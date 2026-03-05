@@ -787,6 +787,14 @@ body {
 </style>
 </head>
 <body>
+<!-- Kiosk Initialization Overlay (Bypasses Autoplay Policy) -->
+<div id="kiosk-init-overlay" style="position:fixed; inset:0; z-index:999999; background:rgba(12, 12, 14, 0.95); backdrop-filter:blur(10px); display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer;">
+  <div style="text-align:center; animation:pulse-glow 2s ease-in-out infinite;">
+    <h1 style="font-family:var(--font-display); font-size:4rem; color:var(--color-primary); letter-spacing:0.1em; margin-bottom:1rem;">START LOBBY KIOSK</h1>
+    <p style="font-family:var(--font-body); font-size:1.5rem; color:#f0e6dc;">Click anywhere to enable audio and begin.</p>
+  </div>
+</div>
+
 <!-- Ambient Noise Overlay -->
 <svg style="pointer-events: none; position: fixed; inset: 0; z-index: 9999; width: 100%; height: 100%; opacity: 0.04; mix-blend-mode: overlay;" aria-hidden="true">
   <filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" stitchTiles="stitch" /></filter>
@@ -1082,6 +1090,34 @@ body {
   var finalAudio = document.getElementById('final-audio');
   var hornAudio = document.getElementById('horn-audio');
   
+  // Kiosk Initialization (Bypass Autoplay Policy)
+  var initOverlay = document.getElementById('kiosk-init-overlay');
+  if (initOverlay) {
+    initOverlay.addEventListener('click', function() {
+      initOverlay.style.display = 'none';
+      
+      // Play and immediately pause to unlock audio context in browsers
+      [warmupAudio, finalAudio, hornAudio].forEach(function(a) {
+        if (a) {
+          a.volume = 0; // mute the initial test
+          var p = a.play();
+          if (p !== undefined) {
+            p.then(function() {
+              a.pause();
+              a.currentTime = 0;
+              a.volume = 1; // restore volume
+            }).catch(function(e) { console.log(e); });
+          }
+        }
+      });
+      
+      // If we are already in a phase that requires audio, play it now
+      if (currentPhase === PHASE.WARMUP) safePlay(warmupAudio);
+      else if (currentPhase === PHASE.FINAL) safePlay(finalAudio);
+      else if (currentPhase === PHASE.HORN && hornAudio.paused) playHorn();
+    });
+  }
+
   // Try to play audio, ignore if browser blocks it until interaction
   function safePlay(audioEl) {
     if (audioEl && audioEl.paused) {
