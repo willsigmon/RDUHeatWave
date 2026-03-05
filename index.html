@@ -77,13 +77,216 @@ body {
   font-size: var(--text-sm);
   color: var(--color-text);
   background-color: var(--color-bg);
+  overflow: hidden;
+}
+
+/* === SLIDER === */
+.slider {
+  display: flex;
+  width: 300vw;
+  height: 100dvh;
+  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: translateX(-100vw); /* Start on center panel (form) */
+}
+
+.panel {
+  flex: 0 0 100vw;
+  width: 100vw;
+  height: 100dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  padding: 1.5rem 1rem;
 }
+
+/* === NAV DOTS === */
+.nav-dots {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.6rem;
+  z-index: 100;
+  padding: 0.4rem 0.75rem;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.nav-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.nav-dot.active {
+  background: var(--color-primary);
+  box-shadow: 0 0 8px rgba(232, 88, 12, 0.6);
+  transform: scale(1.2);
+}
+
+/* === INFO PANEL STYLES === */
+.info-card {
+  width: 100%;
+  max-width: 600px;
+  background: rgba(22, 18, 16, 0.9);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(232, 88, 12, 0.2);
+  border-radius: 1.5rem;
+  padding: 2rem 1.75rem;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.info-card h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  color: var(--color-primary);
+  margin-bottom: 0.75rem;
+  line-height: 1;
+}
+
+.info-card p {
+  font-size: 1.1rem;
+  color: #f0e6dc;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.principle-box {
+  background: rgba(0,0,0,0.4);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 1.5rem;
+}
+
+.principle-box h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  color: #fff;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.05em;
+}
+
+.principle-box p {
+  color: rgba(255,255,255,0.8);
+  font-size: 1rem;
+  margin-bottom: 0;
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.team-member {
+  background: rgba(255,255,255,0.05);
+  padding: 0.875rem;
+  border-radius: 0.75rem;
+  border-left: 3px solid rgba(232, 88, 12, 0.4);
+}
+
+.team-member.leader {
+  border-left-color: var(--color-primary);
+}
+
+.team-member strong {
+  color: #fff;
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.1rem;
+}
+
+.team-member span {
+  color: rgba(255,255,255,0.7);
+  font-size: 0.95rem;
+}
+
+.swipe-hint {
+  text-align: center;
+  color: rgba(255,255,255,0.4);
+  font-size: 0.85rem;
+  margin-top: 1.25rem;
+}
+
+/* === BEER MENU STYLES === */
+.menu-card {
+  width: 100%;
+  max-width: 700px;
+  background: rgba(35, 28, 24, 0.9);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(232, 88, 12, 0.15);
+  border-radius: 1.5rem;
+  padding: 2rem 1.75rem;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.menu-header {
+  text-align: center;
+  border-bottom: 1px solid rgba(232, 88, 12, 0.3);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.menu-header img {
+  width: 80px;
+  margin: 0 auto 0.75rem;
+}
+
+.menu-header h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: #fff;
+  margin-bottom: 0.25rem;
+}
+
+.menu-header p {
+  font-size: 1rem;
+  color: #f0e6dc;
+}
+
+.beer-section-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: var(--color-primary);
+  border-bottom: 2px solid rgba(232, 88, 12, 0.4);
+  padding-bottom: 0.3rem;
+  margin-bottom: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.beer-list {
+  list-style: none;
+  padding: 0;
+}
+
+.beer-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0.3rem 0;
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.8);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.beer-name { font-weight: 600; color: #fff; }
+.beer-style { color: rgba(255,255,255,0.4); font-size: 0.8rem; margin-left: 0.5rem; }
+.beer-abv { color: var(--color-primary); font-weight: 700; font-size: 0.85rem; white-space: nowrap; }
 
 img, picture, video, canvas, svg { display: block; max-width: 100%; height: auto; }
 input, button, textarea, select { font: inherit; color: inherit; }
@@ -552,12 +755,16 @@ button { cursor: pointer; background: none; border: none; }
 
 /* === MOBILE === */
 @media (max-width: 500px) {
-  body { padding: 0.75rem; align-items: flex-start; padding-top: 1rem; }
+  .panel { padding: 1rem 0.75rem; align-items: flex-start; padding-top: 1.5rem; }
   .form-card { padding: 1.5rem 1.25rem; border-radius: 1.25rem; }
+  .info-card { padding: 1.5rem 1.25rem; }
+  .menu-card { padding: 1.5rem 1.25rem; }
   .form-row { grid-template-columns: 1fr; }
+  .team-grid { grid-template-columns: 1fr; }
   .logo-container img { width: 80px; }
   .form-title { font-size: 1.75rem; }
   .countdown-value { font-size: 1.75rem; }
+  .nav-dots { bottom: 0.75rem; }
 }
 </style>
 </head>
@@ -576,7 +783,43 @@ button { cursor: pointer; background: none; border: none; }
 <!-- Confetti canvas -->
 <canvas id="confetti-canvas" aria-hidden="true"></canvas>
 
-<!-- FORM CARD -->
+<!-- Nav dots -->
+<div class="nav-dots">
+  <div class="nav-dot" data-index="0"></div>
+  <div class="nav-dot active" data-index="1"></div>
+  <div class="nav-dot" data-index="2"></div>
+</div>
+
+<!-- SLIDER: 3 panels, form is center (default) -->
+<div class="slider" id="slider">
+
+<!-- PANEL 0: ABOUT (swipe right to see) -->
+<div class="panel">
+  <div class="info-card">
+    <h2>RDU HEATWAVE</h2>
+    <p>The Raleigh-Durham chapter of the <strong style="color: var(--color-primary);">Two Twelve Referral Network</strong>. A structured, category-exclusive business networking group built on the "extra degree" philosophy.</p>
+
+    <div class="principle-box">
+      <h3>The 212&deg; Principle</h3>
+      <p>At 211 degrees, water is hot. At 212 degrees, it boils. With boiling water comes steam, and with steam, you can power a train. That one extra degree makes all the difference.</p>
+    </div>
+
+    <h3 style="font-family: var(--font-display); font-size: 1.5rem; color: var(--color-primary); letter-spacing: 0.05em; margin-bottom: 0.5rem;">Our Team</h3>
+    <div class="team-grid">
+      <div class="team-member leader"><strong>Team Chair</strong><span>Carter Helms</span></div>
+      <div class="team-member leader"><strong>Vice Chair</strong><span>Craig Morrill</span></div>
+      <div class="team-member leader"><strong>Team Admin</strong><span>Will Sigmon</span></div>
+      <div class="team-member leader"><strong>Marketing</strong><span>Rusty Sutton</span></div>
+      <div class="team-member"><strong>Mortgage Lending</strong><span>Robert Courts</span></div>
+      <div class="team-member"><strong>Magazine Publisher</strong><span>Dana Walsh</span></div>
+      <div class="team-member"><strong>Property Restoration</strong><span>Nathan Senn</span></div>
+    </div>
+    <div class="swipe-hint">Swipe left to check in &rarr;</div>
+  </div>
+</div>
+
+<!-- PANEL 1: FORM (default landing) -->
+<div class="panel">
 <main class="form-card" role="main">
 
   <!-- Logo -->
@@ -700,9 +943,127 @@ button { cursor: pointer; background: none; border: none; }
   </div>
 
 </main>
+</div>
+
+<!-- PANEL 2: BEER MENU (swipe left to see) -->
+<div class="panel">
+  <div class="menu-card">
+    <div class="menu-header">
+      <img src="https://images.squarespace-cdn.com/content/v1/592b235859cc6892f601724f/352e270b-0ec7-41c4-819d-ac473b71a4b3/cb_simplifiedlogo_v1_White2-01.png" alt="Clouds Brewing" loading="lazy">
+      <h2>Clouds Brewing</h2>
+      <p>1233 Front St &bull; Raleigh, NC</p>
+    </div>
+
+    <div class="beer-section-title">Lagers &amp; Pilsners</div>
+    <ul class="beer-list">
+      <li class="beer-item"><span><span class="beer-name">Bock to the Future</span> <span class="beer-style">Helles Bock</span></span> <span class="beer-abv">7.5%</span></li>
+      <li class="beer-item"><span><span class="beer-name">Sky Lime</span> <span class="beer-style">Lime Lager</span></span> <span class="beer-abv">4.6%</span></li>
+      <li class="beer-item"><span><span class="beer-name">Wolkenbrau</span> <span class="beer-style">German-American Lager</span></span> <span class="beer-abv">4.5%</span></li>
+      <li class="beer-item"><span><span class="beer-name">Precipitation</span> <span class="beer-style">German Pilsner</span></span> <span class="beer-abv">5.2%</span></li>
+      <li class="beer-item"><span><span class="beer-name">Czech Mate</span> <span class="beer-style">Czech Pilsner</span></span> <span class="beer-abv">5.6%</span></li>
+      <li class="beer-item"><span><span class="beer-name">Accumulation</span> <span class="beer-style">Amber Lager</span></span> <span class="beer-abv">5.8%</span></li>
+    </ul>
+
+    <div class="beer-section-title">IPAs &amp; Ales</div>
+    <ul class="beer-list">
+      <li class="beer-item"><span><span class="beer-name">Hop Jam IPA</span> <span class="beer-style">American IPA</span></span> <span class="beer-abv">6.3%</span></li>
+      <li class="beer-item"><span><span class="beer-name">Forecast</span> <span class="beer-style">Hazy IPA</span></span> <span class="beer-abv">6.3%</span></li>
+      <li class="beer-item"><span><span class="beer-name">Blood Orange Hop Jam</span> <span class="beer-style">Infused IPA</span></span> <span class="beer-abv">5.9%</span></li>
+      <li class="beer-item"><span><span class="beer-name">Hazy Hop Jam</span> <span class="beer-style">Hazy IPA</span></span> <span class="beer-abv">6.3%</span></li>
+      <li class="beer-item"><span><span class="beer-name">Double Hop Jam</span> <span class="beer-style">Imperial IPA</span></span> <span class="beer-abv">10.3%</span></li>
+      <li class="beer-item"><span><span class="beer-name">Clouds 9</span> <span class="beer-style">Belgian Golden Strong</span></span> <span class="beer-abv">9%</span></li>
+      <li class="beer-item"><span><span class="beer-name">Donner &amp; Blitzen 25</span> <span class="beer-style">Spiced Belgian Quad</span></span> <span class="beer-abv">10.5%</span></li>
+    </ul>
+
+    <div class="beer-section-title">Stouts, Porters &amp; Sours</div>
+    <ul class="beer-list">
+      <li class="beer-item"><span><span class="beer-name">Mean Girl</span> <span class="beer-style">Strawberry Lemonade Sour</span></span> <span class="beer-abv">5.5%</span></li>
+      <li class="beer-item"><span><span class="beer-name">Mean Girl</span> <span class="beer-style">Blackberry Dragon Fruit Sour</span></span> <span class="beer-abv">5.5%</span></li>
+      <li class="beer-item"><span><span class="beer-name">Crimea River</span> <span class="beer-style">Baltic Porter</span></span> <span class="beer-abv">8%</span></li>
+      <li class="beer-item"><span><span class="beer-name">Midnight Delight</span> <span class="beer-style">Choc Milk Stout</span></span> <span class="beer-abv">6.8%</span></li>
+      <li class="beer-item"><span><span class="beer-name">Coffee at Midnight</span> <span class="beer-style">Coffee Stout</span></span> <span class="beer-abv">7%</span></li>
+      <li class="beer-item"><span><span class="beer-name">Kentucky Moonlight</span> <span class="beer-style">BBA Imperial Stout</span></span> <span class="beer-abv">10.5%</span></li>
+    </ul>
+
+    <div class="beer-section-title">Wheat &amp; N/A</div>
+    <ul class="beer-list">
+      <li class="beer-item"><span><span class="beer-name">El Hefe</span> <span class="beer-style">Bavarian Wheat</span></span> <span class="beer-abv">4.9%</span></li>
+      <li class="beer-item"><span><span class="beer-name">Tailwind Margarita</span> <span class="beer-style">THC Seltzer</span></span> <span class="beer-abv">N/A</span></li>
+      <li class="beer-item"><span><span class="beer-name">Root Beer</span> <span class="beer-style">Non-Alcoholic</span></span> <span class="beer-abv">N/A</span></li>
+    </ul>
+
+    <div class="swipe-hint">&larr; Swipe right to check in</div>
+  </div>
+</div>
+
+</div><!-- end slider -->
 
 <script>
 (function() {
+
+  // ===== SWIPE SLIDER =====
+  var slider = document.getElementById('slider');
+  var dots = document.querySelectorAll('.nav-dot');
+  var currentPanel = 1; // Form is default (center)
+  var touchStartX = 0;
+  var touchStartY = 0;
+  var touchDeltaX = 0;
+  var isSwiping = false;
+
+  function goToPanel(index) {
+    if (index < 0 || index > 2) return;
+    currentPanel = index;
+    slider.style.transform = 'translateX(' + (-index * 100) + 'vw)';
+    dots.forEach(function(d, i) { d.classList.toggle('active', i === index); });
+  }
+
+  // Touch swipe handling
+  slider.addEventListener('touchstart', function(e) {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    touchDeltaX = 0;
+    isSwiping = false;
+    slider.style.transition = 'none';
+  }, { passive: true });
+
+  slider.addEventListener('touchmove', function(e) {
+    var dx = e.touches[0].clientX - touchStartX;
+    var dy = e.touches[0].clientY - touchStartY;
+
+    // Determine if horizontal swipe (only on first significant move)
+    if (!isSwiping && Math.abs(dx) > 10) {
+      isSwiping = Math.abs(dx) > Math.abs(dy);
+    }
+
+    if (isSwiping) {
+      touchDeltaX = dx;
+      var offset = (-currentPanel * window.innerWidth) + dx;
+      slider.style.transform = 'translateX(' + offset + 'px)';
+    }
+  }, { passive: true });
+
+  slider.addEventListener('touchend', function() {
+    slider.style.transition = 'transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+    if (isSwiping) {
+      var threshold = window.innerWidth * 0.2; // 20% of screen = swipe
+      if (touchDeltaX < -threshold && currentPanel < 2) {
+        goToPanel(currentPanel + 1);
+      } else if (touchDeltaX > threshold && currentPanel > 0) {
+        goToPanel(currentPanel - 1);
+      } else {
+        goToPanel(currentPanel); // snap back
+      }
+    }
+    isSwiping = false;
+    touchDeltaX = 0;
+  });
+
+  // Dot clicks
+  dots.forEach(function(dot) {
+    dot.addEventListener('click', function() {
+      goToPanel(parseInt(this.getAttribute('data-index')));
+    });
+  });
 
   // ===== COUNTDOWN TIMER =====
   var MEETING_DAY = 4; // Thursday
