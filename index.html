@@ -502,16 +502,27 @@ button { cursor: pointer; background: none; border: none; }
 }
 
 @media (max-width: 768px) {
-  .panel { padding: 1rem 1rem 80px; }
-  .form-card { max-width: 100% !important; width: 100% !important; padding: 1.5rem !important; }
+  .panel { padding: 1rem 1rem 120px; justify-content: flex-start; }
+  .form-card { padding: 1.5rem !important; border-radius: 1rem; }
+  .venue-section { padding: 1.5rem !important; border-radius: 1rem; }
   .field-input { padding: 0.8rem 1rem !important; font-size: 1rem !important; }
   .submit-btn { padding: 1rem 1.5rem !important; font-size: 1.5rem !important; }
-  .countdown-value { font-size: 2.5rem !important; min-width: 2em !important; padding: 0.2rem !important; }
-  .venue-info h2 { font-size: 1.8rem !important; }
+  .countdown-value { font-size: 2rem !important; min-width: 2em !important; padding: 0.2rem !important; }
+  .venue-info h2 { font-size: 2rem !important; }
   .venue-header img { width: 80px !important; }
-  h2[style*="font-size: 4rem;"] { font-size: 2.5rem !important; }
-  h3[style*="font-size: 2.5rem;"] { font-size: 1.8rem !important; }
+  h2[style*="font-size: 4rem;"] { font-size: 2.2rem !important; margin-bottom: 0.5rem !important; }
+  h3[style*="font-size: 2.5rem;"] { font-size: 1.5rem !important; }
+  .form-title { font-size: 2.2rem !important; }
+  .form-subtitle { font-size: 1rem !important; margin-bottom: 1.5rem !important; }
   .card-body p { font-size: 1rem !important; }
+  
+  /* Make sure the grids collapse correctly on mobile */
+  .form-row { grid-template-columns: 1fr; gap: 1rem; }
+  div[style*="grid-template-columns: 1fr 1fr;"] { grid-template-columns: 1fr !important; gap: 1rem !important; }
+  div[style*="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));"] { grid-template-columns: 1fr !important; gap: 1.5rem !important; }
+  
+  /* Fix the text links below the form */
+  div[style*="justify-content: center; gap: 4rem;"] { gap: 1.5rem !important; font-size: 0.8rem !important; }
 }
 </style>
 </head>
@@ -629,7 +640,7 @@ button { cursor: pointer; background: none; border: none; }
 
   <!-- PANEL 2: FORM (Center) -->
   <div class="panel" id="panel-form">
-    <main class="form-card" role="main" style="margin-top: auto; margin-bottom: auto; max-width: 900px; width: 90%;">
+    <main class="form-card" role="main" style="margin-top: auto; margin-bottom: auto; width: 100%; max-width: 900px; box-sizing: border-box;">
 
   <!-- Logo with Flame Effects -->
   <div class="logo-wrap">
@@ -766,7 +777,7 @@ button { cursor: pointer; background: none; border: none; }
 
   <!-- PANEL 3: INFO -->
   <div class="panel" id="panel-info">
-    <div class="form-card" style="max-width: 1000px; width: 90%; text-align: left; margin-top: auto; margin-bottom: auto;">
+    <div class="form-card" style="width: 100%; max-width: 1000px; text-align: left; margin-top: auto; margin-bottom: auto; box-sizing: border-box; padding: 2rem;">
       <h2 style="font-family: var(--font-display); font-size: 4rem; color: var(--color-primary); margin-bottom: 1rem; line-height: 1; text-shadow: 0 4px 12px rgba(232,88,12,0.4);">RDU HEATWAVE</h2>
       <p style="font-size: 1.4rem; margin-bottom: 2.5rem; color: #f0e6dc; line-height: 1.5;">The Raleigh-Durham chapter of the <strong style="color: var(--color-primary);">Two Twelve Referral Network</strong>. We are a structured, category-exclusive business networking group built on the "extra degree" philosophy.</p>
       
