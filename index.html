@@ -503,6 +503,19 @@ button { cursor: pointer; background: none; border: none; }
   color: #f0e6dc !important;
   margin-bottom: 0.8rem !important;
 }
+
+@media (max-width: 768px) {
+  .panel { padding: 1rem 1rem 80px; }
+  .form-card { max-width: 100% !important; width: 100% !important; padding: 1.5rem !important; }
+  .field-input { padding: 0.8rem 1rem !important; font-size: 1rem !important; }
+  .submit-btn { padding: 1rem 1.5rem !important; font-size: 1.5rem !important; }
+  .countdown-value { font-size: 2.5rem !important; min-width: 2em !important; padding: 0.2rem !important; }
+  .venue-info h2 { font-size: 1.8rem !important; }
+  .venue-header img { width: 80px !important; }
+  h2[style*="font-size: 4rem;"] { font-size: 2.5rem !important; }
+  h3[style*="font-size: 2.5rem;"] { font-size: 1.8rem !important; }
+  .card-body p { font-size: 1rem !important; }
+}
 </style>
 </head>
 <body>
@@ -858,6 +871,27 @@ button { cursor: pointer; background: none; border: none; }
   var dotsList = document.querySelectorAll('.nav-dot');
   var currentIndex = 1;
 
+  
+  function peekPop() {
+    if(!slider) return;
+    slider.style.scrollBehavior = 'smooth';
+    
+    // Peek right
+    setTimeout(function() {
+      slider.scrollBy({ left: 100, behavior: 'smooth' });
+      
+      // Peek back left
+      setTimeout(function() {
+        slider.scrollBy({ left: -200, behavior: 'smooth' });
+        
+        // Settle center
+        setTimeout(function() {
+          slider.scrollTo({ left: window.innerWidth, behavior: 'smooth' });
+        }, 300);
+      }, 300);
+    }, 1500); // 1.5 seconds after load
+  }
+
   function initSlider() {
     if(!slider) return;
     slider.scrollLeft = window.innerWidth;
@@ -866,6 +900,7 @@ button { cursor: pointer; background: none; border: none; }
   
   // Wait a frame to ensure layout is ready
   setTimeout(initSlider, 50);
+  setTimeout(peekPop, 1000);
   window.addEventListener('resize', initSlider);
 
   function scrollToPanel(index) {
@@ -911,56 +946,57 @@ button { cursor: pointer; background: none; border: none; }
 
   // ===== COUNTDOWN TIMER =====
   // Meeting: every Wednesday at 11:30 AM EST (Eastern)
+  
+  var MEETING_DAY = 4; // Thursday
+  var MEETING_HOUR = 16; // 4 PM
+  var MEETING_MIN = 0;
+  var MEETING_DURATION = 2 * 60 * 60 * 1000;
+
+  function getETOffset() {
+    var now = new Date();
+    var utcStr = now.toLocaleString('en-US', { timeZone: 'UTC' });
+    var etStr = now.toLocaleString('en-US', { timeZone: 'America/New_York' });
+    var utcDate = new Date(utcStr);
+    var etDate = new Date(etStr);
+    return Math.round((etDate.getTime() - utcDate.getTime()) / 3600000);
+  }
+
   function getNextMeeting() {
     var now = new Date();
-
-    // Convert to Eastern time for calculation
-    var eastOpts = { timeZone: 'America/New_York' };
-    var eastStr = now.toLocaleString('en-US', eastOpts);
+    var eastStr = now.toLocaleString('en-US', { timeZone: 'America/New_York' });
     var eastNow = new Date(eastStr);
 
-    // Find next Thursday (meeting day)
     var next = new Date(eastNow);
-    var dayOfWeek = next.getDay(); // 0=Sun, 4=Thu
-    var daysUntilMeeting = (4 - dayOfWeek + 7) % 7;
+    var dow = next.getDay();
+    var daysUntil = (MEETING_DAY - dow + 7) % 7;
 
-    // If today is Thursday, check if meeting already passed
-    if (daysUntilMeeting === 0) {
-      var meetingToday = new Date(next);
-      meetingToday.setHours(11, 30, 0, 0);
-      // If meeting ended (give 2 hour buffer for networking)
-      if (eastNow > new Date(meetingToday.getTime() + 2 * 60 * 60 * 1000)) {
-        daysUntilMeeting = 7;
-      }
+    // If today is the meeting day but the meeting has ended, go to next week
+    if (daysUntil === 0) {
+      var endTime = new Date(next);
+      endTime.setHours(MEETING_HOUR, MEETING_MIN, 0, 0);
+      endTime = new Date(endTime.getTime() + MEETING_DURATION);
+      if (eastNow > endTime) daysUntil = 7;
     }
 
-    next.setDate(next.getDate() + daysUntilMeeting);
-    next.setHours(11, 30, 0, 0);
+    next.setDate(next.getDate() + daysUntil);
+    next.setHours(MEETING_HOUR, MEETING_MIN, 0, 0);
 
-    // Convert back: create a proper Date in Eastern
-    var year = next.getFullYear();
-    var month = String(next.getMonth() + 1).padStart(2, '0');
-    var day = String(next.getDate()).padStart(2, '0');
-    var meetingDateET = new Date(year + '-' + month + '-' + day + 'T11:30:00-05:00');
-
-    // Check for DST (March-November roughly)
-    var checkDate = new Date(year + '-' + month + '-' + day + 'T12:00:00');
-    var janOffset = new Date(year, 0, 1).getTimezoneOffset();
-    var julOffset = new Date(year, 6, 1).getTimezoneOffset();
-    // If we're in DST period, use -04:00
-    var testET = new Date(year + '-' + month + '-' + day + 'T12:00:00');
-    var etStr = testET.toLocaleString('en-US', { timeZone: 'America/New_York', hour12: false });
-    var localStr = testET.toLocaleString('en-US', { hour12: false });
-    // Simpler: just use the Intl API
-    var meetingMs = meetingDateET.getTime();
-    // Adjust for potential DST difference - use EDT (-04:00) from March-Nov
-    if (next.getMonth() >= 2 && next.getMonth() <= 10) {
-      meetingMs = new Date(year + '-' + month + '-' + day + 'T11:30:00-04:00').getTime();
-    }
+    var y = next.getFullYear();
+    var m = String(next.getMonth() + 1).padStart(2, '0');
+    var d = String(next.getDate()).padStart(2, '0');
+    var offsetH = getETOffset();
+    var sign = offsetH >= 0 ? '+' : '-';
+    var absH = String(Math.abs(offsetH)).padStart(2, '0');
+    var iso = y + '-' + m + '-' + d + 'T' +
+      String(MEETING_HOUR).padStart(2, '0') + ':' +
+      String(MEETING_MIN).padStart(2, '0') + ':00' + sign + absH + ':00';
 
     return {
-      timestamp: meetingMs,
-      dateStr: next.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/New_York' })
+      timestamp: new Date(iso).getTime(),
+      dateStr: next.toLocaleDateString('en-US', {
+        weekday: 'long', month: 'long', day: 'numeric', year: 'numeric',
+        timeZone: 'America/New_York'
+      })
     };
   }
 
@@ -969,7 +1005,7 @@ button { cursor: pointer; background: none; border: none; }
   var countdownGrid = document.getElementById('countdown-grid');
   var statusEl = document.getElementById('meeting-status');
 
-  datetimeEl.textContent = meeting.dateStr + ' \u2022 11:30 AM ET';
+  datetimeEl.textContent = meeting.dateStr + ' \u2022 4:00 PM ET';
 
   function updateCountdown() {
     var now = Date.now();
@@ -985,7 +1021,7 @@ button { cursor: pointer; background: none; border: none; }
       } else {
         // Recalculate for next week
         meeting = getNextMeeting();
-        datetimeEl.textContent = meeting.dateStr + ' \u2022 11:30 AM ET';
+        datetimeEl.textContent = meeting.dateStr + ' \u2022 4:00 PM ET';
         countdownGrid.style.display = 'grid';
         statusEl.style.display = 'none';
       }
