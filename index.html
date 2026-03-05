@@ -502,27 +502,75 @@ button { cursor: pointer; background: none; border: none; }
 }
 
 @media (max-width: 768px) {
-  .panel { padding: 1rem 1rem 120px; justify-content: flex-start; }
-  .form-card { padding: 1.5rem !important; border-radius: 1rem; }
-  .venue-section { padding: 1.5rem !important; border-radius: 1rem; }
-  .field-input { padding: 0.8rem 1rem !important; font-size: 1rem !important; }
-  .submit-btn { padding: 1rem 1.5rem !important; font-size: 1.5rem !important; }
-  .countdown-value { font-size: 2rem !important; min-width: 2em !important; padding: 0.2rem !important; }
-  .venue-info h2 { font-size: 2rem !important; }
-  .venue-header img { width: 80px !important; }
-  h2[style*="font-size: 4rem;"] { font-size: 2.2rem !important; margin-bottom: 0.5rem !important; }
-  h3[style*="font-size: 2.5rem;"] { font-size: 1.5rem !important; }
-  .form-title { font-size: 2.2rem !important; }
-  .form-subtitle { font-size: 1rem !important; margin-bottom: 1.5rem !important; }
-  .card-body p { font-size: 1rem !important; }
+  /* Fix Container Heights & Padding */
+  .panel { padding: 1.5rem 1rem 120px !important; justify-content: flex-start !important; }
   
-  /* Make sure the grids collapse correctly on mobile */
-  .form-row { grid-template-columns: 1fr; gap: 1rem; }
-  div[style*="grid-template-columns: 1fr 1fr;"] { grid-template-columns: 1fr !important; gap: 1rem !important; }
+  /* Form Card Cohesion */
+  .form-card { 
+    padding: 1.5rem !important; 
+    border-radius: 1.25rem !important;
+    margin-top: 0 !important; /* Push it towards the top on mobile so keyboard doesn't hide it */
+    background: rgba(22, 18, 16, 0.95) !important; /* Darker on mobile for contrast */
+  }
+  
+  /* Input Sizing */
+  .field-input { 
+    padding: 1rem !important; 
+    font-size: 1.1rem !important; 
+    border-radius: 0.5rem !important;
+  }
+  .field-label { font-size: 0.8rem !important; margin-bottom: 0.4rem !important; }
+  
+  /* Buttons */
+  .submit-btn { 
+    padding: 1.2rem !important; 
+    font-size: 1.4rem !important; 
+    border-radius: 0.75rem !important;
+  }
+  
+  /* Headers & Typography */
+  .form-title { font-size: 2.5rem !important; margin-bottom: 0.2rem !important; }
+  .form-subtitle { font-size: 1.1rem !important; margin-bottom: 1.5rem !important; }
+  
+  /* Countdown inside Form */
+  .countdown-section { padding: 1rem !important; margin-bottom: 1.5rem !important; }
+  .countdown-value { font-size: 1.8rem !important; min-width: 2em !important; padding: 0.2rem !important; }
+  
+  /* Drink Menu Cohesion */
+  .venue-section { 
+    padding: 1.5rem !important; 
+    border-radius: 1.25rem !important; 
+    margin-top: 0 !important;
+    background: rgba(35, 28, 24, 0.95) !important;
+  }
+  .venue-info h2 { font-size: 2.2rem !important; }
+  .venue-info p { font-size: 1.1rem !important; }
+  .venue-header { padding-bottom: 1rem !important; margin-bottom: 1.5rem !important; }
+  .venue-header img { width: 80px !important; margin-bottom: 0.5rem !important; }
+  .venue-label { font-size: 1.5rem !important; margin-bottom: 1rem !important; }
+  
+  /* Info Panel Cohesion */
+  h2[style*="font-size: 4rem;"] { font-size: 2.8rem !important; margin-bottom: 0.5rem !important; }
+  p[style*="font-size: 1.4rem;"] { font-size: 1.1rem !important; margin-bottom: 1.5rem !important; }
+  div[style*="padding: 2rem; border-radius: 1.5rem;"] { padding: 1.5rem !important; border-radius: 1rem !important; margin-bottom: 1.5rem !important; }
+  h3[style*="font-size: 2.5rem;"] { font-size: 1.8rem !important; margin-bottom: 1rem !important; }
+  div[style*="padding: 1.5rem; border-radius: 1rem;"] { padding: 1rem !important; border-radius: 0.75rem !important; }
+  
+  /* Grid Collapsing */
+  .form-row { grid-template-columns: 1fr !important; gap: 1rem !important; }
+  div[style*="grid-template-columns: 1fr 1fr;"] { grid-template-columns: 1fr !important; gap: 0.8rem !important; }
   div[style*="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));"] { grid-template-columns: 1fr !important; gap: 1.5rem !important; }
   
-  /* Fix the text links below the form */
-  div[style*="justify-content: center; gap: 4rem;"] { gap: 1.5rem !important; font-size: 0.8rem !important; }
+  /* Bottom Text Links */
+  div[style*="justify-content: center; gap: 4rem;"] { gap: 1.5rem !important; font-size: 0.85rem !important; margin-top: 1.5rem !important; }
+  
+  /* Hide arrows on mobile completely, rely on swipe and dots */
+  .nav-arrow { display: none !important; }
+}
+
+/* Ensure the background covers the whole page even when scrolled */
+body {
+  background-attachment: fixed;
 }
 </style>
 </head>
