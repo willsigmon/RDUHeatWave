@@ -168,8 +168,10 @@ button { cursor: pointer; background: none; border: none; }
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 600px;
-  height: 600px;
+  width: 80vw;
+  height: 80vw;
+  max-width: 800px;
+  max-height: 800px;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(232, 88, 12, 0.08) 0%, rgba(232, 88, 12, 0.02) 50%, transparent 70%);
   pointer-events: none;
@@ -188,11 +190,13 @@ button { cursor: pointer; background: none; border: none; }
   z-index: 1;
   width: 100%;
   max-width: 520px;
-  background: var(--color-surface);
+  background: rgba(35, 28, 24, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--color-divider);
   border-radius: var(--radius-2xl);
   padding: var(--space-8) var(--space-6);
-  box-shadow: var(--shadow-glow), var(--shadow-lg);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 120px rgba(232, 88, 12, 0.12);
 }
 
 .animate .form-card {
@@ -418,7 +422,9 @@ button { cursor: pointer; background: none; border: none; }
   line-height: 1;
   min-width: 2.5em;
   text-align: center;
-  background: var(--color-surface-2);
+  background: rgba(44, 36, 32, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--color-divider);
   border-radius: var(--radius-md);
   padding: var(--space-2) var(--space-1);
@@ -561,7 +567,9 @@ button { cursor: pointer; background: none; border: none; }
   font-size: var(--text-lg);
   letter-spacing: 0.08em;
   color: white;
-  background: var(--color-primary);
+  background: linear-gradient(135deg, #E8580C 0%, #FF6A1E 100%);
+  background-size: 200% auto;
+  animation: gradient-shift 3s ease infinite;
   border: none;
   border-radius: var(--radius-lg);
   cursor: pointer;
@@ -723,7 +731,9 @@ button { cursor: pointer; background: none; border: none; }
   max-width: 520px;
   margin-top: var(--space-6);
   padding: var(--space-6) var(--space-5);
-  background: var(--color-surface);
+  background: rgba(35, 28, 24, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--color-divider);
   border-radius: var(--radius-2xl);
   box-sizing: border-box;
