@@ -191,7 +191,7 @@ button { cursor: pointer; background: none; border: none; }
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 520px;
+  max-width: 650px;
   background: rgba(35, 28, 24, 0.75);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -510,7 +510,7 @@ button { cursor: pointer; background: none; border: none; }
 
 .field-input {
   width: 100%;
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-4) var(--space-5);
   font-family: var(--font-body);
   font-size: var(--text-sm);
   color: var(--color-text);
@@ -566,7 +566,7 @@ button { cursor: pointer; background: none; border: none; }
   justify-content: center;
   gap: var(--space-2);
   width: 100%;
-  padding: var(--space-4) var(--space-6);
+  padding: var(--space-5) var(--space-8);
   font-family: var(--font-display);
   font-size: var(--text-lg);
   letter-spacing: 0.08em;
@@ -963,8 +963,8 @@ button { cursor: pointer; background: none; border: none; }
   </div>
 
   <!-- Title -->
-  <h1 class="form-title">Welcome to RDU Heatwave</h1>
-  <p class="form-subtitle">Two Twelve Referral Network &mdash; Raleigh-Durham, NC</p>
+  <h1 class="form-title" style="font-size: clamp(2.5rem, 4vw, 3.5rem); margin-bottom: 0.5rem; text-shadow: 0 4px 12px rgba(0,0,0,0.4);">WELCOME GUESTS</h1>
+  <p class="form-subtitle" style="font-size: clamp(1.2rem, 2vw, 1.5rem); margin-bottom: 2rem;">Please sign in below so we can connect you!</p>
 
   <!-- Countdown to Next Meeting -->
   <div class="countdown-section" id="countdown-section">
@@ -1110,11 +1110,11 @@ button { cursor: pointer; background: none; border: none; }
   function createEmber() {
     var ember = document.createElement('div');
     ember.className = 'ember';
-    var size = Math.random() * 8 + 3; // 3px to 11px
+    var size = Math.random() * 12 + 4; // 3px to 11px
     ember.style.width = size + 'px';
     ember.style.height = size + 'px';
     ember.style.left = Math.random() * 100 + 'vw';
-    var duration = Math.random() * 5 + 4; // 4s to 9s
+    var duration = Math.random() * 8 + 6; // 4s to 9s
     ember.style.animationDuration = duration + 's';
     embersContainer.appendChild(ember);
     setTimeout(function() {
