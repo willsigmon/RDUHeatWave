@@ -1,1 +1,13 @@
-{"version": 2, "builds": [{"src": "index.html", "use": "@vercel/static"}], "routes": [{"src": "/(.*)", "dest": "/index.html"}]}
+{
+  "version": 2,
+  "builds": [
+    { "src": "*.html", "use": "@vercel/static" },
+    { "src": "*.png", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/meet", "dest": "/meet.html" },
+    { "src": "/qr-code-heatwave-bordered.png", "dest": "/qr-code-heatwave-bordered.png" },
+    { "src": "/(.*\\.png)", "dest": "/$1" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}

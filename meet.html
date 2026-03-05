@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RDU Heatwave — Meeting Lobby</title>
+<meta name="description" content="RDU Heatwave meeting lobby. Thursdays at 4:00 PM ET at Clouds Brewing.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+:root {
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --color-bg: #241e1a;
+  --color-surface: #2e2622;
+  --color-surface-2: #3a302a;
+  --color-divider: rgba(232, 88, 12, 0.18);
+  --color-border: rgba(232, 88, 12, 0.25);
+  --color-text: #fff5ec;
+  --color-text-muted: #c4b0a0;
+  --color-text-faint: #8a7a6c;
+  --color-primary: #E8580C;
+  --color-primary-hover: #FF6A1E;
+  --color-warning: #FFB800;
+  --color-success: #5BA847;
+  --color-error: #D94444;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+  --shadow-glow: 0 0 80px rgba(232, 88, 12, 0.12), 0 0 160px rgba(232, 88, 12, 0.06);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
+body {
+  min-height: 100dvh;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* === HEAT BACKGROUND === */
+.heat-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.heat-line {
+  position: absolute; width: 200%; height: 1px; left: -50%;
+  background: linear-gradient(90deg, transparent 0%, rgba(232,88,12,0.06) 20%, rgba(232,88,12,0.1) 50%, rgba(232,88,12,0.06) 80%, transparent 100%);
+  animation: heat-drift linear infinite;
+}
+.heat-line:nth-child(1) { top: 15%; animation-duration: 18s; }
+.heat-line:nth-child(2) { top: 30%; animation-duration: 22s; animation-delay: -4s; opacity: 0.7; }
+.heat-line:nth-child(3) { top: 50%; animation-duration: 16s; animation-delay: -8s; }
+.heat-line:nth-child(4) { top: 70%; animation-duration: 20s; animation-delay: -12s; opacity: 0.5; }
+.heat-line:nth-child(5) { top: 85%; animation-duration: 24s; animation-delay: -6s; opacity: 0.6; }
+@keyframes heat-drift {
+  0% { transform: translateX(-25%) scaleY(1); }
+  25% { transform: translateX(0%) scaleY(2); }
+  50% { transform: translateX(25%) scaleY(1); }
+  75% { transform: translateX(0%) scaleY(1.5); }
+  100% { transform: translateX(-25%) scaleY(1); }
+}
+
+.heat-orb {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 700px; height: 700px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,88,12,0.08) 0%, rgba(232,88,12,0.02) 50%, transparent 70%);
+  pointer-events: none; z-index: 0;
+  animation: orb-pulse 6s ease-in-out infinite;
+}
+@keyframes orb-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  50% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.6; }
+}
+
+/* === TOP BAR: COUNTDOWN + TIME === */
+.top-bar {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 2.5rem;
+  background: rgba(36, 30, 26, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-divider);
+}
+.top-bar-left {
+  display: flex; align-items: center; gap: 1rem;
+}
+.top-bar-logo img {
+  height: 48px; width: auto;
+  filter: drop-shadow(0 0 20px rgba(255,255,255,0.8)) drop-shadow(0 0 45px rgba(255,255,255,0.4)) drop-shadow(0 0 70px rgba(255,255,255,0.2));
+}
+.top-bar-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  letter-spacing: 0.08em;
+  color: var(--color-primary);
+}
+.top-bar-right {
+  text-align: right;
+}
+.top-bar-date {
+  font-size: clamp(0.85rem, 1.2vw, 1.1rem);
+  color: var(--color-text-muted);
+  letter-spacing: 0.03em;
+}
+.top-bar-time {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  letter-spacing: 0.06em;
+  color: var(--color-text);
+}
+
+/* === MAIN LAYOUT === */
+.lobby {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 0;
+  min-height: calc(100dvh - 60px);
+}
+
+/* TwoTwelve logo in top bar */
+.tt-logo-bar {
+  height: 32px;
+  width: auto;
+  margin-left: 1rem;
+  filter: drop-shadow(0 0 18px rgba(255,255,255,0.8)) drop-shadow(0 0 40px rgba(255,255,255,0.45)) drop-shadow(0 0 65px rgba(255,255,255,0.2));
+}
+
+/* === LEFT: LOGO + CAROUSEL === */
+.carousel-zone {
+  grid-column: 1;
+  grid-row: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 3rem;
+  perspective: 1200px;
+  overflow: hidden;
+  gap: 1.5rem;
+}
+
+/* Hero logo - always visible above carousel */
+.hero-logo {
+  flex-shrink: 0;
+}
+.hero-logo img {
+  width: clamp(140px, 18vw, 260px);
+  height: auto;
+  filter: drop-shadow(0 0 50px rgba(255, 255, 255, 0.85)) drop-shadow(0 0 100px rgba(255, 255, 255, 0.5)) drop-shadow(0 0 160px rgba(255, 255, 255, 0.25)) drop-shadow(0 0 200px rgba(232, 88, 12, 0.15));
+  background: radial-gradient(circle, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.12) 50%, transparent 70%);
+  border-radius: 50%;
+  padding: 14px;
+}
+
+/* Card logo (TwoTwelve inside cards) */
+.card-logo {
+  height: clamp(40px, 5vw, 70px);
+  width: auto;
+  margin-bottom: 0.5rem;
+  filter: drop-shadow(0 0 20px rgba(255,255,255,0.8)) drop-shadow(0 0 45px rgba(255,255,255,0.4)) drop-shadow(0 0 70px rgba(255,255,255,0.2));
+}
+
+.carousel-stage {
+  position: relative;
+  width: 100%;
+  max-width: 90%;
+  aspect-ratio: 16 / 9;
+}
+
+.carousel-card {
+  position: absolute;
+  inset: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  padding: 2.5rem 2rem;
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 1rem;
+  opacity: 0;
+  transform: perspective(900px) rotateY(55deg) rotateZ(4deg) scale(0.6) translateX(60px);
+  pointer-events: none;
+  transition: none;
+}
+
+.carousel-card.active {
+  opacity: 1;
+  pointer-events: auto;
+  animation: cardSwivelIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.carousel-card.exiting {
+  animation: cardSwivelOut 0.6s cubic-bezier(0.7, 0, 0.84, 0) forwards;
+}
+
+@keyframes cardSwivelIn {
+  0%   { opacity: 0; transform: perspective(900px) rotateY(55deg) rotateZ(4deg) scale(0.6) translateX(60px) translateY(20px); }
+  30%  { opacity: 1; transform: perspective(900px) rotateY(-12deg) rotateZ(-2deg) scale(1.04) translateX(-10px) translateY(-4px); }
+  50%  { transform: perspective(900px) rotateY(6deg) rotateZ(1deg) scale(0.98) translateX(4px) translateY(2px); }
+  70%  { transform: perspective(900px) rotateY(-2deg) rotateZ(-0.5deg) scale(1.01) translateX(-1px) translateY(-1px); }
+  85%  { transform: perspective(900px) rotateY(0.5deg) rotateZ(0deg) scale(1) translateX(0) translateY(0); }
+  100% { opacity: 1; transform: perspective(900px) rotateY(0deg) rotateZ(0deg) scale(1) translateX(0) translateY(0); }
+}
+
+@keyframes cardSwivelOut {
+  0%   { opacity: 1; transform: perspective(900px) rotateY(0deg) scale(1) translateX(0); }
+  100% { opacity: 0; transform: perspective(900px) rotateY(-45deg) rotateZ(-3deg) scale(0.7) translateX(-80px) translateY(10px); }
+}
+
+/* Gentle float for active card */
+.carousel-card.active.settled {
+  animation: cardFloat 4s ease-in-out infinite;
+}
+@keyframes cardFloat {
+  0%, 100% { transform: perspective(900px) rotateY(0deg) translateY(0); }
+  50% { transform: perspective(900px) rotateY(1deg) translateY(-6px); }
+}
+
+/* Card content styling */
+.card-icon {
+  font-size: clamp(4rem, 8vw, 7rem);
+  line-height: 1;
+}
+.card-heading {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6vw, 5rem);
+  letter-spacing: 0.06em;
+  color: var(--color-primary);
+  line-height: 1.1;
+}
+.card-body {
+  font-size: clamp(1.2rem, 2.2vw, 1.8rem);
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  max-width: 42ch;
+}
+.card-stat {
+  display: flex;
+  gap: 2rem;
+  margin-top: 0.5rem;
+}
+.card-stat-item {
+  text-align: center;
+}
+.card-stat-value {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 4vw, 3.5rem);
+  color: var(--color-primary);
+  letter-spacing: 0.04em;
+}
+.card-stat-label {
+  font-size: 0.85rem;
+  color: var(--color-text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.card-qr img {
+  width: clamp(200px, 30vw, 380px);
+  height: auto;
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--color-border);
+  filter: drop-shadow(0 0 25px rgba(255,255,255,0.5)) drop-shadow(0 0 50px rgba(255,255,255,0.2));
+  background: rgba(255,255,255,0.08);
+  padding: 4px;
+}
+.card-cta {
+  font-size: clamp(1rem, 1.8vw, 1.5rem);
+  color: var(--color-text-faint);
+  letter-spacing: 0.04em;
+}
+
+/* Carousel dots */
+.carousel-dots {
+  position: absolute;
+  bottom: -2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+}
+.carousel-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--color-text-faint);
+  opacity: 0.3;
+  transition: opacity 0.3s, background 0.3s, transform 0.3s;
+}
+.carousel-dot.active {
+  opacity: 1;
+  background: var(--color-primary);
+  transform: scale(1.3);
+}
+
+/* === RIGHT: COUNTDOWN ZONE === */
+.countdown-zone {
+  grid-column: 2;
+  grid-row: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  gap: 2rem;
+  min-height: 100%;
+}
+
+.countdown-header {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  letter-spacing: 0.15em;
+  color: var(--color-primary);
+  text-transform: uppercase;
+}
+
+.countdown-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  max-width: 90%;
+  width: 100%;
+}
+.countdown-unit {
+  display: flex; flex-direction: column; align-items: center;
+}
+.countdown-value {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 9vw, 8rem);
+  letter-spacing: 0.04em;
+  color: var(--color-text);
+  line-height: 1;
+  width: 100%;
+  text-align: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-xl);
+  padding: 0.6rem 0.1rem;
+  transition: color 0.4s, border-color 0.4s, box-shadow 0.4s;
+}
+.countdown-label {
+  font-size: clamp(0.8rem, 1.2vw, 1.1rem); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.15em;
+  color: var(--color-text-faint);
+  margin-top: 0.6rem;
+}
+
+.meeting-meta {
+  text-align: center;
+}
+.meeting-datetime {
+  font-size: clamp(1.3rem, 2.5vw, 2rem);
+  font-weight: 600;
+  color: var(--color-text);
+}
+.meeting-location {
+  font-size: clamp(1rem, 1.8vw, 1.4rem);
+  color: var(--color-text-muted);
+  margin-top: 0.25rem;
+}
+
+/* === STATUS BANNER === */
+.status-banner {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  letter-spacing: 0.08em;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-xl);
+  display: none;
+  text-align: center;
+}
+.status-banner.visible { display: block; }
+
+.status-banner.warmup {
+  color: var(--color-warning);
+  background: rgba(255, 184, 0, 0.08);
+  border: 1px solid rgba(255, 184, 0, 0.2);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+.status-banner.horn {
+  color: var(--color-error);
+  background: rgba(217, 68, 68, 0.12);
+  border: 1px solid rgba(217, 68, 68, 0.3);
+  animation: horn-flash 0.4s ease-in-out infinite alternate;
+}
+.status-banner.live {
+  color: var(--color-success);
+  background: rgba(91, 168, 71, 0.08);
+  border: 1px solid rgba(91, 168, 71, 0.2);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.65; }
+}
+@keyframes horn-flash {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0.8; transform: scale(1.03); }
+}
+
+/* === WARMUP BIG TIMER === */
+.warmup-display {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.warmup-display.visible { display: flex; }
+
+.warmup-time {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 12vw, 7rem);
+  letter-spacing: 0.06em;
+  color: var(--color-warning);
+  line-height: 1;
+  text-shadow: 0 0 50px rgba(255, 184, 0, 0.3);
+}
+.warmup-sub {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.05em;
+}
+
+/* Progress bar */
+.progress-wrap {
+  width: 100%; max-width: 360px;
+  display: none;
+}
+.progress-wrap.visible { display: block; }
+.progress-bar {
+  width: 100%; height: 5px;
+  background: var(--color-surface-2);
+  border-radius: 3px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-warning), var(--color-primary));
+  border-radius: 3px;
+  transition: width 1s linear;
+  box-shadow: 0 0 8px rgba(255, 184, 0, 0.4);
+}
+
+/* === HORN BLAST === */
+.horn-display {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.horn-display.visible { display: flex; }
+.horn-siren {
+  font-size: clamp(5rem, 14vw, 9rem);
+  animation: horn-shake 0.25s ease-in-out infinite;
+  filter: drop-shadow(0 0 40px rgba(217, 68, 68, 0.6));
+}
+@keyframes horn-shake {
+  0%, 100% { transform: rotate(-8deg) scale(1); }
+  50% { transform: rotate(8deg) scale(1.05); }
+}
+.horn-text {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  letter-spacing: 0.1em;
+  color: var(--color-error);
+  text-shadow: 0 0 30px rgba(217, 68, 68, 0.5);
+  animation: horn-text-pulse 0.6s ease-in-out infinite alternate;
+}
+@keyframes horn-text-pulse {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0.8; transform: scale(1.05); }
+}
+
+/* Screen flash */
+.screen-flash {
+  position: fixed; inset: 0;
+  background: rgba(217, 68, 68, 0.12);
+  z-index: 100; pointer-events: none;
+  opacity: 0;
+  animation: flash-cycle 0.8s ease-in-out infinite;
+}
+@keyframes flash-cycle {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* Edge glow during horn */
+.edge-glow {
+  position: fixed; inset: 0; z-index: 99; pointer-events: none;
+  box-shadow: inset 0 0 120px rgba(217, 68, 68, 0.3), inset 0 0 240px rgba(217, 68, 68, 0.1);
+  animation: edge-pulse 1s ease-in-out infinite alternate;
+}
+@keyframes edge-pulse {
+  from { opacity: 0.6; }
+  to { opacity: 1; }
+}
+
+/* === RESPONSIVE: MOBILE STACK === */
+@media (max-width: 768px) {
+  .lobby {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+  }
+  .carousel-zone {
+    grid-column: 1;
+    grid-row: 2;
+    padding: 1.5rem 1rem;
+  }
+  .countdown-zone {
+    grid-column: 1;
+    grid-row: 1;
+    padding: 1.5rem 1rem;
+  }
+  .countdown-value {
+    font-size: clamp(2rem, 8vw, 3rem);
+  }
+  .carousel-stage {
+    max-width: 380px;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-bar { padding: 0.75rem 1rem; }
+  .countdown-grid { gap: 0.4rem; }
+  .countdown-value { padding: 0.4rem 0.15rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="heat-bg" aria-hidden="true">
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+</div>
+<div class="heat-orb" aria-hidden="true"></div>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="top-bar-left">
+    <div class="top-bar-logo">
+      <img src="heatwave-logo.png" alt="RDU Heatwave" width="48" height="48">
+    </div>
+    <div class="top-bar-title">RDU HEATWAVE</div>
+    <img src="twotwelve-logo.png" alt="Two Twelve Referral Network" class="tt-logo-bar">
+  </div>
+  <div class="top-bar-right">
+    <div class="top-bar-date" id="top-date"></div>
+    <div class="top-bar-time" id="top-time"></div>
+  </div>
+</div>
+
+<!-- MAIN LOBBY -->
+<div class="lobby">
+
+  <!-- LEFT: LOGO + ROTATING INFO CAROUSEL -->
+  <div class="carousel-zone">
+    <div class="hero-logo">
+      <img src="heatwave-logo.png" alt="RDU Heatwave">
+    </div>
+    <div class="carousel-stage" id="carousel-stage">
+
+      <!-- Card 1: What is TwoTwelve -->
+      <div class="carousel-card" data-card="0">
+        <img src="twotwelve-logo.png" alt="Two Twelve" class="card-logo">
+        <div class="card-heading">WHAT IS<br>TWO TWELVE?</div>
+        <div class="card-body">A referral network built on trust. Members commit to sending each other real, qualified business. Not leads &mdash; referrals.</div>
+      </div>
+
+      <!-- Card 2: The 212 Principle -->
+      <div class="carousel-card" data-card="1">
+        <div class="card-icon">&#x1F321;&#xFE0F;</div>
+        <div class="card-heading">THE 212&deg; PRINCIPLE</div>
+        <div class="card-body">At 211&deg;, water is hot. At 212&deg;, it boils. One extra degree changes everything. That's the mindset we bring to every referral.</div>
+      </div>
+
+      <!-- Card 3: How it works -->
+      <div class="carousel-card" data-card="2">
+        <div class="card-icon">&#x1F91D;</div>
+        <div class="card-heading">HOW IT WORKS</div>
+        <div class="card-body">One seat per profession. You become the go-to person in your field for every member in the room.</div>
+        <div class="card-stat">
+          <div class="card-stat-item">
+            <div class="card-stat-value">1 SEAT</div>
+            <div class="card-stat-label">Per Profession</div>
+          </div>
+          <div class="card-stat-item">
+            <div class="card-stat-value">WEEKLY</div>
+            <div class="card-stat-label">Commitment</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4: What to expect today -->
+      <div class="carousel-card" data-card="3">
+        <div class="card-icon">&#x1F4CB;</div>
+        <div class="card-heading">TODAY'S MEETING</div>
+        <div class="card-body">Introductions. Member spotlights. Referral sharing. Open networking. Relax &mdash; just be yourself and listen.</div>
+      </div>
+
+      <!-- Card 5: QR Code / Check In -->
+      <div class="carousel-card" data-card="4">
+        <div class="card-heading">CHECK IN</div>
+        <div class="card-qr">
+          <img src="qr-code-heatwave-bordered.png" alt="Scan to check in">
+        </div>
+        <div class="card-cta">Scan to register as a guest</div>
+      </div>
+
+      <!-- Card 6: Why join -->
+      <div class="carousel-card" data-card="5">
+        <div class="card-icon">&#x1F4A1;</div>
+        <div class="card-heading">WHY MEMBERS JOIN</div>
+        <div class="card-body">Predictable referrals. Trusted relationships. A room full of people actively looking to send you business.</div>
+      </div>
+
+      <!-- Dots -->
+      <div class="carousel-dots" id="carousel-dots"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT: COUNTDOWN -->
+  <div class="countdown-zone" id="countdown-zone">
+
+    <div class="countdown-header" id="countdown-header">WE START IN</div>
+
+    <div class="meeting-meta">
+      <div class="meeting-datetime" id="meeting-datetime"></div>
+      <div class="meeting-location">Grab a drink &bull; We'll get started soon</div>
+    </div>
+
+    <!-- Main countdown -->
+    <div class="countdown-grid" id="countdown-grid">
+      <div class="countdown-unit">
+        <div class="countdown-value" id="cd-days">--</div>
+        <div class="countdown-label">Days</div>
+      </div>
+      <div class="countdown-unit">
+        <div class="countdown-value" id="cd-hours">--</div>
+        <div class="countdown-label">Hours</div>
+      </div>
+      <div class="countdown-unit">
+        <div class="countdown-value" id="cd-mins">--</div>
+        <div class="countdown-label">Mins</div>
+      </div>
+      <div class="countdown-unit">
+        <div class="countdown-value" id="cd-secs">--</div>
+        <div class="countdown-label">Secs</div>
+      </div>
+    </div>
+
+    <!-- Status banner -->
+    <div class="status-banner" id="status-banner"></div>
+
+    <!-- Warmup timer (4:00 - 4:05) -->
+    <div class="warmup-display" id="warmup-display">
+      <div class="warmup-time" id="warmup-time">05:00</div>
+      <div class="warmup-sub">until meeting starts</div>
+    </div>
+
+    <div class="progress-wrap" id="progress-wrap">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <!-- Horn blast display -->
+    <div class="horn-display" id="horn-display">
+      <div class="horn-siren" aria-hidden="true">&#x1F4E2;</div>
+      <div class="horn-text">FIND YOUR SEATS!</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Screen flash overlay (horn phase only) -->
+<div class="screen-flash" id="screen-flash" style="display:none" aria-hidden="true"></div>
+<div class="edge-glow" id="edge-glow" style="display:none" aria-hidden="true"></div>
+
+<!-- Horn sound -->
+<audio id="horn-audio" preload="auto" loop>
+  <source src="https://www.myinstants.com/media/sounds/foghorn.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+(function() {
+  'use strict';
+
+  // ===== CONFIG =====
+  var MEETING_DAY = 4;        // Thursday
+  var MEETING_HOUR = 16;      // 4:00 PM ET
+  var MEETING_MIN = 0;
+  var WARMUP_SECS = 300;      // 5 min (4:00:00 - 4:04:59)
+  var HORN_DURATION = 15000;  // 15s horn blast
+  var MEETING_DURATION = 2 * 60 * 60 * 1000; // 2hr window
+  var CARD_INTERVAL = 8000;   // 8s per card
+  var CARD_SETTLE_DELAY = 1200; // match swivel-in duration
+
+  // ===== PHASES =====
+  var PHASE = { COUNTDOWN: 0, WARMUP: 1, HORN: 2, LIVE: 3, OVER: 4 };
+  var currentPhase = null;
+  var hornPlayed = false;
+
+  // ===== DOM =====
+  var countdownGrid = document.getElementById('countdown-grid');
+  var countdownHeader = document.getElementById('countdown-header');
+  var statusBanner = document.getElementById('status-banner');
+  var warmupDisplay = document.getElementById('warmup-display');
+  var warmupTime = document.getElementById('warmup-time');
+  var progressWrap = document.getElementById('progress-wrap');
+  var progressFill = document.getElementById('progress-fill');
+  var hornDisplay = document.getElementById('horn-display');
+  var screenFlash = document.getElementById('screen-flash');
+  var edgeGlow = document.getElementById('edge-glow');
+  var hornAudio = document.getElementById('horn-audio');
+  var datetimeEl = document.getElementById('meeting-datetime');
+  var topDate = document.getElementById('top-date');
+  var topTime = document.getElementById('top-time');
+
+  // ===== MEETING TIME =====
+  function getNextMeeting() {
+    var now = new Date();
+    var eastStr = now.toLocaleString('en-US', { timeZone: 'America/New_York' });
+    var eastNow = new Date(eastStr);
+
+    var next = new Date(eastNow);
+    var dow = next.getDay();
+    var daysUntil = (MEETING_DAY - dow + 7) % 7;
+
+    if (daysUntil === 0) {
+      var endTime = new Date(next);
+      endTime.setHours(MEETING_HOUR, MEETING_MIN, 0, 0);
+      endTime = new Date(endTime.getTime() + MEETING_DURATION);
+      if (eastNow > endTime) daysUntil = 7;
+    }
+
+    next.setDate(next.getDate() + daysUntil);
+    next.setHours(MEETING_HOUR, MEETING_MIN, 0, 0);
+
+    var y = next.getFullYear();
+    var m = String(next.getMonth() + 1).padStart(2, '0');
+    var d = String(next.getDate()).padStart(2, '0');
+    var offset = (next.getMonth() >= 2 && next.getMonth() <= 10) ? '-04:00' : '-05:00';
+    var iso = y + '-' + m + '-' + d + 'T' +
+      String(MEETING_HOUR).padStart(2, '0') + ':' +
+      String(MEETING_MIN).padStart(2, '0') + ':00' + offset;
+
+    return {
+      timestamp: new Date(iso).getTime(),
+      dateStr: next.toLocaleDateString('en-US', {
+        weekday: 'long', month: 'long', day: 'numeric', year: 'numeric',
+        timeZone: 'America/New_York'
+      })
+    };
+  }
+
+  var meeting = getNextMeeting();
+  datetimeEl.textContent = meeting.dateStr + ' \u2022 4:00 PM ET';
+
+  // ===== CAROUSEL =====
+  var cards = document.querySelectorAll('.carousel-card');
+  var dotsContainer = document.getElementById('carousel-dots');
+  var cardCount = cards.length;
+  var currentCard = -1;
+  var cardTimer = null;
+
+  // Build dots
+  for (var i = 0; i < cardCount; i++) {
+    var dot = document.createElement('div');
+    dot.className = 'carousel-dot';
+    dot.dataset.index = i;
+    dotsContainer.appendChild(dot);
+  }
+  var dots = dotsContainer.querySelectorAll('.carousel-dot');
+
+  function showCard(index) {
+    // Exit current card
+    if (currentCard >= 0 && currentCard < cardCount) {
+      cards[currentCard].classList.remove('active', 'settled');
+      cards[currentCard].classList.add('exiting');
+      dots[currentCard].classList.remove('active');
+      // Clean up exiting class after animation
+      (function(c) {
+        setTimeout(function() { cards[c].classList.remove('exiting'); }, 600);
+      })(currentCard);
+    }
+
+    currentCard = index;
+    cards[currentCard].classList.remove('exiting');
+    cards[currentCard].classList.add('active');
+    dots[currentCard].classList.add('active');
+
+    // Add settled (float) class after swivel-in completes
+    setTimeout(function() {
+      if (cards[currentCard] && cards[currentCard].classList.contains('active')) {
+        cards[currentCard].classList.add('settled');
+      }
+    }, CARD_SETTLE_DELAY);
+  }
+
+  function nextCard() {
+    showCard((currentCard + 1) % cardCount);
+  }
+
+  function startCarousel() {
+    nextCard();
+    cardTimer = setInterval(nextCard, CARD_INTERVAL);
+  }
+
+  startCarousel();
+
+  // ===== PHASE MANAGEMENT =====
+  function setPhase(phase) {
+    if (phase === currentPhase) return;
+    currentPhase = phase;
+
+    // Reset
+    countdownGrid.style.display = 'none';
+    countdownHeader.style.display = 'block';
+    statusBanner.className = 'status-banner';
+    warmupDisplay.classList.remove('visible');
+    progressWrap.classList.remove('visible');
+    hornDisplay.classList.remove('visible');
+    screenFlash.style.display = 'none';
+    edgeGlow.style.display = 'none';
+
+    switch (phase) {
+      case PHASE.COUNTDOWN:
+        countdownGrid.style.display = 'grid';
+        countdownHeader.textContent = 'WE START IN';
+        break;
+
+      case PHASE.WARMUP:
+        countdownHeader.textContent = 'MEETING STARTING';
+        warmupDisplay.classList.add('visible');
+        progressWrap.classList.add('visible');
+        statusBanner.textContent = 'GRAB A DRINK \u2014 WE START SOON';
+        statusBanner.className = 'status-banner visible warmup';
+        break;
+
+      case PHASE.HORN:
+        countdownHeader.textContent = '';
+        countdownHeader.style.display = 'none';
+        hornDisplay.classList.add('visible');
+        screenFlash.style.display = 'block';
+        edgeGlow.style.display = 'block';
+        statusBanner.textContent = '\uD83D\uDEA8 TAKE YOUR SEATS! \uD83D\uDEA8';
+        statusBanner.className = 'status-banner visible horn';
+        if (!hornPlayed) {
+          playHorn();
+          hornPlayed = true;
+        }
+        break;
+
+      case PHASE.LIVE:
+        countdownGrid.style.display = 'grid';
+        countdownHeader.textContent = 'MEETING IN PROGRESS';
+        statusBanner.textContent = '\uD83D\uDD25 LET\'S GO \uD83D\uDD25';
+        statusBanner.className = 'status-banner visible live';
+        break;
+
+      case PHASE.OVER:
+        meeting = getNextMeeting();
+        datetimeEl.textContent = meeting.dateStr + ' \u2022 4:00 PM ET';
+        hornPlayed = false;
+        countdownGrid.style.display = 'grid';
+        countdownHeader.textContent = 'WE START IN';
+        break;
+    }
+  }
+
+  // ===== HORN =====
+  function playHorn() {
+    try {
+      hornAudio.currentTime = 0;
+      hornAudio.volume = 1.0;
+      hornAudio.play().catch(function() {});
+      // Stop after horn duration
+      setTimeout(function() {
+        hornAudio.pause();
+        hornAudio.currentTime = 0;
+      }, HORN_DURATION);
+    } catch (e) {}
+  }
+
+  // ===== CLOCK + COUNTDOWN =====
+  function updateClock() {
+    var opts = { timeZone: 'America/New_York' };
+    var now = new Date();
+    topDate.textContent = now.toLocaleDateString('en-US', Object.assign({ weekday: 'long', month: 'short', day: 'numeric' }, opts));
+    topTime.textContent = now.toLocaleTimeString('en-US', Object.assign({ hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true }, opts)) + ' ET';
+  }
+
+  function updateCountdown() {
+    updateClock();
+
+    var now = Date.now();
+    var diff = meeting.timestamp - now;
+    var warmupEnd = meeting.timestamp + WARMUP_SECS * 1000;
+    var hornEnd = warmupEnd + HORN_DURATION;
+    var meetingEnd = meeting.timestamp + MEETING_DURATION;
+
+    if (diff > 0) {
+      // COUNTDOWN
+      setPhase(PHASE.COUNTDOWN);
+      var days = Math.floor(diff / 86400000);
+      var hours = Math.floor((diff % 86400000) / 3600000);
+      var mins = Math.floor((diff % 3600000) / 60000);
+      var secs = Math.floor((diff % 60000) / 1000);
+      document.getElementById('cd-days').textContent = String(days).padStart(2, '0');
+      document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('cd-mins').textContent = String(mins).padStart(2, '0');
+      document.getElementById('cd-secs').textContent = String(secs).padStart(2, '0');
+
+    } else if (now < warmupEnd) {
+      // WARMUP (4:00 - 4:05)
+      setPhase(PHASE.WARMUP);
+      var remaining = Math.max(0, Math.ceil((warmupEnd - now) / 1000));
+      var wM = Math.floor(remaining / 60);
+      var wS = remaining % 60;
+      warmupTime.textContent = String(wM).padStart(2, '0') + ':' + String(wS).padStart(2, '0');
+      var elapsed = WARMUP_SECS - remaining;
+      progressFill.style.width = Math.min(100, (elapsed / WARMUP_SECS) * 100) + '%';
+
+    } else if (now < hornEnd) {
+      // HORN BLAST
+      setPhase(PHASE.HORN);
+
+    } else if (now < meetingEnd) {
+      // LIVE
+      setPhase(PHASE.LIVE);
+      var el = now - hornEnd;
+      var eH = Math.floor(el / 3600000);
+      var eM = Math.floor((el % 3600000) / 60000);
+      var eS = Math.floor((el % 60000) / 1000);
+      document.getElementById('cd-days').textContent = '--';
+      document.getElementById('cd-hours').textContent = String(eH).padStart(2, '0');
+      document.getElementById('cd-mins').textContent = String(eM).padStart(2, '0');
+      document.getElementById('cd-secs').textContent = String(eS).padStart(2, '0');
+
+    } else {
+      // OVER
+      setPhase(PHASE.OVER);
+    }
+  }
+
+  // Enable horn on any user interaction (autoplay policy)
+  var interacted = false;
+  document.addEventListener('click', function() {
+    interacted = true;
+    if (currentPhase === PHASE.HORN && !hornAudio.paused === false) {
+      playHorn();
+    }
+  }, { once: false });
+
+  updateCountdown();
+  setInterval(updateCountdown, 250);
+})();
+</script>
+
+</body>
+</html>

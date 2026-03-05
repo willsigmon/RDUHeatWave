@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RDU Heatwave — Meeting Agenda</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  @page {
+    size: letter;
+    margin: 0.5in;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    color: #1a1412;
+    font-size: 9.5pt;
+    line-height: 1.5;
+    background: #e8e0d8;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page {
+    background: #ffffff;
+    page-break-after: always;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .page:last-child { page-break-after: avoid; }
+
+  /* Push content apart to fill the page */
+  .page-spacer { flex: 1; }
+
+  /* Subtle warm accent on print */
+  .page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 0%, rgba(232,88,12,0.03) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 100%, rgba(232,88,12,0.02) 0%, transparent 40%);
+    pointer-events: none;
+  }
+
+  /* ===== TYPOGRAPHY ===== */
+  .font-display { font-family: 'Bebas Neue', sans-serif; }
+  .font-serif { font-family: 'Cormorant Garamond', serif; }
+
+  /* ===== COLORS ===== */
+  :root {
+    --fire: #E8580C;
+    --fire-dim: rgba(232,88,12,0.35);
+    --fire-glow: rgba(232,88,12,0.08);
+    --gold: #8a6d3b;
+    --gold-dim: rgba(138,109,59,0.25);
+    --text: #1a1412;
+    --text-mid: #5c4f44;
+    --text-dim: #8a7e74;
+    --surface: #faf7f4;
+    --surface-up: #f3eeea;
+    --divider: rgba(138,109,59,0.18);
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    padding: 6pt 0 0;
+    border-bottom: 1.5pt solid var(--divider);
+    position: relative;
+    z-index: 1;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 12pt;
+    padding-bottom: 6pt;
+  }
+
+  .logo-heatwave {
+    width: 72pt;
+    height: 72pt;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .header-text {
+    flex: 1;
+  }
+
+  .team-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28pt;
+    letter-spacing: 3pt;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .team-name span {
+    color: var(--fire);
+  }
+
+  .team-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 8.5pt;
+    color: var(--gold);
+    letter-spacing: 2pt;
+    text-transform: uppercase;
+    margin-top: 2pt;
+  }
+
+  .header-qr {
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .qr-code {
+    width: 64pt;
+    height: 64pt;
+    border: 1.5pt solid var(--fire);
+    border-radius: 4pt;
+    padding: 2pt;
+  }
+
+  .qr-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 6.5pt;
+    letter-spacing: 1.5pt;
+    color: var(--fire);
+    margin-top: 3pt;
+  }
+
+  .header-stats {
+    display: flex;
+    justify-content: center;
+    gap: 20pt;
+    padding: 5pt 0;
+    border-top: 0.5pt solid var(--divider);
+  }
+
+  .stat {
+    display: flex;
+    align-items: baseline;
+    gap: 4pt;
+  }
+
+  .stat-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14pt;
+    color: var(--fire);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 6pt;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    letter-spacing: 1pt;
+  }
+
+  /* ===== DIVIDER ===== */
+  .ornament {
+    text-align: center;
+    padding: 6pt 0;
+    color: var(--fire-dim);
+    font-size: 8pt;
+    letter-spacing: 6pt;
+    position: relative;
+    z-index: 1;
+  }
+
+  .ornament::before,
+  .ornament::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 28%;
+    height: 0.5pt;
+    background: linear-gradient(90deg, transparent, var(--divider), transparent);
+  }
+  .ornament::before { left: 0; }
+  .ornament::after { right: 0; }
+
+  /* ===== TWO COLUMN ===== */
+  .two-col {
+    display: flex;
+    gap: 20pt;
+    align-items: stretch;
+    position: relative;
+    z-index: 1;
+  }
+
+  .two-col-grow {
+    flex: 1;
+  }
+
+  .col-main { flex: 1.15; display: flex; flex-direction: column; }
+  .col-side { flex: 0.85; display: flex; flex-direction: column; }
+
+  /* ===== SECTION TITLES ===== */
+  .section-heading {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11pt;
+    letter-spacing: 2pt;
+    color: var(--gold);
+    border-bottom: 0.75pt solid var(--divider);
+    padding-bottom: 3pt;
+    margin-bottom: 6pt;
+    text-transform: uppercase;
+  }
+
+  .section-heading-fire {
+    color: var(--fire);
+  }
+
+  /* ===== AGENDA LIST ===== */
+  .agenda-list {
+    list-style: none;
+    flex: 1;
+  }
+
+  .agenda-group-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 7pt;
+    letter-spacing: 1.5pt;
+    color: var(--fire-dim);
+    text-transform: uppercase;
+    padding: 8pt 6pt 2pt;
+  }
+
+  .agenda-group-label:first-child {
+    padding-top: 4pt;
+  }
+
+  .agenda-item {
+    display: flex;
+    align-items: center;
+    padding: 4pt 6pt;
+    min-height: 20pt;
+    gap: 6pt;
+    border-radius: 2pt;
+    line-height: 1;
+  }
+
+  .agenda-item:nth-child(odd) {
+    background: rgba(138,109,59,0.03);
+  }
+
+  .agenda-item:last-child { border-bottom: none; }
+
+  .agenda-glyph {
+    color: var(--fire);
+    font-size: 8pt;
+    min-width: 14pt;
+    text-align: center;
+    line-height: 1;
+  }
+
+  .agenda-text {
+    flex: 1;
+    font-weight: 500;
+    font-size: 8.5pt;
+    color: var(--text);
+    letter-spacing: 0.2pt;
+  }
+
+  /* ===== SPOTLIGHT ===== */
+  .spotlight-card {
+    background: var(--surface);
+    border: 0.75pt solid var(--divider);
+    border-radius: 4pt;
+    padding: 8pt 12pt 10pt;
+    margin-bottom: 14pt;
+  }
+
+  .spotlight-hero {
+    text-align: center;
+    padding: 12pt 0 10pt;
+    border-bottom: 0.5pt solid var(--divider);
+    margin-bottom: 8pt;
+  }
+
+  .spotlight-hero-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 6.5pt;
+    letter-spacing: 1.5pt;
+    color: var(--fire-dim);
+    text-transform: uppercase;
+    margin-bottom: 4pt;
+  }
+
+  .spotlight-hero-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20pt;
+    color: var(--fire);
+    letter-spacing: 1.5pt;
+    line-height: 1.1;
+  }
+
+  .spotlight-hero-prof {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 9.5pt;
+    color: var(--text-mid);
+    font-style: italic;
+    margin-top: 2pt;
+  }
+
+  .spotlight-upcoming {
+    display: flex;
+    gap: 6pt;
+    justify-content: space-between;
+  }
+
+  .spotlight-upcoming-item {
+    text-align: center;
+    flex: 1;
+  }
+
+  .spotlight-upcoming-label {
+    font-size: 5.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.5pt;
+    color: var(--text-dim);
+  }
+
+  .spotlight-upcoming-name {
+    font-size: 7.5pt;
+    font-weight: 600;
+    color: var(--text-mid);
+    line-height: 1.3;
+  }
+
+  /* ===== LEADERSHIP ===== */
+  .leadership {
+    margin-bottom: 8pt;
+  }
+
+  .leader-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6pt 0;
+    font-size: 8.5pt;
+    border-bottom: 0.5pt solid rgba(138,109,59,0.08);
+  }
+
+  .leader-role {
+    color: var(--text-dim);
+    font-size: 7pt;
+    text-transform: uppercase;
+    letter-spacing: 0.5pt;
+  }
+
+  .leader-name {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* ===== TIP BOX ===== */
+  .tip-box {
+    background: var(--fire-glow);
+    border-radius: 4pt;
+    padding: 10pt 12pt;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .tip-box-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11pt;
+    letter-spacing: 2pt;
+    color: var(--fire);
+    margin-bottom: 6pt;
+    text-align: center;
+    padding-bottom: 5pt;
+    background-image: linear-gradient(90deg, transparent, var(--fire), transparent);
+    background-size: 100% 0.75pt;
+    background-position: bottom center;
+    background-repeat: no-repeat;
+  }
+
+  .tip-box-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12pt;
+    font-style: italic;
+    line-height: 1.55;
+    color: var(--text-mid);
+    text-align: center;
+  }
+
+  /* ===== ABOUT BOX ===== */
+  .about-box {
+    background: var(--surface);
+    border-left: 2.5pt solid var(--fire);
+    padding: 8pt 10pt;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 8pt;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--text-mid);
+  }
+
+  .about-box strong {
+    font-style: normal;
+    color: var(--gold);
+    font-size: 10.5pt;
+  }
+
+  .about-box-full {
+    margin-top: 10pt;
+    border-left: none;
+    border-top: 0.75pt solid var(--divider);
+    border-bottom: 0.75pt solid var(--divider);
+    text-align: center;
+    padding: 7pt 16pt;
+    font-size: 9.5pt;
+    line-height: 1.55;
+  }
+
+
+  .about-url {
+    display: block;
+    margin-top: 4pt;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-style: normal;
+    color: var(--fire);
+    font-weight: 700;
+    font-size: 8pt;
+    letter-spacing: 0.5pt;
+  }
+
+  /* ===== VENUE BAR ===== */
+  .venue-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5pt;
+    padding: 6pt 0 3pt;
+    margin-top: 8pt;
+    border-top: 0.75pt solid var(--divider);
+    font-size: 6.5pt;
+    white-space: nowrap;
+    color: var(--text-dim);
+    letter-spacing: 0.3pt;
+    position: relative;
+    z-index: 1;
+  }
+
+  .venue-bar strong { color: var(--text); }
+  .venue-dot { color: var(--fire); }
+
+  /* ===== LOGOS FOOTER (page 1) ===== */
+  .logos-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16pt;
+    padding-top: 6pt;
+    position: relative;
+    z-index: 1;
+  }
+
+  .logo-twotwelve {
+    height: 18pt;
+    opacity: 0.85;
+  }
+
+  /* ===== PAGE 2 ===== */
+
+  .write-section {
+    margin-bottom: 14pt;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .write-section .write-lines {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .write-section-grow {
+    flex: 1;
+    margin-bottom: 14pt;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .write-section-grow .write-lines {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .write-prompt {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 8pt;
+    font-style: italic;
+    color: var(--text-dim);
+    margin-bottom: 5pt;
+    line-height: 1.45;
+  }
+
+  .write-prompt strong { color: var(--fire); font-style: normal; }
+
+  .write-lines {
+    list-style: none;
+    counter-reset: writeline;
+  }
+
+  .write-line {
+    counter-increment: writeline;
+    display: flex;
+    align-items: flex-end;
+    padding: 8pt 0 2pt;
+    border-bottom: 0.5pt solid rgba(138,109,59,0.12);
+    gap: 4pt;
+    min-height: 20pt;
+  }
+
+  .write-line::before {
+    content: counter(writeline);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 9pt;
+    color: var(--fire-dim);
+    min-width: 10pt;
+  }
+
+  /* ===== ROSTER TABLE ===== */
+  .roster-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 7.5pt;
+  }
+
+  .roster-table th {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 7.5pt;
+    letter-spacing: 1.5pt;
+    color: var(--gold);
+    padding: 4pt 5pt;
+    text-align: left;
+    border-bottom: 1pt solid var(--divider);
+  }
+
+  .roster-table td {
+    padding: 4pt 5pt;
+    border-bottom: 0.5pt solid rgba(138,109,59,0.08);
+    color: var(--text);
+  }
+
+  .roster-table tr:nth-child(even) td {
+    background: var(--surface);
+  }
+
+  .roster-name { font-weight: 600; }
+
+  .roster-profession {
+    color: var(--text-dim);
+    font-size: 7.5pt;
+  }
+
+  /* ===== PAGE FOOTER ===== */
+  .page-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 6pt;
+    margin-top: 8pt;
+    border-top: 0.75pt solid var(--divider);
+    font-size: 6.5pt;
+    color: var(--text-dim);
+    position: relative;
+    z-index: 1;
+  }
+
+  .page-footer .fire { color: var(--fire); }
+
+  /* ===== PRINT ===== */
+  @media print {
+    body { background: #fff; }
+    .no-print { display: none !important; }
+  }
+
+  /* ===== SCREEN PREVIEW ===== */
+  @media screen {
+    body { padding: 24px; }
+    .page {
+      width: 8.5in;
+      height: 11in;
+      padding: 0.5in;
+      margin: 0 auto 28px;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.12);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== PAGE 1: AGENDA ==================== -->
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-top">
+      <img class="logo-heatwave" src="heatwave-logo.png" alt="RDU Heatwave">
+      <div class="header-text">
+        <div class="team-name">RDU <span>Heatwave</span></div>
+        <div class="team-subtitle">Two Twelve Referral Network</div>
+      </div>
+      <div class="header-qr">
+        <img class="qr-code" src="qr-code-heatwave-bordered.png" alt="Scan to check in">
+        <div class="qr-label">Scan to Check In</div>
+      </div>
+    </div>
+    <div class="header-stats">
+      <div class="stat">
+        <div class="stat-value">35</div>
+        <div class="stat-label">Referrals</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">$3,778</div>
+        <div class="stat-label">Closed Revenue</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">7</div>
+        <div class="stat-label">Members</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Two Column Content -->
+  <div class="two-col two-col-grow" style="margin-top: 6pt;">
+
+    <!-- Left: Agenda -->
+    <div class="col-main">
+      <div class="section-heading section-heading-fire">Meeting Agenda</div>
+      <ul class="agenda-list">
+        <li class="agenda-group-label">Welcome</li>
+        <li class="agenda-item">
+          <span class="agenda-glyph">&#9826;</span>
+          <span class="agenda-text">Arrivals &amp; Open Networking</span>
+        </li>
+        <li class="agenda-item">
+          <span class="agenda-glyph">&#9733;</span>
+          <span class="agenda-text">Welcome &amp; Introductions</span>
+        </li>
+        <li class="agenda-item">
+          <span class="agenda-glyph">&#9673;</span>
+          <span class="agenda-text">Overview of Two Twelve Referral Network</span>
+        </li>
+
+        <li class="agenda-group-label">Connect</li>
+        <li class="agenda-item">
+          <span class="agenda-glyph">&#9638;</span>
+          <span class="agenda-text">Exchange Business Cards</span>
+        </li>
+        <li class="agenda-item">
+          <span class="agenda-glyph">&#9655;</span>
+          <span class="agenda-text">30-Second Profiles</span>
+        </li>
+
+        <li class="agenda-group-label">Business</li>
+        <li class="agenda-item">
+          <span class="agenda-glyph">&#9670;</span>
+          <span class="agenda-text">Vice Chair Report</span>
+        </li>
+        <li class="agenda-item">
+          <span class="agenda-glyph">&#9670;</span>
+          <span class="agenda-text">Team Admin Report</span>
+        </li>
+        <li class="agenda-item">
+          <span class="agenda-glyph">&#10140;</span>
+          <span class="agenda-text">Referral Follow-Up</span>
+        </li>
+        <li class="agenda-item">
+          <span class="agenda-glyph">&#9733;</span>
+          <span class="agenda-text">Member Spotlight</span>
+        </li>
+        <li class="agenda-item">
+          <span class="agenda-glyph">&#10070;</span>
+          <span class="agenda-text">Mentor Moment</span>
+        </li>
+
+        <li class="agenda-group-label">Referrals</li>
+        <li class="agenda-item">
+          <span class="agenda-glyph">&#10140;</span>
+          <span class="agenda-text">Passing of Referrals &amp; Testimonials</span>
+        </li>
+        <li class="agenda-item">
+          <span class="agenda-glyph">&#9993;</span>
+          <span class="agenda-text">Book a BizChat</span>
+        </li>
+
+        <li class="agenda-group-label">Closing</li>
+        <li class="agenda-item">
+          <span class="agenda-glyph">&#9998;</span>
+          <span class="agenda-text">Announcements &amp; How to Apply</span>
+        </li>
+        <li class="agenda-item">
+          <span class="agenda-glyph">&#10038;</span>
+          <span class="agenda-text">Closing Affirmation</span>
+        </li>
+        <li class="agenda-item">
+          <span class="agenda-glyph">&#9826;</span>
+          <span class="agenda-text">Meeting Adjourned &amp; Open Networking</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Right: Spotlight + Leadership + About -->
+    <div class="col-side">
+
+      <div class="section-heading">Member Spotlight</div>
+      <div class="spotlight-card">
+        <div class="spotlight-hero">
+          <div class="spotlight-hero-label">This Week's Presenter</div>
+          <div class="spotlight-hero-name">Nathan Senn</div>
+          <div class="spotlight-hero-prof">Property Restoration</div>
+        </div>
+        <div class="spotlight-upcoming">
+          <div class="spotlight-upcoming-item">
+            <div class="spotlight-upcoming-label">Next</div>
+            <div class="spotlight-upcoming-name">Robert Courts</div>
+          </div>
+          <div class="spotlight-upcoming-item">
+            <div class="spotlight-upcoming-label">2 Wks</div>
+            <div class="spotlight-upcoming-name">Rusty Sutton</div>
+          </div>
+          <div class="spotlight-upcoming-item">
+            <div class="spotlight-upcoming-label">3 Wks</div>
+            <div class="spotlight-upcoming-name">Will Sigmon</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-heading">Leadership</div>
+      <div class="leadership">
+        <div class="leader-row">
+          <span class="leader-role">Team Chair</span>
+          <span class="leader-name">Carter Helms</span>
+        </div>
+        <div class="leader-row">
+          <span class="leader-role">Vice Chair</span>
+          <span class="leader-name">Craig Morrill</span>
+        </div>
+        <div class="leader-row">
+          <span class="leader-role">Team Admin</span>
+          <span class="leader-name" style="color:var(--text-dim); font-style:italic;">Open</span>
+        </div>
+        <div class="leader-row">
+          <span class="leader-role">Marketing</span>
+          <span class="leader-name">Rusty Sutton</span>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <div class="tip-box-label">Referral Tip of the Week</div>
+        <div class="tip-box-text">"The best referral isn't a name &mdash; it's a warm introduction. Text your contact first, then connect them directly."</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- About (full width) -->
+  <div class="about-box about-box-full">
+    <strong>What is Two Twelve?</strong> At 211&deg;, water is hot. Add one extra degree to 212&deg; and it creates steam that drives industry. We exist to add that extra degree to your business through permission-based referrals, trust, and gratitude.
+    <br><br>
+    <strong>Our Mission:</strong> Build genuine relationships that generate high-quality referrals &mdash; so every member grows their business through trust, not cold outreach.
+    <span class="about-url">twotwelvereferrals.com</span>
+  </div>
+
+  <!-- Venue Bar -->
+  <div class="venue-bar">
+    <strong>Clouds Brewing</strong>
+    <span class="venue-dot">&#9670;</span>
+    1233 Front St, Raleigh NC
+    <span class="venue-dot">&#9670;</span>
+    Please stay for a drink after the meeting to support the brewery &mdash; they provide our space at no cost.
+  </div>
+
+  <!-- Two Twelve Logo -->
+  <div class="logos-footer">
+    <img class="logo-twotwelve" src="twotwelve-logo.png" alt="Two Twelve Referral Network">
+  </div>
+
+</div>
+
+<!-- ==================== PAGE 2: NOTES + ROSTER ==================== -->
+<div class="page">
+
+  <div class="two-col" style="margin-bottom: 8pt; padding-top: 6pt;">
+
+    <!-- Left: Connections -->
+    <div class="col-main">
+      <div class="section-heading section-heading-fire">Connections to Make This Week</div>
+      <div class="write-section">
+        <div class="write-prompt">
+          If you hear of a specific person or company a member wants an introduction to, write it down. Take this back to your office and <strong>make that introduction.</strong>
+        </div>
+        <ol class="write-lines">
+          <li class="write-line"></li>
+          <li class="write-line"></li>
+          <li class="write-line"></li>
+          <li class="write-line"></li>
+          <li class="write-line"></li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Right: BizChats -->
+    <div class="col-side">
+      <div class="section-heading">BizChats Next Week</div>
+      <div class="write-section">
+        <ol class="write-lines">
+          <li class="write-line"></li>
+          <li class="write-line"></li>
+          <li class="write-line"></li>
+          <li class="write-line"></li>
+          <li class="write-line"></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notes -->
+  <div class="section-heading section-heading-fire">Notes &amp; Key Takeaways</div>
+  <div class="write-section-grow">
+    <ol class="write-lines">
+      <li class="write-line"></li>
+      <li class="write-line"></li>
+      <li class="write-line"></li>
+      <li class="write-line"></li>
+      <li class="write-line"></li>
+      <li class="write-line"></li>
+    </ol>
+  </div>
+
+  <!-- Ornament -->
+  <div class="ornament">&#9670; &#9670; &#9670;</div>
+
+  <!-- Roster -->
+  <div class="section-heading">Member Roster</div>
+  <table class="roster-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Profession</th>
+        <th>Company</th>
+        <th>Phone</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="roster-name">Carter Helms</td>
+        <td class="roster-profession">Personal Insurance</td>
+        <td>Highstreet Ins &amp; Financial Svcs</td>
+        <td>(252) 294-5396</td>
+        <td>carter.helms@highstreetins.com</td>
+      </tr>
+      <tr>
+        <td class="roster-name">Craig Morrill</td>
+        <td class="roster-profession">Financial Advisor</td>
+        <td>Summit Global</td>
+        <td>(919) 298-2930</td>
+        <td>craig.morrill@sgpw.com</td>
+      </tr>
+      <tr>
+        <td class="roster-name">Dana Walsh</td>
+        <td class="roster-profession">Magazine Publisher</td>
+        <td>Stroll Magazine</td>
+        <td>(609) 707-5497</td>
+        <td>dana.walsh@strollmag.com</td>
+      </tr>
+      <tr>
+        <td class="roster-name">Nathan Senn</td>
+        <td class="roster-profession">Property Restoration</td>
+        <td>Franco Restorations</td>
+        <td>(984) 325-3379</td>
+        <td>nsenn@francorestorations.com</td>
+      </tr>
+      <tr>
+        <td class="roster-name">Robert Courts</td>
+        <td class="roster-profession">Mortgage Lending</td>
+        <td>Advantage Lending</td>
+        <td>(919) 812-5063</td>
+        <td>rcourts@advantagelending.com</td>
+      </tr>
+      <tr>
+        <td class="roster-name">Rusty Sutton</td>
+        <td class="roster-profession">Digital Marketing</td>
+        <td>Monkey Fans Creative</td>
+        <td>(919) 801-7920</td>
+        <td>rusty@monkeyfansraleigh.com</td>
+      </tr>
+      <tr>
+        <td class="roster-name">Will Sigmon</td>
+        <td class="roster-profession">Software Engineer</td>
+        <td>Will Sigmon Media</td>
+        <td>(919) 215-4255</td>
+        <td>will@willsigmon.media</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <span>Revised 3/4/2026 &nbsp;&#9670;&nbsp; Stats since 1/8/2026</span>
+    <img class="logo-twotwelve" src="twotwelve-logo.png" alt="Two Twelve" style="height:14pt; opacity:0.5;">
+    <span class="fire">rduheatwave.team</span>
+  </div>
+
+</div>
+
+</body>
+</html>
