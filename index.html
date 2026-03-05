@@ -581,64 +581,54 @@ button { cursor: pointer; background: none; border: none; }
 
 <div class="slider-container" id="slider">
   
-  <!-- PANEL 1: MENU -->
-  <div class="panel" id="panel-menu">
-    <div class="venue-section" style="max-width: 800px; margin-top: auto; margin-bottom: auto; background: rgba(35, 28, 24, 0.45); backdrop-filter: blur(24px) saturate(180%); border: 1px solid rgba(232, 88, 12, 0.15); border-radius: var(--radius-2xl); padding: var(--space-8); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);">
-      <div class="venue-header" style="justify-content: center; text-align: center; flex-direction: column; border-bottom: 1px solid rgba(232, 88, 12, 0.3); padding-bottom: 1.5rem; margin-bottom: 2rem;">
-        <img class="venue-logo" src="https://images.squarespace-cdn.com/content/v1/592b235859cc6892f601724f/352e270b-0ec7-41c4-819d-ac473b71a4b3/cb_simplifiedlogo_v1_White2-01.png" alt="Clouds Brewing logo" loading="lazy" style="width: 120px; margin-bottom: 1rem;">
-        <div class="venue-info">
-          <h2 style="font-size: 3.5rem; color: #fff; text-shadow: 0 2px 10px rgba(232,88,12,0.4);">Clouds Brewing</h2>
-          <p style="font-size: 1.4rem; color: #f0e6dc;">1233 Front St &bull; Raleigh, NC</p>
-        </div>
-      </div>
+  <!-- PANEL 1: INFO -->
+<!-- PANEL 3: INFO -->
+  <div class="panel" id="panel-info">
+    <div class="form-card" style="width: 100%; max-width: 1000px; text-align: left; margin-top: auto; margin-bottom: auto; box-sizing: border-box; padding: 2rem;">
+      <h2 style="font-family: var(--font-display); font-size: 4rem; color: var(--color-primary); margin-bottom: 1rem; line-height: 1; text-shadow: 0 4px 12px rgba(232,88,12,0.4);">RDU HEATWAVE</h2>
+      <p style="font-size: 1.4rem; margin-bottom: 2.5rem; color: #f0e6dc; line-height: 1.5;">The Raleigh-Durham chapter of the <strong style="color: var(--color-primary);">Two Twelve Referral Network</strong>. We are a structured, category-exclusive business networking group built on the "extra degree" philosophy.</p>
       
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
-        <div>
-          <div class="venue-label" style="font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--color-primary); font-weight: bold; border-bottom: 2px solid rgba(232, 88, 12, 0.4); padding-bottom: 0.5rem;">Lagers & Pilsners</div>
-          <ul class="beer-list">
-            <li class="beer-item"><span><span class="beer-name">Sky Lime</span> <span class="beer-style">Lime Lager</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">4.6%</span></li>
-            <li class="beer-item"><span><span class="beer-name">Wolkenbrau</span> <span class="beer-style">German-American Lager</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">4.5%</span></li>
-            <li class="beer-item"><span><span class="beer-name">Precipitation</span> <span class="beer-style">German Pilsner</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">5.2%</span></li>
-            <li class="beer-item"><span><span class="beer-name">Czech Mate</span> <span class="beer-style">Czech Pilsner</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">5.6%</span></li>
-            <li class="beer-item"><span><span class="beer-name">Accumulation</span> <span class="beer-style">Amber Lager</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">5.8%</span></li>
-          </ul>
-        </div>
+      <div style="background: rgba(0,0,0,0.4); padding: 2rem; border-radius: 1.5rem; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 2.5rem; box-shadow: inset 0 4px 20px rgba(0,0,0,0.5);">
+        <h3 style="font-family: var(--font-display); font-size: 2.5rem; color: #fff; margin-bottom: 0.8rem; letter-spacing: 0.05em;">The 212&deg; Principle</h3>
+        <p style="color: rgba(255,255,255,0.8); font-size: 1.2rem; line-height: 1.6;">At 211 degrees, water is hot. At 212 degrees, it boils. With boiling water comes steam, and with steam, you can power a train. That one extra degree makes all the difference in business and relationships.</p>
+      </div>
 
-        <div>
-          <div class="venue-label" style="font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--color-primary); font-weight: bold; border-bottom: 2px solid rgba(232, 88, 12, 0.4); padding-bottom: 0.5rem;">IPAs & Ales</div>
-          <ul class="beer-list">
-            <li class="beer-item"><span><span class="beer-name">Hop Jam IPA</span> <span class="beer-style">American IPA</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">6.3%</span></li>
-            <li class="beer-item"><span><span class="beer-name">Hazy Hop Jam</span> <span class="beer-style">Hazy IPA</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">6.3%</span></li>
-            <li class="beer-item"><span><span class="beer-name">Double Hop Jam</span> <span class="beer-style">Imperial IPA</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">10.3%</span></li>
-            <li class="beer-item"><span><span class="beer-name">Clouds 9</span> <span class="beer-style">Belgian Golden Strong</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">9%</span></li>
-            <li class="beer-item"><span><span class="beer-name">Donner & Blitzen 25</span> <span class="beer-style">Spiced Belgian Quad</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">10.5%</span></li>
-          </ul>
+      
+      <h3 style="font-family: var(--font-display); font-size: 2.5rem; color: var(--color-primary); margin-bottom: 1.5rem; letter-spacing: 0.05em;">Founding Members</h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+        <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+          <strong style="color: #fff; display: block; font-size: 1.2rem; margin-bottom: 0.2rem; text-transform: uppercase; letter-spacing: 0.05em;">President</strong>
+          <span style="color: rgba(255,255,255,0.7); font-size: 1.1rem;">Will Sigmon</span>
         </div>
-
-        <div>
-          <div class="venue-label" style="font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--color-primary); font-weight: bold; border-bottom: 2px solid rgba(232, 88, 12, 0.4); padding-bottom: 0.5rem;">Stouts, Porters & Sours</div>
-          <ul class="beer-list">
-            <li class="beer-item"><span><span class="beer-name">Mean Girl</span> <span class="beer-style">Blackberry Dragon Fruit Sour</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">5.5%</span></li>
-            <li class="beer-item"><span><span class="beer-name">Crimea River</span> <span class="beer-style">Baltic Porter</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">8%</span></li>
-            <li class="beer-item"><span><span class="beer-name">Midnight Delight</span> <span class="beer-style">Choc Milk Stout</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">6.8%</span></li>
-            <li class="beer-item"><span><span class="beer-name">Coffee at Midnight</span> <span class="beer-style">Coffee Stout</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">7%</span></li>
-            <li class="beer-item"><span><span class="beer-name">Kentucky Moonlight</span> <span class="beer-style">BBA Imperial Stout</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">10.5%</span></li>
-          </ul>
+        <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+          <strong style="color: #fff; display: block; font-size: 1.2rem; margin-bottom: 0.2rem; text-transform: uppercase; letter-spacing: 0.05em;">Vice President</strong>
+          <span style="color: rgba(255,255,255,0.7); font-size: 1.1rem;">Carter Helms</span>
         </div>
-        
-        <div>
-          <div class="venue-label" style="font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--color-primary); font-weight: bold; border-bottom: 2px solid rgba(232, 88, 12, 0.4); padding-bottom: 0.5rem;">Wheat & N/A</div>
-          <ul class="beer-list">
-            <li class="beer-item"><span><span class="beer-name">El Hefe</span> <span class="beer-style">Bavarian Wheat</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">4.9%</span></li>
-            <li class="beer-item"><span><span class="beer-name">Root Beer</span> <span class="beer-style">Non-Alcoholic</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">N/A</span></li>
-          </ul>
+        <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid rgba(255,255,255,0.3); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+          <strong style="color: #fff; display: block; font-size: 1.2rem; margin-bottom: 0.2rem; text-transform: uppercase; letter-spacing: 0.05em;">Financial Advisor</strong>
+          <span style="color: rgba(255,255,255,0.7); font-size: 1.1rem;">Craig Morrill</span>
+        </div>
+        <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid rgba(255,255,255,0.3); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+          <strong style="color: #fff; display: block; font-size: 1.2rem; margin-bottom: 0.2rem; text-transform: uppercase; letter-spacing: 0.05em;">Mortgage Broker</strong>
+          <span style="color: rgba(255,255,255,0.7); font-size: 1.1rem;">Robert Courts</span>
+        </div>
+        <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid rgba(255,255,255,0.3); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+          <strong style="color: #fff; display: block; font-size: 1.2rem; margin-bottom: 0.2rem; text-transform: uppercase; letter-spacing: 0.05em;">Marketing</strong>
+          <span style="color: rgba(255,255,255,0.7); font-size: 1.1rem;">Rusty Sutton</span>
+        </div>
+        <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid rgba(255,255,255,0.3); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+          <strong style="color: #fff; display: block; font-size: 1.2rem; margin-bottom: 0.2rem; text-transform: uppercase; letter-spacing: 0.05em;">Members</strong>
+          <span style="color: rgba(255,255,255,0.7); font-size: 1.1rem;">Dana Walsh & Nathan Senn</span>
         </div>
       </div>
-      <div class="venue-note" style="margin-top: 2rem; color: #f0e6dc; font-size: 1.1rem;">Swipe right to check in &rarr;</div>
+
+      
+      <div class="venue-note" style="color: #f0e6dc; font-size: 1.1rem;">Swipe left to check in &rarr;</div>
     </div>
   </div>
 
-  <!-- PANEL 2: FORM (Center) -->
+<!-- PANEL 2: FORM (Center) -->
+<!-- PANEL 2: FORM (Center) -->
   <div class="panel" id="panel-form">
     <main class="form-card" role="main" style="margin-top: auto; margin-bottom: auto; width: 100%; max-width: 900px; box-sizing: border-box;">
 
@@ -693,7 +683,7 @@ button { cursor: pointer; background: none; border: none; }
   </div>
 
   <!-- Registration Form -->
-  <form id="registration-form" class="form-fields" novalidate>
+  <form id="checkin-form" class="form-fields" novalidate>
     <div class="form-row">
       <div class="field" data-delay="1">
         <label class="field-label" for="firstName">First Name</label>
@@ -770,57 +760,79 @@ button { cursor: pointer; background: none; border: none; }
 
     </main>
     <div style="color: rgba(255,255,255,0.6); font-size: 1rem; margin-top: 2rem; display: flex; justify-content: center; gap: 4rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;">
-       <span>&larr; Drink Menu</span>
-       <span>About Us &rarr;</span>
+       <span>&larr; About Us</span>
+       <span>Drink Menu &rarr;</span>
     </div>
   </div>
 
-  <!-- PANEL 3: INFO -->
-  <div class="panel" id="panel-info">
-    <div class="form-card" style="width: 100%; max-width: 1000px; text-align: left; margin-top: auto; margin-bottom: auto; box-sizing: border-box; padding: 2rem;">
-      <h2 style="font-family: var(--font-display); font-size: 4rem; color: var(--color-primary); margin-bottom: 1rem; line-height: 1; text-shadow: 0 4px 12px rgba(232,88,12,0.4);">RDU HEATWAVE</h2>
-      <p style="font-size: 1.4rem; margin-bottom: 2.5rem; color: #f0e6dc; line-height: 1.5;">The Raleigh-Durham chapter of the <strong style="color: var(--color-primary);">Two Twelve Referral Network</strong>. We are a structured, category-exclusive business networking group built on the "extra degree" philosophy.</p>
-      
-      <div style="background: rgba(0,0,0,0.4); padding: 2rem; border-radius: 1.5rem; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 2.5rem; box-shadow: inset 0 4px 20px rgba(0,0,0,0.5);">
-        <h3 style="font-family: var(--font-display); font-size: 2.5rem; color: #fff; margin-bottom: 0.8rem; letter-spacing: 0.05em;">The 212&deg; Principle</h3>
-        <p style="color: rgba(255,255,255,0.8); font-size: 1.2rem; line-height: 1.6;">At 211 degrees, water is hot. At 212 degrees, it boils. With boiling water comes steam, and with steam, you can power a train. That one extra degree makes all the difference in business and relationships.</p>
-      </div>
+  
 
-      
-      <h3 style="font-family: var(--font-display); font-size: 2.5rem; color: var(--color-primary); margin-bottom: 1.5rem; letter-spacing: 0.05em;">Founding Members</h3>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
-        <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
-          <strong style="color: #fff; display: block; font-size: 1.2rem; margin-bottom: 0.2rem; text-transform: uppercase; letter-spacing: 0.05em;">President</strong>
-          <span style="color: rgba(255,255,255,0.7); font-size: 1.1rem;">Will Sigmon</span>
-        </div>
-        <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
-          <strong style="color: #fff; display: block; font-size: 1.2rem; margin-bottom: 0.2rem; text-transform: uppercase; letter-spacing: 0.05em;">Vice President</strong>
-          <span style="color: rgba(255,255,255,0.7); font-size: 1.1rem;">Carter Helms</span>
-        </div>
-        <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid rgba(255,255,255,0.3); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
-          <strong style="color: #fff; display: block; font-size: 1.2rem; margin-bottom: 0.2rem; text-transform: uppercase; letter-spacing: 0.05em;">Financial Advisor</strong>
-          <span style="color: rgba(255,255,255,0.7); font-size: 1.1rem;">Craig Morrill</span>
-        </div>
-        <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid rgba(255,255,255,0.3); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
-          <strong style="color: #fff; display: block; font-size: 1.2rem; margin-bottom: 0.2rem; text-transform: uppercase; letter-spacing: 0.05em;">Mortgage Broker</strong>
-          <span style="color: rgba(255,255,255,0.7); font-size: 1.1rem;">Robert Courts</span>
-        </div>
-        <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid rgba(255,255,255,0.3); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
-          <strong style="color: #fff; display: block; font-size: 1.2rem; margin-bottom: 0.2rem; text-transform: uppercase; letter-spacing: 0.05em;">Marketing</strong>
-          <span style="color: rgba(255,255,255,0.7); font-size: 1.1rem;">Rusty Sutton</span>
-        </div>
-        <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid rgba(255,255,255,0.3); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
-          <strong style="color: #fff; display: block; font-size: 1.2rem; margin-bottom: 0.2rem; text-transform: uppercase; letter-spacing: 0.05em;">Members</strong>
-          <span style="color: rgba(255,255,255,0.7); font-size: 1.1rem;">Dana Walsh & Nathan Senn</span>
+<!-- PANEL 3: MENU -->
+<!-- PANEL 1: MENU -->
+  <div class="panel" id="panel-menu">
+    <div class="venue-section" style="max-width: 800px; margin-top: auto; margin-bottom: auto; background: rgba(35, 28, 24, 0.45); backdrop-filter: blur(24px) saturate(180%); border: 1px solid rgba(232, 88, 12, 0.15); border-radius: var(--radius-2xl); padding: var(--space-8); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);">
+      <div class="venue-header" style="justify-content: center; text-align: center; flex-direction: column; border-bottom: 1px solid rgba(232, 88, 12, 0.3); padding-bottom: 1.5rem; margin-bottom: 2rem;">
+        <img class="venue-logo" src="https://images.squarespace-cdn.com/content/v1/592b235859cc6892f601724f/352e270b-0ec7-41c4-819d-ac473b71a4b3/cb_simplifiedlogo_v1_White2-01.png" alt="Clouds Brewing logo" loading="lazy" style="width: 120px; margin-bottom: 1rem;">
+        <div class="venue-info">
+          <h2 style="font-size: 3.5rem; color: #fff; text-shadow: 0 2px 10px rgba(232,88,12,0.4);">Clouds Brewing</h2>
+          <p style="font-size: 1.4rem; color: #f0e6dc;">1233 Front St &bull; Raleigh, NC</p>
         </div>
       </div>
-
       
-      <div class="venue-note" style="color: #f0e6dc; font-size: 1.1rem;">&larr; Swipe left to check in</div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+        <div>
+          <div class="venue-label" style="font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--color-primary); font-weight: bold; border-bottom: 2px solid rgba(232, 88, 12, 0.4); padding-bottom: 0.5rem;">Lagers & Pilsners</div>
+          <ul class="beer-list">
+            <li class="beer-item"><span><span class="beer-name">Bock to the Future</span> <span class="beer-style">Helles Bock</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">7.5%</span></li>
+<li class="beer-item"><span><span class="beer-name">Sky Lime</span> <span class="beer-style">Lime Lager</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">4.6%</span></li>
+            <li class="beer-item"><span><span class="beer-name">Wolkenbrau</span> <span class="beer-style">German-American Lager</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">4.5%</span></li>
+            <li class="beer-item"><span><span class="beer-name">Precipitation</span> <span class="beer-style">German Pilsner</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">5.2%</span></li>
+            <li class="beer-item"><span><span class="beer-name">Czech Mate</span> <span class="beer-style">Czech Pilsner</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">5.6%</span></li>
+            <li class="beer-item"><span><span class="beer-name">Accumulation</span> <span class="beer-style">Amber Lager</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">5.8%</span></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="venue-label" style="font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--color-primary); font-weight: bold; border-bottom: 2px solid rgba(232, 88, 12, 0.4); padding-bottom: 0.5rem;">IPAs & Ales</div>
+          <ul class="beer-list">
+            <li class="beer-item"><span><span class="beer-name">Hop Jam IPA</span> <span class="beer-style">American IPA</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">6.3%</span></li>
+            <li class="beer-item"><span><span class="beer-name">Forecast</span> <span class="beer-style">Hazy IPA</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">6.3%</span></li>
+<li class="beer-item"><span><span class="beer-name">Blood Orange Hop Jam</span> <span class="beer-style">Infused IPA</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">5.9%</span></li>
+<li class="beer-item"><span><span class="beer-name">Hazy Hop Jam</span> <span class="beer-style">Hazy IPA</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">6.3%</span></li>
+            <li class="beer-item"><span><span class="beer-name">Double Hop Jam</span> <span class="beer-style">Imperial IPA</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">10.3%</span></li>
+            <li class="beer-item"><span><span class="beer-name">Clouds 9</span> <span class="beer-style">Belgian Golden Strong</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">9%</span></li>
+            <li class="beer-item"><span><span class="beer-name">Donner & Blitzen 25</span> <span class="beer-style">Spiced Belgian Quad</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">10.5%</span></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="venue-label" style="font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--color-primary); font-weight: bold; border-bottom: 2px solid rgba(232, 88, 12, 0.4); padding-bottom: 0.5rem;">Stouts, Porters & Sours</div>
+          <ul class="beer-list">
+            <li class="beer-item"><span><span class="beer-name">Mean Girl</span> <span class="beer-style">Strawberry Lemonade Sour</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">5.5%</span></li>
+<li class="beer-item"><span><span class="beer-name">Mean Girl</span> <span class="beer-style">Blackberry Dragon Fruit Sour</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">5.5%</span></li>
+            <li class="beer-item"><span><span class="beer-name">Crimea River</span> <span class="beer-style">Baltic Porter</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">8%</span></li>
+            <li class="beer-item"><span><span class="beer-name">Midnight Delight</span> <span class="beer-style">Choc Milk Stout</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">6.8%</span></li>
+            <li class="beer-item"><span><span class="beer-name">Coffee at Midnight</span> <span class="beer-style">Coffee Stout</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">7%</span></li>
+            <li class="beer-item"><span><span class="beer-name">Kentucky Moonlight</span> <span class="beer-style">BBA Imperial Stout</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">10.5%</span></li>
+          </ul>
+        </div>
+        
+        <div>
+          <div class="venue-label" style="font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--color-primary); font-weight: bold; border-bottom: 2px solid rgba(232, 88, 12, 0.4); padding-bottom: 0.5rem;">Wheat & N/A</div>
+          <ul class="beer-list">
+            <li class="beer-item"><span><span class="beer-name">El Hefe</span> <span class="beer-style">Bavarian Wheat</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">4.9%</span></li>
+            <li class="beer-item"><span><span class="beer-name">Tailwind Margarita</span> <span class="beer-style">THC Seltzer</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">N/A</span></li>
+<li class="beer-item"><span><span class="beer-name">Root Beer</span> <span class="beer-style">Non-Alcoholic</span></span> <span class="beer-abv" style="color: var(--color-primary); font-weight: 800; font-size: 1.1rem;">N/A</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="venue-note" style="margin-top: 2rem; color: #f0e6dc; font-size: 1.1rem;">&larr; Swipe right to check in</div>
     </div>
   </div>
 
+  
 </div>
+
 
 
 <!-- Footer -->
@@ -890,7 +902,7 @@ button { cursor: pointer; background: none; border: none; }
   function resetAutoPlay() {
     clearInterval(autoPlayInterval);
     clearTimeout(autoPlayTimeout);
-    autoPlayTimeout = setTimeout(startAutoPlay, 30000); // 30 seconds of inactivity before autoplay resumes
+    autoPlayTimeout = setTimeout(startAutoPlay, 120000); // 30 seconds of inactivity before autoplay resumes
   }
 
   document.addEventListener('touchstart', resetAutoPlay);
@@ -930,8 +942,10 @@ button { cursor: pointer; background: none; border: none; }
 
   function initSlider() {
     if(!slider) return;
+    slider.style.scrollBehavior = 'auto'; // Disable smooth scroll for instant snap
     slider.scrollLeft = window.innerWidth;
     updateNav();
+    setTimeout(function() { slider.style.scrollBehavior = 'smooth'; }, 100);
   }
   
   // Wait a frame to ensure layout is ready
@@ -1093,7 +1107,7 @@ button { cursor: pointer; background: none; border: none; }
   var SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
 
   // ===== DOM REFS =====
-  var form = document.getElementById('registration-form');
+  var form = document.getElementById('checkin-form');
   var submitBtn = document.getElementById('submit-btn');
   var successScreen = document.getElementById('success-screen');
   var resetBtn = document.getElementById('reset-btn');
