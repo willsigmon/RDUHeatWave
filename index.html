@@ -814,7 +814,7 @@ body {
   display: flex;
   width: 300vw;
   height: 100dvh;
-  overflow-x: auto;
+  overflow-x: scroll;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
@@ -822,6 +822,7 @@ body {
   scrollbar-width: none;
   position: relative;
   z-index: 1;
+  touch-action: pan-x;
 }
 
 .slider-container::-webkit-scrollbar {
@@ -840,6 +841,8 @@ body {
   justify-content: center;
   padding: 2rem;
   box-sizing: border-box;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* === NAVIGATION DOTS === */
@@ -1355,15 +1358,27 @@ body {
 
   function initSlider() {
     if(!slider) return;
-    slider.style.scrollBehavior = 'auto'; // Disable smooth scroll for instant snap
+    slider.style.scrollBehavior = 'auto';
     slider.scrollLeft = window.innerWidth;
+    currentIndex = 1;
     updateNav();
-    setTimeout(function() { slider.style.scrollBehavior = 'smooth'; }, 100);
+    // Re-enable smooth scroll after snap
+    requestAnimationFrame(function() {
+      slider.style.scrollBehavior = 'smooth';
+    });
   }
-  
-  // Wait a frame to ensure layout is ready
-  setTimeout(initSlider, 50);
-  // Only peekPop on desktop — disorienting on touch devices
+
+  // Ensure form panel is visible on load — multiple attempts for reliability
+  if (document.readyState === 'complete') {
+    initSlider();
+  } else {
+    window.addEventListener('load', initSlider);
+  }
+  // Backup: also try after a frame
+  requestAnimationFrame(function() {
+    requestAnimationFrame(initSlider);
+  });
+  // Only peekPop on desktop
   if (window.innerWidth > 768) setTimeout(peekPop, 1000);
   window.addEventListener('resize', initSlider);
 
