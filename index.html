@@ -538,8 +538,7 @@ button { cursor: pointer; background: none; border: none; }
 </div>
 <div id="embers-container"></div>
 
-<!-- Skip link -->
-<a href="#registration-form" class="sr-only" style="position:absolute;left:var(--space-4);top:var(--space-4);z-index:999;padding:var(--space-2) var(--space-4);background:var(--color-primary);color:white;border-radius:var(--radius-sm);text-decoration:none;" onfocus="this.style.clip='auto';this.style.width='auto';this.style.height='auto';this.style.overflow='visible'" onblur="this.style.clip='rect(0,0,0,0)';this.style.width='1px';this.style.height='1px';this.style.overflow='hidden'">Skip to form</a>
+
 
 <!-- Heat shimmer background -->
 <div class="heat-bg" aria-hidden="true">
@@ -717,8 +716,21 @@ button { cursor: pointer; background: none; border: none; }
     </div>
 
     <div class="field" data-delay="6">
-      <label class="field-label" for="guestOf">Guest Of</label>
-      <input class="field-input" type="text" id="guestOf" name="guestOf" placeholder="Who invited you?" required>
+      <label class="field-label" for="guestOfSelect">Guest Of</label>
+      <select class="field-input" id="guestOfSelect" required style="appearance: none; cursor: pointer; background-image: url('data:image/svg+xml;utf8,<svg fill=%22%23ffffff%22 height=%2224%22 viewBox=%220 0 24 24%22 width=%2224%22 xmlns=%22http://www.w3.org/2000/svg%22><path d=%22M7 10l5 5 5-5z%22/><path d=%22M0 0h24v24H0z%22 fill=%22none%22/></svg>'); background-repeat: no-repeat; background-position: right 1rem center;">
+        <option value="" disabled selected>Select a member...</option>
+        <option value="Will Sigmon">Will Sigmon</option>
+        <option value="Carter Helms">Carter Helms</option>
+        <option value="Craig Morrill">Craig Morrill</option>
+        <option value="Robert Courts">Robert Courts</option>
+        <option value="Rusty Sutton">Rusty Sutton</option>
+        <option value="Dana Walsh">Dana Walsh</option>
+        <option value="Nathan Senn">Nathan Senn</option>
+        <option value="Other">Other</option>
+      </select>
+      
+      <input class="field-input" type="text" id="guestOfOther" placeholder="Please specify..." style="display: none; margin-top: 0.5rem;">
+      <input type="hidden" id="guestOf" name="guestOf">
       <div class="field-error" id="guestOf-error">Please let us know who invited you</div>
     </div>
 
@@ -1070,6 +1082,28 @@ button { cursor: pointer; background: none; border: none; }
 
   var fields = ['firstName', 'lastName', 'profession', 'phone', 'email', 'guestOf'];
 
+  var guestOfSelect = document.getElementById('guestOfSelect');
+  var guestOfOther = document.getElementById('guestOfOther');
+  var guestOfHidden = document.getElementById('guestOf');
+
+  guestOfSelect.addEventListener('change', function() {
+    if (this.value === 'Other') {
+      guestOfOther.style.display = 'block';
+      guestOfOther.required = true;
+      guestOfHidden.value = guestOfOther.value.trim();
+    } else {
+      guestOfOther.style.display = 'none';
+      guestOfOther.required = false;
+      guestOfHidden.value = this.value;
+    }
+    validateField('guestOf');
+  });
+
+  guestOfOther.addEventListener('input', function() {
+    guestOfHidden.value = this.value.trim();
+    validateField('guestOf');
+  });
+
   // ===== VALIDATION =====
   function validateField(name) {
     var input = document.getElementById(name);
@@ -1166,6 +1200,8 @@ button { cursor: pointer; background: none; border: none; }
     form.style.display = 'flex';
     document.getElementById('countdown-section').style.display = 'block';
     form.reset();
+    guestOfOther.style.display = 'none';
+    guestOfHidden.value = '';
     fields.forEach(function(name) {
       document.getElementById(name).classList.remove('error');
       document.getElementById(name + '-error').classList.remove('visible');
