@@ -2,12 +2,13 @@
   "version": 2,
   "builds": [
     { "src": "*.html", "use": "@vercel/static" },
-    { "src": "*.png", "use": "@vercel/static" }
+    { "src": "*.png", "use": "@vercel/static" },
+    { "src": "*.svg", "use": "@vercel/static" }
   ],
   "routes": [
     { "src": "/meet", "dest": "/meet.html" },
-    { "src": "/qr-code-heatwave-bordered.png", "dest": "/qr-code-heatwave-bordered.png" },
     { "src": "/(.*\\.png)", "dest": "/$1" },
+    { "src": "/(.*\\.svg)", "dest": "/$1" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
