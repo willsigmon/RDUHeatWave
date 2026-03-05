@@ -1160,6 +1160,41 @@ button { cursor: pointer; background: none; border: none; }
   // ===== CONFIG =====
   var SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
 
+  // ===== LOCAL BACKUP =====
+  function saveToLocal(data) {
+    try {
+      var entries = JSON.parse(localStorage.getItem('heatwave_entries') || '[]');
+      data.timestamp = new Date().toISOString();
+      data.synced = false;
+      entries.push(data);
+      localStorage.setItem('heatwave_entries', JSON.stringify(entries));
+    } catch(e) { /* storage full or unavailable */ }
+  }
+
+  function getLocalEntries() {
+    try { return JSON.parse(localStorage.getItem('heatwave_entries') || '[]'); }
+    catch(e) { return []; }
+  }
+
+  function exportCSV() {
+    var entries = getLocalEntries();
+    if (!entries.length) { alert('No local entries saved.'); return; }
+    var header = 'Timestamp,First Name,Last Name,Profession,Phone,Email,Guest Of\n';
+    var rows = entries.map(function(e) {
+      return [e.timestamp, e.firstName, e.lastName, e.profession, e.phone, e.email, e.guestOf]
+        .map(function(v) { return '"' + (v || '').replace(/"/g, '""') + '"'; }).join(',');
+    }).join('\n');
+    var blob = new Blob([header + rows], { type: 'text/csv' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'heatwave-entries-' + new Date().toISOString().slice(0,10) + '.csv';
+    a.click();
+  }
+
+  // Expose for console use: exportCSV()
+  window.exportCSV = exportCSV;
+  window.getLocalEntries = getLocalEntries;
+
   // ===== DOM REFS =====
   var form = document.getElementById('checkin-form');
   var submitBtn = document.getElementById('submit-btn');
@@ -1246,21 +1281,33 @@ button { cursor: pointer; background: none; border: none; }
     submitBtn.classList.add('loading');
     submitBtn.disabled = true;
 
-    var formData = new URLSearchParams();
+    // Collect form data
+    var entry = {};
     fields.forEach(function(name) {
-      formData.append(name, document.getElementById(name).value.trim());
+      entry[name] = document.getElementById(name).value.trim();
     });
 
-    fetch(SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: formData.toString()
-    }).then(function() {
-      showSuccess();
-    }).catch(function() {
-      showSuccess();
-    });
+    // ALWAYS save locally as backup
+    saveToLocal(entry);
+
+    // Try sending to Google Sheets
+    var formData = new URLSearchParams();
+    fields.forEach(function(name) { formData.append(name, entry[name]); });
+
+    if (SCRIPT_URL && SCRIPT_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: formData.toString()
+      }).then(function() {
+        showSuccess();
+      }).catch(function() {
+        showSuccess(); // Still show success — data is saved locally
+      });
+    } else {
+      showSuccess(); // No API configured — local backup has the data
+    }
   });
 
   function showSuccess() {
