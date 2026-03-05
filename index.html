@@ -867,6 +867,14 @@ button { cursor: pointer; background: none; border: none; }
   }
 
   
+  
+  // Prevent browser from jumping to hash on load and breaking layout
+  if (window.location.hash) {
+    setTimeout(function() {
+      window.scrollTo(0, 0);
+    }, 1);
+  }
+
   // ===== SLIDER LOGIC =====
   var autoPlayInterval;
   var autoPlayTimeout;

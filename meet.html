@@ -682,31 +682,37 @@ body {
   background: rgba(255,255,255,0.15);
 }
 
-/* === HEAT WAVES FROM BOTTOM === */
+
+/* === ASPHALT HEAT WAVES === */
 .heat-waves {
   position: fixed;
-  bottom: 0; left: 0; width: 100%; height: 45vh;
-  z-index: 0; pointer-events: none; overflow: hidden;
+  bottom: 0; left: 0; width: 100%; height: 35vh;
+  z-index: 2; pointer-events: none; overflow: hidden;
 }
 .hw-wave {
-  position: absolute; bottom: 0; left: 0; width: 200%; height: 100%;
-  background: linear-gradient(to top, rgba(232, 88, 12, 0.15), transparent);
+  position: absolute; bottom: -10vh; left: 0; width: 200%; height: 120%;
+  background: radial-gradient(ellipse at bottom, rgba(232, 88, 12, 0.4) 0%, rgba(255, 106, 30, 0.1) 40%, transparent 70%);
   transform-origin: bottom center;
   animation: wave-undulate linear infinite alternate;
+  mix-blend-mode: screen;
 }
-.hw-wave:nth-child(1) { animation-duration: 8s; opacity: 0.9; }
-.hw-wave:nth-child(2) { animation-duration: 12s; opacity: 0.7; animation-delay: -2s; transform: scaleY(1.2); }
-.hw-wave:nth-child(3) { animation-duration: 15s; opacity: 0.5; animation-delay: -5s; transform: scaleY(0.8); }
-.hw-wave:nth-child(4) { animation-duration: 20s; opacity: 0.3; animation-delay: -8s; transform: scaleY(1.5); }
+.hw-wave:nth-child(1) { animation-duration: 6s; opacity: 0.8; }
+.hw-wave:nth-child(2) { animation-duration: 9s; opacity: 0.6; animation-delay: -2s; transform: scaleY(1.3) translateX(-10%); }
+.hw-wave:nth-child(3) { animation-duration: 12s; opacity: 0.4; animation-delay: -5s; transform: scaleY(0.9) translateX(10%); background: radial-gradient(ellipse at bottom, rgba(255, 106, 30, 0.3) 0%, transparent 60%); }
+.hw-wave:nth-child(4) { animation-duration: 15s; opacity: 0.3; animation-delay: -8s; transform: scaleY(1.5); }
+
 .hw-shimmer {
-  position: absolute; bottom: 15vh; width: 200%; height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(255, 106, 30, 0.4), transparent);
-  animation: wave-undulate 10s linear infinite;
+  position: absolute; bottom: 10vh; width: 200%; height: 4px;
+  background: linear-gradient(90deg, transparent, rgba(255, 153, 51, 0.6), transparent);
+  animation: wave-undulate 8s linear infinite;
+  filter: blur(2px);
+  mix-blend-mode: screen;
 }
 @keyframes wave-undulate {
   0% { transform: translateX(0) scaleY(1); }
-  100% { transform: translateX(-50%) scaleY(1.3); }
+  100% { transform: translateX(-30%) scaleY(1.2); }
 }
+
 
 /* === EMBERS === */
 #embers-container {
@@ -813,7 +819,7 @@ body {
 
 
 
-<div class="heat-waves" aria-hidden="true" style="position: fixed; bottom: 0; left: 0; width: 100%; height: 35vh; z-index: 2; pointer-events: none; mask-image: linear-gradient(to top, black, transparent); -webkit-mask-image: linear-gradient(to top, black, transparent);">
+<div class="heat-waves" aria-hidden="true">
   <div class="hw-wave"></div>
   <div class="hw-wave"></div>
   <div class="hw-wave"></div>
