@@ -87,18 +87,14 @@ html {
 
 body {
   min-height: 100dvh;
+  margin: 0;
   line-height: 1.6;
   font-family: var(--font-body);
   font-size: var(--text-sm);
   color: var(--color-text);
   background-color: var(--color-bg);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding: var(--space-6) var(--space-4);
+  overflow: hidden; /* Handle scrolling inside slider */
   position: relative;
-  overflow-x: hidden;
 }
 
 img, picture, video, canvas, svg { display: block; max-width: 100%; height: auto; }
@@ -172,7 +168,7 @@ button { cursor: pointer; background: none; border: none; }
   transform: translate(-50%, -50%);
   width: 80vw;
   height: 80vw;
-  max-width: 800px;
+  max-width: 1100px; width: 95%;
   max-height: 800px;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(232, 88, 12, 0.08) 0%, rgba(232, 88, 12, 0.02) 50%, transparent 70%);
@@ -191,7 +187,7 @@ button { cursor: pointer; background: none; border: none; }
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 650px;
+  max-width: 900px; width: 90%;
   background: rgba(35, 28, 24, 0.75);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -418,7 +414,7 @@ button { cursor: pointer; background: none; border: none; }
 
 .countdown-value {
   font-family: var(--font-display);
-  font-size: var(--text-xl);
+  font-size: 4rem;
   letter-spacing: 0.04em;
   color: var(--color-text);
   line-height: 1;
@@ -433,7 +429,7 @@ button { cursor: pointer; background: none; border: none; }
 }
 
 .countdown-label {
-  font-size: 0.65rem;
+  font-size: 1rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -500,403 +496,12 @@ button { cursor: pointer; background: none; border: none; }
 
 .field-label {
   display: block;
-  font-size: var(--text-xs);
-  font-weight: 600;
+  font-size: 1.1rem !important;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--color-text-muted);
-  margin-bottom: var(--space-2);
-}
-
-.field-input {
-  width: 100%;
-  padding: var(--space-4) var(--space-5);
-  font-family: var(--font-body);
-  font-size: var(--text-sm);
-  color: var(--color-text);
-  background: rgba(44, 36, 32, 0.35);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(232, 88, 12, 0.2);
-  border-radius: var(--radius-md);
-  outline: none;
-  transition: border-color var(--transition-interactive), 
-              box-shadow var(--transition-interactive),
-              background var(--transition-interactive);
-}
-
-.field-input::placeholder {
-  color: var(--color-text-faint);
-}
-
-.field-input:focus {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(232, 88, 12, 0.15);
-  background: var(--color-surface-offset);
-}
-
-.field-input.error {
-  border-color: var(--color-error);
-  box-shadow: 0 0 0 3px rgba(217, 68, 68, 0.15);
-}
-
-.field-error {
-  font-size: var(--text-xs);
-  color: var(--color-error);
-  margin-top: var(--space-1);
-  display: none;
-}
-
-.field-error.visible {
-  display: block;
-}
-
-/* === SUBMIT BUTTON === */
-.submit-wrap {
-  margin-top: var(--space-6);
-}
-
-.animate .submit-wrap {
-  animation: field-enter 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.46s both;
-}
-
-.submit-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  width: 100%;
-  padding: var(--space-5) var(--space-8);
-  font-family: var(--font-display);
-  font-size: var(--text-lg);
-  letter-spacing: 0.08em;
-  color: white;
-  background: linear-gradient(135deg, #E8580C 0%, #FF6A1E 100%);
-  background-size: 200% auto;
-  animation: gradient-shift 3s ease infinite;
-  border: none;
-  border-radius: var(--radius-lg);
-  cursor: pointer;
-  transition: background var(--transition-interactive), 
-              transform var(--transition-interactive),
-              box-shadow var(--transition-interactive);
-  position: relative;
-  overflow: hidden;
-}
-
-.submit-btn::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%);
-  opacity: 0;
-  transition: opacity var(--transition-interactive);
-}
-
-.submit-btn:hover {
-  background: var(--color-primary-hover);
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 16px 32px rgba(232, 88, 12, 0.4), 0 0 30px rgba(255, 106, 30, 0.3);
-}
-
-.submit-btn:hover::before {
-  opacity: 1;
-}
-
-.submit-btn:active {
-  transform: translateY(0);
-  background: var(--color-primary-active);
-  box-shadow: var(--shadow-sm);
-}
-
-.submit-btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.7;
-  transform: none;
-}
-
-/* Spinner */
-.spinner {
-  display: none;
-  width: 20px;
-  height: 20px;
-  border: 2px solid rgba(255,255,255,0.3);
-  border-top-color: white;
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.submit-btn.loading .spinner { display: block; }
-.submit-btn.loading .btn-text { display: none; }
-
-/* === SUCCESS STATE === */
-.success-screen {
-  display: none;
-  text-align: center;
-  padding: var(--space-8) 0;
-  animation: success-enter 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-@keyframes success-enter {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-.success-icon {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto var(--space-6);
-  border-radius: 50%;
-  background: var(--color-success-highlight);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: icon-pop 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
-}
-
-@keyframes icon-pop {
-  from { transform: scale(0); }
-  to { transform: scale(1); }
-}
-
-.success-icon svg {
-  width: 40px;
-  height: 40px;
-  stroke: var(--color-success);
-  stroke-width: 2.5;
-  fill: none;
-}
-
-.success-check {
-  stroke-dasharray: 30;
-  stroke-dashoffset: 30;
-  animation: draw-check 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
-}
-
-@keyframes draw-check {
-  to { stroke-dashoffset: 0; }
-}
-
-.success-title {
-  font-family: var(--font-display);
-  font-size: var(--text-xl);
-  letter-spacing: 0.04em;
-  color: var(--color-text);
-  margin-bottom: var(--space-2);
-}
-
-.success-subtitle {
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
-  margin-bottom: var(--space-8);
-}
-
-.reset-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-3) var(--space-6);
-  font-family: var(--font-body);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--color-primary);
-  background: transparent;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: border-color var(--transition-interactive),
-              background var(--transition-interactive),
-              color var(--transition-interactive);
-}
-
-.reset-btn:hover {
-  border-color: var(--color-primary);
-  background: var(--color-primary-highlight);
-  color: var(--color-primary-hover);
-}
-
-/* === CONFETTI CANVAS === */
-#confetti-canvas {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  pointer-events: none;
-}
-
-/* === VENUE SECTION === */
-.venue-section {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 520px;
-  margin-top: var(--space-6);
-  padding: var(--space-6) var(--space-5);
-  background: rgba(35, 28, 24, 0.75);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--color-divider);
-  border-radius: var(--radius-2xl);
-  box-sizing: border-box;
-}
-
-.venue-header {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  margin-bottom: var(--space-5);
-  padding-bottom: var(--space-4);
-  border-bottom: 1px solid var(--color-divider);
-}
-
-.venue-logo {
-  width: 80px;
-  height: auto;
-  flex-shrink: 0;
-}
-
-.venue-info h2 {
-  font-family: var(--font-display);
-  font-size: var(--text-lg);
-  color: var(--color-text);
-  letter-spacing: 0.02em;
-  margin: 0;
-}
-
-.venue-info p {
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
-  margin: var(--space-1) 0 0;
-}
-
-.venue-label {
-  font-family: var(--font-display);
-  font-size: var(--text-sm);
   letter-spacing: 0.1em;
-  color: var(--color-primary);
-  text-transform: uppercase;
-  margin-bottom: var(--space-3);
-}
-
-.beer-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: var(--space-2);
-}
-
-.beer-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  padding: var(--space-1) 0;
-  border-bottom: 1px solid rgba(232, 88, 12, 0.06);
-}
-
-.beer-item:last-child {
-  border-bottom: none;
-}
-
-.beer-name {
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--color-text);
-}
-
-.beer-style {
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
-  margin-left: var(--space-2);
-}
-
-.beer-abv {
-  font-size: var(--text-xs);
-  color: var(--color-primary);
-  font-weight: 600;
-  white-space: nowrap;
-  margin-left: var(--space-2);
-}
-
-.venue-note {
-  margin-top: var(--space-4);
-  padding-top: var(--space-3);
-  border-top: 1px solid var(--color-divider);
-  font-size: var(--text-xs);
-  color: var(--color-text-faint);
-  text-align: center;
-}
-
-/* === FOOTER === */
-.site-footer {
-  position: relative;
-  z-index: 1;
-  margin-top: var(--space-8);
-  padding: var(--space-4) 0;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.footer-brand {
-  font-size: var(--text-xs);
-  color: var(--color-text-faint);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-weight: 600;
-}
-
-/* === UTILITY === */
-.sr-only {
-  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;
-}
-
-/* === ASPHALT HEAT WAVES & EMBERS === */
-.heat-waves {
-  position: fixed;
-  bottom: 0; left: 0; width: 100%; height: 35vh;
-  z-index: 0; pointer-events: none; overflow: hidden;
-}
-.hw-wave {
-  position: absolute; bottom: 0; left: 0; width: 200%; height: 100%;
-  background: linear-gradient(to top, rgba(232, 88, 12, 0.15), transparent);
-  transform-origin: bottom center;
-  animation: wave-undulate linear infinite alternate;
-}
-.hw-wave:nth-child(1) { animation-duration: 8s; opacity: 0.9; }
-.hw-wave:nth-child(2) { animation-duration: 12s; opacity: 0.7; animation-delay: -2s; transform: scaleY(1.2); }
-.hw-wave:nth-child(3) { animation-duration: 15s; opacity: 0.5; animation-delay: -5s; transform: scaleY(0.8); }
-.hw-wave:nth-child(4) { animation-duration: 20s; opacity: 0.3; animation-delay: -8s; transform: scaleY(1.5); }
-.hw-shimmer {
-  position: absolute; bottom: 15vh; width: 200%; height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(255, 106, 30, 0.4), transparent);
-  animation: wave-undulate 10s linear infinite;
-}
-@keyframes wave-undulate {
-  0% { transform: translateX(0) scaleY(1); }
-  100% { transform: translateX(-50%) scaleY(1.3); }
-}
-
-#embers-container {
-  position: fixed; inset: 0; pointer-events: none; z-index: 5;
-}
-.ember {
-  position: absolute;
-  bottom: -10px;
-  background: radial-gradient(circle, #FF9933 0%, #FF3300 40%, transparent 70%);
-  border-radius: 50%;
-  animation: ember-float linear forwards;
-}
-@keyframes ember-float {
-  0% { transform: translateY(0) scale(1); opacity: 0; }
-  20% { opacity: 0.8; }
-  80% { opacity: 0.5; }
-  100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+  color: #f0e6dc !important;
+  margin-bottom: 0.8rem !important;
 }
 </style>
 </head>
@@ -939,7 +544,84 @@ button { cursor: pointer; background: none; border: none; }
 <!-- Confetti canvas for success state -->
 <canvas id="confetti-canvas" aria-hidden="true"></canvas>
 
-<!-- Main Form Card -->
+
+<!-- Slider Navigation -->
+<button class="nav-arrow nav-left" id="btn-prev" aria-label="Previous" style="display: none;">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+</button>
+<button class="nav-arrow nav-right" id="btn-next" aria-label="Next">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+</button>
+
+<div class="nav-dots">
+  <div class="nav-dot" data-index="0"></div>
+  <div class="nav-dot active" data-index="1"></div>
+  <div class="nav-dot" data-index="2"></div>
+</div>
+
+<div class="slider-container" id="slider">
+  
+  <!-- PANEL 1: MENU -->
+  <div class="panel" id="panel-menu">
+    <div class="venue-section" style="max-width: 800px; margin-top: auto; margin-bottom: auto; background: rgba(35, 28, 24, 0.45); backdrop-filter: blur(24px) saturate(180%); border: 1px solid rgba(232, 88, 12, 0.15); border-radius: var(--radius-2xl); padding: var(--space-8); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);">
+      <div class="venue-header" style="justify-content: center; text-align: center; flex-direction: column; border-bottom: 1px solid rgba(232, 88, 12, 0.3); padding-bottom: 1.5rem; margin-bottom: 2rem;">
+        <img class="venue-logo" src="https://images.squarespace-cdn.com/content/v1/592b235859cc6892f601724f/352e270b-0ec7-41c4-819d-ac473b71a4b3/cb_simplifiedlogo_v1_White2-01.png" alt="Clouds Brewing logo" loading="lazy" style="width: 120px; margin-bottom: 1rem;">
+        <div class="venue-info">
+          <h2 style="font-size: 3.5rem; color: #fff; text-shadow: 0 2px 10px rgba(232,88,12,0.4);">Clouds Brewing</h2>
+          <p style="font-size: 1.4rem; color: #f0e6dc;">1233 Front St &bull; Raleigh, NC</p>
+        </div>
+      </div>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+        <div>
+          <div class="venue-label" style="font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--color-primary); font-weight: bold; border-bottom: 2px solid rgba(232, 88, 12, 0.4); padding-bottom: 0.5rem;">Lagers & Pilsners</div>
+          <ul class="beer-list">
+            <li class="beer-item"><span><span class="beer-name">Sky Lime</span> <span class="beer-style">Lime Lager</span></span> <span class="beer-abv">4.6%</span></li>
+            <li class="beer-item"><span><span class="beer-name">Wolkenbrau</span> <span class="beer-style">German-American Lager</span></span> <span class="beer-abv">4.5%</span></li>
+            <li class="beer-item"><span><span class="beer-name">Precipitation</span> <span class="beer-style">German Pilsner</span></span> <span class="beer-abv">5.2%</span></li>
+            <li class="beer-item"><span><span class="beer-name">Czech Mate</span> <span class="beer-style">Czech Pilsner</span></span> <span class="beer-abv">5.6%</span></li>
+            <li class="beer-item"><span><span class="beer-name">Accumulation</span> <span class="beer-style">Amber Lager</span></span> <span class="beer-abv">5.8%</span></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="venue-label" style="font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--color-primary); font-weight: bold; border-bottom: 2px solid rgba(232, 88, 12, 0.4); padding-bottom: 0.5rem;">IPAs & Ales</div>
+          <ul class="beer-list">
+            <li class="beer-item"><span><span class="beer-name">Hop Jam IPA</span> <span class="beer-style">American IPA</span></span> <span class="beer-abv">6.3%</span></li>
+            <li class="beer-item"><span><span class="beer-name">Hazy Hop Jam</span> <span class="beer-style">Hazy IPA</span></span> <span class="beer-abv">6.3%</span></li>
+            <li class="beer-item"><span><span class="beer-name">Double Hop Jam</span> <span class="beer-style">Imperial IPA</span></span> <span class="beer-abv">10.3%</span></li>
+            <li class="beer-item"><span><span class="beer-name">Clouds 9</span> <span class="beer-style">Belgian Golden Strong</span></span> <span class="beer-abv">9%</span></li>
+            <li class="beer-item"><span><span class="beer-name">Donner & Blitzen 25</span> <span class="beer-style">Spiced Belgian Quad</span></span> <span class="beer-abv">10.5%</span></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="venue-label" style="font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--color-primary); font-weight: bold; border-bottom: 2px solid rgba(232, 88, 12, 0.4); padding-bottom: 0.5rem;">Stouts, Porters & Sours</div>
+          <ul class="beer-list">
+            <li class="beer-item"><span><span class="beer-name">Mean Girl</span> <span class="beer-style">Blackberry Dragon Fruit Sour</span></span> <span class="beer-abv">5.5%</span></li>
+            <li class="beer-item"><span><span class="beer-name">Crimea River</span> <span class="beer-style">Baltic Porter</span></span> <span class="beer-abv">8%</span></li>
+            <li class="beer-item"><span><span class="beer-name">Midnight Delight</span> <span class="beer-style">Choc Milk Stout</span></span> <span class="beer-abv">6.8%</span></li>
+            <li class="beer-item"><span><span class="beer-name">Coffee at Midnight</span> <span class="beer-style">Coffee Stout</span></span> <span class="beer-abv">7%</span></li>
+            <li class="beer-item"><span><span class="beer-name">Kentucky Moonlight</span> <span class="beer-style">BBA Imperial Stout</span></span> <span class="beer-abv">10.5%</span></li>
+          </ul>
+        </div>
+        
+        <div>
+          <div class="venue-label" style="font-size: 1.8rem; margin-bottom: 1.5rem; color: var(--color-primary); font-weight: bold; border-bottom: 2px solid rgba(232, 88, 12, 0.4); padding-bottom: 0.5rem;">Wheat & N/A</div>
+          <ul class="beer-list">
+            <li class="beer-item"><span><span class="beer-name">El Hefe</span> <span class="beer-style">Bavarian Wheat</span></span> <span class="beer-abv">4.9%</span></li>
+            <li class="beer-item"><span><span class="beer-name">Root Beer</span> <span class="beer-style">Non-Alcoholic</span></span> <span class="beer-abv">N/A</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="venue-note" style="margin-top: 2rem; color: #f0e6dc; font-size: 1.1rem;">Swipe right to check in &rarr;</div>
+    </div>
+  </div>
+
+  <!-- PANEL 2: FORM (Center) -->
+  <div class="panel" id="panel-form">
+    <main class="form-card" role="main" style="margin-top: auto; margin-bottom: auto; max-width: 650px;">
+      
 <main class="form-card" role="main">
 
   <!-- Logo with Flame Effects -->
@@ -963,7 +645,7 @@ button { cursor: pointer; background: none; border: none; }
   </div>
 
   <!-- Title -->
-  <h1 class="form-title" style="font-size: clamp(2.5rem, 4vw, 3.5rem); margin-bottom: 0.5rem; text-shadow: 0 4px 12px rgba(0,0,0,0.4);">WELCOME GUESTS</h1>
+  <h1 class="form-title" style="font-size: clamp(3.5rem, 6vw, 4.5rem); margin-bottom: 0.5rem; text-shadow: 0 4px 12px rgba(0,0,0,0.4);">WELCOME GUESTS</h1>
   <p class="form-subtitle" style="font-size: clamp(1.2rem, 2vw, 1.5rem); margin-bottom: 2rem;">Please sign in below so we can connect you!</p>
 
   <!-- Countdown to Next Meeting -->
@@ -1054,39 +736,51 @@ button { cursor: pointer; background: none; border: none; }
       Submit Another Response
     </button>
   </div>
-</main>
 
-<!-- Venue / Beer List -->
-<section class="venue-section">
-  <div class="venue-header">
-    <img class="venue-logo" src="https://images.squarespace-cdn.com/content/v1/592b235859cc6892f601724f/352e270b-0ec7-41c4-819d-ac473b71a4b3/cb_simplifiedlogo_v1_White2-01.png" alt="Clouds Brewing logo" loading="lazy">
-    <div class="venue-info">
-      <h2>Clouds Brewing</h2>
-      <p>1233 Front St &bull; Raleigh, NC</p>
+    </main>
+    <div style="color: rgba(255,255,255,0.6); font-size: 1rem; margin-top: 2rem; display: flex; justify-content: center; gap: 4rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;">
+       <span>&larr; Drink Menu</span>
+       <span>About Us &rarr;</span>
     </div>
   </div>
-  <div class="venue-label">On Tap</div>
-  <ul class="beer-list">
-    <li class="beer-item"><span><span class="beer-name">Mean Girl</span> <span class="beer-style">Blackberry Dragon Fruit Kettle Sour</span></span> <span class="beer-abv">5.5%</span></li>
-    <li class="beer-item"><span><span class="beer-name">Sky Lime</span> <span class="beer-style">Lime Lager</span></span> <span class="beer-abv">4.6%</span></li>
-    <li class="beer-item"><span><span class="beer-name">Wolkenbrau</span> <span class="beer-style">German-American Lager</span></span> <span class="beer-abv">4.5%</span></li>
-    <li class="beer-item"><span><span class="beer-name">Precipitation</span> <span class="beer-style">German Pilsner</span></span> <span class="beer-abv">5.2%</span></li>
-    <li class="beer-item"><span><span class="beer-name">Czech Mate</span> <span class="beer-style">Czech Pilsner</span></span> <span class="beer-abv">5.6%</span></li>
-    <li class="beer-item"><span><span class="beer-name">El Hefe</span> <span class="beer-style">Bavarian Wheat</span></span> <span class="beer-abv">4.9%</span></li>
-    <li class="beer-item"><span><span class="beer-name">Accumulation</span> <span class="beer-style">Amber Lager</span></span> <span class="beer-abv">5.8%</span></li>
-    <li class="beer-item"><span><span class="beer-name">Hop Jam IPA</span> <span class="beer-style">American IPA</span></span> <span class="beer-abv">6.3%</span></li>
-    <li class="beer-item"><span><span class="beer-name">Hazy Hop Jam</span> <span class="beer-style">Hazy IPA</span></span> <span class="beer-abv">6.3%</span></li>
-    <li class="beer-item"><span><span class="beer-name">Double Hop Jam</span> <span class="beer-style">Imperial IPA</span></span> <span class="beer-abv">10.3%</span></li>
-    <li class="beer-item"><span><span class="beer-name">Crimea River</span> <span class="beer-style">Baltic Porter</span></span> <span class="beer-abv">8%</span></li>
-    <li class="beer-item"><span><span class="beer-name">Midnight Delight</span> <span class="beer-style">Dark Chocolate Milk Stout</span></span> <span class="beer-abv">6.8%</span></li>
-    <li class="beer-item"><span><span class="beer-name">Coffee at Midnight</span> <span class="beer-style">Coffee Stout</span></span> <span class="beer-abv">7%</span></li>
-    <li class="beer-item"><span><span class="beer-name">Kentucky Moonlight</span> <span class="beer-style">BBA Imperial Stout</span></span> <span class="beer-abv">10.5%</span></li>
-    <li class="beer-item"><span><span class="beer-name">Clouds 9</span> <span class="beer-style">Belgian Golden Strong</span></span> <span class="beer-abv">9%</span></li>
-    <li class="beer-item"><span><span class="beer-name">Donner &amp; Blitzen 25</span> <span class="beer-style">Spiced Belgian Quad</span></span> <span class="beer-abv">10.5%</span></li>
-    <li class="beer-item"><span><span class="beer-name">Root Beer</span> <span class="beer-style">Non-Alcoholic</span></span> <span class="beer-abv">N/A</span></li>
-  </ul>
-  <div class="venue-note">Beer list pulled from cloudsbrewing.com &mdash; subject to change</div>
-</section>
+
+  <!-- PANEL 3: INFO -->
+  <div class="panel" id="panel-info">
+    <div class="form-card" style="max-width: 1000px; width: 90%; text-align: left; margin-top: auto; margin-bottom: auto;">
+      <h2 style="font-family: var(--font-display); font-size: 4rem; color: var(--color-primary); margin-bottom: 1rem; line-height: 1; text-shadow: 0 4px 12px rgba(232,88,12,0.4);">RDU HEATWAVE</h2>
+      <p style="font-size: 1.4rem; margin-bottom: 2.5rem; color: #f0e6dc; line-height: 1.5;">The Raleigh-Durham chapter of the <strong style="color: var(--color-primary);">Two Twelve Referral Network</strong>. We are a structured, category-exclusive business networking group built on the "extra degree" philosophy.</p>
+      
+      <div style="background: rgba(0,0,0,0.4); padding: 2rem; border-radius: 1.5rem; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 2.5rem; box-shadow: inset 0 4px 20px rgba(0,0,0,0.5);">
+        <h3 style="font-family: var(--font-display); font-size: 2.5rem; color: #fff; margin-bottom: 0.8rem; letter-spacing: 0.05em;">The 212&deg; Principle</h3>
+        <p style="color: rgba(255,255,255,0.8); font-size: 1.2rem; line-height: 1.6;">At 211 degrees, water is hot. At 212 degrees, it boils. With boiling water comes steam, and with steam, you can power a train. That one extra degree makes all the difference in business and relationships.</p>
+      </div>
+
+      <h3 style="font-family: var(--font-display); font-size: 2.5rem; color: var(--color-primary); margin-bottom: 1.5rem; letter-spacing: 0.05em;">General Council</h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+        <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+          <strong style="color: #fff; display: block; font-size: 1.2rem; margin-bottom: 0.2rem; text-transform: uppercase; letter-spacing: 0.05em;">President</strong>
+          <span style="color: rgba(255,255,255,0.7); font-size: 1.1rem;">Will Sigmon</span>
+        </div>
+        <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+          <strong style="color: #fff; display: block; font-size: 1.2rem; margin-bottom: 0.2rem; text-transform: uppercase; letter-spacing: 0.05em;">Vice President</strong>
+          <span style="color: rgba(255,255,255,0.7); font-size: 1.1rem;">Corey Helms</span>
+        </div>
+        <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+          <strong style="color: #fff; display: block; font-size: 1.2rem; margin-bottom: 0.2rem; text-transform: uppercase; letter-spacing: 0.05em;">Sec. / Treasurer</strong>
+          <span style="color: rgba(255,255,255,0.7); font-size: 1.1rem;">Chris Cates</span>
+        </div>
+        <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 1rem; border-left: 4px solid var(--color-primary); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+          <strong style="color: #fff; display: block; font-size: 1.2rem; margin-bottom: 0.2rem; text-transform: uppercase; letter-spacing: 0.05em;">Visitor Host</strong>
+          <span style="color: rgba(255,255,255,0.7); font-size: 1.1rem;">Open Position</span>
+        </div>
+      </div>
+      
+      <div class="venue-note" style="color: #f0e6dc; font-size: 1.1rem;">&larr; Swipe left to check in</div>
+    </div>
+  </div>
+
+</div>
+
 
 <!-- Footer -->
 <footer class="site-footer">
@@ -1129,6 +823,90 @@ button { cursor: pointer; background: none; border: none; }
     if (spawnRate > 0) {
       emberInterval = setInterval(createEmber, spawnRate);
     }
+  }
+
+  
+  // ===== SLIDER LOGIC =====
+  var autoPlayInterval;
+  var autoPlayTimeout;
+  
+  function startAutoPlay() {
+    clearInterval(autoPlayInterval);
+    autoPlayInterval = setInterval(function() {
+      var nextIndex = (currentIndex + 1) % 3;
+      scrollToPanel(nextIndex);
+    }, 15000); // switch every 15 seconds
+  }
+
+  function resetAutoPlay() {
+    clearInterval(autoPlayInterval);
+    clearTimeout(autoPlayTimeout);
+    autoPlayTimeout = setTimeout(startAutoPlay, 30000); // 30 seconds of inactivity before autoplay resumes
+  }
+
+  document.addEventListener('touchstart', resetAutoPlay);
+  document.addEventListener('mousemove', resetAutoPlay);
+  document.addEventListener('click', resetAutoPlay);
+  document.addEventListener('keydown', resetAutoPlay);
+  
+  // Start the timers
+  resetAutoPlay();
+  
+  var slider = document.getElementById('slider');
+  var btnPrev = document.getElementById('btn-prev');
+  var btnNext = document.getElementById('btn-next');
+  var dotsList = document.querySelectorAll('.nav-dot');
+  var currentIndex = 1;
+
+  function initSlider() {
+    if(!slider) return;
+    slider.scrollLeft = window.innerWidth;
+    updateNav();
+  }
+  
+  // Wait a frame to ensure layout is ready
+  setTimeout(initSlider, 50);
+  window.addEventListener('resize', initSlider);
+
+  function scrollToPanel(index) {
+    if(!slider) return;
+    slider.scrollTo({ left: index * window.innerWidth, behavior: 'smooth' });
+  }
+
+  if(btnPrev) {
+    btnPrev.addEventListener('click', function() {
+      if (currentIndex > 0) scrollToPanel(currentIndex - 1);
+    });
+  }
+  
+  if(btnNext) {
+    btnNext.addEventListener('click', function() {
+      if (currentIndex < 2) scrollToPanel(currentIndex + 1);
+    });
+  }
+
+  dotsList.forEach(function(dot) {
+    dot.addEventListener('click', function() {
+      scrollToPanel(parseInt(this.getAttribute('data-index')));
+    });
+  });
+
+  if(slider) {
+    slider.addEventListener('scroll', function() {
+      var index = Math.round(slider.scrollLeft / window.innerWidth);
+      if (index !== currentIndex) {
+        currentIndex = index;
+        updateNav();
+      }
+    });
+  }
+
+  function updateNav() {
+    dotsList.forEach(function(d, i) {
+      d.classList.toggle('active', i === currentIndex);
+    });
+    if(btnPrev) btnPrev.style.display = currentIndex === 0 ? 'none' : 'flex';
+    if(btnNext) btnNext.style.display = currentIndex === 2 ? 'none' : 'flex';
   }
 
   // ===== COUNTDOWN TIMER =====
