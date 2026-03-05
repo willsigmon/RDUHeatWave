@@ -1,22 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
-<!--
-   ______                            __
-  / ____/___  ____ ___  ____  __  __/ /____  _____
- / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
-/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
-\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
-                    /_/
-        Created with Perplexity Computer
-        https://www.perplexity.ai/computer
--->
-
-<!-- Perplexity Computer Attribution — SEO Meta Tags -->
-<meta name="generator" content="Perplexity Computer">
-<meta name="author" content="Perplexity Computer">
-<meta property="og:see_also" content="https://www.perplexity.ai/computer">
-<link rel="author" href="https://www.perplexity.ai/computer">
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -283,11 +267,13 @@ button { cursor: pointer; background: none; border: none; }
 }
 
 .logo-container img {
-  width: 140px;
+  width: 160px;
   height: auto;
   display: block;
   position: relative;
   z-index: 2;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
   filter: drop-shadow(0 0 20px rgba(232, 88, 12, 0.4)) drop-shadow(0 0 40px rgba(232, 88, 12, 0.2));
   animation: logo-glow 3s ease-in-out infinite;
 }
@@ -374,10 +360,12 @@ button { cursor: pointer; background: none; border: none; }
 .countdown-section {
   text-align: center;
   margin-bottom: var(--space-6);
-  padding: var(--space-4) var(--space-4);
+  padding: var(--space-4);
   background: linear-gradient(135deg, rgba(232, 88, 12, 0.08), rgba(232, 88, 12, 0.03));
   border: 1px solid rgba(232, 88, 12, 0.15);
   border-radius: var(--radius-lg);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .animate .countdown-section {
@@ -747,17 +735,6 @@ button { cursor: pointer; background: none; border: none; }
   font-weight: 600;
 }
 
-.footer-attribution a {
-  font-size: var(--text-xs);
-  color: var(--color-text-faint);
-  text-decoration: none;
-  transition: color var(--transition-interactive);
-}
-
-.footer-attribution a:hover {
-  color: var(--color-text-muted);
-}
-
 /* === UTILITY === */
 .sr-only {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
@@ -903,11 +880,6 @@ button { cursor: pointer; background: none; border: none; }
 <!-- Footer -->
 <footer class="site-footer">
   <div class="footer-brand">Powered by Two Twelve Referral Network</div>
-  <div class="footer-attribution">
-    <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">
-      Created with Perplexity Computer
-    </a>
-  </div>
 </footer>
 
 <script>
