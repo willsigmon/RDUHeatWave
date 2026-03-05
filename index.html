@@ -93,7 +93,7 @@ body {
   font-size: var(--text-sm);
   color: var(--color-text);
   background-color: var(--color-bg);
-  overflow: hidden; /* Handle scrolling inside slider */
+  overflow: hidden; /* Scrolling handled by slider panels */
   position: relative;
 }
 
@@ -502,70 +502,110 @@ button { cursor: pointer; background: none; border: none; }
 }
 
 @media (max-width: 768px) {
-  /* Fix Container Heights & Padding */
-  .panel { padding: 1.5rem 1rem 120px !important; justify-content: flex-start !important; }
-  
-  /* Form Card Cohesion */
-  .form-card { 
-    padding: 1.5rem !important; 
+  /* Panels: allow vertical scroll, proper spacing for mobile */
+  .panel {
+    padding: 1.25rem 1rem 100px !important;
+    justify-content: flex-start !important;
+  }
+
+  /* Form Card: clean, readable, not cramped */
+  .form-card {
+    padding: 1.5rem 1.25rem !important;
     border-radius: 1.25rem !important;
-    margin-top: 0 !important; /* Push it towards the top on mobile so keyboard doesn't hide it */
-    background: rgba(22, 18, 16, 0.95) !important; /* Darker on mobile for contrast */
+    margin-top: 0.5rem !important;
+    background: rgba(22, 18, 16, 0.95) !important;
+    border: 1px solid rgba(232, 88, 12, 0.15) !important;
   }
-  
-  /* Input Sizing */
-  .field-input { 
-    padding: 1rem !important; 
-    font-size: 1.1rem !important; 
-    border-radius: 0.5rem !important;
+
+  /* Inputs: tall enough to tap easily, readable text */
+  .field-input {
+    padding: 0.875rem 1rem !important;
+    font-size: 16px !important; /* 16px prevents iOS zoom on focus */
+    border-radius: 0.625rem !important;
+    background: rgba(44, 36, 32, 0.8) !important;
+    border: 1px solid rgba(232, 88, 12, 0.25) !important;
   }
-  .field-label { font-size: 0.8rem !important; margin-bottom: 0.4rem !important; }
-  
-  /* Buttons */
-  .submit-btn { 
-    padding: 1.2rem !important; 
-    font-size: 1.4rem !important; 
+  .field-input:focus {
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 0 3px rgba(232, 88, 12, 0.2) !important;
+  }
+  .field-label {
+    font-size: 0.75rem !important;
+    margin-bottom: 0.35rem !important;
+    letter-spacing: 0.12em !important;
+  }
+  .form-fields { gap: 1rem !important; }
+
+  /* Submit button: big, bold, easy to tap */
+  .submit-btn {
+    padding: 1rem !important;
+    font-size: 1.3rem !important;
     border-radius: 0.75rem !important;
+    margin-top: 0.25rem !important;
   }
-  
-  /* Headers & Typography */
-  .form-title { font-size: 2.5rem !important; margin-bottom: 0.2rem !important; }
-  .form-subtitle { font-size: 1.1rem !important; margin-bottom: 1.5rem !important; }
-  
-  /* Countdown inside Form */
-  .countdown-section { padding: 1rem !important; margin-bottom: 1.5rem !important; }
-  .countdown-value { font-size: 1.8rem !important; min-width: 2em !important; padding: 0.2rem !important; }
-  
-  /* Drink Menu Cohesion */
-  .venue-section { 
-    padding: 1.5rem !important; 
-    border-radius: 1.25rem !important; 
+
+  /* Logo smaller on mobile */
+  .logo-container img { width: 90px !important; margin-bottom: 0.5rem !important; }
+  .logo-wrap { margin-bottom: 0.5rem !important; }
+  .flame-particles { inset: -15px !important; }
+  .flame-ring { inset: -8px !important; }
+
+  /* Headers: scaled for mobile */
+  .form-title { font-size: 2rem !important; margin-bottom: 0.15rem !important; }
+  .form-subtitle { font-size: 0.95rem !important; margin-bottom: 1rem !important; }
+
+  /* Countdown: compact */
+  .countdown-section { padding: 0.75rem !important; margin-bottom: 1rem !important; }
+  .countdown-value { font-size: 1.6rem !important; min-width: 2em !important; padding: 0.15rem !important; }
+  .countdown-label { font-size: 0.65rem !important; }
+  .meeting-label { font-size: 0.8rem !important; }
+  .meeting-datetime { font-size: 1rem !important; margin-bottom: 0.25rem !important; }
+  .meeting-location { font-size: 0.8rem !important; margin-bottom: 0.75rem !important; }
+
+  /* Drink Menu */
+  .venue-section {
+    padding: 1.25rem !important;
+    border-radius: 1.25rem !important;
     margin-top: 0 !important;
     background: rgba(35, 28, 24, 0.95) !important;
   }
-  .venue-info h2 { font-size: 2.2rem !important; }
-  .venue-info p { font-size: 1.1rem !important; }
-  .venue-header { padding-bottom: 1rem !important; margin-bottom: 1.5rem !important; }
-  .venue-header img { width: 80px !important; margin-bottom: 0.5rem !important; }
-  .venue-label { font-size: 1.5rem !important; margin-bottom: 1rem !important; }
-  
-  /* Info Panel Cohesion */
-  h2[style*="font-size: 4rem;"] { font-size: 2.8rem !important; margin-bottom: 0.5rem !important; }
-  p[style*="font-size: 1.4rem;"] { font-size: 1.1rem !important; margin-bottom: 1.5rem !important; }
-  div[style*="padding: 2rem; border-radius: 1.5rem;"] { padding: 1.5rem !important; border-radius: 1rem !important; margin-bottom: 1.5rem !important; }
-  h3[style*="font-size: 2.5rem;"] { font-size: 1.8rem !important; margin-bottom: 1rem !important; }
-  div[style*="padding: 1.5rem; border-radius: 1rem;"] { padding: 1rem !important; border-radius: 0.75rem !important; }
-  
-  /* Grid Collapsing */
+  .venue-info h2 { font-size: 2rem !important; }
+  .venue-info p { font-size: 1rem !important; }
+  .venue-header { padding-bottom: 0.75rem !important; margin-bottom: 1rem !important; }
+  .venue-header img { width: 70px !important; margin-bottom: 0.5rem !important; }
+  .venue-label { font-size: 1.25rem !important; margin-bottom: 0.75rem !important; }
+  .beer-item { font-size: 0.85rem !important; }
+  .beer-abv { font-size: 0.9rem !important; }
+
+  /* Info Panel */
+  h2[style*="font-size: 4rem;"] { font-size: 2.2rem !important; margin-bottom: 0.4rem !important; }
+  p[style*="font-size: 1.4rem;"] { font-size: 1rem !important; margin-bottom: 1rem !important; }
+  div[style*="padding: 2rem; border-radius: 1.5rem;"] { padding: 1.25rem !important; border-radius: 1rem !important; margin-bottom: 1.25rem !important; }
+  h3[style*="font-size: 2.5rem;"] { font-size: 1.5rem !important; margin-bottom: 0.75rem !important; }
+  div[style*="padding: 1.5rem; border-radius: 1rem;"] { padding: 0.875rem !important; border-radius: 0.75rem !important; }
+
+  /* Grid: single column on mobile */
   .form-row { grid-template-columns: 1fr !important; gap: 1rem !important; }
-  div[style*="grid-template-columns: 1fr 1fr;"] { grid-template-columns: 1fr !important; gap: 0.8rem !important; }
-  div[style*="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));"] { grid-template-columns: 1fr !important; gap: 1.5rem !important; }
-  
-  /* Bottom Text Links */
-  div[style*="justify-content: center; gap: 4rem;"] { gap: 1.5rem !important; font-size: 0.85rem !important; margin-top: 1.5rem !important; }
-  
-  /* Hide arrows on mobile completely, rely on swipe and dots */
+  div[style*="grid-template-columns: 1fr 1fr;"] { grid-template-columns: 1fr !important; gap: 0.75rem !important; }
+  div[style*="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));"] { grid-template-columns: 1fr !important; gap: 1.25rem !important; }
+
+  /* Swipe hints */
+  div[style*="justify-content: center; gap: 4rem;"] { gap: 1.5rem !important; font-size: 0.8rem !important; margin-top: 1rem !important; }
+
+  /* Hide arrows on mobile — swipe + dots only */
   .nav-arrow { display: none !important; }
+
+  /* Nav dots: smaller on mobile */
+  .nav-dots { bottom: 1rem !important; padding: 0.4rem 0.75rem !important; }
+  .nav-dot { width: 8px !important; height: 8px !important; }
+}
+
+/* Small phones */
+@media (max-width: 380px) {
+  .form-card { padding: 1.25rem 1rem !important; }
+  .form-title { font-size: 1.75rem !important; }
+  .countdown-value { font-size: 1.4rem !important; }
+  .logo-container img { width: 70px !important; }
 }
 
 /* Ensure the background covers the whole page even when scrolled */
@@ -1275,8 +1315,8 @@ body {
   document.addEventListener('click', resetAutoPlay);
   document.addEventListener('keydown', resetAutoPlay);
   
-  // Start the timers
-  resetAutoPlay();
+  // Start autoplay only on desktop (kiosk mode) — not on mobile
+  if (window.innerWidth > 768) resetAutoPlay();
   
   var slider = document.getElementById('slider');
   var btnPrev = document.getElementById('btn-prev');
@@ -1315,7 +1355,8 @@ body {
   
   // Wait a frame to ensure layout is ready
   setTimeout(initSlider, 50);
-  setTimeout(peekPop, 1000);
+  // Only peekPop on desktop — disorienting on touch devices
+  if (window.innerWidth > 768) setTimeout(peekPop, 1000);
   window.addEventListener('resize', initSlider);
 
   function scrollToPanel(index) {
