@@ -269,15 +269,13 @@ button { cursor: pointer; background: none; border: none; }
 }
 
 .logo-container img {
-  width: 160px;
+  width: 140px;
   height: auto;
   display: block;
   position: relative;
   z-index: 2;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.6)) drop-shadow(0 0 30px rgba(232, 88, 12, 0.8));
-  animation: stadium-throb-logo 2s ease-in-out infinite alternate;
+  filter: drop-shadow(0 4px 20px rgba(232, 88, 12, 0.6));
+  margin-bottom: 1rem;
 }
 
 @keyframes logo-glow {
@@ -361,11 +359,11 @@ button { cursor: pointer; background: none; border: none; }
 /* === COUNTDOWN SECTION === */
 .countdown-section {
   text-align: center;
-  margin-bottom: var(--space-6);
-  padding: var(--space-4);
-  background: linear-gradient(135deg, rgba(232, 88, 12, 0.08), rgba(232, 88, 12, 0.03));
-  border: 1px solid rgba(232, 88, 12, 0.15);
-  border-radius: var(--radius-lg);
+  margin-bottom: 2.5rem;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 1rem;
   width: 100%;
   box-sizing: border-box;
 }
@@ -376,33 +374,32 @@ button { cursor: pointer; background: none; border: none; }
 
 .meeting-label {
   font-family: var(--font-display);
-  font-size: var(--text-sm);
-  letter-spacing: 0.12em;
+  font-size: 1rem;
+  letter-spacing: 0.15em;
   color: var(--color-primary);
   text-transform: uppercase;
-  margin-bottom: var(--space-1);
+  margin-bottom: 0.5rem;
 }
 
 .meeting-datetime {
   font-family: var(--font-body);
-  font-size: var(--text-base);
+  font-size: 1.2rem;
   font-weight: 600;
-  color: var(--color-text);
-  margin-bottom: var(--space-3);
+  color: #fff;
+  margin-bottom: 0.5rem;
 }
 
 .meeting-location {
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
-  margin-bottom: var(--space-4);
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 1.5rem;
 }
 
 .countdown-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-2);
-  max-width: min(320px, 100%);
-  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
   box-sizing: border-box;
 }
 
@@ -429,12 +426,12 @@ button { cursor: pointer; background: none; border: none; }
 }
 
 .countdown-label {
-  font-size: 1rem;
+  font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--color-text-faint);
-  margin-top: var(--space-1);
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 0.5rem;
 }
 
 .meeting-status {
@@ -454,13 +451,13 @@ button { cursor: pointer; background: none; border: none; }
 .form-fields {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: 1.5rem;
 }
 
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-4);
+  gap: 1.5rem;
 }
 
 @media (max-width: 420px) {
@@ -496,12 +493,12 @@ button { cursor: pointer; background: none; border: none; }
 
 .field-label {
   display: block;
-  font-size: 1.1rem !important;
-  font-weight: 700;
+  font-size: 0.9rem !important;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #f0e6dc !important;
-  margin-bottom: 0.8rem !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+  margin-bottom: 0.5rem !important;
 }
 
 @media (max-width: 768px) {
@@ -658,7 +655,7 @@ button { cursor: pointer; background: none; border: none; }
   </div>
 
   <!-- Title -->
-  <h1 class="form-title" style="font-size: clamp(3.5rem, 6vw, 4.5rem); margin-bottom: 0.5rem; text-shadow: 0 4px 12px rgba(0,0,0,0.4);">WELCOME GUESTS</h1>
+  <h1 class="form-title" style="font-size: clamp(3rem, 5vw, 4rem); font-weight: bold; margin-bottom: 0.5rem; text-shadow: 0 4px 12px rgba(0,0,0,0.5); letter-spacing: 0.05em; color: white;">WELCOME GUESTS</h1>
   <p class="form-subtitle" style="font-size: clamp(1.2rem, 2vw, 1.5rem); margin-bottom: 2rem;">Please sign in below so we can connect you!</p>
 
   <!-- Countdown to Next Meeting -->
