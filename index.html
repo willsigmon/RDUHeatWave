@@ -411,8 +411,9 @@ button { cursor: pointer; background: none; border: none; }
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--space-2);
-  max-width: 320px;
+  max-width: min(320px, 100%);
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .countdown-unit {
@@ -928,22 +929,22 @@ button { cursor: pointer; background: none; border: none; }
     var eastStr = now.toLocaleString('en-US', eastOpts);
     var eastNow = new Date(eastStr);
 
-    // Find next Wednesday
+    // Find next Thursday (meeting day)
     var next = new Date(eastNow);
-    var dayOfWeek = next.getDay(); // 0=Sun, 3=Wed
-    var daysUntilWed = (3 - dayOfWeek + 7) % 7;
+    var dayOfWeek = next.getDay(); // 0=Sun, 4=Thu
+    var daysUntilMeeting = (4 - dayOfWeek + 7) % 7;
 
-    // If today is Wednesday, check if meeting already passed
-    if (daysUntilWed === 0) {
+    // If today is Thursday, check if meeting already passed
+    if (daysUntilMeeting === 0) {
       var meetingToday = new Date(next);
       meetingToday.setHours(11, 30, 0, 0);
       // If meeting ended (give 2 hour buffer for networking)
       if (eastNow > new Date(meetingToday.getTime() + 2 * 60 * 60 * 1000)) {
-        daysUntilWed = 7;
+        daysUntilMeeting = 7;
       }
     }
 
-    next.setDate(next.getDate() + daysUntilWed);
+    next.setDate(next.getDate() + daysUntilMeeting);
     next.setHours(11, 30, 0, 0);
 
     // Convert back: create a proper Date in Eastern
