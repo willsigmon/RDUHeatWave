@@ -39,16 +39,6 @@
   /* Push content apart to fill the page */
   .page-spacer { flex: 1; }
 
-  /* Subtle warm accent on print */
-  .page::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse at 20% 0%, rgba(232,88,12,0.03) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 100%, rgba(232,88,12,0.02) 0%, transparent 40%);
-    pointer-events: none;
-  }
 
   /* ===== TYPOGRAPHY ===== */
   .font-display { font-family: 'Bebas Neue', sans-serif; }
@@ -143,6 +133,7 @@
     gap: 20pt;
     padding: 5pt 0;
     border-top: 0.5pt solid var(--divider);
+    background: rgba(250,247,244,0.5);
   }
 
   .stat {
@@ -168,12 +159,11 @@
   /* ===== DIVIDER ===== */
   .ornament {
     text-align: center;
-    padding: 6pt 0;
+    padding: 2pt 0;
     color: var(--fire-dim);
-    font-size: 8pt;
+    font-size: 6pt;
     letter-spacing: 6pt;
     position: relative;
-    z-index: 1;
   }
 
   .ornament::before,
@@ -193,8 +183,6 @@
     display: flex;
     gap: 20pt;
     align-items: stretch;
-    position: relative;
-    z-index: 1;
   }
 
   .two-col-grow {
@@ -224,33 +212,37 @@
   .agenda-list {
     list-style: none;
     flex: 1;
+    background: rgba(250,247,244,0.6);
+    border-radius: 4pt;
+    padding: 2pt 4pt;
   }
 
   .agenda-group-label {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 7pt;
+    font-size: 8.5pt;
     letter-spacing: 1.5pt;
-    color: var(--fire-dim);
+    color: var(--fire);
     text-transform: uppercase;
-    padding: 8pt 6pt 2pt;
+    padding: 5pt 6pt 1pt;
+    font-weight: 700;
   }
 
   .agenda-group-label:first-child {
-    padding-top: 4pt;
+    padding-top: 2pt;
   }
 
   .agenda-item {
     display: flex;
     align-items: center;
-    padding: 4pt 6pt;
-    min-height: 20pt;
+    padding: 3pt 6pt;
+    min-height: 16pt;
     gap: 6pt;
     border-radius: 2pt;
     line-height: 1;
   }
 
   .agenda-item:nth-child(odd) {
-    background: rgba(138,109,59,0.03);
+    background: rgba(138,109,59,0.04);
   }
 
   .agenda-item:last-child { border-bottom: none; }
@@ -340,6 +332,9 @@
   /* ===== LEADERSHIP ===== */
   .leadership {
     margin-bottom: 8pt;
+    background: rgba(250,247,244,0.6);
+    border-radius: 4pt;
+    padding: 4pt 8pt;
   }
 
   .leader-row {
@@ -371,6 +366,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    border: 0.75pt solid var(--divider);
   }
 
   .tip-box-label {
@@ -415,7 +411,7 @@
   }
 
   .about-box-full {
-    margin-top: 10pt;
+    margin-top: 6pt;
     border-left: none;
     border-top: 0.75pt solid var(--divider);
     border-bottom: 0.75pt solid var(--divider);
@@ -450,8 +446,6 @@
     white-space: nowrap;
     color: var(--text-dim);
     letter-spacing: 0.3pt;
-    position: relative;
-    z-index: 1;
   }
 
   .venue-bar strong { color: var(--text); }
@@ -464,8 +458,6 @@
     justify-content: center;
     gap: 16pt;
     padding-top: 6pt;
-    position: relative;
-    z-index: 1;
   }
 
   .logo-twotwelve {
@@ -475,8 +467,22 @@
 
   /* ===== PAGE 2 ===== */
 
+  .worksheet-panel {
+    background: rgba(250,247,244,0.7);
+    border-radius: 6pt;
+    padding: 6pt 8pt;
+    border: 0.5pt solid rgba(138,109,59,0.1);
+  }
+
+  .worksheet-panel-accent {
+    background: var(--fire-glow);
+    border-radius: 6pt;
+    padding: 6pt 8pt;
+    border: 0.5pt solid rgba(232,88,12,0.08);
+  }
+
   .write-section {
-    margin-bottom: 14pt;
+    margin-bottom: 0;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -490,7 +496,7 @@
   }
   .write-section-grow {
     flex: 1;
-    margin-bottom: 14pt;
+    margin-bottom: 6pt;
     display: flex;
     flex-direction: column;
   }
@@ -504,14 +510,26 @@
 
   .write-prompt {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 8pt;
+    font-size: 10pt;
     font-style: italic;
-    color: var(--text-dim);
-    margin-bottom: 5pt;
-    line-height: 1.45;
+    color: var(--text-mid);
+    margin-bottom: 6pt;
+    line-height: 1.5;
+    padding-bottom: 4pt;
+    border-bottom: 0.5pt solid rgba(138,109,59,0.1);
   }
 
-  .write-prompt strong { color: var(--fire); font-style: normal; }
+  .write-prompt strong { color: var(--fire); font-style: normal; font-size: 10.5pt; }
+
+  .write-nudge {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 8pt;
+    font-style: italic;
+    color: var(--fire-dim);
+    text-align: center;
+    margin-top: 6pt;
+    padding-top: 4pt;
+  }
 
   .write-lines {
     list-style: none;
@@ -522,10 +540,10 @@
     counter-increment: writeline;
     display: flex;
     align-items: flex-end;
-    padding: 8pt 0 2pt;
+    padding: 6pt 0 2pt;
     border-bottom: 0.5pt solid rgba(138,109,59,0.12);
     gap: 4pt;
-    min-height: 20pt;
+    min-height: 16pt;
   }
 
   .write-line::before {
@@ -534,6 +552,13 @@
     font-size: 9pt;
     color: var(--fire-dim);
     min-width: 10pt;
+  }
+
+  .roster-panel {
+    background: rgba(250,247,244,0.5);
+    border-radius: 4pt;
+    padding: 2pt 4pt;
+    border: 0.5pt solid rgba(138,109,59,0.08);
   }
 
   /* ===== ROSTER TABLE ===== */
@@ -580,8 +605,6 @@
     border-top: 0.75pt solid var(--divider);
     font-size: 6.5pt;
     color: var(--text-dim);
-    position: relative;
-    z-index: 1;
   }
 
   .page-footer .fire { color: var(--fire); }
@@ -801,14 +824,15 @@
 <!-- ==================== PAGE 2: NOTES + ROSTER ==================== -->
 <div class="page">
 
-  <div class="two-col" style="margin-bottom: 8pt; padding-top: 6pt;">
+  <div class="two-col" style="margin-bottom: 6pt; padding-top: 4pt; flex-shrink: 0;">
 
     <!-- Left: Connections -->
     <div class="col-main">
       <div class="section-heading section-heading-fire">Connections to Make This Week</div>
-      <div class="write-section">
+      <div class="worksheet-panel-accent write-section">
         <div class="write-prompt">
-          If you hear of a specific person or company a member wants an introduction to, write it down. Take this back to your office and <strong>make that introduction.</strong>
+          Listen for names &amp; companies. Write them down.<br>
+          Take this back to your office and <strong>make that introduction.</strong>
         </div>
         <ol class="write-lines">
           <li class="write-line"></li>
@@ -817,13 +841,18 @@
           <li class="write-line"></li>
           <li class="write-line"></li>
         </ol>
+        <div class="write-nudge">Every name here is a relationship waiting to happen.</div>
       </div>
     </div>
 
     <!-- Right: BizChats -->
     <div class="col-side">
       <div class="section-heading">BizChats Next Week</div>
-      <div class="write-section">
+      <div class="worksheet-panel write-section">
+        <div class="write-prompt">
+          Who are you meeting 1-on-1 this week?<br>
+          <strong>Book it before you leave.</strong>
+        </div>
         <ol class="write-lines">
           <li class="write-line"></li>
           <li class="write-line"></li>
@@ -831,13 +860,15 @@
           <li class="write-line"></li>
           <li class="write-line"></li>
         </ol>
+        <div class="write-nudge">Relationships are built between meetings, not during them.</div>
       </div>
     </div>
   </div>
 
   <!-- Notes -->
-  <div class="section-heading section-heading-fire">Notes &amp; Key Takeaways</div>
-  <div class="write-section-grow">
+  <div class="section-heading section-heading-fire" style="flex-shrink: 0;">Notes &amp; Key Takeaways</div>
+  <div class="worksheet-panel write-section-grow" style="flex: 1;">
+    <div class="write-prompt">What stood out today? What can you act on <strong>this week</strong>?</div>
     <ol class="write-lines">
       <li class="write-line"></li>
       <li class="write-line"></li>
@@ -846,13 +877,15 @@
       <li class="write-line"></li>
       <li class="write-line"></li>
     </ol>
+    <div class="write-nudge">The ink you put here is worth more than the agenda on the other side.</div>
   </div>
 
   <!-- Ornament -->
-  <div class="ornament">&#9670; &#9670; &#9670;</div>
+  <div class="ornament" style="flex-shrink: 0;">&#9670; &#9670; &#9670;</div>
 
   <!-- Roster -->
-  <div class="section-heading">Member Roster</div>
+  <div class="section-heading" style="flex-shrink: 0;">Member Roster</div>
+  <div class="roster-panel">
   <table class="roster-table">
     <thead>
       <tr>
@@ -915,6 +948,7 @@
       </tr>
     </tbody>
   </table>
+  </div>
 
   <!-- Footer -->
   <div class="page-footer">
