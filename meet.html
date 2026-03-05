@@ -30,6 +30,8 @@ html {
   --color-text-muted: #a09898;
   --color-text-faint: #686060;
   --color-primary: #E8580C;
+  --gradient-fire: linear-gradient(135deg, #E8580C 0%, #FF6A1E 50%, #FF9933 100%);
+  --gradient-heat: linear-gradient(135deg, #FF6A1E 0%, #E8580C 100%);
   --color-primary-hover: #FF6A1E;
   --color-warning: #FFB800;
   --color-success: #5BA847;
@@ -75,8 +77,9 @@ body {
 
 .heat-orb {
   position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 700px; height: 700px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(232,88,12,0.08) 0%, rgba(232,88,12,0.02) 50%, transparent 70%);
+  width: 100vw; height: 100vw; max-width: 1000px; max-height: 1000px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(232, 88, 12, 0.18) 0%, rgba(255, 106, 30, 0.08) 30%, transparent 70%);
+  mix-blend-mode: screen;
   pointer-events: none; z-index: 0;
   animation: orb-pulse 6s ease-in-out infinite;
 }
@@ -94,10 +97,11 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem 3rem;
-  background: rgba(12, 12, 14, 0.9);
-  backdrop-filter: blur(16px);
+  background: #1c1a1e;
   border-bottom: 1px solid var(--color-divider);
 }
+
+
 
 .header-left {
   display: flex;
@@ -107,7 +111,6 @@ body {
 .header-logo img {
   height: clamp(56px, 6vw, 80px);
   width: auto;
-  filter: drop-shadow(0 0 20px rgba(255,255,255,0.8)) drop-shadow(0 0 45px rgba(255,255,255,0.4)) drop-shadow(0 0 70px rgba(255,255,255,0.2));
 }
 .header-brand {
   display: flex;
@@ -124,7 +127,6 @@ body {
 .header-tt {
   height: clamp(20px, 2vw, 28px);
   width: auto;
-  filter: drop-shadow(0 0 18px rgba(255,255,255,0.8)) drop-shadow(0 0 40px rgba(255,255,255,0.45)) drop-shadow(0 0 65px rgba(255,255,255,0.2));
 }
 
 .header-center {
@@ -162,11 +164,12 @@ body {
 .header::after {
   content: '';
   position: absolute;
-  bottom: -1px;
-  left: 10%;
-  right: 10%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(232, 88, 12, 0.3), transparent);
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+  box-shadow: 0 0 20px var(--color-primary);
 }
 
 /* === MAIN LAYOUT === */
@@ -204,11 +207,13 @@ body {
 .carousel-card {
   position: absolute;
   inset: 0;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: rgba(22, 22, 24, 0.55);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border: 1px solid rgba(232, 88, 12, 0.2);
   border-radius: var(--radius-2xl);
   padding: 2.5rem 2rem;
-  box-shadow: var(--shadow-lg), var(--shadow-glow);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 0 160px rgba(232, 88, 12, 0.12);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -342,12 +347,20 @@ body {
   font-family: var(--font-display);
   font-size: clamp(4rem, 9vw, 8rem);
   letter-spacing: 0.04em;
-  color: var(--color-text);
+  background: linear-gradient(180deg, #ffffff 0%, #e6d8cc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
   line-height: 1;
+  filter: drop-shadow(0 8px 16px rgba(0,0,0,0.6));
   width: 100%;
   text-align: center;
-  background: var(--color-surface);
-  border: 1px solid var(--color-divider);
+  background-color: rgba(22, 22, 24, 0.35);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(232, 88, 12, 0.2);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
   border-radius: var(--radius-xl);
   padding: 0.6rem 0.1rem;
   transition: color 0.4s, border-color 0.4s, box-shadow 0.4s;
@@ -668,9 +681,102 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.header-divider {
+  width: 1px;
+  height: 48px;
+  background: rgba(255,255,255,0.15);
+}
+
+/* === HEAT WAVES FROM BOTTOM === */
+.heat-waves {
+  position: fixed;
+  bottom: 0; left: 0; width: 100%; height: 35vh;
+  z-index: 0; pointer-events: none; overflow: hidden;
+}
+.hw-wave {
+  position: absolute; bottom: 0; left: 0; width: 200%; height: 100%;
+  background: linear-gradient(to top, rgba(232, 88, 12, 0.15), transparent);
+  transform-origin: bottom center;
+  animation: wave-undulate linear infinite alternate;
+}
+.hw-wave:nth-child(1) { animation-duration: 8s; opacity: 0.9; }
+.hw-wave:nth-child(2) { animation-duration: 12s; opacity: 0.7; animation-delay: -2s; transform: scaleY(1.2); }
+.hw-wave:nth-child(3) { animation-duration: 15s; opacity: 0.5; animation-delay: -5s; transform: scaleY(0.8); }
+.hw-wave:nth-child(4) { animation-duration: 20s; opacity: 0.3; animation-delay: -8s; transform: scaleY(1.5); }
+.hw-shimmer {
+  position: absolute; bottom: 15vh; width: 200%; height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 106, 30, 0.4), transparent);
+  animation: wave-undulate 10s linear infinite;
+}
+@keyframes wave-undulate {
+  0% { transform: translateX(0) scaleY(1); }
+  100% { transform: translateX(-50%) scaleY(1.3); }
+}
+
+/* === EMBERS === */
+#embers-container {
+  position: fixed; inset: 0; pointer-events: none; z-index: 5;
+}
+.ember {
+  position: absolute;
+  bottom: -10px;
+  background: radial-gradient(circle, #FF9933 0%, #FF3300 40%, transparent 70%);
+  border-radius: 50%;
+  animation: ember-float linear forwards;
+}
+@keyframes ember-float {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  20% { opacity: 0.8; }
+  80% { opacity: 0.5; }
+  100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+}
+
+/* === EXCITEMENT TIERS === */
+.tier-warm {
+  border-color: rgba(232, 88, 12, 0.5) !important;
+  box-shadow: 0 0 20px rgba(232, 88, 12, 0.2) !important;
+}
+.tier-hot {
+  border-color: rgba(255, 106, 30, 0.8) !important;
+  box-shadow: 0 0 30px rgba(255, 106, 30, 0.4) !important;
+  text-shadow: 0 0 15px rgba(255, 106, 30, 0.6) !important;
+}
+.tier-fire {
+  border-color: #FF3300 !important;
+  box-shadow: 0 0 50px rgba(255, 51, 0, 0.6) !important;
+  text-shadow: 0 0 25px rgba(255, 51, 0, 0.8) !important;
+  animation: pulse-fire 1s ease-in-out infinite alternate !important;
+}
+@keyframes pulse-fire {
+  from { box-shadow: 0 0 30px rgba(255, 51, 0, 0.4); }
+  to { box-shadow: 0 0 60px rgba(255, 51, 0, 0.8); border-color: #FF6600; }
+}
+.excitement-msg {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  letter-spacing: 0.15em;
+  color: var(--color-primary);
+  height: 3rem;
+  text-align: center;
+  transition: opacity 0.5s;
+  text-transform: uppercase;
+}
 </style>
 </head>
 <body>
+<!-- Ambient Noise Overlay -->
+<svg style="pointer-events: none; position: fixed; inset: 0; z-index: 9999; width: 100%; height: 100%; opacity: 0.04; mix-blend-mode: overlay;" aria-hidden="true">
+  <filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" stitchTiles="stitch" /></filter>
+  <rect width="100%" height="100%" filter="url(#noiseFilter)" />
+</svg>
+
 
 <div class="heat-bg" aria-hidden="true">
   <div class="heat-line"></div>
@@ -681,12 +787,22 @@ body {
 </div>
 <div class="heat-orb" aria-hidden="true"></div>
 
+<div class="heat-waves" aria-hidden="true">
+  <div class="hw-wave"></div>
+  <div class="hw-wave"></div>
+  <div class="hw-wave"></div>
+  <div class="hw-wave"></div>
+  <div class="hw-shimmer"></div>
+</div>
+<div id="embers-container"></div>
+
 <!-- BIG HEADER -->
 <div class="header">
   <div class="header-left">
     <div class="header-logo">
       <img src="heatwave-logo.png" alt="RDU Heatwave">
     </div>
+    <div class="header-divider"></div>
     <div class="header-brand">
       <div class="header-title">RDU HEATWAVE</div>
       <img src="twotwelve-logo.png" alt="Two Twelve Referral Network" class="header-tt">
@@ -761,6 +877,7 @@ body {
   <!-- CENTER: COUNTDOWN -->
   <div class="countdown-zone" id="countdown-zone">
     <div class="countdown-header" id="countdown-header">WE START IN</div>
+    <div class="excitement-msg" id="excitement-msg"></div>
 
     <!-- Main countdown -->
     <div class="countdown-grid" id="countdown-grid">
@@ -844,6 +961,66 @@ body {
   var CARD_SETTLE_DELAY = 1200;
 
   var PHASE = { COUNTDOWN: 0, WARMUP: 1, FINAL: 2, HORN: 3, LIVE: 4, OVER: 5 };
+
+  // Embers and Excitement Logic
+  var embersContainer = document.getElementById('embers-container');
+  var emberInterval = null;
+  var currentSpawnRate = 0;
+  
+  function createEmber() {
+    var ember = document.createElement('div');
+    ember.className = 'ember';
+    var size = Math.random() * 8 + 3; // 3px to 11px
+    ember.style.width = size + 'px';
+    ember.style.height = size + 'px';
+    ember.style.left = Math.random() * 100 + 'vw';
+    var duration = Math.random() * 5 + 4; // 4s to 9s
+    ember.style.animationDuration = duration + 's';
+    embersContainer.appendChild(ember);
+    setTimeout(function() {
+      if (ember.parentNode) ember.parentNode.removeChild(ember);
+    }, duration * 1000);
+  }
+  
+  function updateEmbers(spawnRate) {
+    if (spawnRate === currentSpawnRate) return;
+    currentSpawnRate = spawnRate;
+    if (emberInterval) clearInterval(emberInterval);
+    if (spawnRate > 0) {
+      emberInterval = setInterval(createEmber, spawnRate);
+    }
+  }
+
+  var msgsWarm = ["ALMOST TIME", "GET READY"];
+  var msgsHot = ["GETTING CLOSE!", "BRING THE HEAT!"];
+  var msgsFire = ["IT'S ALMOST GO TIME!", "FIND YOUR SEAT!"];
+  var msgIndex = 0;
+  var excitementMsgEl = document.getElementById('excitement-msg');
+  
+  setInterval(function() {
+     msgIndex++;
+     if(currentPhase !== PHASE.COUNTDOWN) {
+       excitementMsgEl.textContent = "";
+       return;
+     }
+     var diff = meeting.timestamp - Date.now();
+     var mins = Math.floor(diff / 60000);
+     var msgs = [];
+     if (mins < 10) msgs = msgsFire;
+     else if (mins < 30) msgs = msgsHot;
+     else if (mins < 60) msgs = msgsWarm;
+     
+     if (msgs.length > 0) {
+       excitementMsgEl.style.opacity = 0;
+       setTimeout(function() {
+         excitementMsgEl.textContent = msgs[msgIndex % msgs.length];
+         excitementMsgEl.style.opacity = 1;
+       }, 500);
+     } else {
+       excitementMsgEl.textContent = "";
+     }
+  }, 4000);
+
   var currentPhase = null;
   var hornPlayed = false;
   var lastFinalSec = -1;
@@ -975,6 +1152,7 @@ body {
         countdownHeader.textContent = 'WE START IN';
         break;
       case PHASE.WARMUP:
+        updateEmbers(200);
         countdownHeader.textContent = 'MEETING TIME';
         warmupDisplay.classList.add('visible');
         progressWrap.classList.add('visible');
@@ -982,6 +1160,7 @@ body {
         statusBanner.className = 'status-banner visible warmup';
         break;
       case PHASE.FINAL:
+        updateEmbers(80);
         countdownHeader.textContent = '';
         countdownHeader.style.display = 'none';
         finalDisplay.classList.add('visible');
@@ -994,6 +1173,7 @@ body {
         lastFinalSec = -1;
         break;
       case PHASE.HORN:
+        updateEmbers(40);
         countdownHeader.textContent = '';
         countdownHeader.style.display = 'none';
         finalDisplay.classList.remove('visible');
@@ -1007,12 +1187,14 @@ body {
         if (!hornPlayed) { playHorn(); hornPlayed = true; }
         break;
       case PHASE.LIVE:
+        updateEmbers(0);
         countdownGrid.style.display = 'grid';
         countdownHeader.textContent = 'MEETING IN PROGRESS';
         statusBanner.textContent = '\uD83D\uDD25 LET\'S GO \uD83D\uDD25';
         statusBanner.className = 'status-banner visible live';
         break;
       case PHASE.OVER:
+        updateEmbers(0);
         meeting = getNextMeeting();
         datetimeEl.textContent = meeting.dateStr + ' \u2022 4:00 PM ET';
         hornPlayed = false;
@@ -1057,6 +1239,19 @@ body {
       document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
       document.getElementById('cd-mins').textContent = String(mins).padStart(2, '0');
       document.getElementById('cd-secs').textContent = String(secs).padStart(2, '0');
+
+      var values = document.querySelectorAll('.countdown-value');
+      values.forEach(function(v) {
+        v.classList.remove('tier-warm', 'tier-hot', 'tier-fire');
+        if (mins < 10) v.classList.add('tier-fire');
+        else if (mins < 30) v.classList.add('tier-hot');
+        else if (mins < 60) v.classList.add('tier-warm');
+      });
+      
+      if (mins < 10) updateEmbers(300);
+      else if (mins < 30) updateEmbers(600);
+      else updateEmbers(0);
+
     } else if (now < warmupEnd) {
       setPhase(PHASE.WARMUP);
       var remaining = Math.max(0, Math.ceil((warmupEnd - now) / 1000));
