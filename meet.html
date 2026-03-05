@@ -752,6 +752,34 @@ body {
   transition: opacity 0.5s;
   text-transform: uppercase;
 }
+
+/* Interactive Hover State for Cards */
+.carousel-card {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+.carousel-card.active:hover {
+  transform: perspective(900px) rotateY(0deg) translateY(-10px) scale(1.02) !important;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 200px rgba(232, 88, 12, 0.25) !important;
+  cursor: pointer;
+}
+
+.ticker-wrap::before, .ticker-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 150px;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+.ticker-wrap::before {
+  left: 0;
+  background: linear-gradient(to right, #E8580C, transparent);
+}
+.ticker-wrap::after {
+  right: 0;
+  background: linear-gradient(to left, #E8580C, transparent);
+}
 </style>
 </head>
 <body>
@@ -800,7 +828,7 @@ body {
     </div>
     <div style="width: 2px; height: 50px; background: rgba(0,0,0,0.1);"></div>
     <div class="header-tt-wrap" style="display:flex; align-items:center;">
-      <img src="twotwelve-logo.png" alt="Two Twelve Referral Network" style="height: clamp(30px, 3vw, 40px); filter: brightness(0) drop-shadow(0 2px 4px rgba(0,0,0,0.1)); opacity: 0.85;">
+      <img src="twotwelve-logo.png" alt="Two Twelve Referral Network" style="height: clamp(30px, 3vw, 40px); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); opacity: 0.95;">
     </div>
   </div>
   <div class="header-center">
