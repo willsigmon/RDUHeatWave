@@ -4,9 +4,9 @@
     { "src": "api/**/*.js", "use": "@vercel/node" },
     { "src": "*.html", "use": "@vercel/static" },
     { "src": "*.png", "use": "@vercel/static" },
-    { "src": "*.ico", "use": "@vercel/static" },
     { "src": "icons/*.png", "use": "@vercel/static" },
     { "src": "*.svg", "use": "@vercel/static" },
+    { "src": "*.ico", "use": "@vercel/static" },
     { "src": "*.txt", "use": "@vercel/static" },
     { "src": "*.xml", "use": "@vercel/static" },
     { "src": "*.webmanifest", "use": "@vercel/static" }
@@ -30,6 +30,7 @@
     { "src": "/agenda.html", "dest": "/agenda.html" },
     { "src": "/(.*\\.png)", "dest": "/$1" },
     { "src": "/(.*\\.svg)", "dest": "/$1" },
+    { "src": "/(.*\\.ico)", "dest": "/$1" },
     { "src": "/(.*\\.txt)", "dest": "/$1" },
     { "src": "/(.*\\.xml)", "dest": "/$1" },
     { "src": "/(.*\\.webmanifest)", "dest": "/$1" },

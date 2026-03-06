@@ -36,21 +36,22 @@ function expect(condition, label, detail) {
 
 (async function run() {
   const paths = [
-    ['/', 'text/html'],
-    ['/meet', 'text/html'],
-    ['/agenda', 'text/html'],
-    ['/api/checkin', 'application/json'],
-    ['/robots.txt', 'text/plain'],
-    ['/sitemap.xml', 'application/xml'],
-    ['/site.webmanifest', 'application/manifest+json'],
-    ['/icons/heatwave-icon-192.png', 'image/png']
+    ['/', ['text/html']],
+    ['/meet', ['text/html']],
+    ['/agenda', ['text/html']],
+    ['/api/checkin', ['application/json']],
+    ['/robots.txt', ['text/plain']],
+    ['/sitemap.xml', ['application/xml']],
+    ['/site.webmanifest', ['application/manifest+json']],
+    ['/favicon.ico', ['image/x-icon', 'image/vnd.microsoft.icon']],
+    ['/icons/heatwave-icon-192.png', ['image/png']]
   ];
 
-  for (const [path, expectedType] of paths) {
+  for (const [path, expectedTypes] of paths) {
     const response = await fetch(`${base}${path}`);
     expect(response.ok, `${path} returns 200`, String(response.status));
     const type = response.headers.get('content-type') || '';
-    expect(type.includes(expectedType), `${path} content-type`, type || 'missing');
+    expect(expectedTypes.some((expectedType) => type.includes(expectedType)), `${path} content-type`, type || 'missing');
   }
 
   const { response: homeResponse, text: homeHtml } = await fetchText('/');
