@@ -3,9 +3,23 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#E8580C">
 <title>RDU Heatwave — Registration</title>
 <meta name="description" content="Register for RDU Heatwave, a 212 Referral Network team in the Raleigh-Durham, NC area.">
+<link rel="canonical" href="https://rduheatwave.team/">
+<link rel="icon" type="image/png" href="/icons/heatwave-icon-192.png">
+<link rel="apple-touch-icon" href="/icons/heatwave-icon-180.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:title" content="RDU Heatwave — Registration">
+<meta property="og:description" content="Register for RDU Heatwave, a 212 Referral Network team in the Raleigh-Durham, NC area.">
+<meta property="og:url" content="https://rduheatwave.team/">
+<meta property="og:image" content="https://rduheatwave.team/icons/heatwave-icon-512.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RDU Heatwave — Registration">
+<meta name="twitter:description" content="Register for RDU Heatwave, a 212 Referral Network team in the Raleigh-Durham, NC area.">
+<meta name="twitter:image" content="https://rduheatwave.team/icons/heatwave-icon-512.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -121,9 +135,13 @@ body {
 .nav-dot {
   width: 9px;
   height: 9px;
+  padding: 0;
+  border: 0;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.25);
   cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
   transition: all 0.25s ease;
 }
 
@@ -131,6 +149,11 @@ body {
   background: var(--color-primary);
   box-shadow: 0 0 8px rgba(232, 88, 12, 0.6);
   transform: scale(1.2);
+}
+
+.nav-dot:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.9);
+  outline-offset: 3px;
 }
 
 /* === INFO PANEL STYLES === */
@@ -785,9 +808,9 @@ button { cursor: pointer; background: none; border: none; }
 
 <!-- Nav dots -->
 <div class="nav-dots">
-  <div class="nav-dot" data-index="0"></div>
-  <div class="nav-dot active" data-index="1"></div>
-  <div class="nav-dot" data-index="2"></div>
+  <button class="nav-dot" type="button" data-index="0" aria-label="Go to about panel" aria-current="false"></button>
+  <button class="nav-dot active" type="button" data-index="1" aria-label="Go to check-in panel" aria-current="true"></button>
+  <button class="nav-dot" type="button" data-index="2" aria-label="Go to venue panel" aria-current="false"></button>
 </div>
 
 <!-- SLIDER: 3 panels, form is center (default) -->
@@ -872,31 +895,31 @@ button { cursor: pointer; background: none; border: none; }
     <div class="form-row">
       <div class="field">
         <label class="field-label" for="firstName">First Name</label>
-        <input class="field-input" type="text" id="firstName" name="firstName" placeholder="John" autocomplete="given-name" required>
+        <input class="field-input" type="text" id="firstName" name="firstName" placeholder="John" autocomplete="given-name" maxlength="80" required>
         <div class="field-error" id="firstName-error">Please enter your first name</div>
       </div>
       <div class="field">
         <label class="field-label" for="lastName">Last Name</label>
-        <input class="field-input" type="text" id="lastName" name="lastName" placeholder="Doe" autocomplete="family-name" required>
+        <input class="field-input" type="text" id="lastName" name="lastName" placeholder="Doe" autocomplete="family-name" maxlength="80" required>
         <div class="field-error" id="lastName-error">Please enter your last name</div>
       </div>
     </div>
 
     <div class="field">
       <label class="field-label" for="profession">Profession</label>
-      <input class="field-input" type="text" id="profession" name="profession" placeholder="e.g. Real Estate Agent" required>
+      <input class="field-input" type="text" id="profession" name="profession" placeholder="e.g. Real Estate Agent" maxlength="120" required>
       <div class="field-error" id="profession-error">Please enter your profession</div>
     </div>
 
     <div class="form-row">
       <div class="field">
         <label class="field-label" for="phone">Phone</label>
-        <input class="field-input" type="tel" id="phone" name="phone" placeholder="(919) 555-0123" autocomplete="tel" required>
+        <input class="field-input" type="tel" id="phone" name="phone" placeholder="(919) 555-0123" autocomplete="tel" inputmode="tel" maxlength="40" required>
         <div class="field-error" id="phone-error">Please enter your phone number</div>
       </div>
       <div class="field">
         <label class="field-label" for="email">Email</label>
-        <input class="field-input" type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+        <input class="field-input" type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" maxlength="254" required>
         <div class="field-error" id="email-error">Please enter a valid email</div>
       </div>
     </div>
@@ -914,9 +937,14 @@ button { cursor: pointer; background: none; border: none; }
         <option value="Will Sigmon">Will Sigmon</option>
         <option value="Other">Other</option>
       </select>
-      <input class="field-input" type="text" id="guestOfOther" placeholder="Please specify..." style="display: none; margin-top: 0.5rem;">
+      <input class="field-input" type="text" id="guestOfOther" placeholder="Please specify..." maxlength="120" style="display: none; margin-top: 0.5rem;">
       <input type="hidden" id="guestOf" name="guestOf">
       <div class="field-error" id="guestOf-error">Please let us know who invited you</div>
+    </div>
+
+    <div style="position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden;" aria-hidden="true">
+      <label for="companyWebsite">Leave this field blank</label>
+      <input type="text" id="companyWebsite" name="companyWebsite" tabindex="-1" autocomplete="off">
     </div>
 
     <div class="submit-wrap">
@@ -934,8 +962,8 @@ button { cursor: pointer; background: none; border: none; }
         <path class="success-check" d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
     </div>
-    <h2 class="success-title">Welcome to the Heatwave!</h2>
-    <p class="success-subtitle">Your registration has been submitted. We look forward to connecting with you.</p>
+    <h2 class="success-title" id="success-title">Welcome to the Heatwave!</h2>
+    <p class="success-subtitle" id="success-subtitle">Your registration has been submitted. We look forward to connecting with you.</p>
     <button class="reset-btn" id="reset-btn" type="button">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
       Submit Another Response
@@ -949,7 +977,7 @@ button { cursor: pointer; background: none; border: none; }
 <div class="panel">
   <div class="menu-card">
     <div class="menu-header">
-      <img src="https://images.squarespace-cdn.com/content/v1/592b235859cc6892f601724f/352e270b-0ec7-41c4-819d-ac473b71a4b3/cb_simplifiedlogo_v1_White2-01.png" alt="Clouds Brewing" loading="lazy">
+      <img src="clouds-brewing-logo.png" alt="Clouds Brewing" loading="lazy">
       <h2>Clouds Brewing</h2>
       <p>1233 Front St &bull; Raleigh, NC</p>
     </div>
@@ -1014,7 +1042,11 @@ button { cursor: pointer; background: none; border: none; }
     if (index < 0 || index > 2) return;
     currentPanel = index;
     slider.style.transform = 'translateX(' + (-index * 100) + 'vw)';
-    dots.forEach(function(d, i) { d.classList.toggle('active', i === index); });
+    dots.forEach(function(d, i) {
+      var isActive = i === index;
+      d.classList.toggle('active', isActive);
+      d.setAttribute('aria-current', isActive ? 'true' : 'false');
+    });
   }
 
   // Touch swipe handling
@@ -1067,54 +1099,85 @@ button { cursor: pointer; background: none; border: none; }
 
   // ===== COUNTDOWN TIMER =====
   var MEETING_DAY = 4; // Thursday
-  var MEETING_HOUR = 16; // 4 PM
-  var MEETING_MIN = 0;
+  var MEETING_HOUR = 11; // 11:30 AM ET
+  var MEETING_MIN = 30;
+  var MEETING_TIME_LABEL = '11:30 AM ET';
+  var MEETING_TIME_ZONE = 'America/New_York';
   var MEETING_DURATION = 2 * 60 * 60 * 1000;
+  var meetingDateFormatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: MEETING_TIME_ZONE,
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric'
+  });
+  var meetingPartsFormatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: MEETING_TIME_ZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  });
 
-  function getETOffset() {
-    var now = new Date();
-    var utcStr = now.toLocaleString('en-US', { timeZone: 'UTC' });
-    var etStr = now.toLocaleString('en-US', { timeZone: 'America/New_York' });
-    var utcDate = new Date(utcStr);
-    var etDate = new Date(etStr);
-    return Math.round((etDate.getTime() - utcDate.getTime()) / 3600000);
+  function getMeetingParts(date) {
+    var parts = {};
+    meetingPartsFormatter.formatToParts(date).forEach(function(part) {
+      if (part.type !== 'literal') parts[part.type] = part.value;
+    });
+    return {
+      year: Number(parts.year),
+      month: Number(parts.month),
+      day: Number(parts.day),
+      hour: Number(parts.hour),
+      minute: Number(parts.minute),
+      second: Number(parts.second)
+    };
+  }
+
+  function getMeetingOffsetMs(date) {
+    var parts = getMeetingParts(date);
+    var zonedAsUtc = Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute, parts.second);
+    return zonedAsUtc - date.getTime();
+  }
+
+  function getMeetingTimestamp(year, month, day, hour, minute) {
+    var utcGuess = Date.UTC(year, month - 1, day, hour, minute, 0);
+    var offset = getMeetingOffsetMs(new Date(utcGuess));
+    var timestamp = utcGuess - offset;
+    var refinedOffset = getMeetingOffsetMs(new Date(timestamp));
+
+    if (refinedOffset !== offset) {
+      timestamp = utcGuess - refinedOffset;
+    }
+
+    return timestamp;
   }
 
   function getNextMeeting() {
-    var now = new Date();
-    var eastStr = now.toLocaleString('en-US', { timeZone: 'America/New_York' });
-    var eastNow = new Date(eastStr);
-
-    var next = new Date(eastNow);
-    var dow = next.getDay();
+    var eastNow = getMeetingParts(new Date());
+    var todayUtc = new Date(Date.UTC(eastNow.year, eastNow.month - 1, eastNow.day));
+    var dow = todayUtc.getUTCDay();
     var daysUntil = (MEETING_DAY - dow + 7) % 7;
+    var meetingEndMinutes = (MEETING_HOUR * 60) + MEETING_MIN + (MEETING_DURATION / 60000);
+    var currentMinutes = (eastNow.hour * 60) + eastNow.minute + (eastNow.second / 60);
 
-    if (daysUntil === 0) {
-      var endTime = new Date(next);
-      endTime.setHours(MEETING_HOUR, MEETING_MIN, 0, 0);
-      endTime = new Date(endTime.getTime() + MEETING_DURATION);
-      if (eastNow > endTime) daysUntil = 7;
+    if (daysUntil === 0 && currentMinutes >= meetingEndMinutes) {
+      daysUntil = 7;
     }
 
-    next.setDate(next.getDate() + daysUntil);
-    next.setHours(MEETING_HOUR, MEETING_MIN, 0, 0);
+    todayUtc.setUTCDate(todayUtc.getUTCDate() + daysUntil);
 
-    var y = next.getFullYear();
-    var m = String(next.getMonth() + 1).padStart(2, '0');
-    var d = String(next.getDate()).padStart(2, '0');
-    var offsetH = getETOffset();
-    var sign = offsetH >= 0 ? '+' : '-';
-    var absH = String(Math.abs(offsetH)).padStart(2, '0');
-    var iso = y + '-' + m + '-' + d + 'T' +
-      String(MEETING_HOUR).padStart(2, '0') + ':' +
-      String(MEETING_MIN).padStart(2, '0') + ':00' + sign + absH + ':00';
+    var year = todayUtc.getUTCFullYear();
+    var month = todayUtc.getUTCMonth() + 1;
+    var day = todayUtc.getUTCDate();
+    var timestamp = getMeetingTimestamp(year, month, day, MEETING_HOUR, MEETING_MIN);
 
     return {
-      timestamp: new Date(iso).getTime(),
-      dateStr: next.toLocaleDateString('en-US', {
-        weekday: 'long', month: 'long', day: 'numeric', year: 'numeric',
-        timeZone: 'America/New_York'
-      })
+      timestamp: timestamp,
+      dateStr: meetingDateFormatter.format(new Date(timestamp))
     };
   }
 
@@ -1123,7 +1186,7 @@ button { cursor: pointer; background: none; border: none; }
   var countdownGrid = document.getElementById('countdown-grid');
   var statusEl = document.getElementById('meeting-status');
 
-  datetimeEl.textContent = meeting.dateStr + ' \u2022 4:00 PM ET';
+  datetimeEl.textContent = meeting.dateStr + ' \u2022 ' + MEETING_TIME_LABEL;
 
   function updateCountdown() {
     var now = Date.now();
@@ -1136,8 +1199,8 @@ button { cursor: pointer; background: none; border: none; }
         statusEl.textContent = 'MEETING IN PROGRESS';
       } else {
         meeting = getNextMeeting();
-        datetimeEl.textContent = meeting.dateStr + ' \u2022 4:00 PM ET';
-        countdownGrid.style.display = 'flex';
+        datetimeEl.textContent = meeting.dateStr + ' \u2022 ' + MEETING_TIME_LABEL;
+        countdownGrid.style.display = 'grid';
         statusEl.style.display = 'none';
       }
       return;
@@ -1158,17 +1221,60 @@ button { cursor: pointer; background: none; border: none; }
   setInterval(updateCountdown, 1000);
 
   // ===== CONFIG =====
-  var SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+  var FORM_ENDPOINT = '/api/checkin';
+  var FORM_TIMEOUT_MS = 12000;
+  var MAX_LOCAL_ENTRIES = 250;
+
+  function keepLatestLocalEntries(entries) {
+    return entries.slice(-MAX_LOCAL_ENTRIES);
+  }
+
+  function fetchWithTimeout(url, options, timeoutMs) {
+    if (typeof AbortController === 'undefined') {
+      return fetch(url, options);
+    }
+
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function() {
+      controller.abort();
+    }, timeoutMs);
+    var requestOptions = Object.assign({}, options, { signal: controller.signal });
+
+    return fetch(url, requestOptions).finally(function() {
+      clearTimeout(timeoutId);
+    });
+  }
 
   // ===== LOCAL BACKUP =====
   function saveToLocal(data) {
     try {
       var entries = JSON.parse(localStorage.getItem('heatwave_entries') || '[]');
-      data.timestamp = new Date().toISOString();
-      data.synced = false;
-      entries.push(data);
-      localStorage.setItem('heatwave_entries', JSON.stringify(entries));
+      var savedEntry = Object.assign({}, data, {
+        timestamp: new Date().toISOString(),
+        synced: false
+      });
+      entries.push(savedEntry);
+      localStorage.setItem('heatwave_entries', JSON.stringify(keepLatestLocalEntries(entries)));
+      return savedEntry;
     } catch(e) { /* storage full or unavailable */ }
+    return null;
+  }
+
+  function markLocalEntrySynced(timestamp) {
+    if (!timestamp) return;
+
+    try {
+      var entries = JSON.parse(localStorage.getItem('heatwave_entries') || '[]');
+      var updatedEntries = entries.map(function(entry) {
+        if (entry.timestamp === timestamp) {
+          return Object.assign({}, entry, { synced: true });
+        }
+
+        return entry;
+      });
+
+      localStorage.setItem('heatwave_entries', JSON.stringify(keepLatestLocalEntries(updatedEntries)));
+    } catch(e) { /* storage unavailable */ }
   }
 
   function getLocalEntries() {
@@ -1199,14 +1305,24 @@ button { cursor: pointer; background: none; border: none; }
   var form = document.getElementById('checkin-form');
   var submitBtn = document.getElementById('submit-btn');
   var successScreen = document.getElementById('success-screen');
+  var successTitle = document.getElementById('success-title');
+  var successSubtitle = document.getElementById('success-subtitle');
   var resetBtn = document.getElementById('reset-btn');
   var confettiCanvas = document.getElementById('confetti-canvas');
+  var defaultSuccessTitle = 'Welcome to the Heatwave!';
+  var defaultSuccessSubtitle = 'Your registration has been submitted. We look forward to connecting with you.';
+  var localOnlySuccessTitle = 'Saved on this device';
+  var localOnlySuccessSubtitle = 'Google Sheets is not connected yet, so this check-in is stored locally on this device only.';
+  var syncFailedSuccessSubtitle = 'We saved this check-in on this device, but the Google Sheets sync did not complete.';
+  var submitFailedTitle = 'We could not confirm your check-in';
+  var submitFailedSubtitle = 'This browser could not save a local backup, and the network sync did not complete. Please try again or ask the host to retry.';
 
   var fields = ['firstName', 'lastName', 'profession', 'phone', 'email', 'guestOf'];
 
   var guestOfSelect = document.getElementById('guestOfSelect');
   var guestOfOther = document.getElementById('guestOfOther');
   var guestOfHidden = document.getElementById('guestOf');
+  var companyWebsite = document.getElementById('companyWebsite');
 
   guestOfSelect.addEventListener('change', function() {
     if (this.value === 'Other') {
@@ -1231,6 +1347,14 @@ button { cursor: pointer; background: none; border: none; }
     var input = document.getElementById(name);
     var errorEl = document.getElementById(name + '-error');
     var valid = true;
+
+    if (name === 'guestOf') {
+      valid = !!guestOfHidden.value.trim();
+      guestOfSelect.classList.toggle('error', !valid);
+      guestOfOther.classList.toggle('error', !valid && guestOfSelect.value === 'Other');
+      errorEl.classList.toggle('visible', !valid);
+      return valid;
+    }
 
     if (!input.value.trim()) valid = false;
 
@@ -1259,6 +1383,7 @@ button { cursor: pointer; background: none; border: none; }
   }
 
   fields.forEach(function(name) {
+    if (name === 'guestOf') return;
     var input = document.getElementById(name);
     input.addEventListener('blur', function() {
       if (input.value.trim()) validateField(name);
@@ -1266,6 +1391,14 @@ button { cursor: pointer; background: none; border: none; }
     input.addEventListener('input', function() {
       if (input.classList.contains('error')) validateField(name);
     });
+  });
+
+  guestOfSelect.addEventListener('blur', function() {
+    validateField('guestOf');
+  });
+
+  guestOfOther.addEventListener('blur', function() {
+    if (guestOfSelect.value === 'Other') validateField('guestOf');
   });
 
   // ===== FORM SUBMIT =====
@@ -1288,35 +1421,55 @@ button { cursor: pointer; background: none; border: none; }
     });
 
     // ALWAYS save locally as backup
-    saveToLocal(entry);
+    var savedEntry = saveToLocal(entry);
 
-    // Try sending to Google Sheets
-    var formData = new URLSearchParams();
-    fields.forEach(function(name) { formData.append(name, entry[name]); });
-
-    if (SCRIPT_URL && SCRIPT_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
-      fetch(SCRIPT_URL, {
+    // Send to same-origin proxy so the UI gets a real success/failure signal
+    fetchWithTimeout(FORM_ENDPOINT, {
         method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: formData.toString()
-      }).then(function() {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+        body: new URLSearchParams(Object.assign({}, entry, {
+          companyWebsite: companyWebsite.value.trim()
+        })).toString()
+      }, FORM_TIMEOUT_MS).then(function(response) {
+        if (!response.ok) throw new Error('submit-failed');
+        return response.json();
+      }).then(function(result) {
+        if (!result || result.status !== 'ok') throw new Error('submit-failed');
+        markLocalEntrySynced(savedEntry && savedEntry.timestamp);
         showSuccess();
       }).catch(function() {
-        showSuccess(); // Still show success — data is saved locally
+        if (savedEntry) {
+          showSuccess({ localOnly: true, reason: 'sync-failed' });
+          return;
+        }
+
+        showSubmissionIssue();
       });
-    } else {
-      showSuccess(); // No API configured — local backup has the data
-    }
   });
 
-  function showSuccess() {
+  function showSuccess(options) {
+    var localOnly = !!(options && options.localOnly);
+    var reason = options && options.reason;
     submitBtn.classList.remove('loading');
     submitBtn.disabled = false;
+    successTitle.textContent = localOnly ? localOnlySuccessTitle : defaultSuccessTitle;
+    successSubtitle.textContent = localOnly
+      ? (reason === 'sync-failed' ? syncFailedSuccessSubtitle : localOnlySuccessSubtitle)
+      : defaultSuccessSubtitle;
     form.style.display = 'none';
     document.getElementById('countdown-section').style.display = 'none';
     successScreen.style.display = 'flex';
     launchConfetti();
+  }
+
+  function showSubmissionIssue() {
+    submitBtn.classList.remove('loading');
+    submitBtn.disabled = false;
+    successTitle.textContent = submitFailedTitle;
+    successSubtitle.textContent = submitFailedSubtitle;
+    form.style.display = 'none';
+    document.getElementById('countdown-section').style.display = 'none';
+    successScreen.style.display = 'flex';
   }
 
   // ===== RESET =====
@@ -1327,10 +1480,15 @@ button { cursor: pointer; background: none; border: none; }
     form.reset();
     guestOfOther.style.display = 'none';
     guestOfHidden.value = '';
+    companyWebsite.value = '';
+    successTitle.textContent = defaultSuccessTitle;
+    successSubtitle.textContent = defaultSuccessSubtitle;
     fields.forEach(function(name) {
       document.getElementById(name).classList.remove('error');
       document.getElementById(name + '-error').classList.remove('visible');
     });
+    guestOfSelect.classList.remove('error');
+    guestOfOther.classList.remove('error');
     document.getElementById('firstName').focus();
   });
 

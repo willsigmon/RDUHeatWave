@@ -3,8 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#E8580C">
 <title>RDU Heatwave — Meeting Lobby</title>
-<meta name="description" content="RDU Heatwave meeting lobby. Thursdays at 4:00 PM ET at Clouds Brewing.">
+<meta name="description" content="RDU Heatwave meeting lobby. Thursdays at 11:30 AM ET at Clouds Brewing.">
+<link rel="canonical" href="https://rduheatwave.team/meet">
+<link rel="icon" type="image/png" href="/icons/heatwave-icon-192.png">
+<link rel="apple-touch-icon" href="/icons/heatwave-icon-180.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:title" content="RDU Heatwave — Meeting Lobby">
+<meta property="og:description" content="RDU Heatwave meeting lobby. Thursdays at 11:30 AM ET at Clouds Brewing.">
+<meta property="og:url" content="https://rduheatwave.team/meet">
+<meta property="og:image" content="https://rduheatwave.team/icons/heatwave-icon-512.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RDU Heatwave — Meeting Lobby">
+<meta name="twitter:description" content="RDU Heatwave meeting lobby. Thursdays at 11:30 AM ET at Clouds Brewing.">
+<meta name="twitter:image" content="https://rduheatwave.team/icons/heatwave-icon-512.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -464,7 +478,7 @@ body {
   color: var(--color-error);
   line-height: 0.8;
   text-shadow: 0 0 100px rgba(217, 68, 68, 0.8), 0 0 200px rgba(217, 68, 68, 0.5), 0 0 300px rgba(255, 106, 30, 0.3);
-  animation: stadium-throb 0.5s ease-in-out infinite alternate;
+  animation: final-throb 0.5s ease-in-out infinite alternate;
 }
 @keyframes final-throb {
   0%, 100% { transform: scale(1); opacity: 1; }
@@ -794,7 +808,7 @@ body {
 </head>
 <body>
 <!-- Kiosk Initialization Overlay (Bypasses Autoplay Policy) -->
-<div id="kiosk-init-overlay" style="position:fixed; inset:0; z-index:999999; background:rgba(12, 12, 14, 0.95); backdrop-filter:blur(10px); display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer;">
+<div id="kiosk-init-overlay" role="button" tabindex="0" aria-label="Start lobby kiosk and enable audio" style="position:fixed; inset:0; z-index:999999; background:rgba(12, 12, 14, 0.95); backdrop-filter:blur(10px); display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer;">
   <div style="text-align:center; animation:pulse-glow 2s ease-in-out infinite;">
     <h1 style="font-family:var(--font-display); font-size:4rem; color:var(--color-primary); letter-spacing:0.1em; margin-bottom:1rem;">START LOBBY KIOSK</h1>
     <p style="font-family:var(--font-body); font-size:1.5rem; color:#f0e6dc;">Click anywhere to enable audio and begin.</p>
@@ -948,7 +962,7 @@ body {
     </div>
 
     <!-- Status banner -->
-    <div class="status-banner" id="status-banner"></div>
+    <div class="status-banner" id="status-banner" role="status" aria-live="polite"></div>
 
     <!-- Warmup timer (4:00 - 4:04) -->
     <div class="warmup-display" id="warmup-display">
@@ -989,24 +1003,17 @@ body {
 <div class="screen-flash" id="screen-flash" style="display:none" aria-hidden="true"></div>
 <div class="edge-glow" id="edge-glow" style="display:none" aria-hidden="true"></div>
 
-<!-- Audio Tracks -->
-<audio id="warmup-audio" preload="auto" loop>
-  <source src="https://www.myinstants.com/media/sounds/heartbeat.mp3" type="audio/mpeg">
-</audio>
-<audio id="final-audio" preload="auto" loop>
-  <source src="https://www.myinstants.com/media/sounds/epic.mp3" type="audio/mpeg">
-</audio>
-<audio id="horn-audio" preload="auto" loop>
-  <source src="https://www.myinstants.com/media/sounds/foghorn.mp3" type="audio/mpeg">
-</audio>
+<!-- Audio cues are synthesized locally via Web Audio API -->
 
 <script>
 (function() {
   'use strict';
 
   var MEETING_DAY = 4;
-  var MEETING_HOUR = 16;
-  var MEETING_MIN = 0;
+  var MEETING_HOUR = 11;
+  var MEETING_MIN = 30;
+  var MEETING_TIME_LABEL = '11:30 AM ET';
+  var MEETING_TIME_ZONE = 'America/New_York';
   var WARMUP_SECS = 240;
   var FINAL_SECS = 60;
   var HORN_DURATION = 15000;
@@ -1091,112 +1098,234 @@ body {
   var hornDisplay = document.getElementById('horn-display');
   var screenFlash = document.getElementById('screen-flash');
   var edgeGlow = document.getElementById('edge-glow');
-  var warmupAudio = document.getElementById('warmup-audio');
-  var finalAudio = document.getElementById('final-audio');
-  var hornAudio = document.getElementById('horn-audio');
-  
-  // Kiosk Initialization (Bypass Autoplay Policy)
-  var initOverlay = document.getElementById('kiosk-init-overlay');
-  if (initOverlay) {
-    initOverlay.addEventListener('click', function() {
-      initOverlay.style.display = 'none';
-      
-      // Play and immediately pause to unlock audio context in browsers
-      [warmupAudio, finalAudio, hornAudio].forEach(function(a) {
-        if (a) {
-          a.volume = 0; // mute the initial test
-          var p = a.play();
-          if (p !== undefined) {
-            p.then(function() {
-              a.pause();
-              a.currentTime = 0;
-              a.volume = 1; // restore volume
-            }).catch(function(e) { console.log(e); });
-          }
-        }
-      });
-      
-      // If we are already in a phase that requires audio, play it now
-      if (currentPhase === PHASE.WARMUP) safePlay(warmupAudio);
-      else if (currentPhase === PHASE.FINAL) safePlay(finalAudio);
-      else if (currentPhase === PHASE.HORN && hornAudio.paused) playHorn();
-    });
+  var AudioContextCtor = window.AudioContext || window.webkitAudioContext;
+  var audioContext = null;
+  var masterGain = null;
+  var currentSoundMode = null;
+  var soundLoopTimer = null;
+  var hornTimeout = null;
+  var soundCleanups = [];
+
+  function getAudioContext() {
+    if (!AudioContextCtor) return null;
+    if (!audioContext) {
+      audioContext = new AudioContextCtor();
+      masterGain = audioContext.createGain();
+      masterGain.gain.value = 0.16;
+      masterGain.connect(audioContext.destination);
+    }
+    return audioContext;
   }
 
-  // Try to play audio, ignore if browser blocks it until interaction
-  function safePlay(audioEl) {
-    if (audioEl && audioEl.paused) {
-      audioEl.volume = 0.5;
-      var playPromise = audioEl.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(function(error) {
-          console.log("Autoplay prevented:", error);
-        });
-      }
+  function ensureAudioReady() {
+    var ctx = getAudioContext();
+    if (!ctx) return Promise.resolve(false);
+    if (ctx.state === 'suspended') {
+      return ctx.resume().then(function() { return true; }).catch(function() { return false; });
+    }
+    return Promise.resolve(true);
+  }
+
+  function rememberSoundCleanup(cleanup) {
+    soundCleanups.push(cleanup);
+  }
+
+  function playTone(options) {
+    var ctx = getAudioContext();
+    if (!ctx || !masterGain) return function() {};
+
+    var startTime = ctx.currentTime + (options.delay || 0);
+    var duration = options.duration || 0.2;
+    var attack = options.attack || 0.02;
+    var release = options.release || Math.min(0.18, duration);
+    var endTime = startTime + duration;
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+
+    osc.type = options.type || 'sine';
+    osc.frequency.setValueAtTime(options.frequency || 220, startTime);
+    if (options.detune) {
+      osc.detune.setValueAtTime(options.detune, startTime);
+    }
+
+    gain.gain.setValueAtTime(0.0001, startTime);
+    gain.gain.exponentialRampToValueAtTime(options.volume || 0.05, startTime + attack);
+    gain.gain.exponentialRampToValueAtTime(0.0001, Math.max(startTime + attack + 0.01, endTime - release));
+
+    osc.connect(gain);
+    gain.connect(masterGain);
+    osc.start(startTime);
+    osc.stop(endTime + 0.02);
+
+    var cleaned = false;
+    return function cleanup() {
+      if (cleaned) return;
+      cleaned = true;
+      try { osc.stop(); } catch (e) {}
+      try { osc.disconnect(); } catch (e) {}
+      try { gain.disconnect(); } catch (e) {}
+    };
+  }
+
+  function clearScheduledSounds() {
+    while (soundCleanups.length) {
+      try { soundCleanups.pop()(); } catch (e) {}
     }
   }
   
-  function stopAllAudio() {
-    [warmupAudio, finalAudio, hornAudio].forEach(function(a) {
-      if (a) {
-        a.pause();
-        a.currentTime = 0;
+  // Kiosk Initialization (Bypass Autoplay Policy)
+  var initOverlay = document.getElementById('kiosk-init-overlay');
+
+  function startKiosk() {
+    if (!initOverlay || initOverlay.style.display === 'none') return;
+
+    initOverlay.style.display = 'none';
+
+    ensureAudioReady().then(function() {
+      if (currentPhase === PHASE.WARMUP) safePlay('warmup');
+      else if (currentPhase === PHASE.FINAL) safePlay('final');
+      else if (currentPhase === PHASE.HORN && currentSoundMode !== 'horn') playHorn();
+    });
+  }
+
+  if (initOverlay) {
+    initOverlay.addEventListener('click', startKiosk);
+    initOverlay.addEventListener('keydown', function(event) {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      startKiosk();
+    });
+  }
+
+  function queueWarmupPulse() {
+    rememberSoundCleanup(playTone({ frequency: 56, type: 'sine', volume: 0.06, duration: 0.12 }));
+    rememberSoundCleanup(playTone({ frequency: 56, type: 'sine', volume: 0.04, duration: 0.08, delay: 0.18 }));
+  }
+
+  function queueFinalPulse() {
+    rememberSoundCleanup(playTone({ frequency: 220, type: 'triangle', volume: 0.035, duration: 0.12 }));
+    rememberSoundCleanup(playTone({ frequency: 330, type: 'sawtooth', volume: 0.03, duration: 0.18, delay: 0.14 }));
+    rememberSoundCleanup(playTone({ frequency: 440, type: 'sawtooth', volume: 0.025, duration: 0.24, delay: 0.32 }));
+  }
+
+  function startLoopedSound(mode) {
+    if (currentSoundMode === mode) return;
+
+    stopAllAudio();
+    ensureAudioReady().then(function(ready) {
+      if (!ready) return;
+
+      currentSoundMode = mode;
+
+      if (mode === 'warmup') {
+        queueWarmupPulse();
+        soundLoopTimer = setInterval(queueWarmupPulse, 950);
+      } else if (mode === 'final') {
+        queueFinalPulse();
+        soundLoopTimer = setInterval(queueFinalPulse, 700);
       }
     });
+  }
+
+  function safePlay(mode) {
+    startLoopedSound(mode);
+  }
+
+  function stopAllAudio() {
+    currentSoundMode = null;
+    if (soundLoopTimer) {
+      clearInterval(soundLoopTimer);
+      soundLoopTimer = null;
+    }
+    if (hornTimeout) {
+      clearTimeout(hornTimeout);
+      hornTimeout = null;
+    }
+    clearScheduledSounds();
   }
   var datetimeEl = document.getElementById('meeting-datetime');
   var topDate = document.getElementById('top-date');
   var topTime = document.getElementById('top-time');
 
-  function getETOffset() {
-    var now = new Date();
-    var utcStr = now.toLocaleString('en-US', { timeZone: 'UTC' });
-    var etStr = now.toLocaleString('en-US', { timeZone: 'America/New_York' });
-    var utcDate = new Date(utcStr);
-    var etDate = new Date(etStr);
-    return Math.round((etDate.getTime() - utcDate.getTime()) / 3600000);
+  var meetingDateFormatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: MEETING_TIME_ZONE,
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric'
+  });
+  var meetingPartsFormatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: MEETING_TIME_ZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  });
+
+  function getMeetingParts(date) {
+    var parts = {};
+    meetingPartsFormatter.formatToParts(date).forEach(function(part) {
+      if (part.type !== 'literal') parts[part.type] = part.value;
+    });
+    return {
+      year: Number(parts.year),
+      month: Number(parts.month),
+      day: Number(parts.day),
+      hour: Number(parts.hour),
+      minute: Number(parts.minute),
+      second: Number(parts.second)
+    };
+  }
+
+  function getMeetingOffsetMs(date) {
+    var parts = getMeetingParts(date);
+    var zonedAsUtc = Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute, parts.second);
+    return zonedAsUtc - date.getTime();
+  }
+
+  function getMeetingTimestamp(year, month, day, hour, minute) {
+    var utcGuess = Date.UTC(year, month - 1, day, hour, minute, 0);
+    var offset = getMeetingOffsetMs(new Date(utcGuess));
+    var timestamp = utcGuess - offset;
+    var refinedOffset = getMeetingOffsetMs(new Date(timestamp));
+
+    if (refinedOffset !== offset) {
+      timestamp = utcGuess - refinedOffset;
+    }
+
+    return timestamp;
   }
 
   function getNextMeeting() {
-    var now = new Date();
-    var eastStr = now.toLocaleString('en-US', { timeZone: 'America/New_York' });
-    var eastNow = new Date(eastStr);
-
-    var next = new Date(eastNow);
-    var dow = next.getDay();
+    var eastNow = getMeetingParts(new Date());
+    var todayUtc = new Date(Date.UTC(eastNow.year, eastNow.month - 1, eastNow.day));
+    var dow = todayUtc.getUTCDay();
     var daysUntil = (MEETING_DAY - dow + 7) % 7;
+    var meetingEndMinutes = (MEETING_HOUR * 60) + MEETING_MIN + (MEETING_DURATION / 60000);
+    var currentMinutes = (eastNow.hour * 60) + eastNow.minute + (eastNow.second / 60);
 
-    if (daysUntil === 0) {
-      var endTime = new Date(next);
-      endTime.setHours(MEETING_HOUR, MEETING_MIN, 0, 0);
-      endTime = new Date(endTime.getTime() + MEETING_DURATION);
-      if (eastNow > endTime) daysUntil = 7;
+    if (daysUntil === 0 && currentMinutes >= meetingEndMinutes) {
+      daysUntil = 7;
     }
 
-    next.setDate(next.getDate() + daysUntil);
-    next.setHours(MEETING_HOUR, MEETING_MIN, 0, 0);
+    todayUtc.setUTCDate(todayUtc.getUTCDate() + daysUntil);
 
-    var y = next.getFullYear();
-    var m = String(next.getMonth() + 1).padStart(2, '0');
-    var d = String(next.getDate()).padStart(2, '0');
-    var offsetH = getETOffset();
-    var sign = offsetH >= 0 ? '+' : '-';
-    var absH = String(Math.abs(offsetH)).padStart(2, '0');
-    var iso = y + '-' + m + '-' + d + 'T' +
-      String(MEETING_HOUR).padStart(2, '0') + ':' +
-      String(MEETING_MIN).padStart(2, '0') + ':00' + sign + absH + ':00';
+    var year = todayUtc.getUTCFullYear();
+    var month = todayUtc.getUTCMonth() + 1;
+    var day = todayUtc.getUTCDate();
+    var timestamp = getMeetingTimestamp(year, month, day, MEETING_HOUR, MEETING_MIN);
 
     return {
-      timestamp: new Date(iso).getTime(),
-      dateStr: next.toLocaleDateString('en-US', {
-        weekday: 'long', month: 'long', day: 'numeric', year: 'numeric',
-        timeZone: 'America/New_York'
-      })
+      timestamp: timestamp,
+      dateStr: meetingDateFormatter.format(new Date(timestamp))
     };
   }
 
   var meeting = getNextMeeting();
-  datetimeEl.textContent = meeting.dateStr + ' \u2022 4:00 PM ET';
+  datetimeEl.textContent = meeting.dateStr + ' \u2022 ' + MEETING_TIME_LABEL;
 
   // Carousel
   var cards = document.querySelectorAll('.carousel-card');
@@ -1260,7 +1389,7 @@ body {
         break;
       case PHASE.WARMUP:
         stopAllAudio();
-        safePlay(warmupAudio);
+        safePlay('warmup');
         updateEmbers(200);
         countdownHeader.textContent = 'MEETING TIME';
         warmupDisplay.classList.add('visible');
@@ -1270,7 +1399,7 @@ body {
         break;
       case PHASE.FINAL:
         stopAllAudio();
-        safePlay(finalAudio);
+        safePlay('final');
         updateEmbers(80);
         countdownHeader.textContent = '';
         countdownHeader.style.display = 'none';
@@ -1310,7 +1439,7 @@ body {
         stopAllAudio();
         updateEmbers(0);
         meeting = getNextMeeting();
-        datetimeEl.textContent = meeting.dateStr + ' \u2022 4:00 PM ET';
+        datetimeEl.textContent = meeting.dateStr + ' \u2022 ' + MEETING_TIME_LABEL;
         hornPlayed = false;
         countdownGrid.style.display = 'grid';
         countdownHeader.textContent = 'WE START IN';
@@ -1319,16 +1448,22 @@ body {
   }
 
   function playHorn() {
-    try {
-      hornAudio.currentTime = 0;
-      hornAudio.volume = 1.0;
-      hornAudio.play().catch(function() {});
-      setTimeout(function() { hornAudio.pause(); hornAudio.currentTime = 0; }, HORN_DURATION);
-    } catch (e) {}
+    if (currentSoundMode === 'horn') return;
+
+    stopAllAudio();
+    ensureAudioReady().then(function(ready) {
+      if (!ready) return;
+
+      currentSoundMode = 'horn';
+      var hornDurationSecs = HORN_DURATION / 1000;
+      rememberSoundCleanup(playTone({ frequency: 165, type: 'square', volume: 0.08, duration: hornDurationSecs, attack: 0.03, release: 0.4 }));
+      rememberSoundCleanup(playTone({ frequency: 220, type: 'sawtooth', volume: 0.045, duration: hornDurationSecs, attack: 0.03, release: 0.4, detune: -5 }));
+      hornTimeout = setTimeout(stopAllAudio, HORN_DURATION);
+    });
   }
 
   function updateClock() {
-    var opts = { timeZone: 'America/New_York' };
+    var opts = { timeZone: MEETING_TIME_ZONE };
     var now = new Date();
     topDate.textContent = now.toLocaleDateString('en-US', Object.assign({ weekday: 'long', month: 'short', day: 'numeric' }, opts));
     topTime.textContent = now.toLocaleTimeString('en-US', Object.assign({ hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true }, opts)) + ' ET';
@@ -1424,9 +1559,9 @@ body {
   }
 
   document.addEventListener('click', function() {
-    if (currentPhase === PHASE.WARMUP) safePlay(warmupAudio);
-    else if (currentPhase === PHASE.FINAL) safePlay(finalAudio);
-    else if (currentPhase === PHASE.HORN && hornAudio.paused) playHorn();
+    if (currentPhase === PHASE.WARMUP) safePlay('warmup');
+    else if (currentPhase === PHASE.FINAL) safePlay('final');
+    else if (currentPhase === PHASE.HORN && currentSoundMode !== 'horn') playHorn();
   }, { once: false });
 })();
 </script>

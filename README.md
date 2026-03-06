@@ -14,6 +14,7 @@
 |-------|---------|
 | `/` | Guest registration / check-in form with countdown timer |
 | `/meet` | Meeting lobby display (kiosk mode) with QR code + venue info |
+| `/agenda` | Printable meeting agenda shortcut |
 | `/agenda.html` | Printable meeting agenda with worksheets |
 
 ## Meeting Details
@@ -26,9 +27,11 @@
 ## Tech Stack
 
 - Static HTML/CSS/JS (no framework)
-- Vercel (hosting + SSL)
-- Google Apps Script (form -> Google Sheets)
+- Vercel (hosting + SSL + same-origin form proxy at `/api/checkin`)
+- Google Apps Script (proxy target -> Google Sheets)
 - Namecheap (domain DNS)
+- SEO/PWA assets (`robots.txt`, `sitemap.xml`, `site.webmanifest`, touch icons)
+- Security headers via `vercel.json` route policy
 
 ## Brand
 
@@ -53,12 +56,26 @@
 ## Deploy
 
 ```bash
-cd "/Volumes/Ext-code/GitHub Repos/RDUHeatWave"
+cd "/Users/wsig/GitHub MBA/RDUHeatWave"
 vercel --yes --prod
 ```
 
+Production smoke check after deploy:
+- `/`
+- `/meet`
+- `/agenda`
+- `/api/checkin`
+- `/robots.txt`
+- `/sitemap.xml`
+- `/site.webmanifest`
+
 ## Google Sheets Integration
 
-- **Sheet ID**: `1xX4PCqHVgdjxr2PzZxLFV73ewtpv6qVE5-AGvl5_l2M`
+- **Form intake sheet ID**: `1kO0bk-89QLOI71ZqZkrGK50phvJfq6TxnGdHGIFt3qk`
+- **Current web app URL**: `https://script.google.com/macros/s/AKfycbzrs6C9Ts3KyJKksOBKLuQ8zl9u0VB8fQbsdnVy463PdGs1tzr02ursWMqcSJJ7BjnQtA/exec`
+- **Production form endpoint**: `/api/checkin` on `https://rduheatwave.team`
+- **Form hardening**: hidden honeypot, origin allowlist, burst/hourly throttling, bounded local backup, server-side field-length validation, and request timeouts
 - **Apps Script**: Deploy `apps-script.js` to script.google.com as Web App
+- **Destination Tab**: `Applications`
+- **Original team sheet requested for access**: `1xX4PCqHVgdjxr2PzZxLFV73ewtpv6qVE5-AGvl5_l2M`
 - Form submissions write: Timestamp, First Name, Last Name, Profession, Phone, Email, Guest Of

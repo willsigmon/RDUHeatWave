@@ -1,14 +1,38 @@
 {
   "version": 2,
   "builds": [
+    { "src": "api/**/*.js", "use": "@vercel/node" },
     { "src": "*.html", "use": "@vercel/static" },
     { "src": "*.png", "use": "@vercel/static" },
-    { "src": "*.svg", "use": "@vercel/static" }
+    { "src": "*.ico", "use": "@vercel/static" },
+    { "src": "icons/*.png", "use": "@vercel/static" },
+    { "src": "*.svg", "use": "@vercel/static" },
+    { "src": "*.txt", "use": "@vercel/static" },
+    { "src": "*.xml", "use": "@vercel/static" },
+    { "src": "*.webmanifest", "use": "@vercel/static" }
   ],
   "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1.js" },
+    {
+      "src": "/(.*)",
+      "headers": {
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+        "Content-Security-Policy": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+      },
+      "continue": true
+    },
     { "src": "/meet", "dest": "/meet.html" },
+    { "src": "/meet.html", "dest": "/meet.html" },
+    { "src": "/agenda", "dest": "/agenda.html" },
+    { "src": "/agenda.html", "dest": "/agenda.html" },
     { "src": "/(.*\\.png)", "dest": "/$1" },
     { "src": "/(.*\\.svg)", "dest": "/$1" },
+    { "src": "/(.*\\.txt)", "dest": "/$1" },
+    { "src": "/(.*\\.xml)", "dest": "/$1" },
+    { "src": "/(.*\\.webmanifest)", "dest": "/$1" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 }

@@ -1,12 +1,17 @@
 // Google Apps Script — paste this into script.google.com
 // Connects the RDU Heatwave registration form to your Google Sheet
 //
-// Sheet ID: 1WWSxfqJ1UdMqJxKLaiIzb06n3rSQj5-AVN3m07wAkSA
+// Sheet ID: 1kO0bk-89QLOI71ZqZkrGK50phvJfq6TxnGdHGIFt3qk
+// Tab: Applications
 //
 // Deploy as: Web App → Execute as: Me → Access: Anyone
 
+var SHEET_ID = '1kO0bk-89QLOI71ZqZkrGK50phvJfq6TxnGdHGIFt3qk';
+var SHEET_NAME = 'Applications';
+
 function doPost(e) {
-  var sheet = SpreadsheetApp.openById('1WWSxfqJ1UdMqJxKLaiIzb06n3rSQj5-AVN3m07wAkSA').getActiveSheet();
+  var spreadsheet = SpreadsheetApp.openById(SHEET_ID);
+  var sheet = spreadsheet.getSheetByName(SHEET_NAME) || spreadsheet.insertSheet(SHEET_NAME);
 
   // Add header row if sheet is empty
   if (sheet.getLastRow() === 0) {
