@@ -34,15 +34,11 @@
 - [x] SEO/PWA polish added: canonical tags, Open Graph/Twitter cards, robots.txt, sitemap.xml, site.webmanifest, and app icons
 - [x] Security headers added through Vercel route policy
 - [x] Meeting lobby overlay made keyboard-accessible for kiosk start/audio enable
-- [x] Owned intake spreadsheet created for live submissions because the original team sheet was inaccessible to the deployment account
+- [x] Original team sheet access restored for `will@willsigmon.media`
+- [x] Apps Script backend switched back to the original team sheet
 
-## TODO
-- [ ] **Migrate form backend to the original team sheet once access is approved**
-  - Current live intake sheet: `1kO0bk-89QLOI71ZqZkrGK50phvJfq6TxnGdHGIFt3qk`
-  - Original requested team sheet: `1xX4PCqHVgdjxr2PzZxLFV73ewtpv6qVE5-AGvl5_l2M`
-  - Current live web app URL: `https://script.google.com/macros/s/AKfycbzrs6C9Ts3KyJKksOBKLuQ8zl9u0VB8fQbsdnVy463PdGs1tzr02ursWMqcSJJ7BjnQtA/exec`
-- [ ] Countdown centering may still be slightly off -- verify on mobile
-- [ ] Logo could be replaced with higher-res PNG source if available
+## Remaining Non-Blocking Items
+- [ ] Logo could be replaced with a higher-res source image if you want sharper derived icons/social previews
 - [ ] Change Namecheap password (was shared in chat)
 
 ## Venue

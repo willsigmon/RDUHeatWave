@@ -71,11 +71,11 @@ Production smoke check after deploy:
 
 ## Google Sheets Integration
 
-- **Form intake sheet ID**: `1kO0bk-89QLOI71ZqZkrGK50phvJfq6TxnGdHGIFt3qk`
+- **Form intake sheet ID**: `1xX4PCqHVgdjxr2PzZxLFV73ewtpv6qVE5-AGvl5_l2M`
 - **Current web app URL**: `https://script.google.com/macros/s/AKfycbzrs6C9Ts3KyJKksOBKLuQ8zl9u0VB8fQbsdnVy463PdGs1tzr02ursWMqcSJJ7BjnQtA/exec`
 - **Production form endpoint**: `/api/checkin` on `https://rduheatwave.team`
 - **Form hardening**: hidden honeypot, origin allowlist, burst/hourly throttling, bounded local backup, server-side field-length validation, and request timeouts
 - **Apps Script**: Deploy `apps-script.js` to script.google.com as Web App
-- **Destination Tab**: `Applications`
-- **Original team sheet requested for access**: `1xX4PCqHVgdjxr2PzZxLFV73ewtpv6qVE5-AGvl5_l2M`
+- **Destination Tab**: `Applications` if present, otherwise the first existing sheet
+- **Fallback sheet retained for history**: `1kO0bk-89QLOI71ZqZkrGK50phvJfq6TxnGdHGIFt3qk`
 - Form submissions write: Timestamp, First Name, Last Name, Profession, Phone, Email, Guest Of
