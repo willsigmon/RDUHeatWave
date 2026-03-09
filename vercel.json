@@ -26,6 +26,8 @@
     },
     { "src": "/meet", "dest": "/meet.html" },
     { "src": "/meet.html", "dest": "/meet.html" },
+    { "src": "/timer", "dest": "/timer.html" },
+    { "src": "/timer.html", "dest": "/timer.html" },
     { "src": "/agenda", "dest": "/agenda.html" },
     { "src": "/agenda.html", "dest": "/agenda.html" },
     { "src": "/(.*\\.png)", "dest": "/$1" },

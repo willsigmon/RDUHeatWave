@@ -14,6 +14,7 @@
 |-------|---------|
 | `/` | Guest registration / check-in form with countdown timer |
 | `/meet` | Meeting lobby display (kiosk mode) with QR code + venue info |
+| `/timer` | Standalone countdown timer (defaults to 30 seconds) |
 | `/agenda` | Printable meeting agenda shortcut |
 | `/agenda.html` | Printable meeting agenda with worksheets |
 

@@ -38,6 +38,7 @@ function expect(condition, label, detail) {
   const paths = [
     ['/', ['text/html']],
     ['/meet', ['text/html']],
+    ['/timer', ['text/html']],
     ['/agenda', ['text/html']],
     ['/api/checkin', ['application/json']],
     ['/robots.txt', ['text/plain']],
