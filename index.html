@@ -253,6 +253,7 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.1rem;
+  line-height: 1.25;
 }
 
 .team-member span {
@@ -260,14 +261,9 @@ body {
   font-size: 0.95rem;
 }
 
-.team-member-kind {
-  display: inline-block;
-  margin-top: 0.35rem;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.5);
+.team-member-title-special {
+  color: #ffb36b;
+  letter-spacing: 0.07em;
 }
 
 .swipe-hint {
@@ -1376,7 +1372,7 @@ button { cursor: pointer; background: none; border: none; }
     { name: 'Carter Helms', title: 'Team Chair', leader: true },
     { name: 'Craig Morrill', title: 'Vice Chair', leader: true },
     { name: 'Will Sigmon', title: 'Team Admin', leader: true },
-    { name: 'Rusty Sutton', title: 'Marketing', leader: true },
+    { name: 'Rusty Sutton', title: 'Team Marketing Specialist', leader: true, specialTitle: true },
     { name: 'Robert Courts', title: 'Mortgage Lending', leader: false },
     { name: 'Dana Walsh', title: 'Magazine Publisher', leader: false },
     { name: 'Nathan Senn', title: 'Property Restoration', leader: false }
@@ -1401,12 +1397,11 @@ button { cursor: pointer; background: none; border: none; }
     var councilMembers = TEAM_MEMBERS.filter(function(member) { return member.leader; });
     var memberRoster = TEAM_MEMBERS.filter(function(member) { return !member.leader; });
 
-    function renderMemberCards(members, kindLabel) {
+    function renderMemberCards(members) {
       return members.map(function(member) {
         return '<div class="team-member' + (member.leader ? ' leader' : '') + '">' +
-          '<strong>' + escapeHtml(member.title) + '</strong>' +
+          '<strong class="' + (member.specialTitle ? 'team-member-title-special' : '') + '">' + escapeHtml(member.title) + '</strong>' +
           '<span>' + escapeHtml(member.name) + '</span>' +
-          '<div class="team-member-kind">' + escapeHtml(kindLabel) + '</div>' +
         '</div>';
       }).join('');
     }
@@ -1414,11 +1409,11 @@ button { cursor: pointer; background: none; border: none; }
     teamGrid.innerHTML =
       '<div class="team-grid-group">' +
         '<div class="team-grid-label">Council</div>' +
-        '<div class="team-grid-cards">' + renderMemberCards(councilMembers, 'Council') + '</div>' +
+        '<div class="team-grid-cards">' + renderMemberCards(councilMembers) + '</div>' +
       '</div>' +
       '<div class="team-grid-group">' +
         '<div class="team-grid-label">Members</div>' +
-        '<div class="team-grid-cards">' + renderMemberCards(memberRoster, 'Member') + '</div>' +
+        '<div class="team-grid-cards">' + renderMemberCards(memberRoster) + '</div>' +
       '</div>';
   }
 
