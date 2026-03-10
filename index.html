@@ -93,6 +93,7 @@ body {
   color: var(--color-text);
   background-color: var(--color-bg);
   overflow: hidden;
+  overscroll-behavior-x: none;
 }
 
 /* === SLIDER === */
@@ -103,6 +104,7 @@ body {
   height: 100dvh;
   transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   transform: translateX(-100vw); /* Start on center panel (form) */
+  will-change: transform;
 }
 
 .panel {
@@ -111,6 +113,7 @@ body {
   height: 100dvh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  touch-action: pan-y pinch-zoom;
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -281,6 +284,73 @@ body {
   color: rgba(255,255,255,0.4);
   font-size: 0.85rem;
   margin-top: 1.25rem;
+}
+
+.swipe-hint-center {
+  margin-top: 0.95rem;
+  margin-bottom: 0.2rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.48);
+}
+
+.swipe-peek {
+  position: fixed;
+  bottom: calc(4.6rem + env(safe-area-inset-bottom));
+  z-index: 95;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.42rem 0.6rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(232, 88, 12, 0.14);
+  background: rgba(22, 18, 16, 0.78);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: rgba(255,255,255,0.68);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.swipe-peek.visible {
+  opacity: 1;
+}
+
+.swipe-peek-left {
+  left: 0.75rem;
+  transform: translateX(-0.4rem);
+}
+
+.swipe-peek-right {
+  right: 0.75rem;
+  transform: translateX(0.4rem);
+}
+
+.swipe-peek-left.visible,
+.swipe-peek-right.visible {
+  transform: translateX(0);
+}
+
+.swipe-peek.peek-pop {
+  animation: swipe-peek-pop 0.9s ease;
+}
+
+.swipe-peek-arrow {
+  color: var(--color-primary);
+  font-size: 0.82rem;
+  line-height: 1;
+}
+
+@keyframes swipe-peek-pop {
+  0%, 100% { transform: translateX(0) scale(1); }
+  35% { transform: translateX(0) scale(1.06); }
+  70% { transform: translateX(0) scale(0.98); }
 }
 
 /* === BEER MENU STYLES === */
@@ -988,6 +1058,109 @@ button { cursor: pointer; background: none; border: none; }
   border-style: dashed;
 }
 
+.guest-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.guest-quick-picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.guest-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.4rem;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid rgba(232, 88, 12, 0.24);
+  border-radius: var(--radius-full);
+  background: rgba(44, 36, 32, 0.72);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease, background 0.2s ease;
+}
+
+.guest-chip:hover {
+  transform: translateY(-1px);
+  border-color: rgba(232, 88, 12, 0.45);
+}
+
+.guest-chip.active {
+  background: rgba(232, 88, 12, 0.18);
+  border-color: rgba(232, 88, 12, 0.7);
+  box-shadow: 0 0 0 3px rgba(232, 88, 12, 0.14);
+}
+
+.guest-chip--other {
+  border-style: dashed;
+}
+
+.guest-search-input {
+  margin-top: 0.05rem;
+}
+
+.guest-results {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  max-height: 14rem;
+  overflow-y: auto;
+}
+
+.guest-results:empty {
+  display: none;
+}
+
+.guest-result {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid rgba(232, 88, 12, 0.18);
+  border-radius: var(--radius-md);
+  background: rgba(44, 36, 32, 0.58);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease, background 0.2s ease;
+}
+
+.guest-result:hover {
+  transform: translateY(-1px);
+  border-color: rgba(232, 88, 12, 0.42);
+}
+
+.guest-result.active {
+  background: rgba(232, 88, 12, 0.18);
+  border-color: rgba(232, 88, 12, 0.7);
+  box-shadow: 0 0 0 3px rgba(232, 88, 12, 0.14);
+}
+
+.guest-result-name {
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.guest-result-meta {
+  font-size: 0.76rem;
+  color: var(--color-text-muted);
+  line-height: 1.2;
+}
+
+.guest-picker.error .guest-quick-picks {
+  padding: 0.25rem;
+  margin: -0.25rem;
+  border-radius: calc(var(--radius-md) + 0.25rem);
+  box-shadow: 0 0 0 2px rgba(217, 68, 68, 0.14);
+}
+
 /* === SUBMIT BUTTON === */
 .submit-wrap {
   margin-top: 0.5rem;
@@ -1124,6 +1297,7 @@ button { cursor: pointer; background: none; border: none; }
   .tap-panel-grid-members,
   .tap-panel-grid-thirds { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .clouds-pour-row { gap: 0.4rem; }
+  .swipe-peek { bottom: calc(4rem + env(safe-area-inset-bottom)); }
   .clouds-event-head { flex-direction: column; align-items: flex-start; gap: 0.2rem; }
   .tap-panel { min-height: 3.25rem; padding: 0.75rem; }
   .logo-container img { width: 80px; }
@@ -1153,6 +1327,15 @@ button { cursor: pointer; background: none; border: none; }
   <button class="nav-dot" type="button" data-index="0" aria-label="Go to about panel" aria-current="false"></button>
   <button class="nav-dot active" type="button" data-index="1" aria-label="Go to check-in panel" aria-current="true"></button>
   <button class="nav-dot" type="button" data-index="2" aria-label="Go to venue panel" aria-current="false"></button>
+</div>
+
+<div class="swipe-peek swipe-peek-left" id="swipe-peek-left" aria-hidden="true">
+  <span class="swipe-peek-arrow">&larr;</span>
+  <span id="swipe-peek-left-label"></span>
+</div>
+<div class="swipe-peek swipe-peek-right" id="swipe-peek-right" aria-hidden="true">
+  <span id="swipe-peek-right-label"></span>
+  <span class="swipe-peek-arrow">&rarr;</span>
 </div>
 
 <!-- SLIDER: 3 panels, form is center (default) -->
@@ -1223,6 +1406,7 @@ button { cursor: pointer; background: none; border: none; }
     </div>
     <div class="meeting-status" id="meeting-status" style="display:none;"></div>
   </div>
+  <div class="swipe-hint swipe-hint-center" id="swipe-hint-center">Swipe &larr; Team &bull; Clouds &rarr;</div>
 
   <!-- Registration Form -->
   <form id="checkin-form" class="form-fields" novalidate>
@@ -1266,9 +1450,12 @@ button { cursor: pointer; background: none; border: none; }
     </div>
 
     <div class="field">
-      <label class="field-label" for="guestOf">Guest Of</label>
-      <div class="tap-panel-grid tap-panel-grid-members" id="guestOf-panels" role="group" aria-label="Guest Of"></div>
-      <input class="field-input" type="text" id="guestOfOther" placeholder="Please specify..." maxlength="120" style="display: none; margin-top: 0.5rem;">
+      <label class="field-label" for="guestOfSearch">Guest Of</label>
+      <div class="guest-picker" id="guestOf-picker">
+        <div class="guest-quick-picks" id="guestOf-quick" role="group" aria-label="Quick host picks"></div>
+        <input class="field-input guest-search-input" type="text" id="guestOfSearch" placeholder="Search team member or type a name" maxlength="120" autocomplete="off" autocapitalize="words" spellcheck="false">
+        <div class="guest-results" id="guestOf-results" role="listbox" aria-label="Guest suggestions"></div>
+      </div>
       <input type="hidden" id="guestOf" name="guestOf">
       <div class="field-error" id="guestOf-error">Please let us know who invited you</div>
     </div>
@@ -1436,11 +1623,75 @@ button { cursor: pointer; background: none; border: none; }
   // ===== SWIPE SLIDER =====
   var slider = document.getElementById('slider');
   var dots = document.querySelectorAll('.nav-dot');
+  var swipeHintCenter = document.getElementById('swipe-hint-center');
+  var swipePeekLeft = document.getElementById('swipe-peek-left');
+  var swipePeekRight = document.getElementById('swipe-peek-right');
+  var swipePeekLeftLabel = document.getElementById('swipe-peek-left-label');
+  var swipePeekRightLabel = document.getElementById('swipe-peek-right-label');
   var currentPanel = 1; // Form is default (center)
   var touchStartX = 0;
   var touchStartY = 0;
   var touchDeltaX = 0;
   var isSwiping = false;
+  var gestureAxis = '';
+  var swipeLocked = false;
+  var peekTimers = [];
+  var peekHasRun = false;
+  var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var touchCapable = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+  var panelPeekLabels = ['Team', 'Check In', 'Clouds'];
+
+  function clearPeekTimers() {
+    peekTimers.forEach(function(timerId) {
+      window.clearTimeout(timerId);
+    });
+    peekTimers = [];
+  }
+
+  function cancelPeek() {
+    clearPeekTimers();
+    slider.style.transition = 'transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+    goToPanel(currentPanel);
+  }
+
+  function updateSwipePeek() {
+    var leftLabel = currentPanel > 0 ? panelPeekLabels[currentPanel - 1] : '';
+    var rightLabel = currentPanel < 2 ? panelPeekLabels[currentPanel + 1] : '';
+
+    if (swipePeekLeftLabel) swipePeekLeftLabel.textContent = leftLabel;
+    if (swipePeekRightLabel) swipePeekRightLabel.textContent = rightLabel;
+
+    if (swipePeekLeft) swipePeekLeft.classList.toggle('visible', !!leftLabel && touchCapable);
+    if (swipePeekRight) swipePeekRight.classList.toggle('visible', !!rightLabel && touchCapable);
+  }
+
+  function pulseSwipePeekLabels() {
+    [swipePeekLeft, swipePeekRight].forEach(function(element) {
+      if (!element || !element.classList.contains('visible')) return;
+      element.classList.remove('peek-pop');
+      void element.offsetWidth;
+      element.classList.add('peek-pop');
+    });
+  }
+
+  function schedulePeek(delay) {
+    if (!touchCapable || peekHasRun || reduceMotion) return;
+    clearPeekTimers();
+    peekTimers.push(window.setTimeout(function() {
+      if (currentPanel !== 1 || swipeLocked) return;
+      peekHasRun = true;
+      pulseSwipePeekLabels();
+      slider.style.transition = 'transform 0.3s ease';
+      slider.style.transform = 'translateX(calc(-100vw + 18px))';
+      peekTimers.push(window.setTimeout(function() {
+        slider.style.transform = 'translateX(calc(-100vw - 18px))';
+      }, 320));
+      peekTimers.push(window.setTimeout(function() {
+        slider.style.transition = 'transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        goToPanel(1);
+      }, 640));
+    }, delay || 900));
+  }
 
   function goToPanel(index) {
     if (index < 0 || index > 2) return;
@@ -1451,55 +1702,82 @@ button { cursor: pointer; background: none; border: none; }
       d.classList.toggle('active', isActive);
       d.setAttribute('aria-current', isActive ? 'true' : 'false');
     });
+
+    if (swipeHintCenter) {
+      swipeHintCenter.textContent = index === 1 ? 'Swipe ← Team • Clouds →' : (index === 0 ? 'Swipe → Check In' : 'Swipe ← Check In');
+    }
+
+    updateSwipePeek();
   }
 
   // Touch swipe handling
   slider.addEventListener('touchstart', function(e) {
+    if (e.touches.length !== 1) return;
+    cancelPeek();
     touchStartX = e.touches[0].clientX;
     touchStartY = e.touches[0].clientY;
     touchDeltaX = 0;
     isSwiping = false;
+    gestureAxis = '';
+    swipeLocked = !e.target.closest('.panel') || !!e.target.closest('input:not([type="hidden"]), textarea, select, [contenteditable="true"]');
     slider.style.transition = 'none';
   }, { passive: true });
 
   slider.addEventListener('touchmove', function(e) {
+    if (swipeLocked || !e.touches.length) return;
     var dx = e.touches[0].clientX - touchStartX;
     var dy = e.touches[0].clientY - touchStartY;
 
-    // Determine if horizontal swipe (only on first significant move)
-    if (!isSwiping && Math.abs(dx) > 10) {
-      isSwiping = Math.abs(dx) > Math.abs(dy);
+    if (!gestureAxis) {
+      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+      gestureAxis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+      isSwiping = gestureAxis === 'x';
     }
 
-    if (isSwiping) {
-      touchDeltaX = dx;
-      var offset = (-currentPanel * window.innerWidth) + dx;
-      slider.style.transform = 'translateX(' + offset + 'px)';
-    }
-  }, { passive: true });
+    if (gestureAxis !== 'x') return;
 
-  slider.addEventListener('touchend', function() {
+    e.preventDefault();
+    touchDeltaX = dx;
+
+    var resistance = 1;
+    if ((currentPanel === 0 && dx > 0) || (currentPanel === 2 && dx < 0)) {
+      resistance = 0.35;
+    }
+    var offset = (-currentPanel * window.innerWidth) + (dx * resistance);
+    slider.style.transform = 'translateX(' + offset + 'px)';
+  }, { passive: false });
+
+  function finishSwipe() {
     slider.style.transition = 'transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
     if (isSwiping) {
-      var threshold = window.innerWidth * 0.2; // 20% of screen = swipe
+      var threshold = window.innerWidth * 0.16;
       if (touchDeltaX < -threshold && currentPanel < 2) {
         goToPanel(currentPanel + 1);
       } else if (touchDeltaX > threshold && currentPanel > 0) {
         goToPanel(currentPanel - 1);
       } else {
-        goToPanel(currentPanel); // snap back
+        goToPanel(currentPanel);
       }
     }
     isSwiping = false;
+    swipeLocked = false;
+    gestureAxis = '';
     touchDeltaX = 0;
-  });
+  }
+
+  slider.addEventListener('touchend', finishSwipe);
+  slider.addEventListener('touchcancel', finishSwipe);
 
   // Dot clicks
   dots.forEach(function(dot) {
     dot.addEventListener('click', function() {
+      cancelPeek();
       goToPanel(parseInt(this.getAttribute('data-index')));
     });
   });
+
+  updateSwipePeek();
+  schedulePeek(900);
 
   // ===== COUNTDOWN TIMER =====
   var MEETING_DAY = 4; // Thursday
@@ -1771,8 +2049,10 @@ button { cursor: pointer; background: none; border: none; }
   var optionalFields = ['idealReferral'];
   var allFields = fields.concat(optionalFields);
 
-  var guestOfPanels = document.getElementById('guestOf-panels');
-  var guestOfOther = document.getElementById('guestOfOther');
+  var guestPicker = document.getElementById('guestOf-picker');
+  var guestQuickPicks = document.getElementById('guestOf-quick');
+  var guestSearchInput = document.getElementById('guestOfSearch');
+  var guestResults = document.getElementById('guestOf-results');
   var guestOfHidden = document.getElementById('guestOf');
   var companyWebsite = document.getElementById('companyWebsite');
   var tapPanelGroups = {
@@ -1787,6 +2067,83 @@ button { cursor: pointer; background: none; border: none; }
     });
   }
 
+  function normalizeGuestValue(value) {
+    return String(value || '').trim().toLowerCase();
+  }
+
+  function findGuestMember(value) {
+    var normalized = normalizeGuestValue(value);
+    if (!normalized) return null;
+    return TEAM_MEMBERS.find(function(member) {
+      return normalizeGuestValue(member.name) === normalized;
+    }) || null;
+  }
+
+  function syncGuestQuickPicks() {
+    var selectedOption = guestQuickPicks.getAttribute('data-selected-option') || '';
+
+    guestQuickPicks.querySelectorAll('.guest-chip').forEach(function(button) {
+      button.classList.toggle('active', button.getAttribute('data-value') === selectedOption);
+    });
+  }
+
+  function renderGuestQuickPicks() {
+    guestQuickPicks.innerHTML = TEAM_MEMBERS.filter(function(member) {
+      return member.leader;
+    }).map(function(member) {
+      return '<button type="button" class="guest-chip" data-value="' + escapeHtml(member.name) + '">' + escapeHtml(member.name) + '</button>';
+    }).join('') +
+    '<button type="button" class="guest-chip guest-chip--other" data-value="Other">Someone Else</button>';
+
+    syncGuestQuickPicks();
+  }
+
+  function getGuestMatches(query) {
+    var normalized = normalizeGuestValue(query);
+    if (!normalized) return [];
+
+    return TEAM_MEMBERS.filter(function(member) {
+      return [member.name, member.title, member.company].some(function(part) {
+        return normalizeGuestValue(part).indexOf(normalized) !== -1;
+      });
+    }).slice(0, 6);
+  }
+
+  function renderGuestResults() {
+    var query = guestSearchInput.value.trim();
+    var matches = getGuestMatches(query);
+    var selectedValue = guestOfHidden.value;
+
+    if (!query) {
+      guestResults.innerHTML = '';
+      return;
+    }
+
+    guestResults.innerHTML = matches.map(function(member) {
+      var activeClass = member.name === selectedValue ? ' active' : '';
+      return '<button type="button" class="guest-result' + activeClass + '" data-value="' + escapeHtml(member.name) + '">' +
+        '<span class="guest-result-name">' + escapeHtml(member.name) + '</span>' +
+        '<span class="guest-result-meta">' + escapeHtml(member.title) + ' &bull; ' + escapeHtml(member.company || '') + '</span>' +
+      '</button>';
+    }).join('');
+  }
+
+  function setGuestSelection(value, options) {
+    var nextValue = String(value || '').trim();
+    var exactMember = findGuestMember(nextValue);
+    var isCustom = !!(nextValue && !exactMember);
+
+    guestOfHidden.value = exactMember ? exactMember.name : nextValue;
+    if (!options || !options.keepTypedValue) {
+      guestSearchInput.value = guestOfHidden.value;
+    }
+
+    guestQuickPicks.setAttribute('data-selected-option', exactMember && exactMember.leader ? exactMember.name : (isCustom ? 'Other' : ''));
+    syncGuestQuickPicks();
+    renderGuestResults();
+    validateField('guestOf');
+  }
+
   function syncPanelGroup(fieldName) {
     var group = tapPanelGroups[fieldName];
     var input = document.getElementById(fieldName);
@@ -1797,65 +2154,49 @@ button { cursor: pointer; background: none; border: none; }
     });
   }
 
-  function syncGuestOfPanels() {
-    var selectedOption = guestOfPanels.getAttribute('data-selected-option') || '';
-
-    guestOfPanels.querySelectorAll('.tap-panel').forEach(function(button) {
-      button.classList.toggle('active', button.getAttribute('data-value') === selectedOption);
-    });
-  }
-
-  function renderGuestOfPanels() {
-    var currentValue = guestOfHidden.value || '';
-    var selectedOption = currentValue ? (isTeamMember(currentValue) ? currentValue : 'Other') : '';
-
-    guestOfPanels.innerHTML = TEAM_MEMBERS.map(function(member) {
-      return '<button type="button" class="tap-panel" data-field="guestOf" data-value="' + escapeHtml(member.name) + '">' +
-        '<span class="tap-panel-title">' + escapeHtml(member.name) + '</span>' +
-        '<span class="tap-panel-subtitle">' + escapeHtml(member.title) + '</span>' +
-      '</button>';
-    }).join('') +
-    '<button type="button" class="tap-panel tap-panel--other" data-field="guestOf" data-value="Other">' +
-      '<span class="tap-panel-title">Someone Else</span>' +
-      '<span class="tap-panel-subtitle">Type their name</span>' +
-    '</button>';
-
-    guestOfPanels.setAttribute('data-selected-option', selectedOption);
-    guestOfOther.style.display = selectedOption === 'Other' ? 'block' : 'none';
-    guestOfOther.required = selectedOption === 'Other';
-    syncGuestOfPanels();
-  }
-
   renderTeamGrid();
-  renderGuestOfPanels();
+  renderGuestQuickPicks();
   Object.keys(tapPanelGroups).forEach(syncPanelGroup);
 
-  guestOfPanels.addEventListener('click', function(event) {
-    var button = event.target.closest('.tap-panel');
+  guestQuickPicks.addEventListener('click', function(event) {
+    var button = event.target.closest('.guest-chip');
     if (!button) return;
 
     var value = button.getAttribute('data-value');
-    guestOfPanels.setAttribute('data-selected-option', value);
-    syncGuestOfPanels();
-
     if (value === 'Other') {
-      guestOfOther.style.display = 'block';
-      guestOfOther.required = true;
-      guestOfHidden.value = guestOfOther.value.trim();
-      guestOfOther.focus();
-    } else {
-      guestOfOther.style.display = 'none';
-      guestOfOther.required = false;
-      guestOfOther.value = '';
-      guestOfHidden.value = value;
+      guestQuickPicks.setAttribute('data-selected-option', 'Other');
+      guestOfHidden.value = guestSearchInput.value.trim();
+      syncGuestQuickPicks();
+      guestSearchInput.focus();
+      validateField('guestOf');
+      return;
     }
 
-    validateField('guestOf');
+    setGuestSelection(value);
   });
 
-  guestOfOther.addEventListener('input', function() {
-    guestOfHidden.value = this.value.trim();
-    validateField('guestOf');
+  guestSearchInput.addEventListener('focus', function() {
+    renderGuestResults();
+  });
+
+  guestSearchInput.addEventListener('input', function() {
+    setGuestSelection(this.value, { keepTypedValue: true });
+  });
+
+  guestSearchInput.addEventListener('blur', function() {
+    window.setTimeout(function() {
+      guestResults.innerHTML = '';
+      setGuestSelection(guestSearchInput.value);
+    }, 120);
+  });
+
+  guestResults.addEventListener('click', function(event) {
+    var button = event.target.closest('.guest-result');
+    if (!button) return;
+
+    setGuestSelection(button.getAttribute('data-value'));
+    guestResults.innerHTML = '';
+    guestSearchInput.blur();
   });
 
   Object.keys(tapPanelGroups).forEach(function(fieldName) {
@@ -1878,8 +2219,8 @@ button { cursor: pointer; background: none; border: none; }
 
     if (name === 'guestOf') {
       valid = !!guestOfHidden.value.trim();
-      guestOfPanels.classList.toggle('error', !valid);
-      guestOfOther.classList.toggle('error', !valid && guestOfPanels.getAttribute('data-selected-option') === 'Other');
+      guestPicker.classList.toggle('error', !valid);
+      guestSearchInput.classList.toggle('error', !valid);
       errorEl.classList.toggle('visible', !valid);
       return valid;
     }
@@ -2019,10 +2360,10 @@ button { cursor: pointer; background: none; border: none; }
     form.style.display = 'flex';
     document.getElementById('countdown-section').style.display = 'block';
     form.reset();
-    guestOfOther.style.display = 'none';
-    guestOfOther.required = false;
     guestOfHidden.value = '';
-    guestOfPanels.setAttribute('data-selected-option', '');
+    guestSearchInput.value = '';
+    guestResults.innerHTML = '';
+    guestQuickPicks.setAttribute('data-selected-option', '');
     companyWebsite.value = '';
     successTitle.textContent = defaultSuccessTitle;
     successSubtitle.textContent = defaultSuccessSubtitle;
@@ -2041,10 +2382,10 @@ button { cursor: pointer; background: none; border: none; }
 
       if (errorEl) errorEl.classList.remove('visible');
     });
-    syncGuestOfPanels();
+    syncGuestQuickPicks();
     Object.keys(tapPanelGroups).forEach(syncPanelGroup);
-    guestOfPanels.classList.remove('error');
-    guestOfOther.classList.remove('error');
+    guestPicker.classList.remove('error');
+    guestSearchInput.classList.remove('error');
     document.getElementById('firstName').focus();
   });
 
