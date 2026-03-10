@@ -286,7 +286,7 @@ body {
 /* === BEER MENU STYLES === */
 .menu-card {
   width: 100%;
-  max-width: 700px;
+  max-width: 940px;
   background: rgba(35, 28, 24, 0.9);
   backdrop-filter: blur(40px);
   -webkit-backdrop-filter: blur(40px);
@@ -432,6 +432,20 @@ body {
   padding: 0;
 }
 
+.beer-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+  align-items: start;
+}
+
+.beer-column {
+  display: flex;
+  flex-direction: column;
+}
+
+
 .beer-item {
   display: flex;
   justify-content: space-between;
@@ -458,6 +472,52 @@ body {
   color: rgba(255,255,255,0.46);
   text-align: center;
 }
+
+.clouds-status-card {
+  margin-top: 1rem;
+  padding: 1rem 1rem 0.95rem;
+  border-radius: 1rem;
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(232, 88, 12, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+.clouds-status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.32rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(232, 88, 12, 0.12);
+  border: 1px solid rgba(232, 88, 12, 0.2);
+  color: var(--color-primary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.clouds-status-title {
+  margin-top: 0.8rem;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.clouds-status-copy {
+  margin-top: 0.45rem;
+  color: rgba(255,255,255,0.78);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.clouds-status-meta {
+  margin-top: 0.55rem;
+  color: rgba(255,255,255,0.58);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
 
 .clouds-event-list {
   list-style: none;
@@ -1083,6 +1143,10 @@ button { cursor: pointer; background: none; border: none; }
 }
 
 /* === MOBILE === */
+@media (max-width: 820px) {
+  .beer-columns { grid-template-columns: 1fr; gap: 0; }
+}
+
 @media (max-width: 500px) {
   .panel {
     align-items: flex-start;
@@ -1325,7 +1389,7 @@ button { cursor: pointer; background: none; border: none; }
       <div class="clouds-pill-row">
         <div class="clouds-pill">Thursday Hangout</div>
         <div class="clouds-pill">Fresh Tap List</div>
-        <div class="clouds-pill">Live Taproom Events</div>
+        <div class="clouds-pill">Food + Early Events</div>
       </div>
     </div>
 
@@ -1349,96 +1413,61 @@ button { cursor: pointer; background: none; border: none; }
 
     <div class="clouds-specials-card">
       <div class="clouds-specials-header">
-        <div class="clouds-specials-title">Thursday Night at Clouds</div>
-        <div class="clouds-specials-kicker">Post-Meeting Move</div>
+        <div class="clouds-specials-title">After Heatwave Window</div>
+        <div class="clouds-specials-kicker">5:00&ndash;7:00 PM Filter</div>
       </div>
-      <div class="clouds-specials-copy">Keep the momentum going after Heatwave. Grab a pour, settle into the taproom, and catch the weekly comedy mic lineup on upcoming Thursdays.</div>
+      <div class="clouds-specials-copy">This board only surfaces Thursday things that matter right after the meeting &mdash; food trucks, food specials, or events that land in the 5 to 7 PM window. Late-night comedy does not make the cut.</div>
     </div>
 
-    <div class="beer-section-title">Lagers &amp; Pilsners</div>
-    <ul class="beer-list">
-      <li class="beer-item"><span><span class="beer-name">Sky Lime</span> <span class="beer-style">Lime Lager</span></span> <span class="beer-abv">4.6%</span></li>
-      <li class="beer-item"><span><span class="beer-name">Wolkenbrau</span> <span class="beer-style">Hybrid German-American Lager</span></span> <span class="beer-abv">4.5%</span></li>
-      <li class="beer-item"><span><span class="beer-name">Precipitation</span> <span class="beer-style">German Pilsner</span></span> <span class="beer-abv">5.2%</span></li>
-      <li class="beer-item"><span><span class="beer-name">Czech Mate</span> <span class="beer-style">Czech Style Pilsner</span></span> <span class="beer-abv">5.6%</span></li>
-      <li class="beer-item"><span><span class="beer-name">Accumulation</span> <span class="beer-style">Amber Lager</span></span> <span class="beer-abv">5.8%</span></li>
-    </ul>
+    <div class="beer-columns">
+      <div class="beer-column">
+        <div class="beer-section-title">Lagers &amp; Pilsners</div>
+        <ul class="beer-list">
+          <li class="beer-item"><span><span class="beer-name">Sky Lime</span> <span class="beer-style">Lime Lager</span></span> <span class="beer-abv">4.6%</span></li>
+          <li class="beer-item"><span><span class="beer-name">Wolkenbrau</span> <span class="beer-style">Hybrid German-American Lager</span></span> <span class="beer-abv">4.5%</span></li>
+          <li class="beer-item"><span><span class="beer-name">Precipitation</span> <span class="beer-style">German Pilsner</span></span> <span class="beer-abv">5.2%</span></li>
+          <li class="beer-item"><span><span class="beer-name">Czech Mate</span> <span class="beer-style">Czech Style Pilsner</span></span> <span class="beer-abv">5.6%</span></li>
+          <li class="beer-item"><span><span class="beer-name">Accumulation</span> <span class="beer-style">Amber Lager</span></span> <span class="beer-abv">5.8%</span></li>
+        </ul>
 
-    <div class="beer-section-title">IPAs &amp; Strong Ales</div>
-    <ul class="beer-list">
-      <li class="beer-item"><span><span class="beer-name">Hop Jam IPA</span> <span class="beer-style">American IPA</span></span> <span class="beer-abv">6.3%</span></li>
-      <li class="beer-item"><span><span class="beer-name">Hazy Hop Jam</span> <span class="beer-style">Hazy IPA</span></span> <span class="beer-abv">6.3%</span></li>
-      <li class="beer-item"><span><span class="beer-name">Double Hop Jam</span> <span class="beer-style">Imperial IPA</span></span> <span class="beer-abv">10.3%</span></li>
-      <li class="beer-item"><span><span class="beer-name">Clouds 9</span> <span class="beer-style">Belgian Golden Strong</span></span> <span class="beer-abv">9%</span></li>
-      <li class="beer-item"><span><span class="beer-name">Donner &amp; Blitzen 25</span> <span class="beer-style">Spiced Belgian Quad</span></span> <span class="beer-abv">10.5%</span></li>
-    </ul>
+        <div class="beer-section-title">IPAs &amp; Strong Ales</div>
+        <ul class="beer-list">
+          <li class="beer-item"><span><span class="beer-name">Hop Jam IPA</span> <span class="beer-style">American IPA</span></span> <span class="beer-abv">6.3%</span></li>
+          <li class="beer-item"><span><span class="beer-name">Hazy Hop Jam</span> <span class="beer-style">Hazy IPA</span></span> <span class="beer-abv">6.3%</span></li>
+          <li class="beer-item"><span><span class="beer-name">Double Hop Jam</span> <span class="beer-style">Imperial IPA</span></span> <span class="beer-abv">10.3%</span></li>
+          <li class="beer-item"><span><span class="beer-name">Clouds 9</span> <span class="beer-style">Belgian Golden Strong</span></span> <span class="beer-abv">9%</span></li>
+          <li class="beer-item"><span><span class="beer-name">Donner &amp; Blitzen 25</span> <span class="beer-style">Spiced Belgian Quad</span></span> <span class="beer-abv">10.5%</span></li>
+        </ul>
+      </div>
 
-    <div class="beer-section-title">Sours, Stouts &amp; Porters</div>
-    <ul class="beer-list">
-      <li class="beer-item"><span><span class="beer-name">Mean Girl</span> <span class="beer-style">Blackberry Dragon Fruit Kettle Sour</span></span> <span class="beer-abv">5.5%</span></li>
-      <li class="beer-item"><span><span class="beer-name">Crimea River</span> <span class="beer-style">Baltic Porter</span></span> <span class="beer-abv">8%</span></li>
-      <li class="beer-item"><span><span class="beer-name">Midnight Delight</span> <span class="beer-style">Dark Chocolate Milk Stout</span></span> <span class="beer-abv">6.8%</span></li>
-      <li class="beer-item"><span><span class="beer-name">Coffee at Midnight</span> <span class="beer-style">Coffee Stout</span></span> <span class="beer-abv">7%</span></li>
-      <li class="beer-item"><span><span class="beer-name">Kentucky Moonlight</span> <span class="beer-style">BBA Imperial Stout</span></span> <span class="beer-abv">10.5%</span></li>
-    </ul>
+      <div class="beer-column">
+        <div class="beer-section-title">Sours, Stouts &amp; Porters</div>
+        <ul class="beer-list">
+          <li class="beer-item"><span><span class="beer-name">Mean Girl</span> <span class="beer-style">Blackberry Dragon Fruit Kettle Sour</span></span> <span class="beer-abv">5.5%</span></li>
+          <li class="beer-item"><span><span class="beer-name">Crimea River</span> <span class="beer-style">Baltic Porter</span></span> <span class="beer-abv">8%</span></li>
+          <li class="beer-item"><span><span class="beer-name">Midnight Delight</span> <span class="beer-style">Dark Chocolate Milk Stout</span></span> <span class="beer-abv">6.8%</span></li>
+          <li class="beer-item"><span><span class="beer-name">Coffee at Midnight</span> <span class="beer-style">Coffee Stout</span></span> <span class="beer-abv">7%</span></li>
+          <li class="beer-item"><span><span class="beer-name">Kentucky Moonlight</span> <span class="beer-style">BBA Imperial Stout</span></span> <span class="beer-abv">10.5%</span></li>
+        </ul>
 
-    <div class="beer-section-title">Wheat &amp; N/A</div>
-    <ul class="beer-list">
-      <li class="beer-item"><span><span class="beer-name">El Hefe</span> <span class="beer-style">Bavarian Wheat</span></span> <span class="beer-abv">4.9%</span></li>
-      <li class="beer-item"><span><span class="beer-name">Tailwind Margarita</span> <span class="beer-style">7mg Delta 9 THC Seltzer</span></span> <span class="beer-abv">N/A</span></li>
-      <li class="beer-item"><span><span class="beer-name">Root Beer</span> <span class="beer-style">Non-Alcoholic</span></span> <span class="beer-abv">N/A</span></li>
-    </ul>
+        <div class="beer-section-title">Wheat, THC &amp; N/A</div>
+        <ul class="beer-list">
+          <li class="beer-item"><span><span class="beer-name">El Hefe</span> <span class="beer-style">Bavarian Wheat</span></span> <span class="beer-abv">4.9%</span></li>
+          <li class="beer-item"><span><span class="beer-name">Tailwind Margarita</span> <span class="beer-style">7mg Delta 9 THC Seltzer</span></span> <span class="beer-abv">N/A</span></li>
+          <li class="beer-item"><span><span class="beer-name">Root Beer</span> <span class="beer-style">Non-Alcoholic</span></span> <span class="beer-abv">N/A</span></li>
+        </ul>
+      </div>
+    </div>
 
-    <div class="beer-section-title">Upcoming Thursday Taproom Events</div>
-    <ul class="clouds-event-list">
-      <li>
-        <details class="clouds-event-item" open>
-          <summary class="clouds-event-toggle">
-            <div class="clouds-event-head">
-              <span class="clouds-event-name">Clouds Brewing Comedy Mic</span>
-              <span class="clouds-event-date">Thu, Mar 12</span>
-            </div>
-            <div class="clouds-event-time">Signups at 8 PM &bull; Show at 8:30 PM</div>
-          </summary>
-          <div class="clouds-event-body">
-            <div class="clouds-event-desc">Free weekly comedy mic in the taproom. Easy post-meeting play if the crew wants to swing back later that night.</div>
-            <div class="clouds-event-cta">Tap to collapse</div>
-          </div>
-        </details>
-      </li>
-      <li>
-        <details class="clouds-event-item">
-          <summary class="clouds-event-toggle">
-            <div class="clouds-event-head">
-              <span class="clouds-event-name">Clouds Brewing Comedy Mic</span>
-              <span class="clouds-event-date">Thu, Mar 19</span>
-            </div>
-            <div class="clouds-event-time">Signups at 8 PM &bull; Show at 8:30 PM</div>
-          </summary>
-          <div class="clouds-event-body">
-            <div class="clouds-event-desc">Another Thursday-night comedy mic in the taproom with the same signup and show timing.</div>
-            <div class="clouds-event-cta">Tap to expand</div>
-          </div>
-        </details>
-      </li>
-      <li>
-        <details class="clouds-event-item">
-          <summary class="clouds-event-toggle">
-            <div class="clouds-event-head">
-              <span class="clouds-event-name">Clouds Brewing Comedy Mic</span>
-              <span class="clouds-event-date">Thu, Mar 26</span>
-            </div>
-            <div class="clouds-event-time">Signups at 8 PM &bull; Show at 8:30 PM</div>
-          </summary>
-          <div class="clouds-event-body">
-            <div class="clouds-event-desc">The current published Thursday event pattern continues through late March.</div>
-            <div class="clouds-event-cta">Tap to expand</div>
-          </div>
-        </details>
-      </li>
-    </ul>
+    <div class="beer-section-title">Post-Meeting Thursday Check</div>
+    <div class="clouds-status-card">
+      <div class="clouds-status-badge">Relevant Thursdays only</div>
+      <div class="clouds-status-title">No Thursday food truck or 5&ndash;7 PM event is currently posted.</div>
+      <div class="clouds-status-copy">As of March 10, 2026, Clouds' published Thursday listings are comedy mics starting at 8:00 PM. Those are intentionally left off this page because they do not affect the group right after the meeting.</div>
+      <div class="clouds-status-meta">Taproom hours currently show 4:30 PM to 11:00 PM on Thursdays. When Clouds posts a Thursday food truck, food special, or an early event that overlaps the 5 to 7 PM window, this section should highlight it first &mdash; with a truck/menu link if they publish one.</div>
+    </div>
 
-    <p class="clouds-note">Clouds menu + taproom events checked against cloudsbrewing.com on March 10, 2026.</p>
+    <p class="clouds-note">Clouds menu + Thursday-relevant taproom items checked against cloudsbrewing.com on March 10, 2026.</p>
 
     <div class="swipe-hint">&larr; Swipe right to check in</div>
   </div>
