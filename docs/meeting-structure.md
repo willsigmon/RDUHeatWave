@@ -3,18 +3,18 @@
 ## Schedule
 
 - **Day**: Every Thursday
-- **Time**: 11:30 AM ET
+- **Time**: 4:00 PM ET
 - **Venue**: Clouds Brewing, 1233 Front St, Raleigh NC 27609 (side room)
 - **Duration**: ~90 minutes
 
 ## Agenda Flow
 
-### 1. Open Networking (11:30 - 11:45)
+### 1. Open Networking (4:00 - 4:15)
 - Informal mingling, coffee/drinks
 - Members greet guests, make introductions
 - Lobby display (meet.html) shows QR code for guest check-in
 
-### 2. Welcome & Call to Order (11:45)
+### 2. Welcome & Call to Order (4:15)
 - President or VP opens the meeting
 - Brief announcements
 

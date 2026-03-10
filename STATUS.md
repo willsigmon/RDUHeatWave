@@ -14,7 +14,7 @@
 - [x] Custom HTML form with flame animations, countdown timer
 - [x] Deployed to Vercel (auto from `vercel --yes --prod`)
 - [x] rduheatwave.team pointed to Vercel
-- [x] Meeting day set to Thursday 11:30 AM ET
+- [x] Meeting day set to Thursday 4:00 PM ET
 - [x] Button says "CHECK IN"
 - [x] Perplexity branding removed
 - [x] Logo sharpened (160px, crisp-edges)
@@ -25,7 +25,7 @@
 - [x] Repo renamed: rduheat -> RDUHeatWave
 - [x] README, CLAUDE.md, brand guide, meeting structure docs added
 - [x] Context from 212-website and two-twelve repos consolidated
-- [x] Sweep fix: agenda route restored, meeting time corrected to 11:30 AM ET, countdown made DST-safe
+- [x] Sweep fix: agenda route restored, meeting time corrected to 4:00 PM ET, countdown made DST-safe
 - [x] Sweep fix: guest-of validation, local-only submit messaging, and kiosk audio hardening
 - [x] Google Apps Script deployed and wired to production form
 - [x] Same-origin Vercel form proxy added so check-ins get real success/failure instead of `no-cors` false positives

@@ -21,7 +21,7 @@
 ## Meeting Details
 
 - **Day**: Thursdays
-- **Time**: 11:30 AM ET
+- **Time**: 4:00 PM ET
 - **Venue**: Clouds Brewing, 1233 Front St, Raleigh NC (side room)
 - **Contact**: rduheatwave.team
 
