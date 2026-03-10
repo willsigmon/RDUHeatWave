@@ -99,6 +99,7 @@ body {
 .slider {
   display: flex;
   width: 300vw;
+  min-height: 100dvh;
   height: 100dvh;
   transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   transform: translateX(-100vw); /* Start on center panel (form) */
@@ -111,9 +112,11 @@ body {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 1.5rem 1rem;
+  padding: max(1.5rem, env(safe-area-inset-top)) 1rem calc(5rem + env(safe-area-inset-bottom));
+  scroll-padding-top: 1.5rem;
+  scroll-padding-bottom: calc(5rem + env(safe-area-inset-bottom));
 }
 
 /* === NAV DOTS === */
@@ -1081,7 +1084,11 @@ button { cursor: pointer; background: none; border: none; }
 
 /* === MOBILE === */
 @media (max-width: 500px) {
-  .panel { padding: 1rem 0.75rem; align-items: flex-start; padding-top: 1.5rem; }
+  .panel {
+    align-items: flex-start;
+    padding: max(1rem, env(safe-area-inset-top)) 0.75rem calc(4.75rem + env(safe-area-inset-bottom));
+    scroll-padding-bottom: calc(4.75rem + env(safe-area-inset-bottom));
+  }
   .form-card { padding: 1.5rem 1.25rem; border-radius: 1.25rem; }
   .info-card { padding: 1.5rem 1.25rem; }
   .menu-card { padding: 1.5rem 1.25rem; }
