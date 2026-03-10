@@ -6,8 +6,8 @@
 //
 // Deploy as: Web App → Execute as: Me → Access: Anyone
 
-var SHEET_ID = '1xX4PCqHVgdjxr2PzZxLFV73ewtpv6qVE5-AGvl5_l2M';
-var SHEET_NAME = 'Applications';
+var SHEET_ID = '1WWSxfqJ1UdMqJxKLaiIzb06n3rSQj5-AVN3m07wAkSA';
+var SHEET_NAME = 'Guest Check In';
 
 function doPost(e) {
   var spreadsheet = SpreadsheetApp.openById(SHEET_ID);

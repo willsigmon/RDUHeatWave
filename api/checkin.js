@@ -1,6 +1,6 @@
 'use strict';
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbybCuaVCO5NUa7gZU0t9LkTCLqW6raXy1XVUaZWPjGfplIoqyGL-vQX1-QsUzC8FGRZMg/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwvYv_BYJznuumdC51jP-P6RuYRRgK5MEONjUywvl322MbR1W1_nA1hZHcsSj5oLfzvoQ/exec';
 const REQUIRED_FIELDS = ['firstName', 'lastName', 'profession', 'phone', 'email', 'guestOf'];
 const HONEYPOT_FIELD = 'companyWebsite';
 const APPS_SCRIPT_TIMEOUT_MS = 10 * 1000;
