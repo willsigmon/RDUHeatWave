@@ -261,6 +261,13 @@ body {
   font-size: 0.95rem;
 }
 
+.team-member-company {
+  margin-top: 0.18rem;
+  color: rgba(255,255,255,0.46);
+  font-size: 0.74rem;
+  line-height: 1.25;
+}
+
 .team-member-title-special {
   color: #ffb36b;
   letter-spacing: 0.07em;
@@ -1369,13 +1376,13 @@ button { cursor: pointer; background: none; border: none; }
   var MAX_LOCAL_ENTRIES = 250;
   // Single source of truth for the public team list and the "Guest Of" dropdown.
   var TEAM_MEMBERS = [
-    { name: 'Carter Helms', title: 'Team Chair', leader: true },
-    { name: 'Craig Morrill', title: 'Vice Chair', leader: true },
-    { name: 'Will Sigmon', title: 'Team Admin', leader: true },
-    { name: 'Rusty Sutton', title: 'Team Marketing Specialist', leader: true, specialTitle: true },
-    { name: 'Robert Courts', title: 'Mortgage Lending', leader: false },
-    { name: 'Dana Walsh', title: 'Magazine Publisher', leader: false },
-    { name: 'Nathan Senn', title: 'Property Restoration', leader: false }
+    { name: 'Carter Helms', title: 'Team Chair', company: 'Highstreet Ins & Financial Svcs', leader: true },
+    { name: 'Craig Morrill', title: 'Vice Chair', company: 'Summit Global', leader: true },
+    { name: 'Will Sigmon', title: 'Team Admin', company: 'Will Sigmon Media', leader: true },
+    { name: 'Rusty Sutton', title: 'Team Marketing Specialist', company: 'Monkey Fans Creative', leader: true, specialTitle: true },
+    { name: 'Robert Courts', title: 'Mortgage Lending', company: 'Advantage Lending', leader: false },
+    { name: 'Dana Walsh', title: 'Magazine Publisher', company: 'Stroll Magazine', leader: false },
+    { name: 'Nathan Senn', title: 'Property Restoration', company: 'Franco Restorations', leader: false }
   ];
 
   function keepLatestLocalEntries(entries) {
@@ -1402,6 +1409,7 @@ button { cursor: pointer; background: none; border: none; }
         return '<div class="team-member' + (member.leader ? ' leader' : '') + '">' +
           '<strong class="' + (member.specialTitle ? 'team-member-title-special' : '') + '">' + escapeHtml(member.title) + '</strong>' +
           '<span>' + escapeHtml(member.name) + '</span>' +
+          '<div class="team-member-company">' + escapeHtml(member.company || '') + '</div>' +
         '</div>';
       }).join('');
     }
