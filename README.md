@@ -72,11 +72,11 @@ Production smoke check after deploy:
 
 ## Google Sheets Integration
 
-- **Form intake sheet ID**: `1xX4PCqHVgdjxr2PzZxLFV73ewtpv6qVE5-AGvl5_l2M`
-- **Current web app URL**: `https://script.google.com/macros/s/AKfycbzrs6C9Ts3KyJKksOBKLuQ8zl9u0VB8fQbsdnVy463PdGs1tzr02ursWMqcSJJ7BjnQtA/exec`
+- **Form intake sheet ID**: `1WWSxfqJ1UdMqJxKLaiIzb06n3rSQj5-AVN3m07wAkSA`
+- **Current web app URL**: `https://script.google.com/macros/s/AKfycbwvYv_BYJznuumdC51jP-P6RuYRRgK5MEONjUywvl322MbR1W1_nA1hZHcsSj5oLfzvoQ/exec`
 - **Production form endpoint**: `/api/checkin` on `https://rduheatwave.team`
-- **Form hardening**: hidden honeypot, origin allowlist, burst/hourly throttling, bounded local backup, server-side field-length validation, and request timeouts
+- **Form hardening**: hidden honeypot, origin allowlist, burst/hourly throttling, bounded local backup, server-side field-length validation, enum validation for select fields, and request timeouts
 - **Apps Script**: Deploy `apps-script.js` to script.google.com as Web App
-- **Destination Tab**: `Applications` if present, otherwise the first existing sheet
-- **Fallback sheet retained for history**: `1kO0bk-89QLOI71ZqZkrGK50phvJfq6TxnGdHGIFt3qk`
-- Form submissions write: Timestamp, First Name, Last Name, Profession, Phone, Email, Guest Of
+- **Destination Tab**: `Guest Check In`
+- **Header strategy**: `apps-script.js` maps values by header name and auto-adds missing expected columns
+- **Current check-in fields**: Timestamp, Meeting Date, First Name, Last Name, Profession, Company Name, Email, Phone, Guest Of, First Visit?, Interested in Learning More?, Best Contact Method, Ideal Referral

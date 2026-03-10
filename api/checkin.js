@@ -1,7 +1,8 @@
 'use strict';
 
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwvYv_BYJznuumdC51jP-P6RuYRRgK5MEONjUywvl322MbR1W1_nA1hZHcsSj5oLfzvoQ/exec';
-const REQUIRED_FIELDS = ['firstName', 'lastName', 'profession', 'phone', 'email', 'guestOf'];
+const REQUIRED_FIELDS = ['firstName', 'lastName', 'profession', 'companyName', 'phone', 'email', 'guestOf', 'firstVisit', 'interestedInLearningMore', 'bestContactMethod'];
+const OPTIONAL_FIELDS = ['idealReferral'];
 const HONEYPOT_FIELD = 'companyWebsite';
 const APPS_SCRIPT_TIMEOUT_MS = 10 * 1000;
 const BURST_WINDOW_MS = 60 * 1000;
@@ -12,9 +13,19 @@ const FIELD_LENGTH_LIMITS = {
   firstName: 80,
   lastName: 80,
   profession: 120,
+  companyName: 120,
   phone: 40,
   email: 254,
-  guestOf: 120
+  guestOf: 120,
+  firstVisit: 3,
+  interestedInLearningMore: 5,
+  bestContactMethod: 10,
+  idealReferral: 180
+};
+const ALLOWED_FIELD_VALUES = {
+  firstVisit: ['Yes', 'No'],
+  interestedInLearningMore: ['Yes', 'Maybe', 'No'],
+  bestContactMethod: ['Text', 'Call', 'Email']
 };
 const MAX_BODY_BYTES = 50 * 1024;
 const rateLimitStore = new Map();
@@ -134,8 +145,8 @@ function parseRawBody(rawBody, contentType) {
 }
 
 function normalizeEntry(body) {
-  return REQUIRED_FIELDS.reduce(function(entry, field) {
-    entry[field] = normalizeText(body[field]);
+  return REQUIRED_FIELDS.concat(OPTIONAL_FIELDS).reduce(function(entry, field) {
+    entry[field] = normalizeFieldValue(field, body[field]);
     return entry;
   }, {});
 }
@@ -144,6 +155,21 @@ function normalizeText(value) {
   return String(value || '')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+function normalizeFieldValue(field, value) {
+  const normalizedValue = normalizeText(value);
+  const allowedValues = ALLOWED_FIELD_VALUES[field];
+
+  if (!allowedValues || !allowedValues.length || !normalizedValue) {
+    return normalizedValue;
+  }
+
+  const matchedValue = allowedValues.find(function(allowedValue) {
+    return allowedValue.toLowerCase() === normalizedValue.toLowerCase();
+  });
+
+  return matchedValue || normalizedValue;
 }
 
 function validateEntry(entry) {
@@ -160,12 +186,20 @@ function validateEntry(entry) {
     return 'Invalid email address';
   }
 
-  const overLimitField = REQUIRED_FIELDS.find(function(field) {
+  const overLimitField = REQUIRED_FIELDS.concat(OPTIONAL_FIELDS).find(function(field) {
     return entry[field].length > FIELD_LENGTH_LIMITS[field];
   });
 
   if (overLimitField) {
     return 'One or more fields are too long';
+  }
+
+  const invalidOptionField = Object.keys(ALLOWED_FIELD_VALUES).find(function(field) {
+    return ALLOWED_FIELD_VALUES[field].indexOf(entry[field]) === -1;
+  });
+
+  if (invalidOptionField) {
+    return 'One or more fields contain an invalid option';
   }
 
   return null;

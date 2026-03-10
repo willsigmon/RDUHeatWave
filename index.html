@@ -208,10 +208,29 @@ body {
 }
 
 .team-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-top: 1rem;
+}
+
+.team-grid-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.team-grid-label {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.team-grid-cards {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
-  margin-top: 1rem;
 }
 
 .team-member {
@@ -223,6 +242,8 @@ body {
 
 .team-member.leader {
   border-left-color: var(--color-primary);
+  background: rgba(232, 88, 12, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(232, 88, 12, 0.16);
 }
 
 .team-member strong {
@@ -237,6 +258,16 @@ body {
 .team-member span {
   color: rgba(255,255,255,0.7);
   font-size: 0.95rem;
+}
+
+.team-member-kind {
+  display: inline-block;
+  margin-top: 0.35rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
 }
 
 .swipe-hint {
@@ -606,6 +637,8 @@ button { cursor: pointer; background: none; border: none; }
 
 .field {
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .field-label {
@@ -658,6 +691,88 @@ button { cursor: pointer; background: none; border: none; }
 
 .field-error.visible {
   display: block;
+}
+
+.tap-panel-grid {
+  display: grid;
+  gap: 0.625rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tap-panel-grid-members {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tap-panel-grid-thirds {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.tap-panel {
+  min-height: 3.5rem;
+  width: 100%;
+  padding: 0.8rem 0.875rem;
+  border: 1px solid rgba(232, 88, 12, 0.25);
+  border-radius: var(--radius-md);
+  background: rgba(44, 36, 32, 0.7);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  text-align: left;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease, background 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.2rem;
+}
+
+.tap-panel:hover {
+  transform: translateY(-1px);
+  border-color: rgba(232, 88, 12, 0.45);
+}
+
+.tap-panel:focus-visible {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(232, 88, 12, 0.2);
+}
+
+.tap-panel.active {
+  background: rgba(232, 88, 12, 0.18);
+  border-color: rgba(232, 88, 12, 0.7);
+  box-shadow: 0 0 0 3px rgba(232, 88, 12, 0.16);
+}
+
+.tap-panel-grid.error .tap-panel {
+  border-color: rgba(217, 68, 68, 0.5);
+}
+
+.tap-panel-grid.error {
+  padding: 0.25rem;
+  margin: -0.25rem;
+  border-radius: calc(var(--radius-md) + 0.25rem);
+  box-shadow: 0 0 0 2px rgba(217, 68, 68, 0.14);
+}
+
+.tap-panel-title {
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.tap-panel-subtitle {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  line-height: 1.2;
+}
+
+.tap-panel--center {
+  align-items: center;
+  text-align: center;
+}
+
+.tap-panel--other {
+  align-items: center;
+  text-align: center;
+  border-style: dashed;
 }
 
 /* === SUBMIT BUTTON === */
@@ -784,7 +899,10 @@ button { cursor: pointer; background: none; border: none; }
   .info-card { padding: 1.5rem 1.25rem; }
   .menu-card { padding: 1.5rem 1.25rem; }
   .form-row { grid-template-columns: 1fr; }
-  .team-grid { grid-template-columns: 1fr; }
+  .team-grid-cards { grid-template-columns: 1fr; }
+  .tap-panel-grid-members,
+  .tap-panel-grid-thirds { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tap-panel { min-height: 3.25rem; padding: 0.75rem; }
   .logo-container img { width: 80px; }
   .form-title { font-size: 1.75rem; }
   .countdown-value { font-size: 1.75rem; }
@@ -829,15 +947,7 @@ button { cursor: pointer; background: none; border: none; }
     </div>
 
     <h3 style="font-family: var(--font-display); font-size: 1.5rem; color: var(--color-primary); letter-spacing: 0.05em; margin-bottom: 0.5rem;">Our Team</h3>
-    <div class="team-grid">
-      <div class="team-member leader"><strong>Team Chair</strong><span>Carter Helms</span></div>
-      <div class="team-member leader"><strong>Vice Chair</strong><span>Craig Morrill</span></div>
-      <div class="team-member leader"><strong>Team Admin</strong><span>Will Sigmon</span></div>
-      <div class="team-member leader"><strong>Marketing</strong><span>Rusty Sutton</span></div>
-      <div class="team-member"><strong>Mortgage Lending</strong><span>Robert Courts</span></div>
-      <div class="team-member"><strong>Magazine Publisher</strong><span>Dana Walsh</span></div>
-      <div class="team-member"><strong>Property Restoration</strong><span>Nathan Senn</span></div>
-    </div>
+    <div class="team-grid" id="team-grid"></div>
     <div class="swipe-hint">Swipe left to check in &rarr;</div>
   </div>
 </div>
@@ -906,10 +1016,17 @@ button { cursor: pointer; background: none; border: none; }
       </div>
     </div>
 
-    <div class="field">
-      <label class="field-label" for="profession">Profession</label>
-      <input class="field-input" type="text" id="profession" name="profession" placeholder="e.g. Real Estate Agent" maxlength="120" required>
-      <div class="field-error" id="profession-error">Please enter your profession</div>
+    <div class="form-row">
+      <div class="field">
+        <label class="field-label" for="profession">Profession</label>
+        <input class="field-input" type="text" id="profession" name="profession" placeholder="e.g. Real Estate Agent" maxlength="120" required>
+        <div class="field-error" id="profession-error">Please enter your profession</div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="companyName">Company Name</label>
+        <input class="field-input" type="text" id="companyName" name="companyName" placeholder="e.g. Advantage Lending" maxlength="120" required>
+        <div class="field-error" id="companyName-error">Please enter your company name</div>
+      </div>
     </div>
 
     <div class="form-row">
@@ -926,21 +1043,49 @@ button { cursor: pointer; background: none; border: none; }
     </div>
 
     <div class="field">
-      <label class="field-label" for="guestOfSelect">Guest Of</label>
-      <select class="field-input" id="guestOfSelect" required style="cursor: pointer; background-image: url('data:image/svg+xml;utf8,<svg fill=%22%23ffffff%22 height=%2224%22 viewBox=%220 0 24 24%22 width=%2224%22 xmlns=%22http://www.w3.org/2000/svg%22><path d=%22M7 10l5 5 5-5z%22/><path d=%22M0 0h24v24H0z%22 fill=%22none%22/></svg>'); background-repeat: no-repeat; background-position: right 0.875rem center;">
-        <option value="" disabled selected>Select a member...</option>
-        <option value="Carter Helms">Carter Helms</option>
-        <option value="Craig Morrill">Craig Morrill</option>
-        <option value="Dana Walsh">Dana Walsh</option>
-        <option value="Nathan Senn">Nathan Senn</option>
-        <option value="Robert Courts">Robert Courts</option>
-        <option value="Rusty Sutton">Rusty Sutton</option>
-        <option value="Will Sigmon">Will Sigmon</option>
-        <option value="Other">Other</option>
-      </select>
+      <label class="field-label" for="guestOf">Guest Of</label>
+      <div class="tap-panel-grid tap-panel-grid-members" id="guestOf-panels" role="group" aria-label="Guest Of"></div>
       <input class="field-input" type="text" id="guestOfOther" placeholder="Please specify..." maxlength="120" style="display: none; margin-top: 0.5rem;">
       <input type="hidden" id="guestOf" name="guestOf">
       <div class="field-error" id="guestOf-error">Please let us know who invited you</div>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="firstVisit">First Visit?</label>
+      <div class="tap-panel-grid" id="firstVisit-panels" role="group" aria-label="First Visit?">
+        <button type="button" class="tap-panel tap-panel--center" data-field="firstVisit" data-value="Yes">Yes</button>
+        <button type="button" class="tap-panel tap-panel--center" data-field="firstVisit" data-value="No">No</button>
+      </div>
+      <input type="hidden" id="firstVisit" name="firstVisit">
+      <div class="field-error" id="firstVisit-error">Please select whether this is your first visit</div>
+    </div>
+
+    <div class="form-row">
+      <div class="field">
+        <label class="field-label" for="interestedInLearningMore">Interested in Learning More?</label>
+        <div class="tap-panel-grid tap-panel-grid-thirds" id="interestedInLearningMore-panels" role="group" aria-label="Interested in Learning More?">
+          <button type="button" class="tap-panel tap-panel--center" data-field="interestedInLearningMore" data-value="Yes">Yes</button>
+          <button type="button" class="tap-panel tap-panel--center" data-field="interestedInLearningMore" data-value="Maybe">Maybe</button>
+          <button type="button" class="tap-panel tap-panel--center" data-field="interestedInLearningMore" data-value="No">No</button>
+        </div>
+        <input type="hidden" id="interestedInLearningMore" name="interestedInLearningMore">
+        <div class="field-error" id="interestedInLearningMore-error">Please let us know your level of interest</div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="bestContactMethod">Best Contact Method</label>
+        <div class="tap-panel-grid tap-panel-grid-thirds" id="bestContactMethod-panels" role="group" aria-label="Best Contact Method">
+          <button type="button" class="tap-panel tap-panel--center" data-field="bestContactMethod" data-value="Text">Text</button>
+          <button type="button" class="tap-panel tap-panel--center" data-field="bestContactMethod" data-value="Call">Call</button>
+          <button type="button" class="tap-panel tap-panel--center" data-field="bestContactMethod" data-value="Email">Email</button>
+        </div>
+        <input type="hidden" id="bestContactMethod" name="bestContactMethod">
+        <div class="field-error" id="bestContactMethod-error">Please choose the best way to follow up</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="idealReferral">Ideal Referral / Who Do You Want to Meet?</label>
+      <input class="field-input" type="text" id="idealReferral" name="idealReferral" placeholder="Optional: who would be a great intro for you?" maxlength="180">
     </div>
 
     <div style="position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden;" aria-hidden="true">
@@ -1225,9 +1370,55 @@ button { cursor: pointer; background: none; border: none; }
   var FORM_ENDPOINT = '/api/checkin';
   var FORM_TIMEOUT_MS = 12000;
   var MAX_LOCAL_ENTRIES = 250;
+  // Single source of truth for the public team list and the "Guest Of" dropdown.
+  var TEAM_MEMBERS = [
+    { name: 'Carter Helms', title: 'Team Chair', leader: true },
+    { name: 'Craig Morrill', title: 'Vice Chair', leader: true },
+    { name: 'Will Sigmon', title: 'Team Admin', leader: true },
+    { name: 'Rusty Sutton', title: 'Marketing', leader: true },
+    { name: 'Robert Courts', title: 'Mortgage Lending', leader: false },
+    { name: 'Dana Walsh', title: 'Magazine Publisher', leader: false },
+    { name: 'Nathan Senn', title: 'Property Restoration', leader: false }
+  ];
 
   function keepLatestLocalEntries(entries) {
     return entries.slice(-MAX_LOCAL_ENTRIES);
+  }
+
+  function escapeHtml(value) {
+    return String(value || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function renderTeamGrid() {
+    var teamGrid = document.getElementById('team-grid');
+    if (!teamGrid) return;
+    var councilMembers = TEAM_MEMBERS.filter(function(member) { return member.leader; });
+    var memberRoster = TEAM_MEMBERS.filter(function(member) { return !member.leader; });
+
+    function renderMemberCards(members, kindLabel) {
+      return members.map(function(member) {
+        return '<div class="team-member' + (member.leader ? ' leader' : '') + '">' +
+          '<strong>' + escapeHtml(member.title) + '</strong>' +
+          '<span>' + escapeHtml(member.name) + '</span>' +
+          '<div class="team-member-kind">' + escapeHtml(kindLabel) + '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    teamGrid.innerHTML =
+      '<div class="team-grid-group">' +
+        '<div class="team-grid-label">Council</div>' +
+        '<div class="team-grid-cards">' + renderMemberCards(councilMembers, 'Council') + '</div>' +
+      '</div>' +
+      '<div class="team-grid-group">' +
+        '<div class="team-grid-label">Members</div>' +
+        '<div class="team-grid-cards">' + renderMemberCards(memberRoster, 'Member') + '</div>' +
+      '</div>';
   }
 
   function fetchWithTimeout(url, options, timeoutMs) {
@@ -1286,9 +1477,9 @@ button { cursor: pointer; background: none; border: none; }
   function exportCSV() {
     var entries = getLocalEntries();
     if (!entries.length) { alert('No local entries saved.'); return; }
-    var header = 'Timestamp,First Name,Last Name,Profession,Phone,Email,Guest Of\n';
+    var header = 'Timestamp,First Name,Last Name,Profession,Company Name,Phone,Email,Guest Of,First Visit?,Interested in Learning More?,Best Contact Method,Ideal Referral\n';
     var rows = entries.map(function(e) {
-      return [e.timestamp, e.firstName, e.lastName, e.profession, e.phone, e.email, e.guestOf]
+      return [e.timestamp, e.firstName, e.lastName, e.profession, e.companyName, e.phone, e.email, e.guestOf, e.firstVisit, e.interestedInLearningMore, e.bestContactMethod, e.idealReferral]
         .map(function(v) { return '"' + (v || '').replace(/"/g, '""') + '"'; }).join(',');
     }).join('\n');
     var blob = new Blob([header + rows], { type: 'text/csv' });
@@ -1318,29 +1509,107 @@ button { cursor: pointer; background: none; border: none; }
   var submitFailedTitle = 'We could not confirm your check-in';
   var submitFailedSubtitle = 'This browser could not save a local backup, and the network sync did not complete. Please try again or ask the host to retry.';
 
-  var fields = ['firstName', 'lastName', 'profession', 'phone', 'email', 'guestOf'];
+  var fields = ['firstName', 'lastName', 'profession', 'companyName', 'phone', 'email', 'guestOf', 'firstVisit', 'interestedInLearningMore', 'bestContactMethod'];
+  var optionalFields = ['idealReferral'];
+  var allFields = fields.concat(optionalFields);
 
-  var guestOfSelect = document.getElementById('guestOfSelect');
+  var guestOfPanels = document.getElementById('guestOf-panels');
   var guestOfOther = document.getElementById('guestOfOther');
   var guestOfHidden = document.getElementById('guestOf');
   var companyWebsite = document.getElementById('companyWebsite');
+  var tapPanelGroups = {
+    firstVisit: document.getElementById('firstVisit-panels'),
+    interestedInLearningMore: document.getElementById('interestedInLearningMore-panels'),
+    bestContactMethod: document.getElementById('bestContactMethod-panels')
+  };
 
-  guestOfSelect.addEventListener('change', function() {
-    if (this.value === 'Other') {
+  function isTeamMember(name) {
+    return TEAM_MEMBERS.some(function(member) {
+      return member.name === name;
+    });
+  }
+
+  function syncPanelGroup(fieldName) {
+    var group = tapPanelGroups[fieldName];
+    var input = document.getElementById(fieldName);
+    if (!group || !input) return;
+
+    group.querySelectorAll('.tap-panel').forEach(function(button) {
+      button.classList.toggle('active', button.getAttribute('data-value') === input.value);
+    });
+  }
+
+  function syncGuestOfPanels() {
+    var selectedOption = guestOfPanels.getAttribute('data-selected-option') || '';
+
+    guestOfPanels.querySelectorAll('.tap-panel').forEach(function(button) {
+      button.classList.toggle('active', button.getAttribute('data-value') === selectedOption);
+    });
+  }
+
+  function renderGuestOfPanels() {
+    var currentValue = guestOfHidden.value || '';
+    var selectedOption = currentValue ? (isTeamMember(currentValue) ? currentValue : 'Other') : '';
+
+    guestOfPanels.innerHTML = TEAM_MEMBERS.map(function(member) {
+      return '<button type="button" class="tap-panel" data-field="guestOf" data-value="' + escapeHtml(member.name) + '">' +
+        '<span class="tap-panel-title">' + escapeHtml(member.name) + '</span>' +
+        '<span class="tap-panel-subtitle">' + escapeHtml(member.title) + '</span>' +
+      '</button>';
+    }).join('') +
+    '<button type="button" class="tap-panel tap-panel--other" data-field="guestOf" data-value="Other">' +
+      '<span class="tap-panel-title">Someone Else</span>' +
+      '<span class="tap-panel-subtitle">Type their name</span>' +
+    '</button>';
+
+    guestOfPanels.setAttribute('data-selected-option', selectedOption);
+    guestOfOther.style.display = selectedOption === 'Other' ? 'block' : 'none';
+    guestOfOther.required = selectedOption === 'Other';
+    syncGuestOfPanels();
+  }
+
+  renderTeamGrid();
+  renderGuestOfPanels();
+  Object.keys(tapPanelGroups).forEach(syncPanelGroup);
+
+  guestOfPanels.addEventListener('click', function(event) {
+    var button = event.target.closest('.tap-panel');
+    if (!button) return;
+
+    var value = button.getAttribute('data-value');
+    guestOfPanels.setAttribute('data-selected-option', value);
+    syncGuestOfPanels();
+
+    if (value === 'Other') {
       guestOfOther.style.display = 'block';
       guestOfOther.required = true;
       guestOfHidden.value = guestOfOther.value.trim();
+      guestOfOther.focus();
     } else {
       guestOfOther.style.display = 'none';
       guestOfOther.required = false;
-      guestOfHidden.value = this.value;
+      guestOfOther.value = '';
+      guestOfHidden.value = value;
     }
+
     validateField('guestOf');
   });
 
   guestOfOther.addEventListener('input', function() {
     guestOfHidden.value = this.value.trim();
     validateField('guestOf');
+  });
+
+  Object.keys(tapPanelGroups).forEach(function(fieldName) {
+    var group = tapPanelGroups[fieldName];
+    group.addEventListener('click', function(event) {
+      var button = event.target.closest('.tap-panel');
+      if (!button) return;
+
+      document.getElementById(fieldName).value = button.getAttribute('data-value');
+      syncPanelGroup(fieldName);
+      validateField(fieldName);
+    });
   });
 
   // ===== VALIDATION =====
@@ -1351,10 +1620,23 @@ button { cursor: pointer; background: none; border: none; }
 
     if (name === 'guestOf') {
       valid = !!guestOfHidden.value.trim();
-      guestOfSelect.classList.toggle('error', !valid);
-      guestOfOther.classList.toggle('error', !valid && guestOfSelect.value === 'Other');
+      guestOfPanels.classList.toggle('error', !valid);
+      guestOfOther.classList.toggle('error', !valid && guestOfPanels.getAttribute('data-selected-option') === 'Other');
       errorEl.classList.toggle('visible', !valid);
       return valid;
+    }
+
+    if (input.type === 'hidden') {
+      valid = !!input.value.trim();
+      if (tapPanelGroups[name]) tapPanelGroups[name].classList.toggle('error', !valid);
+      if (errorEl) errorEl.classList.toggle('visible', !valid);
+      return valid;
+    }
+
+    if (optionalFields.indexOf(name) !== -1 && !input.value.trim()) {
+      input.classList.remove('error');
+      if (errorEl) errorEl.classList.remove('visible');
+      return true;
     }
 
     if (!input.value.trim()) valid = false;
@@ -1366,10 +1648,10 @@ button { cursor: pointer; background: none; border: none; }
 
     if (valid) {
       input.classList.remove('error');
-      errorEl.classList.remove('visible');
+      if (errorEl) errorEl.classList.remove('visible');
     } else {
       input.classList.add('error');
-      errorEl.classList.add('visible');
+      if (errorEl) errorEl.classList.add('visible');
     }
 
     return valid;
@@ -1383,23 +1665,23 @@ button { cursor: pointer; background: none; border: none; }
     return allValid;
   }
 
-  fields.forEach(function(name) {
+  allFields.forEach(function(name) {
     if (name === 'guestOf') return;
     var input = document.getElementById(name);
+    if (!input || input.type === 'hidden') return;
     input.addEventListener('blur', function() {
-      if (input.value.trim()) validateField(name);
+      if (input.value.trim() || fields.indexOf(name) !== -1) validateField(name);
+    });
+    input.addEventListener('change', function() {
+      validateField(name);
     });
     input.addEventListener('input', function() {
       if (input.classList.contains('error')) validateField(name);
     });
   });
 
-  guestOfSelect.addEventListener('blur', function() {
-    validateField('guestOf');
-  });
-
   guestOfOther.addEventListener('blur', function() {
-    if (guestOfSelect.value === 'Other') validateField('guestOf');
+    if (guestOfPanels.getAttribute('data-selected-option') === 'Other') validateField('guestOf');
   });
 
   // ===== FORM SUBMIT =====
@@ -1407,7 +1689,7 @@ button { cursor: pointer; background: none; border: none; }
     e.preventDefault();
 
     if (!validateAll()) {
-      var firstError = form.querySelector('.field-input.error');
+      var firstError = form.querySelector('.field-input.error, .tap-panel-grid.error .tap-panel');
       if (firstError) firstError.focus();
       return;
     }
@@ -1417,7 +1699,7 @@ button { cursor: pointer; background: none; border: none; }
 
     // Collect form data
     var entry = {};
-    fields.forEach(function(name) {
+    allFields.forEach(function(name) {
       entry[name] = document.getElementById(name).value.trim();
     });
 
@@ -1480,15 +1762,30 @@ button { cursor: pointer; background: none; border: none; }
     document.getElementById('countdown-section').style.display = 'block';
     form.reset();
     guestOfOther.style.display = 'none';
+    guestOfOther.required = false;
     guestOfHidden.value = '';
+    guestOfPanels.setAttribute('data-selected-option', '');
     companyWebsite.value = '';
     successTitle.textContent = defaultSuccessTitle;
     successSubtitle.textContent = defaultSuccessSubtitle;
-    fields.forEach(function(name) {
-      document.getElementById(name).classList.remove('error');
-      document.getElementById(name + '-error').classList.remove('visible');
+    allFields.forEach(function(name) {
+      var input = document.getElementById(name);
+      var errorEl = document.getElementById(name + '-error');
+
+      if (input) {
+        input.value = '';
+        input.classList.remove('error');
+      }
+
+      if (tapPanelGroups[name]) {
+        tapPanelGroups[name].classList.remove('error');
+      }
+
+      if (errorEl) errorEl.classList.remove('visible');
     });
-    guestOfSelect.classList.remove('error');
+    syncGuestOfPanels();
+    Object.keys(tapPanelGroups).forEach(syncPanelGroup);
+    guestOfPanels.classList.remove('error');
     guestOfOther.classList.remove('error');
     document.getElementById('firstName').focus();
   });

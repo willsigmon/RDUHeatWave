@@ -67,9 +67,14 @@ function expect(condition, label, detail) {
     firstName: 'Smoke',
     lastName: 'Check',
     profession: 'QA',
+    companyName: 'Heatwave QA',
     phone: '555-0110',
     email: `smoke-${timestamp}@example.com`,
-    guestOf: 'Automated Check'
+    guestOf: 'Automated Check',
+    firstVisit: 'Yes',
+    interestedInLearningMore: 'Maybe',
+    bestContactMethod: 'Email',
+    idealReferral: 'Small business owners needing automation'
   };
 
   const valid = await fetchJson('/api/checkin', {
@@ -93,6 +98,13 @@ function expect(condition, label, detail) {
     body: JSON.stringify({ ...validPayload, email: 'not-an-email' })
   });
   expect(invalidEmail.response.status === 400, 'invalid email returns 400', String(invalidEmail.response.status));
+
+  const invalidOption = await fetchJson('/api/checkin', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ...validPayload, firstVisit: 'Sometimes' })
+  });
+  expect(invalidOption.response.status === 400, 'invalid select option returns 400', String(invalidOption.response.status));
 
   if (process.exitCode) {
     console.error(`\nVerification failed for ${base}`);
