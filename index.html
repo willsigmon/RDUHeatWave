@@ -320,103 +320,63 @@ body {
   color: #f0e6dc;
 }
 
-.clouds-pill-row {
+.clouds-hero {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(232, 88, 12, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.clouds-hero-kicker {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.45rem;
+  color: var(--color-primary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.clouds-hero-copy {
+  text-align: center;
+  color: rgba(255,255,255,0.76);
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.clouds-pour-row {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.5rem;
-  margin-top: 1rem;
 }
 
-.clouds-pill {
+.clouds-pour-chip {
   display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.38rem 0.75rem;
+  flex-direction: column;
+  gap: 0.08rem;
+  padding: 0.5rem 0.7rem 0.45rem;
   border-radius: 999px;
-  background: rgba(232, 88, 12, 0.12);
-  border: 1px solid rgba(232, 88, 12, 0.22);
-  color: rgba(255,255,255,0.84);
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.clouds-feature-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.75rem;
-  margin-top: 1.25rem;
-}
-
-.clouds-feature-card {
-  padding: 0.9rem 0.9rem 0.85rem;
-  border-radius: 1rem;
-  background: linear-gradient(180deg, rgba(232, 88, 12, 0.14) 0%, rgba(232, 88, 12, 0.06) 100%);
-  border: 1px solid rgba(232, 88, 12, 0.22);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
-}
-.clouds-feature-card:last-child { grid-column: 1 / -1; }
-
-
-.clouds-feature-label {
-  font-size: 0.66rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.54);
-  margin-bottom: 0.45rem;
-}
-
-.clouds-feature-name {
-  color: #fff;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.clouds-feature-meta {
-  margin-top: 0.3rem;
-  font-size: 0.8rem;
-  color: rgba(255,255,255,0.66);
-}
-
-.clouds-specials-card {
-  margin-top: 1.25rem;
-  padding: 1rem 1rem 0.95rem;
-  border-radius: 1rem;
-  background:
-    radial-gradient(circle at top right, rgba(255, 140, 64, 0.22), transparent 38%),
-    rgba(255,255,255,0.04);
+  background: rgba(232, 88, 12, 0.1);
   border: 1px solid rgba(232, 88, 12, 0.18);
+  min-width: 0;
 }
 
-.clouds-specials-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.55rem;
-}
-
-.clouds-specials-title {
-  font-family: var(--font-display);
-  font-size: 1.4rem;
-  letter-spacing: 0.05em;
+.clouds-pour-name {
   color: #fff;
-}
-
-.clouds-specials-kicker {
-  font-size: 0.74rem;
-  color: var(--color-primary);
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
+  font-size: 0.84rem;
   font-weight: 700;
+  line-height: 1.1;
 }
 
-.clouds-specials-copy {
-  color: rgba(255,255,255,0.78);
-  font-size: 0.92rem;
-  line-height: 1.45;
+.clouds-pour-meta {
+  color: rgba(255,255,255,0.6);
+  font-size: 0.7rem;
+  line-height: 1.1;
 }
 
 .beer-section-title {
@@ -1163,7 +1123,7 @@ button { cursor: pointer; background: none; border: none; }
   .team-grid-cards { grid-template-columns: 1fr; }
   .tap-panel-grid-members,
   .tap-panel-grid-thirds { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .clouds-feature-grid { grid-template-columns: 1fr; }
+  .clouds-pour-row { gap: 0.4rem; }
   .clouds-event-head { flex-direction: column; align-items: flex-start; gap: 0.2rem; }
   .tap-panel { min-height: 3.25rem; padding: 0.75rem; }
   .logo-container img { width: 80px; }
@@ -1389,37 +1349,29 @@ button { cursor: pointer; background: none; border: none; }
       <img src="clouds-brewing-logo.png" alt="Clouds Brewing" loading="lazy">
       <h2>Clouds Brewing</h2>
       <p>1233 Front St &bull; Raleigh, NC</p>
-      <div class="clouds-pill-row">
-        <div class="clouds-pill">Thursday Hangout</div>
-        <div class="clouds-pill">Fresh Tap List</div>
-        <div class="clouds-pill">Food + 5&ndash;7</div>
-      </div>
     </div>
 
-    <div class="clouds-feature-grid">
-      <div class="clouds-feature-card">
-        <div class="clouds-feature-label">Featured Lager</div>
-        <div class="clouds-feature-name">Sky Lime</div>
-        <div class="clouds-feature-meta">Lime Lager &bull; 4.6%</div>
+    <div class="clouds-hero">
+      <div class="clouds-hero-kicker">
+        <span>Fresh Tap List</span>
+        <span>&bull;</span>
+        <span>Food + 5&ndash;7 PM</span>
       </div>
-      <div class="clouds-feature-card">
-        <div class="clouds-feature-label">Hop Pick</div>
-        <div class="clouds-feature-name">Hazy Hop Jam</div>
-        <div class="clouds-feature-meta">Hazy IPA &bull; 6.3%</div>
+      <div class="clouds-hero-copy">Sky Lime, Hazy Hop Jam, and Coffee at Midnight are pouring now.</div>
+      <div class="clouds-pour-row">
+        <div class="clouds-pour-chip">
+          <span class="clouds-pour-name">Sky Lime</span>
+          <span class="clouds-pour-meta">Lager &bull; 4.6%</span>
+        </div>
+        <div class="clouds-pour-chip">
+          <span class="clouds-pour-name">Hazy Hop Jam</span>
+          <span class="clouds-pour-meta">Hazy IPA &bull; 6.3%</span>
+        </div>
+        <div class="clouds-pour-chip">
+          <span class="clouds-pour-name">Coffee at Midnight</span>
+          <span class="clouds-pour-meta">Coffee Stout &bull; 7%</span>
+        </div>
       </div>
-      <div class="clouds-feature-card">
-        <div class="clouds-feature-label">Dark Pour</div>
-        <div class="clouds-feature-name">Coffee at Midnight</div>
-        <div class="clouds-feature-meta">Coffee Stout &bull; 7%</div>
-      </div>
-    </div>
-
-    <div class="clouds-specials-card">
-      <div class="clouds-specials-header">
-        <div class="clouds-specials-title">After Heatwave</div>
-        <div class="clouds-specials-kicker">5&ndash;7 PM Only</div>
-      </div>
-      <div class="clouds-specials-copy">Only food, specials, and 5&ndash;7 PM Thursday stuff.</div>
     </div>
 
     <div class="beer-columns">
