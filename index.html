@@ -1264,6 +1264,87 @@ button { cursor: pointer; background: none; border: none; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* === 212 BOTTOM POPUP === */
+.info-drawer {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(420px, 92vw);
+  z-index: 200;
+  pointer-events: auto;
+}
+
+.info-drawer-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.55rem 1.2rem;
+  background: linear-gradient(180deg, rgba(232, 88, 12, 0.92) 0%, rgba(196, 74, 10, 0.95) 100%);
+  border: none;
+  border-radius: 0.75rem 0.75rem 0 0;
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.info-drawer-tab:hover { background: rgba(255, 106, 30, 0.95); }
+
+.info-drawer-tab .chevron {
+  display: inline-block;
+  transition: transform 0.3s ease;
+  font-size: 0.7rem;
+}
+
+.info-drawer.open .info-drawer-tab .chevron { transform: rotate(180deg); }
+
+.info-drawer-body {
+  max-height: 0;
+  overflow: hidden;
+  background: rgba(26, 20, 18, 0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(232, 88, 12, 0.3);
+  transition: max-height 0.35s ease, padding 0.35s ease;
+  padding: 0 1.4rem;
+}
+
+.info-drawer.open .info-drawer-body {
+  max-height: 260px;
+  padding: 1.2rem 1.4rem;
+}
+
+.info-drawer-body h3 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--color-primary);
+  letter-spacing: 0.06em;
+  margin: 0 0 0.5rem;
+}
+
+.info-drawer-body p {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.info-drawer-body .site-link {
+  display: block;
+  margin-top: 0.6rem;
+  color: var(--color-primary);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+}
+
 /* === SUCCESS SCREEN === */
 .success-screen {
   display: none;
@@ -1623,54 +1704,6 @@ button { cursor: pointer; background: none; border: none; }
       </div>
     </div>
 
-    <div class="beer-section-title">Upcoming Thursday Taproom Events</div>
-    <ul class="clouds-event-list">
-      <li>
-        <details class="clouds-event-item" open>
-          <summary class="clouds-event-toggle">
-            <div class="clouds-event-head">
-              <span class="clouds-event-name">Clouds Brewing Comedy Mic (Free Show)</span>
-              <span class="clouds-event-date">Thu, Mar 12</span>
-            </div>
-            <div class="clouds-event-time">8:00 PM &ndash; 10:00 PM</div>
-          </summary>
-          <div class="clouds-event-body">
-            <p class="clouds-event-desc">Comedy open mic hosted by Jack Crissey. Sign ups at 8:00 PM and show at 8:30 PM.</p>
-            <p class="clouds-event-cta"><a href="https://www.cloudsbrewing.com/taproom-events/2022/6/25/closed-for-private-event-w7jnh-dcdmr-567bj-mlcbz-y2tz3-msbca-s2fz2-7j7sh-fhwc8-ptrat-k7tz2-c357f-k7m2g-prlxy-225l5-k4agl-hm6t4-tpr2s-jnm9x-pg59a-bwl53-z26y8-7rslr" target="_blank" rel="noopener">View event details &rarr;</a></p>
-          </div>
-        </details>
-      </li>
-      <li>
-        <details class="clouds-event-item">
-          <summary class="clouds-event-toggle">
-            <div class="clouds-event-head">
-              <span class="clouds-event-name">Clouds Brewing Comedy Mic (Free Show)</span>
-              <span class="clouds-event-date">Thu, Mar 19</span>
-            </div>
-            <div class="clouds-event-time">8:00 PM &ndash; 10:00 PM</div>
-          </summary>
-          <div class="clouds-event-body">
-            <p class="clouds-event-desc">Comedy open mic hosted by Jack Crissey. Sign ups at 8:00 PM and show at 8:30 PM.</p>
-            <p class="clouds-event-cta"><a href="https://www.cloudsbrewing.com/taproom-events/2022/6/25/closed-for-private-event-w7jnh-dcdmr-567bj-mlcbz-y2tz3-msbca-s2fz2-7j7sh-fhwc8-ptrat-k7tz2-c357f-k7m2g-prlxy-225l5-k4agl-hm6t4-tpr2s-jnm9x-pg59a-bwl53-z26y8-zx8gj-8b6xc" target="_blank" rel="noopener">View event details &rarr;</a></p>
-          </div>
-        </details>
-      </li>
-      <li>
-        <details class="clouds-event-item">
-          <summary class="clouds-event-toggle">
-            <div class="clouds-event-head">
-              <span class="clouds-event-name">Clouds Brewing Comedy Mic (Free Show)</span>
-              <span class="clouds-event-date">Thu, Mar 26</span>
-            </div>
-            <div class="clouds-event-time">8:00 PM &ndash; 10:00 PM</div>
-          </summary>
-          <div class="clouds-event-body">
-            <p class="clouds-event-desc">Comedy open mic hosted by Jack Crissey. Sign ups at 8:00 PM and show at 8:30 PM.</p>
-            <p class="clouds-event-cta"><a href="https://www.cloudsbrewing.com/taproom-events/2022/6/25/closed-for-private-event-w7jnh-dcdmr-567bj-mlcbz-y2tz3-msbca-s2fz2-7j7sh-fhwc8-ptrat-k7tz2-c357f-k7m2g-prlxy-225l5-k4agl-hm6t4-tpr2s-jnm9x-pg59a-bwl53-z26y8-2kzmb-xg8d2" target="_blank" rel="noopener">View event details &rarr;</a></p>
-          </div>
-        </details>
-      </li>
-    </ul>
 
     <p class="clouds-note">Checked March 12, 2026.</p>
 
@@ -2602,6 +2635,30 @@ button { cursor: pointer; background: none; border: none; }
     confettiCanvas.width = window.innerWidth;
     confettiCanvas.height = window.innerHeight;
   });
+})();
+</script>
+<!-- 212 Info Drawer -->
+<div class="info-drawer" id="info-drawer">
+  <button class="info-drawer-tab" id="info-drawer-tab" type="button" aria-expanded="false">
+    <span class="chevron">&#9650;</span> WHY RDU HEATWAVE
+  </button>
+  <div class="info-drawer-body">
+    <h3>The 212&deg; Principle</h3>
+    <p>At 211 degrees, water is hot. At 212 degrees, it boils. With boiling water comes steam, and with steam, you can power a train. That one extra degree makes all the difference.</p>
+    <p style="margin-top: 0.5rem;">RDU Heatwave carries the 212&deg; mission forward in Raleigh-Durham &mdash; a structured, category-exclusive referral network built on going the extra degree.</p>
+    <a class="site-link" href="https://rduheatwave.team">rduheatwave.team &rarr;</a>
+  </div>
+</div>
+<script>
+(function() {
+  var drawer = document.getElementById('info-drawer');
+  var tab = document.getElementById('info-drawer-tab');
+  if (drawer && tab) {
+    tab.addEventListener('click', function() {
+      var isOpen = drawer.classList.toggle('open');
+      tab.setAttribute('aria-expanded', isOpen);
+    });
+  }
 })();
 </script>
 </body>
