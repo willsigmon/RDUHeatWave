@@ -952,8 +952,7 @@ body.phase-live .qr-panel-arrow {
 }
 
 .ticker-wrap {
-  padding-left: var(--shell-pad) !important;
-  padding-right: var(--shell-pad) !important;
+  overflow: hidden;
 }
 
 .overscan-control {
@@ -1223,7 +1222,7 @@ body.phase-live .qr-panel-arrow {
 
 <div class="overscan-control" aria-label="Overscan safe frame control">
   <span class="overscan-label">Safe frame</span>
-  <input id="overscan-range" class="overscan-range" type="range" min="18" max="96" step="2" value="42" aria-label="Adjust overscan safe frame">
+  <input id="overscan-range" class="overscan-range" type="range" min="18" max="96" step="2" value="56" aria-label="Adjust overscan safe frame">
   <span class="overscan-value" id="overscan-value">42px</span>
 </div>
 
@@ -1313,6 +1312,8 @@ body.phase-live .qr-panel-arrow {
   if (overscanRange) {
     var storedOverscan = null;
     try { storedOverscan = localStorage.getItem(overscanStorageKey); } catch (e) {}
+    // If stored value is the old default (42), upgrade to new default (56)
+    if (storedOverscan === '42') storedOverscan = null;
     applyOverscan(storedOverscan || overscanRange.value);
     overscanRange.addEventListener('input', function(event) {
       applyOverscan(event.target.value);
