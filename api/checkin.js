@@ -1,8 +1,8 @@
 'use strict';
 
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwvYv_BYJznuumdC51jP-P6RuYRRgK5MEONjUywvl322MbR1W1_nA1hZHcsSj5oLfzvoQ/exec';
-const REQUIRED_FIELDS = ['firstName', 'lastName', 'profession', 'companyName', 'phone', 'email', 'guestOf', 'firstVisit', 'interestedInLearningMore', 'bestContactMethod'];
-const OPTIONAL_FIELDS = ['idealReferral'];
+const REQUIRED_FIELDS = ['firstName', 'lastName', 'profession', 'phone', 'email', 'guestOf'];
+const OPTIONAL_FIELDS = ['companyName', 'idealReferral'];
 const HONEYPOT_FIELD = 'companyWebsite';
 const APPS_SCRIPT_TIMEOUT_MS = 10 * 1000;
 const BURST_WINDOW_MS = 60 * 1000;
@@ -17,16 +17,9 @@ const FIELD_LENGTH_LIMITS = {
   phone: 40,
   email: 254,
   guestOf: 120,
-  firstVisit: 3,
-  interestedInLearningMore: 5,
-  bestContactMethod: 10,
   idealReferral: 180
 };
-const ALLOWED_FIELD_VALUES = {
-  firstVisit: ['Yes', 'No'],
-  interestedInLearningMore: ['Yes', 'Maybe', 'No'],
-  bestContactMethod: ['Text', 'Call', 'Email']
-};
+const ALLOWED_FIELD_VALUES = {};
 const MAX_BODY_BYTES = 50 * 1024;
 const rateLimitStore = new Map();
 

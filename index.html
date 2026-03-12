@@ -1058,6 +1058,58 @@ button { cursor: pointer; background: none; border: none; }
   border-style: dashed;
 }
 
+.field-optional {
+  font-weight: 400;
+  color: var(--color-text-faint);
+  font-size: 0.82em;
+}
+
+.profession-picker {
+  position: relative;
+}
+
+.profession-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  max-height: 14rem;
+  overflow-y: auto;
+  background: var(--color-surface);
+  border: 1px solid rgba(232, 88, 12, 0.3);
+  border-radius: var(--radius-md);
+  margin-top: 0.35rem;
+  padding: 0.35rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.profession-results:empty {
+  display: none;
+}
+
+.profession-result {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.profession-result:hover,
+.profession-result.active {
+  background: rgba(232, 88, 12, 0.14);
+}
+
 .guest-picker {
   display: flex;
   flex-direction: column;
@@ -1426,12 +1478,15 @@ button { cursor: pointer; background: none; border: none; }
     <div class="form-row">
       <div class="field">
         <label class="field-label" for="profession">Profession</label>
-        <input class="field-input" type="text" id="profession" name="profession" placeholder="e.g. Real Estate Agent" maxlength="120" required>
+        <div class="profession-picker" id="profession-picker">
+          <input class="field-input" type="text" id="profession" name="profession" placeholder="Start typing your industry..." maxlength="120" autocomplete="off" autocapitalize="words" spellcheck="false" required>
+          <div class="profession-results" id="profession-results" role="listbox" aria-label="Industry suggestions"></div>
+        </div>
         <div class="field-error" id="profession-error">Please enter your profession</div>
       </div>
       <div class="field">
-        <label class="field-label" for="companyName">Company Name</label>
-        <input class="field-input" type="text" id="companyName" name="companyName" placeholder="e.g. Advantage Lending" maxlength="120" required>
+        <label class="field-label" for="companyName">Company Name <span class="field-optional">(optional)</span></label>
+        <input class="field-input" type="text" id="companyName" name="companyName" placeholder="e.g. Advantage Lending" maxlength="120">
         <div class="field-error" id="companyName-error">Please enter your company name</div>
       </div>
     </div>
@@ -1461,41 +1516,8 @@ button { cursor: pointer; background: none; border: none; }
     </div>
 
     <div class="field">
-      <label class="field-label" for="firstVisit">First Visit?</label>
-      <div class="tap-panel-grid" id="firstVisit-panels" role="group" aria-label="First Visit?">
-        <button type="button" class="tap-panel tap-panel--center" data-field="firstVisit" data-value="Yes">Yes</button>
-        <button type="button" class="tap-panel tap-panel--center" data-field="firstVisit" data-value="No">No</button>
-      </div>
-      <input type="hidden" id="firstVisit" name="firstVisit">
-      <div class="field-error" id="firstVisit-error">Please select whether this is your first visit</div>
-    </div>
-
-    <div class="form-row">
-      <div class="field">
-        <label class="field-label" for="interestedInLearningMore">Want to Learn More?</label>
-        <div class="tap-panel-grid tap-panel-grid-thirds" id="interestedInLearningMore-panels" role="group" aria-label="Interested in Learning More?">
-          <button type="button" class="tap-panel tap-panel--center" data-field="interestedInLearningMore" data-value="Yes">Yes</button>
-          <button type="button" class="tap-panel tap-panel--center" data-field="interestedInLearningMore" data-value="Maybe">Maybe</button>
-          <button type="button" class="tap-panel tap-panel--center" data-field="interestedInLearningMore" data-value="No">No</button>
-        </div>
-        <input type="hidden" id="interestedInLearningMore" name="interestedInLearningMore">
-        <div class="field-error" id="interestedInLearningMore-error">Please let us know your level of interest</div>
-      </div>
-      <div class="field">
-        <label class="field-label" for="bestContactMethod">Best Contact Method</label>
-        <div class="tap-panel-grid tap-panel-grid-thirds" id="bestContactMethod-panels" role="group" aria-label="Best Contact Method">
-          <button type="button" class="tap-panel tap-panel--center" data-field="bestContactMethod" data-value="Text">Text</button>
-          <button type="button" class="tap-panel tap-panel--center" data-field="bestContactMethod" data-value="Call">Call</button>
-          <button type="button" class="tap-panel tap-panel--center" data-field="bestContactMethod" data-value="Email">Email</button>
-        </div>
-        <input type="hidden" id="bestContactMethod" name="bestContactMethod">
-        <div class="field-error" id="bestContactMethod-error">Please choose the best way to follow up</div>
-      </div>
-    </div>
-
-    <div class="field">
-      <label class="field-label" for="idealReferral">Ideal Referral / Who to Meet?</label>
-      <input class="field-input" type="text" id="idealReferral" name="idealReferral" placeholder="Optional: who would be a great intro for you?" maxlength="180">
+      <label class="field-label" for="idealReferral">Ideal Referral / Who to Meet? <span class="field-optional">(optional)</span></label>
+      <input class="field-input" type="text" id="idealReferral" name="idealReferral" placeholder="Who would be a great intro for you?" maxlength="180">
     </div>
 
     <div style="position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden;" aria-hidden="true">
@@ -1809,6 +1831,34 @@ button { cursor: pointer; background: none; border: none; }
   slider.addEventListener('touchend', finishSwipe);
   slider.addEventListener('touchcancel', finishSwipe);
 
+  // Mouse drag for desktop swipe
+  var mouseDown = false;
+  slider.addEventListener('mousedown', function(e) {
+    if (e.button !== 0) return;
+    mouseDown = true;
+    cancelPeek();
+    touchStartX = e.clientX;
+    touchStartY = e.clientY;
+    touchDeltaX = 0;
+    slider.style.transition = 'none';
+    e.preventDefault();
+  });
+  slider.addEventListener('mousemove', function(e) {
+    if (!mouseDown || swipeLocked) return;
+    var dx = e.clientX - touchStartX;
+    var dy = e.clientY - touchStartY;
+    if (Math.abs(dy) > Math.abs(dx) * 1.2 && Math.abs(dx) < 15) return;
+    touchDeltaX = dx;
+    var base = -(currentPanel * 100);
+    var pct = (dx / slider.offsetWidth) * 100;
+    slider.style.transform = 'translateX(' + (base + pct) + '%)';
+  });
+  window.addEventListener('mouseup', function() {
+    if (!mouseDown) return;
+    mouseDown = false;
+    finishSwipe();
+  });
+
   // Dot clicks
   dots.forEach(function(dot) {
     dot.addEventListener('click', function() {
@@ -1949,13 +1999,14 @@ button { cursor: pointer; background: none; border: none; }
   var MAX_LOCAL_ENTRIES = 250;
   // Single source of truth for the public team list and the "Guest Of" dropdown.
   var TEAM_MEMBERS = [
-    { name: 'Carter Helms', title: 'Team Chair', company: 'Highstreet Ins & Financial Svcs', leader: true },
-    { name: 'Craig Morrill', title: 'Vice Chair', company: 'Summit Global', leader: true },
-    { name: 'Will Sigmon', title: 'Team Admin', company: 'Will Sigmon Media', leader: true },
-    { name: 'Rusty Sutton', title: 'Team Marketing Specialist', company: 'Monkey Fans Creative', leader: true, specialTitle: true },
-    { name: 'Robert Courts', title: 'Mortgage Lending', company: 'Advantage Lending', leader: false },
-    { name: 'Dana Walsh', title: 'Magazine Publisher', company: 'Stroll Magazine', leader: false },
-    { name: 'Nathan Senn', title: 'Property Restoration', company: 'Franco Restorations', leader: false }
+    { name: 'Carter Helms', title: 'Team Chair', company: 'Highstreet Ins & Financial Svcs', website: 'https://carterhelms.com', leader: true },
+    { name: 'Craig Morrill', title: 'Vice Chair', company: 'Summit Global', website: '', leader: true },
+    { name: 'Will Sigmon', title: 'Team Admin', company: 'Will Sigmon Media', website: 'https://willsigmon.media', leader: true },
+    { name: 'Rusty Sutton', title: 'Team Marketing Specialist', company: 'Monkey Fans Creative', website: 'https://monkeyfansraleigh.com', leader: true, specialTitle: true },
+    { name: 'Robert Courts', title: 'Mortgage Lending', company: 'Advantage Lending', website: 'https://advantagelending.com', leader: false },
+    { name: 'Dana Walsh', title: 'Magazine Publisher', company: 'Stroll Magazine', website: 'https://strollmag.com/locations/hayes-barton-nc', leader: false },
+    { name: 'Nathan Senn', title: 'Property Restoration', company: 'Franco Restorations', website: 'https://francorestorations.com', leader: false },
+    { name: 'Roni Payne', title: 'Accounting / Tax', company: 'R. Payne LLC', website: '', leader: false }
   ];
 
   function keepLatestLocalEntries(entries) {
@@ -1974,7 +2025,7 @@ button { cursor: pointer; background: none; border: none; }
   function renderTeamGrid() {
     var teamGrid = document.getElementById('team-grid');
     if (!teamGrid) return;
-    var councilMembers = TEAM_MEMBERS.filter(function(member) { return member.leader; });
+    var governanceMembers = TEAM_MEMBERS.filter(function(member) { return member.leader; });
     var memberRoster = TEAM_MEMBERS.filter(function(member) { return !member.leader; });
 
     function renderMemberCards(members) {
@@ -1989,8 +2040,8 @@ button { cursor: pointer; background: none; border: none; }
 
     teamGrid.innerHTML =
       '<div class="team-grid-group">' +
-        '<div class="team-grid-label">Council</div>' +
-        '<div class="team-grid-cards">' + renderMemberCards(councilMembers) + '</div>' +
+        '<div class="team-grid-label">Governance Committee</div>' +
+        '<div class="team-grid-cards">' + renderMemberCards(governanceMembers) + '</div>' +
       '</div>' +
       '<div class="team-grid-group">' +
         '<div class="team-grid-label">Members</div>' +
@@ -2054,9 +2105,9 @@ button { cursor: pointer; background: none; border: none; }
   function exportCSV() {
     var entries = getLocalEntries();
     if (!entries.length) { alert('No local entries saved.'); return; }
-    var header = 'Timestamp,First Name,Last Name,Profession,Company Name,Phone,Email,Guest Of,First Visit?,Interested in Learning More?,Best Contact Method,Ideal Referral\n';
+    var header = 'Timestamp,First Name,Last Name,Profession,Company Name,Phone,Email,Guest Of,Ideal Referral\n';
     var rows = entries.map(function(e) {
-      return [e.timestamp, e.firstName, e.lastName, e.profession, e.companyName, e.phone, e.email, e.guestOf, e.firstVisit, e.interestedInLearningMore, e.bestContactMethod, e.idealReferral]
+      return [e.timestamp, e.firstName, e.lastName, e.profession, e.companyName, e.phone, e.email, e.guestOf, e.idealReferral]
         .map(function(v) { return '"' + (v || '').replace(/"/g, '""') + '"'; }).join(',');
     }).join('\n');
     var blob = new Blob([header + rows], { type: 'text/csv' });
@@ -2086,8 +2137,8 @@ button { cursor: pointer; background: none; border: none; }
   var submitFailedTitle = 'We could not confirm your check-in';
   var submitFailedSubtitle = 'This browser could not save a local backup, and the network sync did not complete. Please try again or ask the host to retry.';
 
-  var fields = ['firstName', 'lastName', 'profession', 'companyName', 'phone', 'email', 'guestOf', 'firstVisit', 'interestedInLearningMore', 'bestContactMethod'];
-  var optionalFields = ['idealReferral'];
+  var fields = ['firstName', 'lastName', 'profession', 'phone', 'email', 'guestOf'];
+  var optionalFields = ['companyName', 'idealReferral'];
   var allFields = fields.concat(optionalFields);
 
   var guestPicker = document.getElementById('guestOf-picker');
@@ -2097,9 +2148,6 @@ button { cursor: pointer; background: none; border: none; }
   var guestOfHidden = document.getElementById('guestOf');
   var companyWebsite = document.getElementById('companyWebsite');
   var tapPanelGroups = {
-    firstVisit: document.getElementById('firstVisit-panels'),
-    interestedInLearningMore: document.getElementById('interestedInLearningMore-panels'),
-    bestContactMethod: document.getElementById('bestContactMethod-panels')
   };
 
   function isTeamMember(name) {
@@ -2128,9 +2176,69 @@ button { cursor: pointer; background: none; border: none; }
     });
   }
 
+  // ===== PROFESSION AUTOCOMPLETE =====
+  var INDUSTRIES = [
+    'Accounting', 'Architecture', 'Auto Sales', 'Banking', 'Business Consulting',
+    'Chiropractic', 'Commercial Real Estate', 'Construction', 'Copywriting',
+    'Cyber Security', 'Dental', 'Education', 'Electrical', 'Event Planning',
+    'Financial Planning', 'Fitness & Wellness', 'Graphic Design', 'Healthcare',
+    'Home Inspection', 'Home Services', 'HVAC', 'Insurance', 'Interior Design',
+    'IT Services', 'Landscaping', 'Legal', 'Lending & Mortgage', 'Marketing',
+    'Massage Therapy', 'Media & Video', 'Mental Health', 'Nonprofit',
+    'Nutrition', 'Painting', 'Pest Control', 'Pet Services', 'Photography',
+    'Physical Therapy', 'Plumbing', 'Printing', 'Property Management',
+    'Property Restoration', 'Publishing', 'Real Estate', 'Recruiting',
+    'Roofing', 'Solar Energy', 'Staffing', 'Tax Preparation', 'Technology',
+    'Travel', 'Veterinary', 'Wealth Management', 'Web Development'
+  ];
+  var professionInput = document.getElementById('profession');
+  var professionResults = document.getElementById('profession-results');
+
+  function getProfessionMatches(query) {
+    var q = query.trim().toLowerCase();
+    if (!q) return [];
+    return INDUSTRIES.filter(function(industry) {
+      return industry.toLowerCase().indexOf(q) !== -1;
+    }).slice(0, 6);
+  }
+
+  function renderProfessionResults() {
+    var matches = getProfessionMatches(professionInput.value);
+    if (!matches.length || professionInput.value.trim().toLowerCase() === matches[0].toLowerCase()) {
+      professionResults.innerHTML = '';
+      return;
+    }
+    professionResults.innerHTML = matches.map(function(industry) {
+      return '<button type="button" class="profession-result" data-value="' + escapeHtml(industry) + '">' + escapeHtml(industry) + '</button>';
+    }).join('');
+  }
+
+  professionInput.addEventListener('input', function() {
+    renderProfessionResults();
+  });
+
+  professionInput.addEventListener('focus', function() {
+    if (professionInput.value.trim()) renderProfessionResults();
+  });
+
+  professionInput.addEventListener('blur', function() {
+    window.setTimeout(function() {
+      professionResults.innerHTML = '';
+    }, 120);
+  });
+
+  professionResults.addEventListener('click', function(event) {
+    var button = event.target.closest('.profession-result');
+    if (!button) return;
+    professionInput.value = button.getAttribute('data-value');
+    professionResults.innerHTML = '';
+    professionInput.blur();
+    validateField('profession');
+  });
+
   function renderGuestQuickPicks() {
     guestQuickPicks.innerHTML = TEAM_MEMBERS.filter(function(member) {
-      return member.leader;
+      return member.leader && !member.specialTitle;
     }).map(function(member) {
       return '<button type="button" class="guest-chip" data-value="' + escapeHtml(member.name) + '">' + escapeHtml(member.name) + '</button>';
     }).join('') +

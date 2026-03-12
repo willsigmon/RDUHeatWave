@@ -63,21 +63,21 @@
   /* ===== COLORS ===== */
   :root {
     --fire: #E8580C;
-    --fire-dim: rgba(232,88,12,0.35);
-    --fire-glow: rgba(232,88,12,0.08);
-    --gold: #8a6d3b;
-    --gold-dim: rgba(138,109,59,0.25);
-    --text: #1a1412;
-    --text-mid: #5c4f44;
-    --text-dim: #8a7e74;
-    --surface: #faf7f4;
-    --surface-up: #f3eeea;
-    --divider: rgba(138,109,59,0.18);
+    --fire-dim: rgba(232,88,12,0.46);
+    --fire-glow: rgba(232,88,12,0.12);
+    --gold: #9c7748;
+    --gold-dim: rgba(156,119,72,0.22);
+    --text: #231914;
+    --text-mid: #5c4a3d;
+    --text-dim: #8a7361;
+    --surface: #f4eee8;
+    --surface-up: #eee5dc;
+    --divider: rgba(156,119,72,0.22);
   }
 
   /* ===== HEADER ===== */
   .header {
-    padding: 6pt 0 0;
+    padding: 6pt 6pt 0;
     border-bottom: 1.5pt solid var(--divider);
     position: relative;
     z-index: 1;
@@ -127,12 +127,21 @@
     flex-shrink: 0;
   }
 
+  .header-qr-link {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+  }
+
   .qr-code {
     width: 64pt;
     height: 64pt;
-    border: 1.5pt solid var(--fire);
+    border: 1.75pt solid rgba(26,20,18,0.18);
     border-radius: 4pt;
     padding: 2pt;
+    background: #fff;
+    box-shadow: 0 4pt 14pt rgba(26,20,18,0.12);
   }
 
   .qr-label {
@@ -144,32 +153,41 @@
   }
 
   .header-stats {
-    display: flex;
-    justify-content: center;
-    gap: 20pt;
-    padding: 5pt 0;
-    border-top: 0.5pt solid var(--divider);
-    background: rgba(250,247,244,0.5);
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 6pt;
+    padding: 8pt 4pt 6pt;
+    border-top: none;
+    background: transparent;
   }
 
   .stat {
     display: flex;
-    align-items: baseline;
-    gap: 4pt;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2pt;
+    min-width: 0;
+    padding: 6pt 5pt 5pt;
+    background: linear-gradient(180deg, rgba(248,244,240,0.98), rgba(239,229,220,0.96));
+    border: 0.75pt solid rgba(232,88,12,0.18);
+    border-radius: 4pt;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
   }
 
   .stat-value {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 14pt;
-    color: var(--fire);
+    color: #2b1d16;
     line-height: 1;
   }
 
   .stat-label {
     font-size: 6pt;
     text-transform: uppercase;
-    color: var(--text-dim);
+    color: #786354;
     letter-spacing: 1pt;
+    text-align: center;
   }
 
   /* ===== DIVIDER ===== */
@@ -203,6 +221,7 @@
 
   .two-col-grow {
     flex: 1;
+    align-items: stretch;
   }
 
   .col-main { flex: 1.15; display: flex; flex-direction: column; }
@@ -228,9 +247,13 @@
   .agenda-list {
     list-style: none;
     flex: 1;
-    background: rgba(250,247,244,0.6);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: linear-gradient(180deg, rgba(244,238,232,0.98), rgba(235,226,217,0.96));
     border-radius: 4pt;
-    padding: 2pt 4pt;
+    padding: 5pt 6pt;
+    border: 0.5pt solid rgba(185,145,84,0.22);
   }
 
   .agenda-group-label {
@@ -239,7 +262,7 @@
     letter-spacing: 1.5pt;
     color: var(--fire);
     text-transform: uppercase;
-    padding: 5pt 6pt 1pt;
+    padding: 7pt 6pt 2pt;
     font-weight: 700;
   }
 
@@ -250,15 +273,15 @@
   .agenda-item {
     display: flex;
     align-items: center;
-    padding: 3pt 6pt;
-    min-height: 16pt;
+    padding: 5pt 8pt;
+    min-height: 20pt;
     gap: 6pt;
     border-radius: 2pt;
-    line-height: 1;
+    line-height: 1.15;
   }
 
   .agenda-item:nth-child(odd) {
-    background: rgba(138,109,59,0.04);
+    background: rgba(138,109,59,0.06);
   }
 
   .agenda-item:last-child { border-bottom: none; }
@@ -281,11 +304,12 @@
 
   /* ===== SPOTLIGHT ===== */
   .spotlight-card {
-    background: var(--surface);
-    border: 0.75pt solid var(--divider);
+    background: linear-gradient(180deg, rgba(247,238,229,0.98), rgba(238,228,219,0.96));
+    border: 0.75pt solid rgba(232,88,12,0.24);
     border-radius: 4pt;
-    padding: 8pt 12pt 10pt;
-    margin-bottom: 14pt;
+    padding: 10pt 12pt 12pt;
+    margin-bottom: 12pt;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
   }
 
   .spotlight-hero {
@@ -322,7 +346,7 @@
 
   .spotlight-upcoming {
     display: flex;
-    gap: 6pt;
+    gap: 4pt;
     justify-content: space-between;
   }
 
@@ -339,7 +363,7 @@
   }
 
   .spotlight-upcoming-name {
-    font-size: 7.5pt;
+    font-size: 6.8pt;
     font-weight: 600;
     color: var(--text-mid);
     line-height: 1.3;
@@ -347,10 +371,11 @@
 
   /* ===== LEADERSHIP ===== */
   .leadership {
-    margin-bottom: 8pt;
-    background: rgba(250,247,244,0.6);
+    margin-bottom: 12pt;
+    background: linear-gradient(180deg, rgba(244,238,232,0.98), rgba(235,226,217,0.96));
     border-radius: 4pt;
-    padding: 4pt 8pt;
+    padding: 5pt 8pt;
+    border: 0.5pt solid rgba(185,145,84,0.18);
   }
 
   .leader-row {
@@ -375,14 +400,15 @@
 
   /* ===== TIP BOX ===== */
   .tip-box {
-    background: var(--fire-glow);
+    background: linear-gradient(180deg, rgba(247,238,229,0.98), rgba(238,228,219,0.96));
     border-radius: 4pt;
     padding: 10pt 12pt;
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    border: 0.75pt solid var(--divider);
+    border: 0.75pt solid rgba(232,88,12,0.22);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
   }
 
   .tip-box-label {
@@ -410,7 +436,7 @@
 
   /* ===== ABOUT BOX ===== */
   .about-box {
-    background: var(--surface);
+    background: linear-gradient(180deg, rgba(244,238,232,0.98), rgba(235,226,217,0.96));
     border-left: 2.5pt solid var(--fire);
     padding: 8pt 10pt;
     font-family: 'Cormorant Garamond', serif;
@@ -427,14 +453,42 @@
   }
 
   .about-box-full {
-    margin-top: 6pt;
+    margin-top: 10pt;
     border-left: none;
     border-top: 0.75pt solid var(--divider);
     border-bottom: 0.75pt solid var(--divider);
     text-align: center;
-    padding: 7pt 16pt;
+    padding: 10pt 16pt 9pt;
     font-size: 9.5pt;
-    line-height: 1.55;
+    line-height: 1.5;
+  }
+
+  .about-pills {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 5pt;
+    margin-top: 8pt;
+  }
+
+  .about-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 3pt;
+    padding: 3pt 7pt;
+    border-radius: 999pt;
+    background: rgba(234,224,214,0.96);
+    color: var(--text);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 7pt;
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: 0.3pt;
+  }
+
+  .about-pill strong {
+    color: var(--fire);
+    font-size: 7pt;
   }
 
 
@@ -484,17 +538,17 @@
   /* ===== PAGE 2 ===== */
 
   .worksheet-panel {
-    background: rgba(250,247,244,0.7);
+    background: linear-gradient(180deg, rgba(244,238,232,0.98), rgba(235,226,217,0.96));
     border-radius: 6pt;
     padding: 6pt 8pt;
-    border: 0.5pt solid rgba(138,109,59,0.1);
+    border: 0.5pt solid rgba(185,145,84,0.18);
   }
 
   .worksheet-panel-accent {
-    background: var(--fire-glow);
+    background: linear-gradient(180deg, rgba(247,238,229,0.98), rgba(238,228,219,0.96));
     border-radius: 6pt;
     padding: 6pt 8pt;
-    border: 0.5pt solid rgba(232,88,12,0.08);
+    border: 0.5pt solid rgba(232,88,12,0.22);
   }
 
   .write-section {
@@ -532,7 +586,7 @@
     margin-bottom: 6pt;
     line-height: 1.5;
     padding-bottom: 4pt;
-    border-bottom: 0.5pt solid rgba(138,109,59,0.1);
+    border-bottom: 0.75pt solid rgba(138,109,59,0.22);
   }
 
   .write-prompt strong { color: var(--fire); font-style: normal; font-size: 10.5pt; }
@@ -557,7 +611,7 @@
     display: flex;
     align-items: flex-end;
     padding: 6pt 0 2pt;
-    border-bottom: 0.5pt solid rgba(138,109,59,0.12);
+    border-bottom: 0.75pt solid rgba(138,109,59,0.3);
     gap: 4pt;
     min-height: 16pt;
   }
@@ -571,10 +625,10 @@
   }
 
   .roster-panel {
-    background: rgba(250,247,244,0.5);
+    background: linear-gradient(180deg, rgba(244,238,232,0.98), rgba(235,226,217,0.96));
     border-radius: 4pt;
     padding: 2pt 4pt;
-    border: 0.5pt solid rgba(138,109,59,0.08);
+    border: 0.5pt solid rgba(185,145,84,0.18);
   }
 
   /* ===== ROSTER TABLE ===== */
@@ -601,7 +655,7 @@
   }
 
   .roster-table tr:nth-child(even) td {
-    background: var(--surface);
+    background: rgba(138,109,59,0.05);
   }
 
   .roster-name { font-weight: 600; }
@@ -660,22 +714,36 @@
         <div class="team-subtitle">Two Twelve Referral Network</div>
       </div>
       <div class="header-qr">
-        <img class="qr-code" src="qr-rduheatwave.svg" alt="Scan to register at rduheatwave.team">
-        <div class="qr-label">Scan to Check In</div>
+        <a class="header-qr-link" href="https://rduheatwave.team" aria-label="Visit rduheatwave.team">
+          <img class="qr-code" src="qr-rduheatwave.svg" alt="Scan to visit rduheatwave.team">
+          <div class="qr-label">Scan to Visit</div>
+        </a>
       </div>
     </div>
     <div class="header-stats">
       <div class="stat">
-        <div class="stat-value">35</div>
+        <div class="stat-value">8</div>
+        <div class="stat-label">Members</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">102</div>
+        <div class="stat-label">Guests</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">122</div>
+        <div class="stat-label">BizChats</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">38</div>
         <div class="stat-label">Referrals</div>
       </div>
       <div class="stat">
-        <div class="stat-value">$3,778</div>
-        <div class="stat-label">Closed Revenue</div>
+        <div class="stat-value">20</div>
+        <div class="stat-label">Total GIs</div>
       </div>
       <div class="stat">
-        <div class="stat-value">7</div>
-        <div class="stat-label">Members</div>
+        <div class="stat-value">$105,628</div>
+        <div class="stat-label">Closed Revenue</div>
       </div>
     </div>
   </div>
@@ -766,21 +834,21 @@
       <div class="spotlight-card">
         <div class="spotlight-hero">
           <div class="spotlight-hero-label">This Week's Presenter</div>
-          <div class="spotlight-hero-name">Nathan Senn</div>
-          <div class="spotlight-hero-prof">Property Restoration</div>
+          <div class="spotlight-hero-name">Robert Courts</div>
+          <div class="spotlight-hero-prof">Advantage Lending</div>
         </div>
         <div class="spotlight-upcoming">
           <div class="spotlight-upcoming-item">
             <div class="spotlight-upcoming-label">Next</div>
-            <div class="spotlight-upcoming-name">Robert Courts</div>
-          </div>
-          <div class="spotlight-upcoming-item">
-            <div class="spotlight-upcoming-label">2 Wks</div>
             <div class="spotlight-upcoming-name">Rusty Sutton</div>
           </div>
           <div class="spotlight-upcoming-item">
-            <div class="spotlight-upcoming-label">3 Wks</div>
+            <div class="spotlight-upcoming-label">2 Wks</div>
             <div class="spotlight-upcoming-name">Will Sigmon</div>
+          </div>
+          <div class="spotlight-upcoming-item">
+            <div class="spotlight-upcoming-label">3 Wks</div>
+            <div class="spotlight-upcoming-name">Carter Helms</div>
           </div>
         </div>
       </div>
@@ -797,7 +865,7 @@
         </div>
         <div class="leader-row">
           <span class="leader-role">Team Admin</span>
-          <span class="leader-name" style="color:var(--text-dim); font-style:italic;">Open</span>
+          <span class="leader-name">Will Sigmon</span>
         </div>
         <div class="leader-row">
           <span class="leader-role">Team Marketing Specialist</span>
@@ -807,7 +875,7 @@
 
       <div class="tip-box">
         <div class="tip-box-label">Referral Tip of the Week</div>
-        <div class="tip-box-text">"The best referral isn't a name &mdash; it's a warm introduction. Text your contact first, then connect them directly."</div>
+        <div class="tip-box-text">"Don&rsquo;t ask for &lsquo;anyone.&rsquo; Ask for one specific introduction. Specific asks are easier to remember, repeat, and actually send."</div>
       </div>
 
     </div>
@@ -815,9 +883,12 @@
 
   <!-- About (full width) -->
   <div class="about-box about-box-full">
-    <strong>What is Two Twelve?</strong> At 211&deg;, water is hot. Add one extra degree to 212&deg; and it creates steam that drives industry. We exist to add that extra degree to your business through permission-based referrals, trust, and gratitude.
-    <br><br>
-    <strong>Our Mission:</strong> Build genuine relationships that generate high-quality referrals &mdash; so every member grows their business through trust, not cold outreach.
+    <strong>211&deg; is hot. 212&deg; makes steam.</strong> Two Twelve is a referral network built on warm introductions, trust, and shared momentum &mdash; the kind of room that actively looks for openings for you.
+    <div class="about-pills">
+      <span class="about-pill"><strong>Permission</strong> Warm introductions only</span>
+      <span class="about-pill"><strong>Trust</strong> Members know who to send</span>
+      <span class="about-pill"><strong>Access</strong> Right doors open faster</span>
+    </div>
     <span class="about-url">twotwelvereferrals.com</span>
   </div>
 
@@ -949,6 +1020,13 @@
         <td>rcourts@advantagelending.com</td>
       </tr>
       <tr>
+        <td class="roster-name">Roni Payne</td>
+        <td class="roster-profession">Accounting / Tax</td>
+        <td>R. Payne LLC</td>
+        <td>(412) 229-7595</td>
+        <td>roni@rpayne.org</td>
+      </tr>
+      <tr>
         <td class="roster-name">Rusty Sutton</td>
         <td class="roster-profession">Digital Marketing</td>
         <td>Monkey Fans Creative</td>
@@ -968,7 +1046,7 @@
 
   <!-- Footer -->
   <div class="page-footer">
-    <span>Revised 3/4/2026 &nbsp;&#9670;&nbsp; Stats since 1/8/2026</span>
+    <span>Revised 3/12/2026 &nbsp;&#9670;&nbsp; Stats since 1/8/2026</span>
     <img class="logo-twotwelve" src="twotwelve-logo.png" alt="Two Twelve" style="height:14pt; opacity:0.5;">
     <span class="fire">rduheatwave.team</span>
   </div>

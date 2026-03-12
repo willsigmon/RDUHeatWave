@@ -72,11 +72,13 @@ Production smoke check after deploy:
 
 ## Google Sheets Integration
 
-- **Form intake sheet ID**: `1WWSxfqJ1UdMqJxKLaiIzb06n3rSQj5-AVN3m07wAkSA`
+- **Production team sheet ID**: `1WWSxfqJ1UdMqJxKLaiIzb06n3rSQj5-AVN3m07wAkSA`
+- **Cleaned rebuild sheet ID**: `1lPvgkg20Dxqc0IHiHzwe6IBCdqLAcpiszj17LGT093Q` (reference / fallback)
 - **Current web app URL**: `https://script.google.com/macros/s/AKfycbwvYv_BYJznuumdC51jP-P6RuYRRgK5MEONjUywvl322MbR1W1_nA1hZHcsSj5oLfzvoQ/exec`
 - **Production form endpoint**: `/api/checkin` on `https://rduheatwave.team`
 - **Form hardening**: hidden honeypot, origin allowlist, burst/hourly throttling, bounded local backup, server-side field-length validation, enum validation for select fields, and request timeouts
 - **Apps Script**: Deploy `apps-script.js` to script.google.com as Web App
 - **Destination Tab**: `Guest Check In`
 - **Header strategy**: `apps-script.js` maps values by header name and auto-adds missing expected columns
-- **Current check-in fields**: Timestamp, Meeting Date, First Name, Last Name, Profession, Company Name, Email, Phone, Guest Of, First Visit?, Interested in Learning More?, Best Contact Method, Ideal Referral
+- **Current-sheet compatibility**: `apps-script.js` now targets the live `Guest Check In` schema directly at row 3, columns A:I, so submissions stay aligned with the existing sheet
+- **Current check-in fields written to the live sheet**: Timestamp, Meeting Date, First Name, Last Name, Profession, Email, Phone, Guest Of, First Visit?

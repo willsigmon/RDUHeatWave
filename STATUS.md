@@ -36,6 +36,9 @@
 - [x] Meeting lobby overlay made keyboard-accessible for kiosk start/audio enable
 - [x] Original team sheet access restored for `will@willsigmon.media`
 - [x] Apps Script backend switched back to the original team sheet
+- [x] Cleaned replacement workbook generated and shared: `1lPvgkg20Dxqc0IHiHzwe6IBCdqLAcpiszj17LGT093Q`
+- [x] Report rebuild script added (`scripts/build_clean_workbook.py`) with backups, Needs Review, validation tabs, and revenue reconciliation
+- [x] `apps-script.js` updated to match the current live sheet schema directly (Guest Check In row 3, columns A:I) so new form submissions line up on the existing sheet
 
 ## Remaining Non-Blocking Items
 - [ ] Logo could be replaced with a higher-res source image if you want sharper derived icons/social previews
