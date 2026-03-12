@@ -1999,6 +1999,7 @@ button { cursor: pointer; background: none; border: none; }
   var mouseDown = false;
   slider.addEventListener('mousedown', function(e) {
     if (e.button !== 0) return;
+    if (e.target.closest('input, textarea, select, button, a, label, [contenteditable]')) return;
     mouseDown = true;
     cancelPeek();
     touchStartX = e.clientX;
