@@ -1742,7 +1742,7 @@ button { cursor: pointer; background: none; border: none; }
     </div>
 
     <div class="submit-wrap">
-      <button type="submit" class="submit-btn" id="submit-btn">
+      <button type="button" class="submit-btn" id="submit-btn">
         <span class="btn-text">CHECK IN</span>
         <div class="spinner" role="status" aria-label="Submitting"></div>
       </button>
@@ -2597,14 +2597,9 @@ button { cursor: pointer; background: none; border: none; }
     });
   });
 
-  guestOfOther.addEventListener('blur', function() {
-    if (guestOfPanels.getAttribute('data-selected-option') === 'Other') validateField('guestOf');
-  });
 
   // ===== FORM SUBMIT =====
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
+  submitBtn.addEventListener('click', function(e) {
     try {
       if (!validateAll()) {
         var firstError = form.querySelector('.field-input.error, .tap-panel-grid.error .tap-panel');
@@ -2647,11 +2642,9 @@ button { cursor: pointer; background: none; border: none; }
           showSubmissionIssue();
         });
     } catch(err) {
-      // Prevent any error from causing native form submit
       submitBtn.classList.remove('loading');
       submitBtn.disabled = false;
     }
-    return false;
   });
 
   function showSuccess(options) {
