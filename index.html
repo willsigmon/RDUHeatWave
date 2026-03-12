@@ -1677,7 +1677,7 @@ button { cursor: pointer; background: none; border: none; }
   <div class="swipe-hint swipe-hint-center" id="swipe-hint-center">Swipe &larr; Team &bull; Clouds &rarr;</div>
 
   <!-- Registration Form -->
-  <form id="checkin-form" class="form-fields" novalidate onsubmit="return false">
+  <form id="checkin-form" class="form-fields" novalidate>
     <div class="form-row">
       <div class="field">
         <label class="field-label" for="firstName">First Name</label>
@@ -2604,47 +2604,54 @@ button { cursor: pointer; background: none; border: none; }
   // ===== FORM SUBMIT =====
   form.addEventListener('submit', function(e) {
     e.preventDefault();
+    e.stopPropagation();
+    try {
+      if (!validateAll()) {
+        var firstError = form.querySelector('.field-input.error, .tap-panel-grid.error .tap-panel');
+        if (firstError) firstError.focus();
+        return;
+      }
 
-    if (!validateAll()) {
-      var firstError = form.querySelector('.field-input.error, .tap-panel-grid.error .tap-panel');
-      if (firstError) firstError.focus();
-      return;
-    }
+      submitBtn.classList.add('loading');
+      submitBtn.disabled = true;
 
-    submitBtn.classList.add('loading');
-    submitBtn.disabled = true;
-
-    // Collect form data
-    var entry = {};
-    allFields.forEach(function(name) {
-      entry[name] = document.getElementById(name).value.trim();
-    });
-
-    // ALWAYS save locally as backup
-    var savedEntry = saveToLocal(entry);
-
-    // Send to same-origin proxy so the UI gets a real success/failure signal
-    fetchWithTimeout(FORM_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
-        body: new URLSearchParams(Object.assign({}, entry, {
-          companyWebsite: companyWebsite.value.trim()
-        })).toString()
-      }, FORM_TIMEOUT_MS).then(function(response) {
-        if (!response.ok) throw new Error('submit-failed');
-        return response.json();
-      }).then(function(result) {
-        if (!result || result.status !== 'ok') throw new Error('submit-failed');
-        markLocalEntrySynced(savedEntry && savedEntry.timestamp);
-        showSuccess();
-      }).catch(function() {
-        if (savedEntry) {
-          showSuccess({ localOnly: true, reason: 'sync-failed' });
-          return;
-        }
-
-        showSubmissionIssue();
+      // Collect form data
+      var entry = {};
+      allFields.forEach(function(name) {
+        entry[name] = document.getElementById(name).value.trim();
       });
+
+      // ALWAYS save locally as backup
+      var savedEntry = saveToLocal(entry);
+
+      // Send to same-origin proxy so the UI gets a real success/failure signal
+      fetchWithTimeout(FORM_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+          body: new URLSearchParams(Object.assign({}, entry, {
+            companyWebsite: companyWebsite.value.trim()
+          })).toString()
+        }, FORM_TIMEOUT_MS).then(function(response) {
+          if (!response.ok) throw new Error('submit-failed');
+          return response.json();
+        }).then(function(result) {
+          if (!result || result.status !== 'ok') throw new Error('submit-failed');
+          markLocalEntrySynced(savedEntry && savedEntry.timestamp);
+          showSuccess();
+        }).catch(function() {
+          if (savedEntry) {
+            showSuccess({ localOnly: true, reason: 'sync-failed' });
+            return;
+          }
+
+          showSubmissionIssue();
+        });
+    } catch(err) {
+      // Prevent any error from causing native form submit
+      submitBtn.classList.remove('loading');
+      submitBtn.disabled = false;
+    }
+    return false;
   });
 
   function showSuccess(options) {
