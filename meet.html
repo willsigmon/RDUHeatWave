@@ -57,6 +57,9 @@ html {
   --radius-2xl: 1.25rem;
   --shadow-glow: 0 0 80px rgba(232, 88, 12, 0.12), 0 0 160px rgba(232, 88, 12, 0.06);
   --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+  --overscan: 42px;
+  --content-max: 1760px;
+  --shell-pad: max(var(--overscan), calc((100vw - var(--content-max)) / 2 + var(--overscan)));
 }
 
 body {
@@ -68,6 +71,20 @@ body {
   flex-direction: column;
   overflow-x: hidden;
   position: relative;
+}
+
+body.anchor-mode .heat-orb {
+  opacity: 0.42;
+  animation-duration: 12s;
+}
+
+body.anchor-mode .heat-line {
+  opacity: 0.22;
+}
+
+body.anchor-mode .ticker-content {
+  animation-duration: 120s !important;
+  opacity: 0.82;
 }
 
 /* === HEAT BACKGROUND === */
@@ -111,7 +128,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.2rem 3rem;
+  padding: 1.2rem calc(var(--shell-pad) + 0.35rem);
   background: linear-gradient(135deg, rgba(250, 245, 240, 0.98) 0%, rgba(220, 210, 200, 0.9) 100%);
   backdrop-filter: blur(24px) saturate(200%);
   -webkit-backdrop-filter: blur(24px) saturate(200%);
@@ -178,10 +195,12 @@ body {
   width: 100%;
   flex: 1;
   display: grid;
-  grid-template-columns: 1fr 1.2fr auto;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(500px, 1.05fr) minmax(260px, 0.84fr);
   grid-template-rows: 1fr;
-  gap: 0;
-  min-height: 0;
+  gap: clamp(1rem, 2vw, 1.75rem);
+  min-height: calc(100dvh - 176px);
+  padding: clamp(1rem, 2.2vw, 2rem) var(--shell-pad) clamp(1.5rem, 2.6vw, 2.6rem);
+  align-items: stretch;
 }
 
 /* === LEFT: CAROUSEL === */
@@ -191,27 +210,35 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 3rem 4rem;
+  min-height: 100%;
+  min-width: 0;
+  padding: 1.6rem 1.5rem;
   perspective: 1600px;
   overflow: hidden;
+  border: 1px solid rgba(232, 88, 12, 0.16);
+  border-radius: 1.5rem;
+  background: rgba(9, 9, 12, 0.36);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 18px 40px rgba(0,0,0,0.4);
 }
 
 .carousel-stage {
   position: relative;
-  width: 100%;
+  width: min(100%, 520px);
   max-width: 100%;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 1 / 1;
 }
 
 .carousel-card {
   position: absolute;
   inset: 0;
-  background: rgba(22, 22, 24, 0.55);
+  background: rgba(22, 22, 24, 0.76);
   backdrop-filter: blur(28px) saturate(200%);
   -webkit-backdrop-filter: blur(28px) saturate(200%);
   border: 1px solid rgba(232, 88, 12, 0.2);
   border-radius: var(--radius-2xl);
-  padding: 2.5rem 2rem;
+  padding: 1.8rem 1.55rem;
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 0 160px rgba(232, 88, 12, 0.12);
   display: flex;
   flex-direction: column;
@@ -220,7 +247,7 @@ body {
   text-align: center;
   gap: 1rem;
   opacity: 0;
-  transform: perspective(900px) rotateY(55deg) rotateZ(4deg) scale(0.6) translateX(60px);
+  transform: perspective(900px) rotateY(38deg) rotateZ(3deg) scale(0.72) translateX(34px);
   pointer-events: none;
   transition: none;
 }
@@ -236,8 +263,8 @@ body {
 }
 
 @keyframes cardSwivelIn {
-  0%   { opacity: 0; transform: perspective(900px) rotateY(55deg) rotateZ(4deg) scale(0.6) translateX(60px) translateY(20px); }
-  30%  { opacity: 1; transform: perspective(900px) rotateY(-12deg) rotateZ(-2deg) scale(1.04) translateX(-10px) translateY(-4px); }
+  0%   { opacity: 0; transform: perspective(900px) rotateY(38deg) rotateZ(3deg) scale(0.72) translateX(34px) translateY(12px); }
+  30%  { opacity: 1; transform: perspective(900px) rotateY(-8deg) rotateZ(-1deg) scale(1.02) translateX(-6px) translateY(-4px); }
   50%  { transform: perspective(900px) rotateY(6deg) rotateZ(1deg) scale(0.98) translateX(4px) translateY(2px); }
   70%  { transform: perspective(900px) rotateY(-2deg) rotateZ(-0.5deg) scale(1.01) translateX(-1px) translateY(-1px); }
   85%  { transform: perspective(900px) rotateY(0.5deg) rotateZ(0deg) scale(1) translateX(0) translateY(0); }
@@ -259,32 +286,32 @@ body {
 
 /* Card content */
 .card-icon {
-  font-size: clamp(3.5rem, 6vw, 5.5rem);
+  font-size: clamp(2.4rem, 4vw, 4.25rem);
   line-height: 1;
 }
 .card-heading {
   font-family: var(--font-display);
-  font-size: clamp(3rem, 6vw, 5.5rem);
+  font-size: clamp(2.2rem, 4.1vw, 4rem);
   letter-spacing: 0.06em;
   color: var(--color-primary);
   line-height: 1.1;
   text-shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
 .card-body {
-  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+  font-size: clamp(1.05rem, 1.7vw, 1.45rem);
   color: var(--color-text-muted);
-  line-height: 1.4;
-  max-width: 32ch;
+  line-height: 1.42;
+  max-width: 26ch;
 }
 .card-stat {
   display: flex;
-  gap: 2rem;
-  margin-top: 0.5rem;
+  gap: 1.2rem;
+  margin-top: 0.25rem;
 }
 .card-stat-item { text-align: center; }
 .card-stat-value {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-size: clamp(1.35rem, 2.4vw, 2rem);
   color: var(--color-primary);
   letter-spacing: 0.04em;
 }
@@ -321,24 +348,33 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
-  gap: 1.5rem;
+  min-height: 100%;
+  min-width: 0;
+  padding: 1.6rem 1.4rem;
+  gap: 1rem;
+  border: 1px solid rgba(232, 88, 12, 0.16);
+  border-radius: 1.5rem;
+  background: rgba(9, 9, 12, 0.32);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 18px 40px rgba(0,0,0,0.4);
 }
 
 .countdown-header {
   font-family: var(--font-display);
-  font-size: clamp(3rem, 5vw, 5rem);
+  font-size: clamp(2.2rem, 4vw, 3.7rem);
   letter-spacing: 0.15em;
   color: var(--color-primary);
   text-transform: uppercase;
   text-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  text-align: center;
 }
 
 .countdown-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 3rem;
-  max-width: 95%;
+  gap: clamp(0.9rem, 1.4vw, 1.3rem);
+  max-width: 100%;
   width: 100%;
 }
 .countdown-unit {
@@ -346,7 +382,7 @@ body {
 }
 .countdown-value {
   font-family: var(--font-display);
-  font-size: clamp(6rem, 14vw, 16rem);
+  font-size: clamp(4.6rem, 10vw, 10rem);
   letter-spacing: 0.04em;
   background: linear-gradient(180deg, #ffffff 0%, #e6d8cc 100%);
   -webkit-background-clip: text;
@@ -363,14 +399,14 @@ body {
   border: 1px solid rgba(232, 88, 12, 0.2);
   box-shadow: 0 12px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
   border-radius: var(--radius-xl);
-  padding: 0.6rem 0.1rem;
+  padding: 0.55rem 0.1rem 0.35rem;
   transition: color 0.4s, border-color 0.4s, box-shadow 0.4s;
 }
 .countdown-label {
-  font-size: clamp(1.2rem, 1.8vw, 1.8rem); font-weight: 600;
+  font-size: clamp(0.95rem, 1.2vw, 1.2rem); font-weight: 600;
   text-transform: uppercase; letter-spacing: 0.15em;
   color: var(--color-text-faint);
-  margin-top: 1rem;
+  margin-top: 0.75rem;
 }
 
 /* === STATUS BANNER === */
@@ -404,10 +440,17 @@ body {
   animation: horn-flash 0.4s ease-in-out infinite alternate;
 }
 .status-banner.live {
-  color: var(--color-success);
-  background: rgba(91, 168, 71, 0.08);
-  border: 1px solid rgba(91, 168, 71, 0.2);
-  animation: pulse-glow 2s ease-in-out infinite;
+  color: #f1e6dc;
+  background: rgba(232, 88, 12, 0.09);
+  border: 1px solid rgba(232, 88, 12, 0.16);
+  animation: none;
+}
+
+.status-banner.preheat {
+  color: #ffd4aa;
+  background: rgba(232, 88, 12, 0.09);
+  border: 1px solid rgba(232, 88, 12, 0.2);
+  animation: pulse-glow 2.8s ease-in-out infinite;
 }
 
 @keyframes pulse-glow {
@@ -430,7 +473,7 @@ body {
 
 .warmup-time {
   font-family: var(--font-display);
-  font-size: clamp(5rem, 14vw, 10rem);
+  font-size: clamp(4.5rem, 11vw, 8rem);
   letter-spacing: 0.06em;
   color: var(--color-warning);
   line-height: 1;
@@ -438,7 +481,7 @@ body {
 }
 .warmup-sub {
   font-family: var(--font-display);
-  font-size: clamp(1rem, 2vw, 1.6rem);
+  font-size: clamp(0.95rem, 1.6vw, 1.35rem);
   color: var(--color-text-muted);
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -512,11 +555,11 @@ body {
   display: none;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 .horn-display.visible { display: flex; }
 .horn-siren {
-  font-size: clamp(6rem, 16vw, 12rem);
+  font-size: clamp(4.5rem, 10vw, 7rem);
   animation: horn-shake 0.2s ease-in-out infinite;
   filter: drop-shadow(0 0 60px rgba(217, 68, 68, 0.7));
 }
@@ -528,11 +571,20 @@ body {
 }
 .horn-text {
   font-family: var(--font-display);
-  font-size: clamp(4rem, 10vw, 8rem);
+  font-size: clamp(3.6rem, 7vw, 6rem);
   letter-spacing: 0.12em;
   color: #fff;
   text-shadow: 0 0 80px #E8580C, 0 0 160px #FF3300, 0 0 300px #D94444;
   animation: horn-text-pulse 0.2s ease-in-out infinite alternate;
+}
+
+.horn-joke {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2vw, 2rem);
+  letter-spacing: 0.08em;
+  color: #ffd5bd;
+  text-align: center;
+  text-shadow: 0 0 24px rgba(232,88,12,0.45);
 }
 @keyframes horn-text-pulse {
   from { opacity: 1; transform: scale(1); }
@@ -593,35 +645,58 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 3rem 4rem;
-  gap: 2rem;
-  border-left: 2px solid rgba(255,255,255,0.1);
-  background: rgba(0, 0, 0, 0.2);
-  box-shadow: inset 20px 0 60px rgba(0,0,0,0.3);
+  min-height: 100%;
+  min-width: 0;
+  padding: 1.6rem 1.4rem;
+  gap: 1rem;
+  border: 1px solid rgba(232, 88, 12, 0.16);
+  border-radius: 1.5rem;
+  background: rgba(9, 9, 12, 0.38);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 18px 40px rgba(0,0,0,0.4);
 }
 .qr-panel-heading {
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 4vw, 4rem);
+  font-size: clamp(2.1rem, 3.1vw, 3.35rem);
   letter-spacing: 0.1em;
   color: var(--color-primary);
   text-align: center;
   line-height: 1.1;
   text-shadow: 0 4px 12px rgba(0,0,0,0.5);
 }
+.qr-panel-link {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  gap: 0.8rem;
+}
+.qr-panel-chip {
+  font-family: var(--font-display);
+  font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #101010;
+  background: #ffffff;
+  border-radius: 999px;
+  padding: 0.42rem 0.85rem;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.26);
+}
 .qr-panel-img {
-  width: clamp(250px, 22vw, 450px);
+  width: clamp(180px, 16vw, 290px);
   height: auto;
   border-radius: var(--radius-lg);
-  border: 4px solid var(--color-border);
+  border: 10px solid rgba(255,255,255,0.96);
   filter: drop-shadow(0 0 25px rgba(255,255,255,0.2)) drop-shadow(0 0 50px rgba(255,255,255,0.1));
   background: white;
-  padding: 12px;
+  padding: 10px;
 }
 .qr-panel-cta {
-  font-size: clamp(1.2rem, 2vw, 1.8rem);
+  font-size: clamp(1rem, 1.55vw, 1.25rem);
   color: var(--color-text-muted);
   text-align: center;
-  max-width: 20ch;
+  max-width: 19ch;
   line-height: 1.4;
 }
 .qr-panel-arrow {
@@ -634,22 +709,41 @@ body {
   50% { transform: translateY(-8px); }
 }
 
+body.phase-live .ticker-content {
+  animation-duration: 95s !important;
+  opacity: 0.72;
+}
+body.phase-live .heat-orb {
+  animation-duration: 18s;
+  opacity: 0.45;
+}
+body.phase-live .heat-line {
+  animation-duration: 34s;
+  opacity: 0.35;
+}
+body.phase-live .carousel-card.active.settled {
+  animation: none;
+}
+body.phase-live .qr-panel-arrow {
+  animation-duration: 3.5s;
+}
+
 /* === RESPONSIVE === */
 @media (max-width: 1024px) {
   .header { padding: 1rem 2rem; }
   .lobby {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr auto;
+    padding: 1rem 1.2rem 1.4rem;
   }
   .qr-panel {
     grid-column: 1 / -1;
     grid-row: 2;
     flex-direction: row;
-    border-left: none;
-    border-top: 1px solid var(--color-divider);
-    padding: 1.5rem 2rem;
+    padding: 1.2rem 1.4rem;
   }
   .qr-panel-img { width: 120px; }
+  .overscan-control { display: none; }
 }
 
 @media (max-width: 768px) {
@@ -663,11 +757,12 @@ body {
   .lobby {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto;
+    padding: 0.9rem 1rem 1.2rem;
   }
   .carousel-zone { grid-column: 1; grid-row: 2; padding: 1.5rem 1rem; }
   .countdown-zone { grid-column: 1; grid-row: 1; padding: 1.5rem 1rem; }
   .qr-panel { grid-column: 1; grid-row: 3; }
-  .countdown-value { font-size: clamp(2rem, 8vw, 3rem); }
+  .countdown-value { font-size: clamp(2.6rem, 11vw, 4rem); }
   .carousel-stage { max-width: 380px; }
 }
 
@@ -805,6 +900,57 @@ body {
   right: 0;
   background: linear-gradient(to left, #E8580C, transparent);
 }
+
+.ticker-wrap {
+  padding-left: var(--shell-pad) !important;
+  padding-right: var(--shell-pad) !important;
+}
+
+.overscan-control {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.45rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(12, 12, 16, 0.56);
+  border: 1px solid rgba(232, 88, 12, 0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.26);
+  opacity: 0.5;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.overscan-control:hover,
+.overscan-control:focus-within {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.overscan-label,
+.overscan-value {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(240, 236, 232, 0.92);
+}
+
+.overscan-value {
+  min-width: 2.8rem;
+  text-align: right;
+  color: #ffd9c0;
+}
+
+.overscan-range {
+  width: 118px;
+  accent-color: #E8580C;
+  cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -845,7 +991,7 @@ body {
 
 <!-- BIG HEADER -->
 <div class="header">
-  <div class="header-left" style="gap: 2rem;">
+  <div class="header-left" style="gap: 1.25rem;">
     <div class="header-logo" style="display:flex; align-items:center; gap: 1rem;">
       <img src="heatwave-logo.png" alt="RDU Heatwave" style="filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));">
       <div class="header-title" style="color: var(--color-primary); font-size: clamp(2.5rem, 4vw, 3.5rem); text-shadow: 0 2px 4px rgba(0,0,0,0.1);">RDU HEATWAVE</div>
@@ -866,13 +1012,15 @@ body {
 </div>
 
 <div class="ticker-wrap" style="width: 100%; background: #E8580C; color: white; padding: 0.8rem 0; overflow: hidden; position: relative; z-index: 15; box-shadow: 0 4px 15px rgba(232,88,12,0.4); border-bottom: 2px solid #FF9933;">
-  <div class="ticker-content" style="display: inline-block; white-space: nowrap; font-family: var(--font-display); font-size: 2.2rem; letter-spacing: 0.1em; animation: ticker 25s linear infinite; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+  <div class="ticker-content" style="display: inline-block; white-space: nowrap; font-family: var(--font-display); font-size: 2.2rem; letter-spacing: 0.1em; animation: ticker 50s linear infinite; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
     <span style="display: inline-block; padding-right: 80px;">🔥 WELCOME TO RDU HEATWAVE! GRAB A DRINK, FIND A SEAT, AND GET READY TO CONNECT.</span>
-    <span style="display: inline-block; padding-right: 80px;">📣 HOT NEWS: WE HAVE A REAL ESTATE POSITION THAT JUST OPENED UP! GRAB IT BEFORE IT'S GONE!</span>
-    <span style="display: inline-block; padding-right: 80px;">🤝 THE 212 PRINCIPLE: ONE EXTRA DEGREE MAKES ALL THE DIFFERENCE. BRING THE HEAT!</span>
+    <span style="display: inline-block; padding-right: 80px;">🎤 TODAY&rsquo;S SPEAKER: ROBERT COURTS FROM ADVANTAGE LENDING.</span>
+    <span style="display: inline-block; padding-right: 80px;">🤝 WARM INTRODUCTIONS ONLY. TRUSTED PROFESSIONALS. REAL FOLLOW-THROUGH.</span>
+    <span style="display: inline-block; padding-right: 80px;">📲 GUESTS: SCAN THE QR CODE TO VISIT RDUHEATWAVE.TEAM.</span>
     <span style="display: inline-block; padding-right: 80px;">🔥 WELCOME TO RDU HEATWAVE! GRAB A DRINK, FIND A SEAT, AND GET READY TO CONNECT.</span>
-    <span style="display: inline-block; padding-right: 80px;">📣 HOT NEWS: WE HAVE A REAL ESTATE POSITION THAT JUST OPENED UP! GRAB IT BEFORE IT'S GONE!</span>
-    <span style="display: inline-block; padding-right: 80px;">🤝 THE 212 PRINCIPLE: ONE EXTRA DEGREE MAKES ALL THE DIFFERENCE. BRING THE HEAT!</span>
+    <span style="display: inline-block; padding-right: 80px;">🎤 TODAY&rsquo;S SPEAKER: ROBERT COURTS FROM ADVANTAGE LENDING.</span>
+    <span style="display: inline-block; padding-right: 80px;">🤝 WARM INTRODUCTIONS ONLY. TRUSTED PROFESSIONALS. REAL FOLLOW-THROUGH.</span>
+    <span style="display: inline-block; padding-right: 80px;">📲 GUESTS: SCAN THE QR CODE TO VISIT RDUHEATWAVE.TEAM.</span>
   </div>
 </div>
 <style>
@@ -888,25 +1036,35 @@ body {
   <div class="carousel-zone">
     <div class="carousel-stage" id="carousel-stage">
 
-      <!-- Card 1: What is TwoTwelve -->
+      <!-- Card 1: Today's speaker -->
       <div class="carousel-card" data-card="0">
-        <div class="card-icon">&#x1F525;</div>
-        <div class="card-heading">WHAT IS<br>TWO TWELVE?</div>
-        <div class="card-body">A referral network built on trust. Members commit to sending each other real, qualified business. Not leads &mdash; referrals.</div>
+        <div class="card-icon">&#x1F3A4;</div>
+        <div class="card-heading">TODAY&rsquo;S<br>SPOTLIGHT</div>
+        <div class="card-body">Robert Courts from Advantage Lending is up today. Give him your full attention &mdash; and a warm intro if someone comes to mind.</div>
+        <div class="card-stat">
+          <div class="card-stat-item">
+            <div class="card-stat-value">LIVE</div>
+            <div class="card-stat-label">Speaker Today</div>
+          </div>
+          <div class="card-stat-item">
+            <div class="card-stat-value">4:00</div>
+            <div class="card-stat-label">Kickoff Time</div>
+          </div>
+        </div>
       </div>
 
-      <!-- Card 2: The 212 Principle -->
+      <!-- Card 2: What is TwoTwelve -->
       <div class="carousel-card" data-card="1">
         <div class="card-icon">&#x1F321;&#xFE0F;</div>
-        <div class="card-heading">THE 212&deg; PRINCIPLE</div>
-        <div class="card-body">At 211&deg;, water is hot. At 212&deg;, it boils. One extra degree changes everything. That's the mindset we bring to every referral.</div>
+        <div class="card-heading">WHY 212&deg;<br>MATTERS</div>
+        <div class="card-body">211&deg; is hot. 212&deg; makes steam. That extra degree is what turns a contact list into a team that actively opens doors for you.</div>
       </div>
 
       <!-- Card 3: How it works -->
       <div class="carousel-card" data-card="2">
         <div class="card-icon">&#x1F91D;</div>
         <div class="card-heading">HOW IT WORKS</div>
-        <div class="card-body">One seat per profession. You become the go-to person in your field for every member in the room.</div>
+        <div class="card-body">One seat per profession. Warm introductions only. Weekly follow-up that keeps relationships moving.</div>
         <div class="card-stat">
           <div class="card-stat-item">
             <div class="card-stat-value">1 SEAT</div>
@@ -922,15 +1080,8 @@ body {
       <!-- Card 4: What to expect today -->
       <div class="carousel-card" data-card="3">
         <div class="card-icon">&#x1F4CB;</div>
-        <div class="card-heading">TODAY'S MEETING</div>
-        <div class="card-body">Introductions. Member spotlights. Referral sharing. Open networking. Relax &mdash; just be yourself and listen.</div>
-      </div>
-
-      <!-- Card 5: Why join -->
-      <div class="carousel-card" data-card="4">
-        <div class="card-icon">&#x1F4A1;</div>
-        <div class="card-heading">WHY MEMBERS JOIN</div>
-        <div class="card-body">Predictable referrals. Trusted relationships. A room full of people actively looking to send you business.</div>
+        <div class="card-heading">TONIGHT&rsquo;S FLOW</div>
+        <div class="card-body">Network, settle in, hear the spotlight, and leave with stronger follow-up than you walked in with.</div>
       </div>
 
     </div>
@@ -965,10 +1116,10 @@ body {
     <!-- Status banner -->
     <div class="status-banner" id="status-banner" role="status" aria-live="polite"></div>
 
-    <!-- Warmup timer (4:00 - 4:04) -->
+    <!-- Warmup timer (4:00 - 4:05) -->
     <div class="warmup-display" id="warmup-display">
-      <div class="warmup-time" id="warmup-time">04:00</div>
-      <div class="warmup-sub">until final countdown</div>
+      <div class="warmup-time" id="warmup-time">05:00</div>
+      <div class="warmup-sub">until we kick off</div>
     </div>
 
     <div class="progress-wrap" id="progress-wrap">
@@ -977,27 +1128,37 @@ body {
       </div>
     </div>
 
-    <!-- Final 60s countdown -->
-    <div class="final-display" id="final-display">
-      <div class="final-seconds" id="final-seconds">60</div>
-      <div class="final-label">GET TO YOUR SEATS</div>
-    </div>
-
     <!-- Horn blast display -->
     <div class="horn-display" id="horn-display">
       <div class="horn-siren" aria-hidden="true">&#x1F4E2;</div>
-      <div class="horn-text">LET'S GO!</div>
+      <div class="horn-text" id="horn-text">LET&rsquo;S GO!</div>
+      <div class="horn-joke" id="horn-joke">We&rsquo;re about to boil over.</div>
+    </div>
+
+    <div class="final-display" id="anchor-display">
+      <div class="final-label">TODAY&rsquo;S SPEAKER</div>
+      <div class="horn-text" style="font-size:clamp(2.5rem,4vw,3.8rem); letter-spacing:0.08em; animation:none; text-shadow:0 0 48px rgba(232,88,12,0.4);">ROBERT COURTS</div>
+      <div class="horn-joke" style="max-width:28ch;">Warm introductions. Trusted professionals. Real follow-through.</div>
     </div>
   </div>
 
   <!-- RIGHT: QR CODE (always visible) -->
   <div class="qr-panel">
-    <div class="qr-panel-heading">WELCOME<br>GUESTS<br>SCAN HERE</div>
+    <div class="qr-panel-heading">SCAN TO<br>CHECK IN</div>
     <div class="qr-panel-arrow">&#x2193;</div>
-    <img src="qr-rduheatwave.svg" alt="Scan to register at rduheatwave.team" class="qr-panel-img">
-    <div class="qr-panel-cta">All visitors please register &mdash; it only takes a moment</div>
+    <div class="qr-panel-chip">rduheatwave.team</div>
+    <a class="qr-panel-link" href="https://rduheatwave.team" aria-label="Visit rduheatwave.team">
+      <img src="qr-rduheatwave.svg" alt="Scan to visit rduheatwave.team" class="qr-panel-img">
+    </a>
+    <div class="qr-panel-cta">All visitors can check in at rduheatwave.team &mdash; fast, clear, and easy to scan.</div>
   </div>
 
+</div>
+
+<div class="overscan-control" aria-label="Overscan safe frame control">
+  <span class="overscan-label">Safe frame</span>
+  <input id="overscan-range" class="overscan-range" type="range" min="18" max="96" step="2" value="42" aria-label="Adjust overscan safe frame">
+  <span class="overscan-value" id="overscan-value">42px</span>
 </div>
 
 <!-- Screen flash overlay -->
@@ -1015,78 +1176,19 @@ body {
   var MEETING_MIN = 0;
   var MEETING_TIME_LABEL = '4:00 PM ET';
   var MEETING_TIME_ZONE = 'America/New_York';
-  var WARMUP_SECS = 240;
-  var FINAL_SECS = 60;
-  var HORN_DURATION = 15000;
+  var PREHEAT_WINDOW_SECS = 15 * 60;
+  var WARMUP_SECS = 300;
+  var HORN_DURATION = 30 * 1000;
   var MEETING_DURATION = 2 * 60 * 60 * 1000;
-  var CARD_INTERVAL = 8000;
+  var CARD_INTERVAL = 10000;
   var CARD_SETTLE_DELAY = 1200;
 
-  var PHASE = { COUNTDOWN: 0, WARMUP: 1, FINAL: 2, HORN: 3, LIVE: 4, OVER: 5 };
+  var PHASE = { COUNTDOWN: 0, WARMUP: 1, HORN: 2, LIVE: 3, OVER: 4 };
 
-  // Embers and Excitement Logic
   var embersContainer = document.getElementById('embers-container');
   var emberInterval = null;
   var currentSpawnRate = 0;
-  
-  function createEmber() {
-    var ember = document.createElement('div');
-    ember.className = 'ember';
-    var size = Math.random() * 18 + 6; // 3px to 11px
-    ember.style.width = size + 'px';
-    ember.style.height = size + 'px';
-    ember.style.left = Math.random() * 100 + 'vw';
-    var duration = Math.random() * 8 + 6; // 4s to 9s
-    ember.style.animationDuration = duration + 's';
-    embersContainer.appendChild(ember);
-    setTimeout(function() {
-      if (ember.parentNode) ember.parentNode.removeChild(ember);
-    }, duration * 1000);
-  }
-  
-  function updateEmbers(spawnRate) {
-    if (spawnRate === currentSpawnRate) return;
-    currentSpawnRate = spawnRate;
-    if (emberInterval) clearInterval(emberInterval);
-    if (spawnRate > 0) {
-      emberInterval = setInterval(createEmber, spawnRate);
-    }
-  }
-
-  var msgsWarm = ["ALMOST TIME", "GET READY"];
-  var msgsHot = ["GETTING CLOSE!", "BRING THE HEAT!"];
-  var msgsFire = ["IT'S ALMOST GO TIME!", "FIND YOUR SEAT!"];
-  var msgIndex = 0;
   var excitementMsgEl = document.getElementById('excitement-msg');
-  
-  setInterval(function() {
-     msgIndex++;
-     if(currentPhase !== PHASE.COUNTDOWN) {
-       excitementMsgEl.textContent = "";
-       return;
-     }
-     var diff = meeting.timestamp - Date.now();
-     var mins = Math.floor(diff / 60000);
-     var msgs = [];
-     if (mins < 10) msgs = msgsFire;
-     else if (mins < 30) msgs = msgsHot;
-     else if (mins < 60) msgs = msgsWarm;
-     
-     if (msgs.length > 0) {
-       excitementMsgEl.style.opacity = 0;
-       setTimeout(function() {
-         excitementMsgEl.textContent = msgs[msgIndex % msgs.length];
-         excitementMsgEl.style.opacity = 1;
-       }, 500);
-     } else {
-       excitementMsgEl.textContent = "";
-     }
-  }, 4000);
-
-  var currentPhase = null;
-  var hornPlayed = false;
-  var lastFinalSec = -1;
-
   var countdownGrid = document.getElementById('countdown-grid');
   var countdownHeader = document.getElementById('countdown-header');
   var statusBanner = document.getElementById('status-banner');
@@ -1094,11 +1196,35 @@ body {
   var warmupTime = document.getElementById('warmup-time');
   var progressWrap = document.getElementById('progress-wrap');
   var progressFill = document.getElementById('progress-fill');
-  var finalDisplay = document.getElementById('final-display');
-  var finalSecondsEl = document.getElementById('final-seconds');
+  var anchorDisplay = document.getElementById('anchor-display');
   var hornDisplay = document.getElementById('horn-display');
+  var hornTextEl = document.getElementById('horn-text');
+  var hornJokeEl = document.getElementById('horn-joke');
   var screenFlash = document.getElementById('screen-flash');
   var edgeGlow = document.getElementById('edge-glow');
+  var datetimeEl = document.getElementById('meeting-datetime');
+  var topDate = document.getElementById('top-date');
+  var topTime = document.getElementById('top-time');
+  var initOverlay = document.getElementById('kiosk-init-overlay');
+  var overscanRange = document.getElementById('overscan-range');
+  var overscanValue = document.getElementById('overscan-value');
+
+  var msgsWarm = ['DOORS ARE OPEN', 'MEET SOMEBODY NEW'];
+  var msgsHot = ['SPEAKER UP NEXT', 'BRING THE HEAT'];
+  var msgsFire = ['WE GO LIVE IN 5', 'WRAP IT UP & SIT DOWN'];
+  var hornJokes = [
+    'WE\'RE ABOUT TO BOIL OVER.',
+    'IT\'S GETTING HOT IN HERE.',
+    'TURN UP THE HEAT AND TAKE YOUR SEAT.',
+    'NO MORE SMALL TALK — IT\'S SHOWTIME.'
+  ];
+
+  var msgIndex = 0;
+  var currentPhase = null;
+  var hornPlayed = false;
+  var hornJokeIndex = 0;
+  var hornJokeTimer = null;
+
   var AudioContextCtor = window.AudioContext || window.webkitAudioContext;
   var audioContext = null;
   var masterGain = null;
@@ -1106,6 +1232,64 @@ body {
   var soundLoopTimer = null;
   var hornTimeout = null;
   var soundCleanups = [];
+  var overscanStorageKey = 'rduheatwave:overscan';
+
+  function applyOverscan(value) {
+    var nextValue = Math.max(18, Math.min(96, Number(value) || 42));
+    document.documentElement.style.setProperty('--overscan', nextValue + 'px');
+    if (overscanRange) overscanRange.value = String(nextValue);
+    if (overscanValue) overscanValue.textContent = nextValue + 'px';
+    try { localStorage.setItem(overscanStorageKey, String(nextValue)); } catch (e) {}
+  }
+
+  if (overscanRange) {
+    var storedOverscan = null;
+    try { storedOverscan = localStorage.getItem(overscanStorageKey); } catch (e) {}
+    applyOverscan(storedOverscan || overscanRange.value);
+    overscanRange.addEventListener('input', function(event) {
+      applyOverscan(event.target.value);
+    });
+  }
+
+  function createEmber() {
+    var ember = document.createElement('div');
+    ember.className = 'ember';
+    var size = Math.random() * 18 + 6;
+    ember.style.width = size + 'px';
+    ember.style.height = size + 'px';
+    ember.style.left = Math.random() * 100 + 'vw';
+    var duration = Math.random() * 8 + 6;
+    ember.style.animationDuration = duration + 's';
+    embersContainer.appendChild(ember);
+    setTimeout(function() {
+      if (ember.parentNode) ember.parentNode.removeChild(ember);
+    }, duration * 1000);
+  }
+
+  function updateEmbers(spawnRate) {
+    if (spawnRate === currentSpawnRate) return;
+    currentSpawnRate = spawnRate;
+    if (emberInterval) clearInterval(emberInterval);
+    if (spawnRate > 0) emberInterval = setInterval(createEmber, spawnRate);
+  }
+
+  setInterval(function() {
+    msgIndex += 1;
+    if (currentPhase !== PHASE.COUNTDOWN) {
+      excitementMsgEl.textContent = '';
+      return;
+    }
+
+    var diff = meeting.timestamp - Date.now();
+    var mins = Math.floor(diff / 60000);
+    var messages = mins < 10 ? msgsFire : mins < 30 ? msgsHot : msgsWarm;
+
+    excitementMsgEl.style.opacity = 0;
+    setTimeout(function() {
+      excitementMsgEl.textContent = messages[msgIndex % messages.length];
+      excitementMsgEl.style.opacity = 1;
+    }, 250);
+  }, 4000);
 
   function getAudioContext() {
     if (!AudioContextCtor) return null;
@@ -1145,9 +1329,7 @@ body {
 
     osc.type = options.type || 'sine';
     osc.frequency.setValueAtTime(options.frequency || 220, startTime);
-    if (options.detune) {
-      osc.detune.setValueAtTime(options.detune, startTime);
-    }
+    if (options.detune) osc.detune.setValueAtTime(options.detune, startTime);
 
     gain.gain.setValueAtTime(0.0001, startTime);
     gain.gain.exponentialRampToValueAtTime(options.volume || 0.05, startTime + attack);
@@ -1173,63 +1355,44 @@ body {
       try { soundCleanups.pop()(); } catch (e) {}
     }
   }
-  
-  // Kiosk Initialization (Bypass Autoplay Policy)
-  var initOverlay = document.getElementById('kiosk-init-overlay');
-
-  function startKiosk() {
-    if (!initOverlay || initOverlay.style.display === 'none') return;
-
-    initOverlay.style.display = 'none';
-
-    ensureAudioReady().then(function() {
-      if (currentPhase === PHASE.WARMUP) safePlay('warmup');
-      else if (currentPhase === PHASE.FINAL) safePlay('final');
-      else if (currentPhase === PHASE.HORN && currentSoundMode !== 'horn') playHorn();
-    });
-  }
-
-  if (initOverlay) {
-    initOverlay.addEventListener('click', startKiosk);
-    initOverlay.addEventListener('keydown', function(event) {
-      if (event.key !== 'Enter' && event.key !== ' ') return;
-      event.preventDefault();
-      startKiosk();
-    });
-  }
 
   function queueWarmupPulse() {
     rememberSoundCleanup(playTone({ frequency: 56, type: 'sine', volume: 0.06, duration: 0.12 }));
     rememberSoundCleanup(playTone({ frequency: 56, type: 'sine', volume: 0.04, duration: 0.08, delay: 0.18 }));
   }
 
-  function queueFinalPulse() {
-    rememberSoundCleanup(playTone({ frequency: 220, type: 'triangle', volume: 0.035, duration: 0.12 }));
-    rememberSoundCleanup(playTone({ frequency: 330, type: 'sawtooth', volume: 0.03, duration: 0.18, delay: 0.14 }));
-    rememberSoundCleanup(playTone({ frequency: 440, type: 'sawtooth', volume: 0.025, duration: 0.24, delay: 0.32 }));
-  }
-
   function startLoopedSound(mode) {
     if (currentSoundMode === mode) return;
-
     stopAllAudio();
     ensureAudioReady().then(function(ready) {
       if (!ready) return;
-
       currentSoundMode = mode;
-
       if (mode === 'warmup') {
         queueWarmupPulse();
         soundLoopTimer = setInterval(queueWarmupPulse, 950);
-      } else if (mode === 'final') {
-        queueFinalPulse();
-        soundLoopTimer = setInterval(queueFinalPulse, 700);
       }
     });
   }
 
   function safePlay(mode) {
     startLoopedSound(mode);
+  }
+
+  function stopHornJokes() {
+    if (hornJokeTimer) {
+      clearInterval(hornJokeTimer);
+      hornJokeTimer = null;
+    }
+  }
+
+  function startHornJokes() {
+    if (!hornJokeEl) return;
+    stopHornJokes();
+    hornJokeEl.textContent = hornJokes[hornJokeIndex % hornJokes.length];
+    hornJokeTimer = setInterval(function() {
+      hornJokeIndex += 1;
+      hornJokeEl.textContent = hornJokes[hornJokeIndex % hornJokes.length];
+    }, 3200);
   }
 
   function stopAllAudio() {
@@ -1243,10 +1406,27 @@ body {
       hornTimeout = null;
     }
     clearScheduledSounds();
+    stopHornJokes();
+    if (masterGain) masterGain.gain.value = 0.16;
   }
-  var datetimeEl = document.getElementById('meeting-datetime');
-  var topDate = document.getElementById('top-date');
-  var topTime = document.getElementById('top-time');
+
+  function startKiosk() {
+    if (!initOverlay || initOverlay.style.display === 'none') return;
+    initOverlay.style.display = 'none';
+    ensureAudioReady().then(function() {
+      if (currentPhase === PHASE.WARMUP) safePlay('warmup');
+      else if (currentPhase === PHASE.HORN) playHorn();
+    });
+  }
+
+  if (initOverlay) {
+    initOverlay.addEventListener('click', startKiosk);
+    initOverlay.addEventListener('keydown', function(event) {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      startKiosk();
+    });
+  }
 
   var meetingDateFormatter = new Intl.DateTimeFormat('en-US', {
     timeZone: MEETING_TIME_ZONE,
@@ -1292,11 +1472,7 @@ body {
     var offset = getMeetingOffsetMs(new Date(utcGuess));
     var timestamp = utcGuess - offset;
     var refinedOffset = getMeetingOffsetMs(new Date(timestamp));
-
-    if (refinedOffset !== offset) {
-      timestamp = utcGuess - refinedOffset;
-    }
-
+    if (refinedOffset !== offset) timestamp = utcGuess - refinedOffset;
     return timestamp;
   }
 
@@ -1307,18 +1483,13 @@ body {
     var daysUntil = (MEETING_DAY - dow + 7) % 7;
     var meetingEndMinutes = (MEETING_HOUR * 60) + MEETING_MIN + (MEETING_DURATION / 60000);
     var currentMinutes = (eastNow.hour * 60) + eastNow.minute + (eastNow.second / 60);
-
-    if (daysUntil === 0 && currentMinutes >= meetingEndMinutes) {
-      daysUntil = 7;
-    }
+    if (daysUntil === 0 && currentMinutes >= meetingEndMinutes) daysUntil = 7;
 
     todayUtc.setUTCDate(todayUtc.getUTCDate() + daysUntil);
-
     var year = todayUtc.getUTCFullYear();
     var month = todayUtc.getUTCMonth() + 1;
     var day = todayUtc.getUTCDate();
     var timestamp = getMeetingTimestamp(year, month, day, MEETING_HOUR, MEETING_MIN);
-
     return {
       timestamp: timestamp,
       dateStr: meetingDateFormatter.format(new Date(timestamp))
@@ -1326,13 +1497,20 @@ body {
   }
 
   var meeting = getNextMeeting();
-  datetimeEl.textContent = meeting.dateStr + ' \u2022 ' + MEETING_TIME_LABEL;
+  datetimeEl.textContent = meeting.dateStr + ' • ' + MEETING_TIME_LABEL;
 
-  // Carousel
+  function updateClock() {
+    var opts = { timeZone: MEETING_TIME_ZONE };
+    var now = new Date();
+    topDate.textContent = now.toLocaleDateString('en-US', Object.assign({ weekday: 'long', month: 'short', day: 'numeric' }, opts));
+    topTime.textContent = now.toLocaleTimeString('en-US', Object.assign({ hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true }, opts)) + ' ET';
+  }
+
   var cards = document.querySelectorAll('.carousel-card');
   var dotsContainer = document.getElementById('carousel-dots');
   var cardCount = cards.length;
   var currentCard = -1;
+  var cardRotationTimer = null;
 
   for (var i = 0; i < cardCount; i++) {
     var dot = document.createElement('div');
@@ -1362,85 +1540,102 @@ body {
   }
 
   function nextCard() { showCard((currentCard + 1) % cardCount); }
+
+  function startCardRotation() {
+    if (cardRotationTimer) return;
+    cardRotationTimer = setInterval(nextCard, CARD_INTERVAL);
+  }
+
+  function stopCardRotation(focusIndex) {
+    if (cardRotationTimer) {
+      clearInterval(cardRotationTimer);
+      cardRotationTimer = null;
+    }
+    if (typeof focusIndex === 'number' && focusIndex >= 0 && focusIndex < cardCount) {
+      showCard(focusIndex);
+    }
+  }
+
   nextCard();
-  setInterval(nextCard, CARD_INTERVAL);
+  startCardRotation();
 
-  // Phase management
-  function setPhase(phase) {
-    if (phase === currentPhase) return;
-    currentPhase = phase;
-
+  function resetPhaseUI() {
     countdownGrid.style.display = 'none';
     countdownHeader.style.display = 'block';
     statusBanner.className = 'status-banner';
     warmupDisplay.classList.remove('visible');
     progressWrap.classList.remove('visible');
-    finalDisplay.classList.remove('visible');
     hornDisplay.classList.remove('visible');
+    anchorDisplay.classList.remove('visible');
     screenFlash.style.display = 'none';
     screenFlash.className = 'screen-flash';
     edgeGlow.style.display = 'none';
     edgeGlow.className = 'edge-glow';
+    stopHornJokes();
+  }
+
+  function setPhase(phase) {
+    if (phase === currentPhase) return;
+    currentPhase = phase;
+    document.body.classList.remove('phase-countdown', 'phase-arrival', 'phase-warmup', 'phase-horn', 'phase-live', 'phase-over', 'preheat-mode', 'anchor-mode');
+    document.body.classList.add(
+      phase === PHASE.COUNTDOWN ? 'phase-countdown' :
+      phase === PHASE.WARMUP ? 'phase-warmup' :
+      phase === PHASE.HORN ? 'phase-horn' :
+      phase === PHASE.LIVE ? 'phase-live' : 'phase-over'
+    );
+    if (phase === PHASE.LIVE) document.body.classList.add('anchor-mode');
+
+    resetPhaseUI();
 
     switch (phase) {
       case PHASE.COUNTDOWN:
         stopAllAudio();
+        startCardRotation();
         countdownGrid.style.display = 'grid';
         countdownHeader.textContent = 'WE START IN';
         break;
       case PHASE.WARMUP:
         stopAllAudio();
+        startCardRotation();
         safePlay('warmup');
-        updateEmbers(200);
-        countdownHeader.textContent = 'MEETING TIME';
+        updateEmbers(220);
+        countdownHeader.textContent = 'FIVE-MINUTE COUNTDOWN';
         warmupDisplay.classList.add('visible');
         progressWrap.classList.add('visible');
-        statusBanner.textContent = 'GRAB A DRINK \u2014 WE START SOON';
+        statusBanner.textContent = 'LAST CALL TO WRAP UP CONVERSATIONS';
         statusBanner.className = 'status-banner visible warmup';
-        break;
-      case PHASE.FINAL:
-        stopAllAudio();
-        safePlay('final');
-        updateEmbers(80);
-        countdownHeader.textContent = '';
-        countdownHeader.style.display = 'none';
-        finalDisplay.classList.add('visible');
-        screenFlash.style.display = 'block';
-        screenFlash.classList.add('final-mode');
-        edgeGlow.style.display = 'block';
-        edgeGlow.classList.add('final-mode');
-        statusBanner.textContent = 'FIND YOUR SEATS!';
-        statusBanner.className = 'status-banner visible final';
-        lastFinalSec = -1;
         break;
       case PHASE.HORN:
         stopAllAudio();
-        updateEmbers(40);
-        countdownHeader.textContent = '';
+        stopCardRotation(0);
+        updateEmbers(70);
         countdownHeader.style.display = 'none';
-        finalDisplay.classList.remove('visible');
         hornDisplay.classList.add('visible');
         screenFlash.style.display = 'block';
         screenFlash.className = 'screen-flash horn-mode';
         edgeGlow.style.display = 'block';
         edgeGlow.className = 'edge-glow horn-mode';
-        statusBanner.textContent = '\uD83D\uDEA8 TAKE YOUR SEATS! \uD83D\uDEA8';
+        statusBanner.textContent = '🚨 SEATS NOW — WE ARE ABOUT TO BOIL OVER 🚨';
         statusBanner.className = 'status-banner visible horn';
+        startHornJokes();
         if (!hornPlayed) { playHorn(); hornPlayed = true; }
         break;
       case PHASE.LIVE:
         stopAllAudio();
+        stopCardRotation(0);
         updateEmbers(0);
-        countdownGrid.style.display = 'grid';
-        countdownHeader.textContent = 'MEETING IN PROGRESS';
-        statusBanner.textContent = '\uD83D\uDD25 LET\'S GO \uD83D\uDD25';
+        countdownHeader.style.display = 'none';
+        anchorDisplay.classList.add('visible');
+        statusBanner.textContent = 'Anchor mode — keep eyes on the presenter.';
         statusBanner.className = 'status-banner visible live';
         break;
       case PHASE.OVER:
         stopAllAudio();
+        startCardRotation();
         updateEmbers(0);
         meeting = getNextMeeting();
-        datetimeEl.textContent = meeting.dateStr + ' \u2022 ' + MEETING_TIME_LABEL;
+        datetimeEl.textContent = meeting.dateStr + ' • ' + MEETING_TIME_LABEL;
         hornPlayed = false;
         countdownGrid.style.display = 'grid';
         countdownHeader.textContent = 'WE START IN';
@@ -1454,20 +1649,17 @@ body {
     stopAllAudio();
     ensureAudioReady().then(function(ready) {
       if (!ready) return;
-
       currentSoundMode = 'horn';
       var hornDurationSecs = HORN_DURATION / 1000;
+      if (masterGain) masterGain.gain.value = 0.28;
       rememberSoundCleanup(playTone({ frequency: 165, type: 'square', volume: 0.08, duration: hornDurationSecs, attack: 0.03, release: 0.4 }));
-      rememberSoundCleanup(playTone({ frequency: 220, type: 'sawtooth', volume: 0.045, duration: hornDurationSecs, attack: 0.03, release: 0.4, detune: -5 }));
-      hornTimeout = setTimeout(stopAllAudio, HORN_DURATION);
+      rememberSoundCleanup(playTone({ frequency: 220, type: 'sawtooth', volume: 0.048, duration: hornDurationSecs, attack: 0.03, release: 0.4, detune: -5 }));
+      rememberSoundCleanup(playTone({ frequency: 880, type: 'triangle', volume: 0.02, duration: 0.14, delay: 0.16 }));
+      hornTimeout = setTimeout(function() {
+        if (masterGain) masterGain.gain.value = 0.16;
+        stopAllAudio();
+      }, HORN_DURATION);
     });
-  }
-
-  function updateClock() {
-    var opts = { timeZone: MEETING_TIME_ZONE };
-    var now = new Date();
-    topDate.textContent = now.toLocaleDateString('en-US', Object.assign({ weekday: 'long', month: 'short', day: 'numeric' }, opts));
-    topTime.textContent = now.toLocaleTimeString('en-US', Object.assign({ hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true }, opts)) + ' ET';
   }
 
   function updateCountdown() {
@@ -1475,8 +1667,7 @@ body {
     var now = Date.now();
     var diff = meeting.timestamp - now;
     var warmupEnd = meeting.timestamp + WARMUP_SECS * 1000;
-    var finalEnd = warmupEnd + FINAL_SECS * 1000;
-    var hornEnd = finalEnd + HORN_DURATION;
+    var hornEnd = warmupEnd + HORN_DURATION;
     var meetingEnd = meeting.timestamp + MEETING_DURATION;
 
     if (diff > 0) {
@@ -1485,75 +1676,67 @@ body {
       var hours = Math.floor((diff % 86400000) / 3600000);
       var mins = Math.floor((diff % 3600000) / 60000);
       var secs = Math.floor((diff % 60000) / 1000);
+      var preheatMode = diff <= (PREHEAT_WINDOW_SECS * 1000);
+
       document.getElementById('cd-days').textContent = String(days).padStart(2, '0');
       document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
       document.getElementById('cd-mins').textContent = String(mins).padStart(2, '0');
       document.getElementById('cd-secs').textContent = String(secs).padStart(2, '0');
 
-      var values = document.querySelectorAll('.countdown-value');
-      values.forEach(function(v) {
-        v.classList.remove('tier-warm', 'tier-hot', 'tier-fire');
-        if (mins < 10) v.classList.add('tier-fire');
-        else if (mins < 30) v.classList.add('tier-hot');
-        else if (mins < 60) v.classList.add('tier-warm');
+      document.querySelectorAll('.countdown-value').forEach(function(valueEl) {
+        valueEl.classList.remove('tier-warm', 'tier-hot', 'tier-fire');
+        if (mins < 10) valueEl.classList.add('tier-fire');
+        else if (mins < 30) valueEl.classList.add('tier-hot');
+        else if (mins < 60) valueEl.classList.add('tier-warm');
       });
-      
-      if (mins < 10) updateEmbers(300);
-      else if (mins < 30) updateEmbers(600);
-      else updateEmbers(0);
 
+      if (preheatMode) {
+        document.body.classList.add('preheat-mode');
+        countdownHeader.textContent = 'DOORS OPEN';
+        statusBanner.textContent = 'NETWORKING MODE • TODAY: ROBERT COURTS';
+        statusBanner.className = 'status-banner visible preheat';
+        updateEmbers(220);
+      } else if (mins < 10) {
+        updateEmbers(300);
+      } else if (mins < 30) {
+        updateEmbers(600);
+      } else {
+        updateEmbers(0);
+      }
     } else if (now < warmupEnd) {
       setPhase(PHASE.WARMUP);
       var remaining = Math.max(0, Math.ceil((warmupEnd - now) / 1000));
-      var wM = Math.floor(remaining / 60);
-      var wS = remaining % 60;
-      warmupTime.textContent = String(wM).padStart(2, '0') + ':' + String(wS).padStart(2, '0');
+      var warmupMinutes = Math.floor(remaining / 60);
+      var warmupSeconds = remaining % 60;
+      warmupTime.textContent = String(warmupMinutes).padStart(2, '0') + ':' + String(warmupSeconds).padStart(2, '0');
       progressFill.style.width = Math.min(100, ((WARMUP_SECS - remaining) / WARMUP_SECS) * 100) + '%';
-    } else if (now < finalEnd) {
-      setPhase(PHASE.FINAL);
-      var secLeft = Math.max(0, Math.ceil((finalEnd - now) / 1000));
-      finalSecondsEl.textContent = secLeft;
-      if (secLeft <= 10 && secLeft !== lastFinalSec) {
-        finalSecondsEl.classList.remove('last-ten');
-        void finalSecondsEl.offsetWidth;
-        finalSecondsEl.classList.add('last-ten');
-        lastFinalSec = secLeft;
-      } else if (secLeft > 10) {
-        finalSecondsEl.classList.remove('last-ten');
-      }
     } else if (now < hornEnd) {
       setPhase(PHASE.HORN);
     } else if (now < meetingEnd) {
       setPhase(PHASE.LIVE);
-      var el = now - hornEnd;
-      document.getElementById('cd-days').textContent = '--';
-      document.getElementById('cd-hours').textContent = String(Math.floor(el / 3600000)).padStart(2, '0');
-      document.getElementById('cd-mins').textContent = String(Math.floor((el % 3600000) / 60000)).padStart(2, '0');
-      document.getElementById('cd-secs').textContent = String(Math.floor((el % 60000) / 1000)).padStart(2, '0');
     } else {
       setPhase(PHASE.OVER);
     }
   }
 
-  // Debug: ?phase=warmup|final|horn|live to preview phases
   var debugPhase = new URLSearchParams(window.location.search).get('phase');
   if (debugPhase) {
-    var phaseMap = { warmup: PHASE.WARMUP, final: PHASE.FINAL, horn: PHASE.HORN, live: PHASE.LIVE };
-    var dp = phaseMap[debugPhase];
-    if (dp !== undefined) {
-      setPhase(dp);
-      if (dp === PHASE.WARMUP) {
-        warmupTime.textContent = '03:42';
-        progressFill.style.width = '7%';
-      } else if (dp === PHASE.FINAL) {
-        finalSecondsEl.textContent = '47';
-      }
-      updateClock();
-      setInterval(updateClock, 1000);
+    if (initOverlay) initOverlay.style.display = 'none';
+    if (debugPhase === 'warmup') {
+      setPhase(PHASE.WARMUP);
+      warmupTime.textContent = '03:42';
+      progressFill.style.width = '26%';
+    } else if (debugPhase === 'horn') {
+      setPhase(PHASE.HORN);
+    } else if (debugPhase === 'live') {
+      setPhase(PHASE.LIVE);
     } else {
-      updateCountdown();
-      setInterval(updateCountdown, 250);
+      setPhase(PHASE.COUNTDOWN);
+      statusBanner.textContent = 'NETWORKING MODE • TODAY: ROBERT COURTS';
+      statusBanner.className = 'status-banner visible preheat';
     }
+    updateClock();
+    setInterval(updateClock, 1000);
   } else {
     updateCountdown();
     setInterval(updateCountdown, 250);
@@ -1561,8 +1744,7 @@ body {
 
   document.addEventListener('click', function() {
     if (currentPhase === PHASE.WARMUP) safePlay('warmup');
-    else if (currentPhase === PHASE.FINAL) safePlay('final');
-    else if (currentPhase === PHASE.HORN && currentSoundMode !== 'horn') playHorn();
+    else if (currentPhase === PHASE.HORN) playHorn();
   }, { once: false });
 })();
 </script>
