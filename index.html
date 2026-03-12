@@ -1264,13 +1264,13 @@ button { cursor: pointer; background: none; border: none; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* === 212 BOTTOM POPUP === */
+/* === 212 SLIDE-UP DRAWER === */
 .info-drawer {
   position: fixed;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: min(420px, 92vw);
+  width: min(480px, 94vw);
   z-index: 200;
   pointer-events: auto;
 }
@@ -1279,26 +1279,30 @@ button { cursor: pointer; background: none; border: none; }
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
   width: 100%;
-  padding: 0.55rem 1.2rem;
-  background: linear-gradient(180deg, rgba(232, 88, 12, 0.92) 0%, rgba(196, 74, 10, 0.95) 100%);
+  padding: 0.6rem 1.4rem;
+  background: linear-gradient(180deg, rgba(232, 88, 12, 0.95) 0%, rgba(196, 74, 10, 0.98) 100%);
   border: none;
   border-radius: 0.75rem 0.75rem 0 0;
   color: #fff;
   font-family: var(--font-display);
   font-size: 0.85rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 -4px 20px rgba(232, 88, 12, 0.3);
 }
 
-.info-drawer-tab:hover { background: rgba(255, 106, 30, 0.95); }
+.info-drawer-tab:hover {
+  background: rgba(255, 106, 30, 0.98);
+  box-shadow: 0 -6px 30px rgba(232, 88, 12, 0.5);
+}
 
 .info-drawer-tab .chevron {
   display: inline-block;
-  transition: transform 0.3s ease;
-  font-size: 0.7rem;
+  transition: transform 0.35s ease;
+  font-size: 0.65rem;
 }
 
 .info-drawer.open .info-drawer-tab .chevron { transform: rotate(180deg); }
@@ -1306,43 +1310,170 @@ button { cursor: pointer; background: none; border: none; }
 .info-drawer-body {
   max-height: 0;
   overflow: hidden;
-  background: rgba(26, 20, 18, 0.97);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(20, 16, 14, 0.98);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
   border-top: 1px solid rgba(232, 88, 12, 0.3);
-  transition: max-height 0.35s ease, padding 0.35s ease;
-  padding: 0 1.4rem;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0 1.6rem;
+  text-align: center;
 }
 
 .info-drawer.open .info-drawer-body {
-  max-height: 260px;
-  padding: 1.2rem 1.4rem;
+  max-height: 440px;
+  padding: 1.6rem 1.6rem 1.8rem;
 }
 
-.info-drawer-body h3 {
+/* Thermometer visual */
+.thermo-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.6rem;
+  margin-bottom: 1.2rem;
+}
+
+.thermo {
+  position: relative;
+  width: 28px;
+  height: 120px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid rgba(232, 88, 12, 0.25);
+  overflow: hidden;
+}
+
+.thermo-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 0%;
+  background: linear-gradient(180deg, #FF6A1E 0%, #E8580C 50%, #C44A0A 100%);
+  border-radius: 0 0 12px 12px;
+  transition: height 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.info-drawer.open .thermo-fill {
+  height: 100%;
+}
+
+.thermo-bubbles {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bubble {
+  position: absolute;
+  bottom: -6px;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  opacity: 0;
+}
+
+.info-drawer.open .bubble {
+  animation: bubble-rise 1.8s ease-in infinite;
+}
+
+.bubble:nth-child(1) { left: 20%; animation-delay: 0s; }
+.bubble:nth-child(2) { left: 50%; animation-delay: 0.4s; }
+.bubble:nth-child(3) { left: 75%; animation-delay: 0.8s; }
+
+@keyframes bubble-rise {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  20% { opacity: 0.8; }
+  100% { transform: translateY(-110px) scale(0.3); opacity: 0; }
+}
+
+.thermo-labels {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
+}
+
+.thermo-label {
   font-family: var(--font-display);
-  font-size: 1.3rem;
-  color: var(--color-primary);
-  letter-spacing: 0.06em;
-  margin: 0 0 0.5rem;
+  letter-spacing: 0.08em;
+  line-height: 1.3;
 }
 
-.info-drawer-body p {
+.thermo-label-hot {
+  font-size: 1.6rem;
+  color: var(--color-text-muted);
+}
+
+.thermo-label-boil {
+  font-size: 2rem;
+  color: var(--color-primary);
+  text-shadow: 0 0 20px rgba(232, 88, 12, 0.4);
+}
+
+.thermo-label-steam {
+  font-size: 0.8rem;
+  color: var(--color-text-faint);
   font-family: var(--font-body);
-  font-size: 0.85rem;
-  line-height: 1.55;
+  max-width: 18ch;
+  line-height: 1.4;
+}
+
+/* Divider */
+.drawer-divider {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+  margin: 0.8rem auto;
+}
+
+/* Meet section */
+.drawer-meet {
+  margin-top: 0.4rem;
+}
+
+.drawer-meet h3 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: #fff;
+  letter-spacing: 0.1em;
+  margin: 0 0 0.35rem;
+}
+
+.drawer-meet p {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  line-height: 1.5;
   color: var(--color-text-muted);
   margin: 0;
+  max-width: 36ch;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.info-drawer-body .site-link {
-  display: block;
-  margin-top: 0.6rem;
+.drawer-site {
+  display: inline-block;
+  margin-top: 0.7rem;
+  padding: 0.4rem 1.2rem;
+  background: rgba(232, 88, 12, 0.15);
+  border: 1px solid rgba(232, 88, 12, 0.3);
+  border-radius: 2rem;
   color: var(--color-primary);
   font-family: var(--font-display);
-  font-size: 0.8rem;
-  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
   text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.drawer-site:hover {
+  background: rgba(232, 88, 12, 0.25);
+  border-color: rgba(232, 88, 12, 0.5);
 }
 
 /* === SUCCESS SCREEN === */
@@ -2637,16 +2768,33 @@ button { cursor: pointer; background: none; border: none; }
   });
 })();
 </script>
-<!-- 212 Info Drawer -->
+<!-- 212 Slide-Up Drawer -->
 <div class="info-drawer" id="info-drawer">
   <button class="info-drawer-tab" id="info-drawer-tab" type="button" aria-expanded="false">
-    <span class="chevron">&#9650;</span> WHY RDU HEATWAVE
+    <span class="chevron">&#9650;</span> MEET TWO TWELVE
   </button>
   <div class="info-drawer-body">
-    <h3>The 212&deg; Principle</h3>
-    <p>At 211 degrees, water is hot. At 212 degrees, it boils. With boiling water comes steam, and with steam, you can power a train. That one extra degree makes all the difference.</p>
-    <p style="margin-top: 0.5rem;">RDU Heatwave carries the 212&deg; mission forward in Raleigh-Durham &mdash; a structured, category-exclusive referral network built on going the extra degree.</p>
-    <a class="site-link" href="https://rduheatwave.team">rduheatwave.team &rarr;</a>
+    <div class="thermo-wrap">
+      <div class="thermo">
+        <div class="thermo-fill"></div>
+        <div class="thermo-bubbles">
+          <div class="bubble"></div>
+          <div class="bubble"></div>
+          <div class="bubble"></div>
+        </div>
+      </div>
+      <div class="thermo-labels">
+        <div class="thermo-label thermo-label-hot">211&deg; HOT</div>
+        <div class="thermo-label thermo-label-boil">212&deg; BOILS</div>
+        <div class="thermo-label thermo-label-steam">That one extra degree creates steam &mdash; and steam can power a train.</div>
+      </div>
+    </div>
+    <div class="drawer-divider"></div>
+    <div class="drawer-meet">
+      <h3>RDU HEATWAVE</h3>
+      <p>Carrying the 212&deg; mission forward in Raleigh-Durham. A structured, category-exclusive referral network where going the extra degree is everything.</p>
+      <a class="drawer-site" href="https://rduheatwave.team">RDUHEATWAVE.TEAM &rarr;</a>
+    </div>
   </div>
 </div>
 <script>

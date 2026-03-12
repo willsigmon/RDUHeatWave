@@ -60,7 +60,10 @@ html {
   --overscan: 42px;
   --content-max: 1760px;
   --shell-pad: max(var(--overscan), calc((100vw - var(--content-max)) / 2 + var(--overscan)));
+  /* Scale entire page to fit within TV overscan */
+  --scale: calc(1 - (var(--overscan) * 2 / 1920));
 }
+
 
 body {
   min-height: 100dvh;
@@ -128,7 +131,7 @@ body.anchor-mode .ticker-content {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.2rem calc(var(--shell-pad) + 0.35rem);
+  padding: 1.2rem 2.5rem;
   background: linear-gradient(135deg, rgba(250, 245, 240, 0.98) 0%, rgba(220, 210, 200, 0.9) 100%);
   backdrop-filter: blur(24px) saturate(200%);
   -webkit-backdrop-filter: blur(24px) saturate(200%);
@@ -199,7 +202,7 @@ body.anchor-mode .ticker-content {
   grid-template-rows: 1fr;
   gap: clamp(1rem, 2vw, 1.75rem);
   min-height: calc(100dvh - 176px);
-  padding: clamp(1rem, 2.2vw, 2rem) var(--shell-pad) clamp(1.5rem, 2.6vw, 2.6rem);
+  padding: clamp(1rem, 2.2vw, 2rem) 2rem clamp(1.5rem, 2.6vw, 2.6rem);
   align-items: stretch;
 }
 
@@ -408,6 +411,53 @@ body.anchor-mode .ticker-content {
   color: var(--color-text-faint);
   margin-top: 0.75rem;
 }
+
+/* === MEETING SCHEDULE === */
+.meeting-schedule {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 560px;
+  margin-top: 0.25rem;
+}
+
+.schedule-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.5rem 0.4rem;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.schedule-item--active {
+  background: rgba(232, 88, 12, 0.1);
+  border-color: rgba(232, 88, 12, 0.3);
+}
+
+.schedule-time {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  color: var(--color-primary);
+}
+
+.schedule-desc {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  line-height: 1.3;
+}
+
+body.phase-warmup .meeting-schedule,
+body.phase-horn .meeting-schedule,
+body.phase-live .meeting-schedule,
+body.phase-over .meeting-schedule { display: none; }
 
 /* === STATUS BANNER === */
 .status-banner {
@@ -1113,6 +1163,22 @@ body.phase-live .qr-panel-arrow {
       </div>
     </div>
 
+    <!-- Meeting schedule -->
+    <div class="meeting-schedule" id="meeting-schedule">
+      <div class="schedule-item">
+        <span class="schedule-time">3:45 &ndash; 4:00</span>
+        <span class="schedule-desc">Networking &amp; Open Seating</span>
+      </div>
+      <div class="schedule-item schedule-item--active">
+        <span class="schedule-time">4:00 &ndash; 4:45</span>
+        <span class="schedule-desc">Meeting &amp; Referral Round</span>
+      </div>
+      <div class="schedule-item">
+        <span class="schedule-time">4:45+</span>
+        <span class="schedule-desc">Stick Around &amp; Connect</span>
+      </div>
+    </div>
+
     <!-- Status banner -->
     <div class="status-banner" id="status-banner" role="status" aria-live="polite"></div>
 
@@ -1236,7 +1302,9 @@ body.phase-live .qr-panel-arrow {
 
   function applyOverscan(value) {
     var nextValue = Math.max(18, Math.min(96, Number(value) || 42));
+    var zoomLevel = 1 - (nextValue * 2 / 1920);
     document.documentElement.style.setProperty('--overscan', nextValue + 'px');
+    document.documentElement.style.zoom = zoomLevel;
     if (overscanRange) overscanRange.value = String(nextValue);
     if (overscanValue) overscanValue.textContent = nextValue + 'px';
     try { localStorage.setItem(overscanStorageKey, String(nextValue)); } catch (e) {}
