@@ -57,10 +57,10 @@ html {
   --radius-2xl: 1.25rem;
   --shadow-glow: 0 0 80px rgba(232, 88, 12, 0.12), 0 0 160px rgba(232, 88, 12, 0.06);
   --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
-  --overscan: 56px;
+  --overscan: 0px;
   --content-max: 1760px;
   --shell-pad: max(var(--overscan), calc((100vw - var(--content-max)) / 2 + var(--overscan)));
-  /* Scale entire page to fit within TV overscan */
+  /* Scale entire page to fit within TV overscan — applied to body via zoom */
   --scale: calc(1 - (var(--overscan) * 2 / 1920));
 }
 
@@ -83,11 +83,6 @@ body.anchor-mode .heat-orb {
 
 body.anchor-mode .heat-line {
   opacity: 0.22;
-}
-
-body.anchor-mode .ticker-content {
-  animation-duration: 120s !important;
-  opacity: 0.82;
 }
 
 /* === HEAT BACKGROUND === */
@@ -196,14 +191,14 @@ body.anchor-mode .ticker-content {
   position: relative;
   z-index: 1;
   width: 100%;
-  flex: 1;
   display: grid;
   grid-template-columns: 0.85fr 1.15fr 0.75fr;
   grid-template-rows: 1fr;
   gap: clamp(0.75rem, 1.5vw, 1.5rem);
-  min-height: calc(100dvh - 176px);
-  padding: clamp(0.75rem, 1.5vw, 1.5rem);
-  align-items: stretch;
+  height: calc(100dvh - 181px);
+  padding: clamp(0.75rem, 1.5vw, 1.5rem) clamp(0.75rem, 1.5vw, 1.5rem) 12vh;
+  align-items: center;
+  overflow: hidden;
 }
 
 /* === LEFT: CAROUSEL === */
@@ -215,21 +210,14 @@ body.anchor-mode .ticker-content {
   justify-content: center;
   min-height: 100%;
   min-width: 0;
-  padding: 1.6rem 1.5rem;
+  padding: 1.6rem 1.5rem 3rem;
   perspective: 1600px;
   overflow: hidden;
-  border: 1px solid rgba(232, 88, 12, 0.16);
-  border-radius: 1.5rem;
-  background: rgba(9, 9, 12, 0.36);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 18px 40px rgba(0,0,0,0.4);
 }
 
 .carousel-stage {
   position: relative;
-  width: min(100%, 520px);
-  max-width: 100%;
+  width: min(100%, 55vh);
   aspect-ratio: 1 / 1;
 }
 
@@ -291,6 +279,15 @@ body.anchor-mode .ticker-content {
 .card-icon {
   font-size: clamp(2.4rem, 4vw, 4.25rem);
   line-height: 1;
+}
+.card-headshot {
+  width: clamp(100px, 14vw, 160px);
+  height: clamp(100px, 14vw, 160px);
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center 15%;
+  border: 4px solid rgba(232, 88, 12, 0.5);
+  box-shadow: 0 6px 30px rgba(232, 88, 12, 0.3);
 }
 .card-heading {
   font-family: var(--font-display);
@@ -355,17 +352,19 @@ body.anchor-mode .ticker-content {
   min-width: 0;
   padding: 1.6rem 1.4rem;
   gap: 1rem;
-  border: 1px solid rgba(232, 88, 12, 0.16);
-  border-radius: 1.5rem;
-  background: rgba(9, 9, 12, 0.32);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 18px 40px rgba(0,0,0,0.4);
 }
 
+.welcome-msg {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+  letter-spacing: 0.1em;
+  color: var(--color-text);
+  text-align: center;
+  text-transform: uppercase;
+}
 .countdown-header {
   font-family: var(--font-display);
-  font-size: clamp(2.2rem, 4vw, 3.7rem);
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
   letter-spacing: 0.15em;
   color: var(--color-primary);
   text-transform: uppercase;
@@ -415,9 +414,8 @@ body.anchor-mode .ticker-content {
 /* === MEETING SCHEDULE === */
 .meeting-schedule {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.6rem;
   width: 100%;
-  max-width: 560px;
   margin-top: 0.25rem;
 }
 
@@ -426,8 +424,8 @@ body.anchor-mode .ticker-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.2rem;
-  padding: 0.5rem 0.4rem;
+  gap: 0.25rem;
+  padding: 0.6rem 0.5rem;
   border-radius: var(--radius-md);
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.06);
@@ -441,14 +439,14 @@ body.anchor-mode .ticker-content {
 
 .schedule-time {
   font-family: var(--font-display);
-  font-size: 0.9rem;
+  font-size: clamp(0.95rem, 1.2vw, 1.15rem);
   letter-spacing: 0.06em;
   color: var(--color-primary);
 }
 
 .schedule-desc {
   font-family: var(--font-body);
-  font-size: 0.7rem;
+  font-size: clamp(0.75rem, 0.9vw, 0.9rem);
   color: var(--color-text-muted);
   text-align: center;
   line-height: 1.3;
@@ -697,14 +695,8 @@ body.phase-over .meeting-schedule { display: none; }
   justify-content: center;
   min-height: 100%;
   min-width: 0;
-  padding: 1.6rem 1.4rem;
-  gap: 1rem;
-  border: 1px solid rgba(232, 88, 12, 0.16);
-  border-radius: 1.5rem;
-  background: rgba(9, 9, 12, 0.38);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 18px 40px rgba(0,0,0,0.4);
+  padding: 1rem 1.2rem;
+  gap: 0.6rem;
 }
 .qr-panel-heading {
   font-family: var(--font-display);
@@ -734,7 +726,7 @@ body.phase-over .meeting-schedule { display: none; }
   box-shadow: 0 10px 24px rgba(0,0,0,0.26);
 }
 .qr-panel-img {
-  width: clamp(180px, 16vw, 290px);
+  width: clamp(280px, 28vw, 420px);
   height: auto;
   border-radius: var(--radius-lg);
   border: 10px solid rgba(255,255,255,0.96);
@@ -743,11 +735,11 @@ body.phase-over .meeting-schedule { display: none; }
   padding: 10px;
 }
 .qr-panel-cta {
-  font-size: clamp(1rem, 1.55vw, 1.25rem);
+  font-size: clamp(0.8rem, 1.2vw, 1rem);
   color: var(--color-text-muted);
   text-align: center;
-  max-width: 19ch;
-  line-height: 1.4;
+  max-width: 26ch;
+  line-height: 1.35;
 }
 .qr-panel-arrow {
   font-size: 2rem;
@@ -759,10 +751,6 @@ body.phase-over .meeting-schedule { display: none; }
   50% { transform: translateY(-8px); }
 }
 
-body.phase-live .ticker-content {
-  animation-duration: 95s !important;
-  opacity: 0.72;
-}
 body.phase-live .heat-orb {
   animation-duration: 18s;
   opacity: 0.45;
@@ -771,8 +759,38 @@ body.phase-live .heat-line {
   animation-duration: 34s;
   opacity: 0.35;
 }
+/* LIVE: kill GPU-heavy effects for smooth carousel */
+body.phase-live .carousel-zone {
+  perspective: none;
+}
+body.phase-live .carousel-card {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: rgba(22, 22, 24, 0.92);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  transform: none !important;
+}
+body.phase-live .carousel-card.active {
+  animation: cardFadeIn 0.6s ease forwards;
+}
+body.phase-live .carousel-card.exiting {
+  animation: cardFadeOut 0.4s ease forwards;
+}
 body.phase-live .carousel-card.active.settled {
   animation: none;
+  transform: none !important;
+}
+body.phase-live .carousel-card.active:hover {
+  transform: none !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5) !important;
+}
+@keyframes cardFadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes cardFadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
 }
 body.phase-live .qr-panel-arrow {
   animation-duration: 3.5s;
@@ -793,7 +811,7 @@ body.phase-live .qr-panel-arrow {
     padding: 1.2rem 1.4rem;
   }
   .qr-panel-img { width: 120px; }
-  .overscan-control { display: none; }
+  .overscan-toast { display: none; }
 }
 
 @media (max-width: 768px) {
@@ -874,9 +892,433 @@ body.phase-live .qr-panel-arrow {
 }
 
 
+/* Asphalt heat distortion — rising from bottom */
+/* Heat distortion — SVG turbulence warps content like real asphalt shimmer */
+.heat-distortion {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 35vh;
+  z-index: 50;
+  pointer-events: none;
+  filter: url(#heat-distort);
+  -webkit-mask-image: linear-gradient(to top, black 0%, rgba(0,0,0,0.8) 20%, rgba(0,0,0,0.3) 50%, transparent 80%);
+  mask-image: linear-gradient(to top, black 0%, rgba(0,0,0,0.8) 20%, rgba(0,0,0,0.3) 50%, transparent 80%);
+  backdrop-filter: blur(1.5px);
+  -webkit-backdrop-filter: blur(1.5px);
+}
+/* Warm glow at the very bottom — subtle orange radiance */
+.heat-glow {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 20vh;
+  z-index: 49;
+  pointer-events: none;
+  background: radial-gradient(ellipse 120% 100% at 50% 100%, rgba(232,88,12,0.15) 0%, rgba(255,106,30,0.06) 40%, transparent 80%);
+  animation: glow-pulse 3s ease-in-out infinite alternate;
+}
+@keyframes glow-pulse {
+  0% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+/* === WARMUP PHASE — PARIS NIGHTCLUB === */
+body.phase-warmup .heat-distortion { height: 50vh; }
+body.phase-warmup .heat-glow {
+  height: 35vh;
+  background: radial-gradient(ellipse 120% 100% at 50% 100%, rgba(232,88,12,0.35) 0%, rgba(255,60,0,0.15) 50%, transparent 85%);
+}
+body.phase-warmup .lobby {
+  animation: warmup-pulse-lobby 1.5s ease-in-out infinite alternate;
+}
+@keyframes warmup-pulse-lobby {
+  0% { filter: brightness(1) saturate(1); }
+  100% { filter: brightness(1.08) saturate(1.2); }
+}
+/* Warmup escalating edge glow */
+.warmup-edge-glow {
+  position: fixed; inset: 0; z-index: 98; pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+body.phase-warmup .warmup-edge-glow {
+  opacity: 1;
+  box-shadow:
+    inset 0 0 120px rgba(232,88,12,0.25),
+    inset 0 0 250px rgba(255,60,0,0.08);
+  animation: warmup-edge-breathe 2s ease-in-out infinite alternate;
+}
+@keyframes warmup-edge-breathe {
+  0% { opacity: 0.5; box-shadow: inset 0 0 80px rgba(232,88,12,0.2), inset 0 0 200px rgba(255,60,0,0.05); }
+  100% { opacity: 1; box-shadow: inset 0 0 160px rgba(232,88,12,0.35), inset 0 0 350px rgba(255,60,0,0.12); }
+}
+/* Warmup strobe — slow breathing flash */
+body.phase-warmup .screen-flash {
+  display: block !important;
+  background: rgba(232,88,12,0.06);
+  animation: warmup-flash 2.5s ease-in-out infinite;
+}
+@keyframes warmup-flash {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+/* Warmup timer urgency — last 60s pulses red */
+body.phase-warmup .warmup-time {
+  animation: warmup-time-pulse 0.8s ease-in-out infinite alternate;
+}
+@keyframes warmup-time-pulse {
+  0% { color: var(--color-warning); text-shadow: 0 0 60px rgba(255,184,0,0.4); transform: scale(1); }
+  100% { color: #FF4422; text-shadow: 0 0 80px rgba(255,50,0,0.6), 0 0 160px rgba(255,50,0,0.2); transform: scale(1.03); }
+}
+
+/* Last 60s — URGENT mode */
+body.warmup-urgent .warmup-time {
+  animation: warmup-urgent-flash 0.4s ease-in-out infinite alternate !important;
+  color: #FF2200 !important;
+}
+@keyframes warmup-urgent-flash {
+  0% { transform: scale(1); text-shadow: 0 0 60px rgba(255,30,0,0.6); }
+  100% { transform: scale(1.08); text-shadow: 0 0 120px rgba(255,30,0,0.8), 0 0 200px rgba(255,100,0,0.3); }
+}
+body.warmup-urgent .screen-flash {
+  background: rgba(255,50,0,0.12) !important;
+  animation: warmup-urgent-strobe 0.8s ease-in-out infinite !important;
+}
+@keyframes warmup-urgent-strobe {
+  0%, 100% { opacity: 0; }
+  30% { opacity: 1; }
+  50% { opacity: 0.3; }
+  70% { opacity: 0.8; }
+}
+body.warmup-urgent .warmup-edge-glow {
+  animation: warmup-urgent-edge 0.5s ease-in-out infinite alternate !important;
+}
+@keyframes warmup-urgent-edge {
+  0% { box-shadow: inset 0 0 150px rgba(255,50,0,0.3), inset 0 0 300px rgba(217,68,68,0.1); }
+  100% { box-shadow: inset 0 0 250px rgba(255,50,0,0.5), inset 0 0 500px rgba(217,68,68,0.2); }
+}
+
+/* === HORN PHASE — FULL SCREEN TAKEOVER === */
+
+/* Hide lobby, show takeover */
+body.phase-horn .lobby { display: none !important; }
+body.phase-horn .ticker-wrap { display: none !important; }
+body.phase-horn .heat-distortion { height: 100vh; }
+body.phase-horn .heat-glow {
+  height: 100vh;
+  background: radial-gradient(ellipse 150% 100% at 50% 100%, rgba(255,50,0,0.6) 0%, rgba(217,68,68,0.3) 40%, rgba(232,88,12,0.1) 70%, transparent 100%);
+  animation: horn-glow-strobe 0.3s ease-in-out infinite alternate;
+}
+@keyframes horn-glow-strobe {
+  0% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+/* Takeover container */
+.takeover {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  overflow: hidden;
+}
+body.phase-horn .takeover { display: block; }
+
+.takeover-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 100% 60% at 50% 110%, rgba(255,80,0,0.7) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 50% at 20% 80%, rgba(217,68,68,0.4) 0%, transparent 50%),
+    radial-gradient(ellipse 80% 50% at 80% 80%, rgba(255,140,0,0.3) 0%, transparent 50%),
+    linear-gradient(to top, rgba(30,10,0,0.95) 0%, rgba(26,20,18,0.98) 40%, #1a1412 70%);
+  animation: takeover-bg-pulse 0.5s ease-in-out infinite alternate;
+}
+@keyframes takeover-bg-pulse {
+  0% { filter: brightness(0.8) saturate(1.2); }
+  100% { filter: brightness(1.3) saturate(1.6); }
+}
+
+.takeover-content {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  animation: takeover-shake 0.12s ease-in-out infinite;
+}
+@keyframes takeover-shake {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-4px, 3px); }
+  40% { transform: translate(3px, -4px); }
+  60% { transform: translate(-3px, -2px); }
+  80% { transform: translate(4px, 2px); }
+}
+
+.takeover-siren {
+  font-size: clamp(5rem, 12vw, 10rem);
+  animation: siren-spin 0.6s linear infinite;
+  filter: drop-shadow(0 0 80px rgba(255,50,0,0.8));
+}
+@keyframes siren-spin {
+  0% { transform: rotate(-15deg) scale(1); }
+  25% { transform: rotate(15deg) scale(1.15); }
+  50% { transform: rotate(-10deg) scale(0.95); }
+  75% { transform: rotate(12deg) scale(1.1); }
+  100% { transform: rotate(-15deg) scale(1); }
+}
+
+.takeover-headline {
+  font-family: var(--font-display);
+  font-size: clamp(6rem, 16vw, 14rem);
+  letter-spacing: 0.08em;
+  color: #fff;
+  text-align: center;
+  line-height: 0.95;
+  text-shadow:
+    0 0 60px #E8580C,
+    0 0 120px #FF3300,
+    0 0 240px #D94444,
+    0 0 400px rgba(255,50,0,0.4);
+  animation: headline-pulse 0.2s ease-in-out infinite alternate;
+}
+@keyframes headline-pulse {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.06); opacity: 0.85; }
+}
+
+.takeover-sub {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3.5vw, 3rem);
+  letter-spacing: 0.12em;
+  color: #ffd5bd;
+  text-align: center;
+  text-shadow: 0 0 40px rgba(232,88,12,0.6);
+  animation: sub-flash 0.8s ease-in-out infinite alternate;
+}
+@keyframes sub-flash {
+  0% { opacity: 1; color: #ffd5bd; }
+  100% { opacity: 0.7; color: #ff8844; }
+}
+
+.takeover-timer {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6vw, 5rem);
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.2em;
+}
+
+/* Strobe overlay on takeover */
+body.phase-horn .screen-flash.horn-mode {
+  z-index: 210;
+  background: rgba(255,255,255,0.18);
+  animation: horn-strobe 0.25s ease-in-out infinite;
+}
+@keyframes horn-strobe {
+  0%, 100% { opacity: 0; background: rgba(255,255,255,0.15); }
+  35% { opacity: 1; background: rgba(255,80,0,0.25); }
+  50% { opacity: 0; }
+  70% { opacity: 0.6; background: rgba(255,255,255,0.12); }
+}
+
+/* Edge glow on takeover */
+body.phase-horn .edge-glow.horn-mode {
+  z-index: 205;
+  box-shadow:
+    inset 0 0 250px rgba(217,68,68,0.6),
+    inset 0 0 500px rgba(255,50,0,0.3),
+    inset 0 0 100px rgba(255,200,0,0.2);
+  opacity: 1;
+  animation: horn-edge-strobe 0.3s ease-in-out infinite alternate;
+}
+@keyframes horn-edge-strobe {
+  0% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+/* Horn text (old, keep for fallback) */
+.horn-text {
+  font-family: var(--font-display);
+  font-size: clamp(4.5rem, 9vw, 7.5rem);
+  letter-spacing: 0.15em;
+  color: #fff;
+  text-shadow: 0 0 80px #E8580C, 0 0 160px #FF3300, 0 0 300px #D94444;
+}
+
+/* === LIVE PHASE — COOL AMBIENT BACKGROUND === */
+body.phase-live .lobby {
+  opacity: 0.92;
+  transition: opacity 1s ease;
+}
+body.phase-live .heat-distortion { height: 20vh; }
+body.phase-live .heat-glow {
+  height: 15vh;
+  opacity: 0.4;
+  background: radial-gradient(ellipse 120% 100% at 50% 100%, rgba(232,88,12,0.08) 0%, transparent 70%);
+}
+
+/* === OVER PHASE — AFTERGLOW NUDGE === */
+.afterglow {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  overflow: hidden;
+}
+body.phase-over .afterglow { display: block; }
+body.phase-over .lobby { display: none !important; }
+body.phase-over .ticker-wrap { display: none !important; }
+
+/* Fire gradient background — matches takeover energy */
+.afterglow-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 120% 50% at 50% 110%, rgba(232,88,12,0.4) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 40% at 25% 90%, rgba(255,80,20,0.2) 0%, transparent 50%),
+    radial-gradient(ellipse 80% 40% at 75% 85%, rgba(200,60,10,0.15) 0%, transparent 50%),
+    linear-gradient(to top, rgba(40,20,8,0.98) 0%, #1a1412 50%);
+  animation: afterglow-bg-breathe 4s ease-in-out infinite alternate;
+}
+@keyframes afterglow-bg-breathe {
+  0% { filter: brightness(0.95); }
+  100% { filter: brightness(1.1); }
+}
+
+.afterglow-content {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 3rem;
+}
+
+.afterglow-thanks {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 8vw, 6rem);
+  letter-spacing: 0.08em;
+  color: #fff;
+  text-shadow: 0 0 60px rgba(232,88,12,0.5), 0 0 120px rgba(255,80,20,0.2);
+  text-align: center;
+  animation: afterglow-fade-in 1.5s ease forwards;
+}
+
+.afterglow-message {
+  font-family: var(--font-body);
+  font-size: clamp(1.3rem, 2.5vw, 2rem);
+  color: var(--color-text);
+  text-align: center;
+  opacity: 0.9;
+  max-width: 40ch;
+  line-height: 1.5;
+  animation: afterglow-fade-in 2s ease forwards;
+}
+
+.afterglow-divider {
+  width: min(400px, 50%);
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(232,88,12,0.4), transparent);
+}
+
+.afterglow-clouds {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  animation: afterglow-fade-in 2.5s ease forwards;
+}
+
+.afterglow-clouds-logo {
+  height: clamp(50px, 6vw, 80px);
+  width: auto;
+  opacity: 0.9;
+}
+
+.afterglow-clouds-text {
+  font-family: var(--font-body);
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  color: var(--color-text-muted);
+  text-align: center;
+  line-height: 1.6;
+}
+
+.afterglow-next {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  animation: afterglow-fade-in 3s ease forwards;
+}
+
+.afterglow-next-label {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.6vw, 1.3rem);
+  letter-spacing: 0.15em;
+  color: var(--color-text-muted);
+}
+
+.afterglow-next-date {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  letter-spacing: 0.06em;
+  color: var(--color-text);
+  text-shadow: 0 0 30px rgba(232,88,12,0.2);
+}
+
+.afterglow-visit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  border: 1px solid rgba(232,88,12,0.3);
+  border-radius: var(--radius-lg);
+  background: rgba(232,88,12,0.08);
+  animation: afterglow-fade-in 3.5s ease forwards;
+}
+
+.afterglow-visit-label {
+  font-family: var(--font-display);
+  font-size: clamp(0.9rem, 1.3vw, 1.1rem);
+  letter-spacing: 0.12em;
+  color: var(--color-text-muted);
+}
+
+.afterglow-visit-text {
+  font-family: var(--font-body);
+  font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+  color: var(--color-text);
+  text-align: center;
+  line-height: 1.4;
+  max-width: 36ch;
+}
+
+.afterglow-visit-url {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.2vw, 1.8rem);
+  letter-spacing: 0.06em;
+  color: var(--color-primary);
+  text-shadow: 0 0 20px rgba(232,88,12,0.3);
+}
+
+@keyframes afterglow-fade-in {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
 /* === EMBERS === */
 #embers-container {
-  position: fixed; inset: 0; pointer-events: none; z-index: 5;
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
 }
 .ember {
   position: absolute;
@@ -887,9 +1329,9 @@ body.phase-live .qr-panel-arrow {
 }
 @keyframes ember-float {
   0% { transform: translateY(0) scale(1); opacity: 0; }
-  20% { opacity: 0.8; }
-  80% { opacity: 0.5; }
-  100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+  20% { opacity: 0.6; }
+  60% { opacity: 0.3; }
+  100% { transform: translateY(-65vh) scale(0.4); opacity: 0; }
 }
 
 /* === EXCITEMENT TIERS === */
@@ -912,16 +1354,6 @@ body.phase-live .qr-panel-arrow {
   from { box-shadow: 0 0 30px rgba(255, 51, 0, 0.4); }
   to { box-shadow: 0 0 60px rgba(255, 51, 0, 0.8); border-color: #FF6600; }
 }
-.excitement-msg {
-  font-family: var(--font-display);
-  font-size: clamp(1.5rem, 3vw, 2.5rem);
-  letter-spacing: 0.15em;
-  color: var(--color-primary);
-  height: 3rem;
-  text-align: center;
-  transition: opacity 0.5s;
-  text-transform: uppercase;
-}
 
 /* Interactive Hover State for Cards */
 .carousel-card {
@@ -933,11 +1365,38 @@ body.phase-live .qr-panel-arrow {
   cursor: pointer;
 }
 
+/* Stats ticker */
+.ticker-wrap {
+  width: 100%;
+  background: #E8580C;
+  color: white;
+  padding: 0.65rem 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 15;
+  box-shadow: 0 4px 15px rgba(232,88,12,0.4);
+  border-bottom: 2px solid #FF9933;
+}
+.ticker-content {
+  display: inline-block;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  letter-spacing: 0.08em;
+  animation: ticker 45s linear infinite;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+.ticker-stat { padding: 0 1.5rem; }
+.ticker-sep { opacity: 0.5; padding: 0 0.5rem; }
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
 .ticker-wrap::before, .ticker-wrap::after {
   content: '';
   position: absolute;
   top: 0;
-  width: 150px;
+  width: 120px;
   height: 100%;
   z-index: 2;
   pointer-events: none;
@@ -951,65 +1410,35 @@ body.phase-live .qr-panel-arrow {
   background: linear-gradient(to left, #E8580C, transparent);
 }
 
-.ticker-wrap {
-  overflow: hidden;
-}
-
-.overscan-control {
+/* Overscan toast — brief on-screen feedback for keyboard adjustment */
+.overscan-toast {
   position: fixed;
-  right: 18px;
-  bottom: 18px;
+  bottom: 24px;
+  right: 24px;
   z-index: 60;
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  padding: 0.45rem 0.7rem;
+  padding: 0.5rem 1rem;
   border-radius: 999px;
-  background: rgba(12, 12, 16, 0.56);
-  border: 1px solid rgba(232, 88, 12, 0.18);
+  background: rgba(12, 12, 16, 0.72);
+  border: 1px solid rgba(232, 88, 12, 0.25);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.26);
-  opacity: 0.5;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.overscan-control:hover,
-.overscan-control:focus-within {
-  opacity: 0.92;
-  transform: translateY(-1px);
-}
-
-.overscan-label,
-.overscan-value {
   font-family: var(--font-display);
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(240, 236, 232, 0.92);
-}
-
-.overscan-value {
-  min-width: 2.8rem;
-  text-align: right;
   color: #ffd9c0;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none;
 }
-
-.overscan-range {
-  width: 118px;
-  accent-color: #E8580C;
-  cursor: pointer;
+.overscan-toast.visible {
+  opacity: 0.9;
+  transform: translateY(0);
 }
 </style>
 </head>
 <body>
 <!-- Kiosk Initialization Overlay (Bypasses Autoplay Policy) -->
-<div id="kiosk-init-overlay" role="button" tabindex="0" aria-label="Start lobby kiosk and enable audio" style="position:fixed; inset:0; z-index:999999; background:rgba(12, 12, 14, 0.95); backdrop-filter:blur(10px); display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer;">
-  <div style="text-align:center; animation:pulse-glow 2s ease-in-out infinite;">
-    <h1 style="font-family:var(--font-display); font-size:4rem; color:var(--color-primary); letter-spacing:0.1em; margin-bottom:1rem;">START LOBBY KIOSK</h1>
-    <p style="font-family:var(--font-body); font-size:1.5rem; color:#f0e6dc;">Click anywhere to enable audio and begin.</p>
-  </div>
-</div>
 
 <!-- Ambient Noise Overlay -->
 <svg style="pointer-events: none; position: fixed; inset: 0; z-index: 9999; width: 100%; height: 100%; opacity: 0.04; mix-blend-mode: overlay;" aria-hidden="true">
@@ -1017,6 +1446,18 @@ body.phase-live .qr-panel-arrow {
   <rect width="100%" height="100%" filter="url(#noiseFilter)" />
 </svg>
 
+
+<div class="heat-distortion" aria-hidden="true"></div>
+<div class="heat-glow" aria-hidden="true"></div>
+<div class="warmup-edge-glow" aria-hidden="true"></div>
+<svg width="0" height="0" style="position:absolute">
+  <filter id="heat-distort">
+    <feTurbulence type="turbulence" baseFrequency="0.015 0.08" numOctaves="3" seed="2" result="turbulence">
+      <animate attributeName="baseFrequency" values="0.015 0.08;0.018 0.1;0.015 0.08" dur="3s" repeatCount="indefinite"/>
+    </feTurbulence>
+    <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="18" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
 
 <div class="heat-bg" aria-hidden="true">
   <div class="heat-line"></div>
@@ -1060,24 +1501,35 @@ body.phase-live .qr-panel-arrow {
   </div>
 </div>
 
-<div class="ticker-wrap" style="width: 100%; background: #E8580C; color: white; padding: 0.8rem 0; overflow: hidden; position: relative; z-index: 15; box-shadow: 0 4px 15px rgba(232,88,12,0.4); border-bottom: 2px solid #FF9933;">
-  <div class="ticker-content" style="display: inline-block; white-space: nowrap; font-family: var(--font-display); font-size: 2.2rem; letter-spacing: 0.1em; animation: ticker 50s linear infinite; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
-    <span style="display: inline-block; padding-right: 80px;">🔥 WELCOME TO RDU HEATWAVE! GRAB A DRINK, FIND A SEAT, AND GET READY TO CONNECT.</span>
-    <span style="display: inline-block; padding-right: 80px;">🎤 TODAY&rsquo;S SPEAKER: ROBERT COURTS FROM ADVANTAGE LENDING.</span>
-    <span style="display: inline-block; padding-right: 80px;">🤝 WARM INTRODUCTIONS ONLY. TRUSTED PROFESSIONALS. REAL FOLLOW-THROUGH.</span>
-    <span style="display: inline-block; padding-right: 80px;">📲 GUESTS: SCAN THE QR CODE TO VISIT RDUHEATWAVE.TEAM.</span>
-    <span style="display: inline-block; padding-right: 80px;">🔥 WELCOME TO RDU HEATWAVE! GRAB A DRINK, FIND A SEAT, AND GET READY TO CONNECT.</span>
-    <span style="display: inline-block; padding-right: 80px;">🎤 TODAY&rsquo;S SPEAKER: ROBERT COURTS FROM ADVANTAGE LENDING.</span>
-    <span style="display: inline-block; padding-right: 80px;">🤝 WARM INTRODUCTIONS ONLY. TRUSTED PROFESSIONALS. REAL FOLLOW-THROUGH.</span>
-    <span style="display: inline-block; padding-right: 80px;">📲 GUESTS: SCAN THE QR CODE TO VISIT RDUHEATWAVE.TEAM.</span>
+<!-- Stats Ticker -->
+<div class="ticker-wrap">
+  <div class="ticker-content">
+    <span class="ticker-stat">&#x1F4AC; 122 BIZCHATS</span>
+    <span class="ticker-sep">&bull;</span>
+    <span class="ticker-stat">&#x1F91D; 106 GUESTS HOSTED</span>
+    <span class="ticker-sep">&bull;</span>
+    <span class="ticker-stat">&#x1F4B0; $105,977 REVENUE GENERATED</span>
+    <span class="ticker-sep">&bull;</span>
+    <span class="ticker-stat">&#x1F4E8; 39 REFERRALS PASSED</span>
+    <span class="ticker-sep">&bull;</span>
+    <span class="ticker-stat">&#x1F31F; 20 GRATITUDE INCENTIVES RECEIVED</span>
+    <span class="ticker-sep">&bull;</span>
+    <span class="ticker-stat">&#x1F525; ROLLING 12-MONTH STATS &mdash; RDU HEATWAVE</span>
+    <span class="ticker-sep">&bull;</span>
+    <span class="ticker-stat">&#x1F4AC; 122 BIZCHATS</span>
+    <span class="ticker-sep">&bull;</span>
+    <span class="ticker-stat">&#x1F91D; 106 GUESTS HOSTED</span>
+    <span class="ticker-sep">&bull;</span>
+    <span class="ticker-stat">&#x1F4B0; $105,977 REVENUE GENERATED</span>
+    <span class="ticker-sep">&bull;</span>
+    <span class="ticker-stat">&#x1F4E8; 39 REFERRALS PASSED</span>
+    <span class="ticker-sep">&bull;</span>
+    <span class="ticker-stat">&#x1F31F; 20 GRATITUDE INCENTIVES RECEIVED</span>
+    <span class="ticker-sep">&bull;</span>
+    <span class="ticker-stat">&#x1F525; ROLLING 12-MONTH STATS &mdash; RDU HEATWAVE</span>
   </div>
 </div>
-<style>
-@keyframes ticker {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-</style>
+
 <!-- MAIN LOBBY -->
 <div class="lobby">
 
@@ -1087,9 +1539,9 @@ body.phase-live .qr-panel-arrow {
 
       <!-- Card 1: Today's speaker -->
       <div class="carousel-card" data-card="0">
-        <div class="card-icon">&#x1F3A4;</div>
+        <img class="card-headshot" src="https://mytrustedcircle.net/rdu-heatwave/wp-content/uploads/sites/76/2026/01/Headshot-Rusty-2-300x300.png" alt="Rusty Sutton">
         <div class="card-heading">TODAY&rsquo;S<br>SPOTLIGHT</div>
-        <div class="card-body">Robert Courts from Advantage Lending is up today. Give him your full attention &mdash; and a warm intro if someone comes to mind.</div>
+        <div class="card-body">Rusty Sutton from MonkeyFans Creative is up today. Give him your full attention &mdash; and a warm intro if someone comes to mind.</div>
         <div class="card-stat">
           <div class="card-stat-item">
             <div class="card-stat-value">LIVE</div>
@@ -1139,8 +1591,8 @@ body.phase-live .qr-panel-arrow {
 
   <!-- CENTER: COUNTDOWN -->
   <div class="countdown-zone" id="countdown-zone">
+    <div class="welcome-msg">Welcome to our guests. We&rsquo;re glad you&rsquo;re here.</div>
     <div class="countdown-header" id="countdown-header">WE START IN</div>
-    <div class="excitement-msg" id="excitement-msg"></div>
 
     <!-- Main countdown -->
     <div class="countdown-grid" id="countdown-grid">
@@ -1166,14 +1618,14 @@ body.phase-live .qr-panel-arrow {
     <div class="meeting-schedule" id="meeting-schedule">
       <div class="schedule-item">
         <span class="schedule-time">3:45 &ndash; 4:00</span>
-        <span class="schedule-desc">Networking &amp; Open Seating</span>
+        <span class="schedule-desc">Open Networking</span>
       </div>
       <div class="schedule-item schedule-item--active">
-        <span class="schedule-time">4:00 &ndash; 4:45</span>
-        <span class="schedule-desc">Meeting &amp; Referral Round</span>
+        <span class="schedule-time">4:00 &ndash; 5:00</span>
+        <span class="schedule-desc">Networking Meeting</span>
       </div>
       <div class="schedule-item">
-        <span class="schedule-time">4:45+</span>
+        <span class="schedule-time">5:00 PM+</span>
         <span class="schedule-desc">Stick Around &amp; Connect</span>
       </div>
     </div>
@@ -1202,7 +1654,7 @@ body.phase-live .qr-panel-arrow {
 
     <div class="final-display" id="anchor-display">
       <div class="final-label">TODAY&rsquo;S SPEAKER</div>
-      <div class="horn-text" style="font-size:clamp(2.5rem,4vw,3.8rem); letter-spacing:0.08em; animation:none; text-shadow:0 0 48px rgba(232,88,12,0.4);">ROBERT COURTS</div>
+      <div class="horn-text" style="font-size:clamp(2.5rem,4vw,3.8rem); letter-spacing:0.08em; animation:none; text-shadow:0 0 48px rgba(232,88,12,0.4);">RUSTY SUTTON</div>
       <div class="horn-joke" style="max-width:28ch;">Warm introductions. Trusted professionals. Real follow-through.</div>
     </div>
   </div>
@@ -1211,7 +1663,6 @@ body.phase-live .qr-panel-arrow {
   <div class="qr-panel">
     <div class="qr-panel-heading">SCAN TO<br>CHECK IN</div>
     <div class="qr-panel-arrow">&#x2193;</div>
-    <div class="qr-panel-chip">rduheatwave.team</div>
     <a class="qr-panel-link" href="https://rduheatwave.team" aria-label="Visit rduheatwave.team">
       <img src="qr-rduheatwave.svg" alt="Scan to visit rduheatwave.team" class="qr-panel-img">
     </a>
@@ -1220,11 +1671,43 @@ body.phase-live .qr-panel-arrow {
 
 </div>
 
-<div class="overscan-control" aria-label="Overscan safe frame control">
-  <span class="overscan-label">Safe frame</span>
-  <input id="overscan-range" class="overscan-range" type="range" min="18" max="96" step="2" value="56" aria-label="Adjust overscan safe frame">
-  <span class="overscan-value" id="overscan-value">42px</span>
+<!-- FULL SCREEN TAKEOVER (horn phase) -->
+<div class="takeover" id="takeover" aria-hidden="true">
+  <div class="takeover-bg"></div>
+  <div class="takeover-content">
+    <div class="takeover-siren">🚨</div>
+    <div class="takeover-headline" id="takeover-headline">IT&rsquo;S 212&deg;!</div>
+    <div class="takeover-sub" id="takeover-sub">TAKE YOUR SEATS — WE&rsquo;RE ABOUT TO BOIL OVER</div>
+    <div class="takeover-timer" id="takeover-timer">30</div>
+  </div>
 </div>
+
+<!-- After-meeting nudge (OVER phase, first 30 min) -->
+<div class="afterglow" id="afterglow" aria-hidden="true">
+  <div class="afterglow-bg"></div>
+  <div class="afterglow-content">
+    <div class="afterglow-thanks">GREAT MEETING, HEATWAVE!</div>
+    <div class="afterglow-message">Don&rsquo;t leave yet &mdash; stick around and connect.</div>
+    <div class="afterglow-divider"></div>
+    <div class="afterglow-clouds">
+      <img src="https://images.squarespace-cdn.com/content/v1/592b235859cc6892f601724f/352e270b-0ec7-41c4-819d-ac473b71a4b3/cb_simplifiedlogo_v1_White2-01.png" alt="Clouds Brewing" class="afterglow-clouds-logo">
+      <div class="afterglow-clouds-text">Clouds Brewing has 17 taps and great food.<br>Grab a drink &mdash; you&rsquo;ve earned it.</div>
+    </div>
+    <div class="afterglow-divider"></div>
+    <div class="afterglow-next">
+      <div class="afterglow-next-label">NEXT MEETING</div>
+      <div class="afterglow-next-date" id="afterglow-next-date"></div>
+    </div>
+    <div class="afterglow-visit">
+      <div class="afterglow-visit-label">VISIT US ONLINE</div>
+      <div class="afterglow-visit-text">See current rotations on tap at Clouds and connect with the team.</div>
+      <div class="afterglow-visit-url">rduheatwave.team</div>
+    </div>
+  </div>
+</div>
+
+<!-- Overscan: press +/- keys to adjust, 0 to reset -->
+<div class="overscan-toast" id="overscan-toast" aria-live="polite"></div>
 
 <!-- Screen flash overlay -->
 <div class="screen-flash" id="screen-flash" style="display:none" aria-hidden="true"></div>
@@ -1244,7 +1727,7 @@ body.phase-live .qr-panel-arrow {
   var PREHEAT_WINDOW_SECS = 15 * 60;
   var WARMUP_SECS = 300;
   var HORN_DURATION = 30 * 1000;
-  var MEETING_DURATION = 2 * 60 * 60 * 1000;
+  var MEETING_DURATION = 1 * 60 * 60 * 1000;
   var CARD_INTERVAL = 10000;
   var CARD_SETTLE_DELAY = 1200;
 
@@ -1253,7 +1736,6 @@ body.phase-live .qr-panel-arrow {
   var embersContainer = document.getElementById('embers-container');
   var emberInterval = null;
   var currentSpawnRate = 0;
-  var excitementMsgEl = document.getElementById('excitement-msg');
   var countdownGrid = document.getElementById('countdown-grid');
   var countdownHeader = document.getElementById('countdown-header');
   var statusBanner = document.getElementById('status-banner');
@@ -1270,21 +1752,19 @@ body.phase-live .qr-panel-arrow {
   var datetimeEl = document.getElementById('meeting-datetime');
   var topDate = document.getElementById('top-date');
   var topTime = document.getElementById('top-time');
-  var initOverlay = document.getElementById('kiosk-init-overlay');
-  var overscanRange = document.getElementById('overscan-range');
-  var overscanValue = document.getElementById('overscan-value');
+  var overscanToast = document.getElementById('overscan-toast');
 
-  var msgsWarm = ['DOORS ARE OPEN', 'MEET SOMEBODY NEW'];
-  var msgsHot = ['SPEAKER UP NEXT', 'BRING THE HEAT'];
-  var msgsFire = ['WE GO LIVE IN 5', 'WRAP IT UP & SIT DOWN'];
   var hornJokes = [
-    'WE\'RE ABOUT TO BOIL OVER.',
-    'IT\'S GETTING HOT IN HERE.',
-    'TURN UP THE HEAT AND TAKE YOUR SEAT.',
-    'NO MORE SMALL TALK — IT\'S SHOWTIME.'
+    'WOOOOO! WE\'RE ABOUT TO BOIL OVER!',
+    'THE EXTRA DEGREE STARTS NOW!',
+    'IT\'S 212° IN HERE — TAKE YOUR SEATS!',
+    'TURN UP THE HEAT AND TAKE YOUR SEAT!',
+    'NO MORE SMALL TALK — IT\'S SHOWTIME!',
+    'THIS IS WHERE CHAMPIONS NETWORK!',
+    'BUCKLE UP — HEATWAVE IS LIVE!',
+    'STYLIN\', PROFILIN\', AND NETWORKING!'
   ];
 
-  var msgIndex = 0;
   var currentPhase = null;
   var hornPlayed = false;
   var hornJokeIndex = 0;
@@ -1298,27 +1778,39 @@ body.phase-live .qr-panel-arrow {
   var hornTimeout = null;
   var soundCleanups = [];
   var overscanStorageKey = 'rduheatwave:overscan';
+  var overscanCurrent = 0;
+  var overscanToastTimer = null;
 
-  function applyOverscan(value) {
-    var nextValue = Math.max(18, Math.min(96, Number(value) || 42));
-    var zoomLevel = 1 - (nextValue * 2 / 1920);
-    document.documentElement.style.setProperty('--overscan', nextValue + 'px');
+  function applyOverscan(value, showToast) {
+    overscanCurrent = Math.max(0, Math.min(120, Number(value) || 0));
+    var zoomLevel = 1 - (overscanCurrent * 2 / 1920);
+    document.documentElement.style.setProperty('--overscan', overscanCurrent + 'px');
     document.documentElement.style.zoom = zoomLevel;
-    if (overscanRange) overscanRange.value = String(nextValue);
-    if (overscanValue) overscanValue.textContent = nextValue + 'px';
-    try { localStorage.setItem(overscanStorageKey, String(nextValue)); } catch (e) {}
+    try { localStorage.setItem(overscanStorageKey, String(overscanCurrent)); } catch (e) {}
+    if (showToast && overscanToast) {
+      overscanToast.textContent = overscanCurrent === 0 ? 'OVERSCAN: OFF' : 'OVERSCAN: ' + overscanCurrent + 'PX';
+      overscanToast.classList.add('visible');
+      clearTimeout(overscanToastTimer);
+      overscanToastTimer = setTimeout(function() { overscanToast.classList.remove('visible'); }, 1500);
+    }
   }
 
-  if (overscanRange) {
-    var storedOverscan = null;
-    try { storedOverscan = localStorage.getItem(overscanStorageKey); } catch (e) {}
-    // If stored value is the old default (42), upgrade to new default (56)
-    if (storedOverscan === '42') storedOverscan = null;
-    applyOverscan(storedOverscan || overscanRange.value);
-    overscanRange.addEventListener('input', function(event) {
-      applyOverscan(event.target.value);
-    });
-  }
+  // Load saved overscan (default 0 for direct HDMI)
+  (function() {
+    var stored = null;
+    try { stored = localStorage.getItem(overscanStorageKey); } catch (e) {}
+    // Migrate old defaults to 0 (direct HDMI doesn't need overscan)
+    if (stored === '42' || stored === '56') stored = null;
+    applyOverscan(stored || 0, false);
+  })();
+
+  // Keyboard: +/= to increase, -/_ to decrease, 0 to reset
+  document.addEventListener('keydown', function(e) {
+    if (e.key === '+' || e.key === '=') { applyOverscan(overscanCurrent + 4, true); }
+    else if (e.key === '-' || e.key === '_') { applyOverscan(overscanCurrent - 4, true); }
+    else if (e.key === '0' && !e.ctrlKey && !e.metaKey) { applyOverscan(0, true); }
+  });
+
 
   function createEmber() {
     var ember = document.createElement('div');
@@ -1342,23 +1834,6 @@ body.phase-live .qr-panel-arrow {
     if (spawnRate > 0) emberInterval = setInterval(createEmber, spawnRate);
   }
 
-  setInterval(function() {
-    msgIndex += 1;
-    if (currentPhase !== PHASE.COUNTDOWN) {
-      excitementMsgEl.textContent = '';
-      return;
-    }
-
-    var diff = meeting.timestamp - Date.now();
-    var mins = Math.floor(diff / 60000);
-    var messages = mins < 10 ? msgsFire : mins < 30 ? msgsHot : msgsWarm;
-
-    excitementMsgEl.style.opacity = 0;
-    setTimeout(function() {
-      excitementMsgEl.textContent = messages[msgIndex % messages.length];
-      excitementMsgEl.style.opacity = 1;
-    }, 250);
-  }, 4000);
 
   function getAudioContext() {
     if (!AudioContextCtor) return null;
@@ -1425,20 +1900,38 @@ body.phase-live .qr-panel-arrow {
     }
   }
 
+  var warmupIntensity = 0;
   function queueWarmupPulse() {
-    rememberSoundCleanup(playTone({ frequency: 56, type: 'sine', volume: 0.06, duration: 0.12 }));
-    rememberSoundCleanup(playTone({ frequency: 56, type: 'sine', volume: 0.04, duration: 0.08, delay: 0.18 }));
+    warmupIntensity = Math.min(warmupIntensity + 1, 100);
+    var intensity = warmupIntensity / 100;
+    var baseVol = 0.04 + intensity * 0.08;
+    var baseFreq = 56 + intensity * 80;
+    rememberSoundCleanup(playTone({ frequency: baseFreq, type: 'sine', volume: baseVol, duration: 0.15 }));
+    rememberSoundCleanup(playTone({ frequency: baseFreq * 1.5, type: 'triangle', volume: baseVol * 0.5, duration: 0.1, delay: 0.12 }));
+    if (intensity > 0.4) {
+      rememberSoundCleanup(playTone({ frequency: baseFreq * 2, type: 'square', volume: baseVol * 0.2, duration: 0.06, delay: 0.2 }));
+    }
+    if (intensity > 0.7) {
+      rememberSoundCleanup(playTone({ frequency: 110, type: 'sawtooth', volume: 0.03, duration: 0.3, delay: 0.05 }));
+    }
   }
 
+  var warmupAccelTimer = null;
   function startLoopedSound(mode) {
     if (currentSoundMode === mode) return;
     stopAllAudio();
+    warmupIntensity = 0;
     ensureAudioReady().then(function(ready) {
       if (!ready) return;
       currentSoundMode = mode;
       if (mode === 'warmup') {
-        queueWarmupPulse();
-        soundLoopTimer = setInterval(queueWarmupPulse, 950);
+        var interval = 900;
+        function scheduleNext() {
+          queueWarmupPulse();
+          interval = Math.max(250, interval - 8);
+          warmupAccelTimer = setTimeout(scheduleNext, interval);
+        }
+        scheduleNext();
       }
     });
   }
@@ -1464,11 +1957,78 @@ body.phase-live .qr-panel-arrow {
     }, 3200);
   }
 
+  /* === TAKEOVER — full screen cycle during horn === */
+  var takeoverHeadlines = [
+    "IT'S 212\u00B0!",
+    "LET'S GO!",
+    "WOOOOO!",
+    "BOILING\nPOINT!",
+    "SEATS\nNOW!",
+    "THE EXTRA\nDEGREE!",
+    "HEATWAVE\nIS LIVE!",
+    "TIME TO\nNETWORK!"
+  ];
+  var takeoverSubs = [
+    "TAKE YOUR SEATS \u2014 WE'RE ABOUT TO BOIL OVER",
+    "THE EXTRA DEGREE CHANGES EVERYTHING",
+    "STYLIN', PROFILIN', AND NETWORKING!",
+    "THIS IS WHERE CHAMPIONS CONNECT",
+    "TURN UP THE HEAT AND TAKE YOUR SEAT",
+    "NO MORE SMALL TALK \u2014 IT'S SHOWTIME!",
+    "RDU HEATWAVE IS ABOUT TO GO OFF",
+    "BUCKLE UP \u2014 212\u00B0 STARTS NOW"
+  ];
+  var takeoverCycleTimer = null;
+  var takeoverCountdownTimer = null;
+  var takeoverIndex = 0;
+
+  function startTakeoverCycle() {
+    var headlineEl = document.getElementById('takeover-headline');
+    var subEl = document.getElementById('takeover-sub');
+    var timerEl = document.getElementById('takeover-timer');
+    if (!headlineEl) return;
+
+    takeoverIndex = 0;
+    headlineEl.textContent = takeoverHeadlines[0];
+    subEl.textContent = takeoverSubs[0];
+
+    /* Cycle headlines every 2.5s */
+    takeoverCycleTimer = setInterval(function() {
+      takeoverIndex = (takeoverIndex + 1) % takeoverHeadlines.length;
+      headlineEl.textContent = takeoverHeadlines[takeoverIndex];
+      subEl.textContent = takeoverSubs[takeoverIndex % takeoverSubs.length];
+    }, 2500);
+
+    /* Countdown from 30 */
+    var secondsLeft = Math.round(HORN_DURATION / 1000);
+    timerEl.textContent = secondsLeft;
+    takeoverCountdownTimer = setInterval(function() {
+      secondsLeft -= 1;
+      if (secondsLeft <= 0) {
+        clearInterval(takeoverCountdownTimer);
+        takeoverCountdownTimer = null;
+        timerEl.textContent = '';
+      } else {
+        timerEl.textContent = secondsLeft;
+      }
+    }, 1000);
+  }
+
+  function stopTakeoverCycle() {
+    if (takeoverCycleTimer) { clearInterval(takeoverCycleTimer); takeoverCycleTimer = null; }
+    if (takeoverCountdownTimer) { clearInterval(takeoverCountdownTimer); takeoverCountdownTimer = null; }
+  }
+
   function stopAllAudio() {
     currentSoundMode = null;
+    warmupIntensity = 0;
     if (soundLoopTimer) {
       clearInterval(soundLoopTimer);
       soundLoopTimer = null;
+    }
+    if (warmupAccelTimer) {
+      clearTimeout(warmupAccelTimer);
+      warmupAccelTimer = null;
     }
     if (hornTimeout) {
       clearTimeout(hornTimeout);
@@ -1479,23 +2039,16 @@ body.phase-live .qr-panel-arrow {
     if (masterGain) masterGain.gain.value = 0.16;
   }
 
+  // Auto-start kiosk; audio will init on first user interaction
   function startKiosk() {
-    if (!initOverlay || initOverlay.style.display === 'none') return;
-    initOverlay.style.display = 'none';
     ensureAudioReady().then(function() {
       if (currentPhase === PHASE.WARMUP) safePlay('warmup');
       else if (currentPhase === PHASE.HORN) playHorn();
     });
   }
-
-  if (initOverlay) {
-    initOverlay.addEventListener('click', startKiosk);
-    initOverlay.addEventListener('keydown', function(event) {
-      if (event.key !== 'Enter' && event.key !== ' ') return;
-      event.preventDefault();
-      startKiosk();
-    });
-  }
+  // Enable audio on any user interaction (browser autoplay policy)
+  document.addEventListener('click', function() { ensureAudioReady(); }, { once: true });
+  document.addEventListener('keydown', function() { ensureAudioReady(); }, { once: true });
 
   var meetingDateFormatter = new Intl.DateTimeFormat('en-US', {
     timeZone: MEETING_TIME_ZONE,
@@ -1572,7 +2125,7 @@ body.phase-live .qr-panel-arrow {
     var opts = { timeZone: MEETING_TIME_ZONE };
     var now = new Date();
     topDate.textContent = now.toLocaleDateString('en-US', Object.assign({ weekday: 'long', month: 'short', day: 'numeric' }, opts));
-    topTime.textContent = now.toLocaleTimeString('en-US', Object.assign({ hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true }, opts)) + ' ET';
+    topTime.textContent = now.toLocaleTimeString('en-US', Object.assign({ hour: 'numeric', minute: '2-digit', hour12: true }, opts));
   }
 
   var cards = document.querySelectorAll('.carousel-card');
@@ -1640,7 +2193,12 @@ body.phase-live .qr-panel-arrow {
     screenFlash.className = 'screen-flash';
     edgeGlow.style.display = 'none';
     edgeGlow.className = 'edge-glow';
+    document.body.classList.remove('warmup-urgent');
+    /* Reset heat distortion to default */
+    var filterEl = document.querySelector('#heat-distort feDisplacementMap');
+    if (filterEl) filterEl.setAttribute('scale', '18');
     stopHornJokes();
+    stopTakeoverCycle();
   }
 
   function setPhase(phase) {
@@ -1668,46 +2226,51 @@ body.phase-live .qr-panel-arrow {
         stopAllAudio();
         startCardRotation();
         safePlay('warmup');
-        updateEmbers(220);
+        updateEmbers(120);
         countdownHeader.textContent = 'FIVE-MINUTE COUNTDOWN';
         warmupDisplay.classList.add('visible');
         progressWrap.classList.add('visible');
-        statusBanner.textContent = 'LAST CALL TO WRAP UP CONVERSATIONS';
+        statusBanner.textContent = '🔥 LAST CALL — WRAP IT UP 🔥';
         statusBanner.className = 'status-banner visible warmup';
+        screenFlash.style.display = 'block';
+        edgeGlow.style.display = 'block';
+        edgeGlow.className = 'edge-glow';
         break;
       case PHASE.HORN:
         stopAllAudio();
         stopCardRotation(0);
-        updateEmbers(70);
+        updateEmbers(25);
         countdownHeader.style.display = 'none';
-        hornDisplay.classList.add('visible');
         screenFlash.style.display = 'block';
         screenFlash.className = 'screen-flash horn-mode';
         edgeGlow.style.display = 'block';
         edgeGlow.className = 'edge-glow horn-mode';
-        statusBanner.textContent = '🚨 SEATS NOW — WE ARE ABOUT TO BOIL OVER 🚨';
-        statusBanner.className = 'status-banner visible horn';
-        startHornJokes();
+        /* Crank heat distortion to max */
+        var hornFilter = document.querySelector('#heat-distort feDisplacementMap');
+        if (hornFilter) hornFilter.setAttribute('scale', '60');
+        /* Start takeover headline cycling */
+        startTakeoverCycle();
         if (!hornPlayed) { playHorn(); hornPlayed = true; }
         break;
       case PHASE.LIVE:
         stopAllAudio();
-        stopCardRotation(0);
-        updateEmbers(0);
-        countdownHeader.style.display = 'none';
-        anchorDisplay.classList.add('visible');
-        statusBanner.textContent = 'Anchor mode — keep eyes on the presenter.';
+        startCardRotation();
+        updateEmbers(1500);
+        countdownHeader.textContent = 'MEETING IN PROGRESS';
+        countdownGrid.style.display = 'none';
+        statusBanner.textContent = 'RDU HEATWAVE \u2022 NETWORKING MEETING IN SESSION';
         statusBanner.className = 'status-banner visible live';
         break;
       case PHASE.OVER:
         stopAllAudio();
-        startCardRotation();
-        updateEmbers(0);
+        stopCardRotation(0);
+        updateEmbers(2000);
         meeting = getNextMeeting();
         datetimeEl.textContent = meeting.dateStr + ' • ' + MEETING_TIME_LABEL;
         hornPlayed = false;
-        countdownGrid.style.display = 'grid';
-        countdownHeader.textContent = 'WE START IN';
+        /* Populate afterglow next-date */
+        var afterglowDate = document.getElementById('afterglow-next-date');
+        if (afterglowDate) afterglowDate.textContent = meeting.dateStr + ' \u2022 4:00 PM';
         break;
     }
   }
@@ -1719,11 +2282,37 @@ body.phase-live .qr-panel-arrow {
     ensureAudioReady().then(function(ready) {
       if (!ready) return;
       currentSoundMode = 'horn';
-      var hornDurationSecs = HORN_DURATION / 1000;
-      if (masterGain) masterGain.gain.value = 0.28;
-      rememberSoundCleanup(playTone({ frequency: 165, type: 'square', volume: 0.08, duration: hornDurationSecs, attack: 0.03, release: 0.4 }));
-      rememberSoundCleanup(playTone({ frequency: 220, type: 'sawtooth', volume: 0.048, duration: hornDurationSecs, attack: 0.03, release: 0.4, detune: -5 }));
-      rememberSoundCleanup(playTone({ frequency: 880, type: 'triangle', volume: 0.02, duration: 0.14, delay: 0.16 }));
+      if (masterGain) masterGain.gain.value = 0.35;
+      /* === SIREN — oscillating between two frequencies === */
+      var ctx = getAudioContext();
+      if (ctx && masterGain) {
+        var sirenOsc = ctx.createOscillator();
+        var sirenGain = ctx.createGain();
+        sirenOsc.type = 'sawtooth';
+        sirenGain.gain.setValueAtTime(0.12, ctx.currentTime);
+        sirenOsc.connect(sirenGain);
+        sirenGain.connect(masterGain);
+        /* Sweep between 600Hz and 1200Hz every 0.8s */
+        var sirenStart = ctx.currentTime;
+        var sweepDur = 0.8;
+        for (var s = 0; s < 40; s++) {
+          var t = sirenStart + s * sweepDur;
+          sirenOsc.frequency.setValueAtTime(600, t);
+          sirenOsc.frequency.linearRampToValueAtTime(1200, t + sweepDur * 0.5);
+          sirenOsc.frequency.linearRampToValueAtTime(600, t + sweepDur);
+        }
+        sirenOsc.start(sirenStart);
+        sirenOsc.stop(sirenStart + HORN_DURATION / 1000);
+        rememberSoundCleanup(function() {
+          try { sirenOsc.stop(); } catch(e) {}
+          try { sirenOsc.disconnect(); } catch(e) {}
+          try { sirenGain.disconnect(); } catch(e) {}
+        });
+        /* Sub bass rumble underneath */
+        rememberSoundCleanup(playTone({ frequency: 80, type: 'sine', volume: 0.08, duration: HORN_DURATION / 1000, attack: 0.1, release: 1 }));
+        /* Impact hit at the start */
+        rememberSoundCleanup(playTone({ frequency: 150, type: 'square', volume: 0.1, duration: 0.4, attack: 0.01, release: 0.3 }));
+      }
       hornTimeout = setTimeout(function() {
         if (masterGain) masterGain.gain.value = 0.16;
         stopAllAudio();
@@ -1762,7 +2351,7 @@ body.phase-live .qr-panel-arrow {
       if (preheatMode) {
         document.body.classList.add('preheat-mode');
         countdownHeader.textContent = 'DOORS OPEN';
-        statusBanner.textContent = 'NETWORKING MODE • TODAY: ROBERT COURTS';
+        statusBanner.textContent = 'NETWORKING MODE • TODAY: RUSTY SUTTON';
         statusBanner.className = 'status-banner visible preheat';
         updateEmbers(220);
       } else if (mins < 10) {
@@ -1770,7 +2359,7 @@ body.phase-live .qr-panel-arrow {
       } else if (mins < 30) {
         updateEmbers(600);
       } else {
-        updateEmbers(0);
+        updateEmbers(900);
       }
     } else if (now < warmupEnd) {
       setPhase(PHASE.WARMUP);
@@ -1779,6 +2368,21 @@ body.phase-live .qr-panel-arrow {
       var warmupSeconds = remaining % 60;
       warmupTime.textContent = String(warmupMinutes).padStart(2, '0') + ':' + String(warmupSeconds).padStart(2, '0');
       progressFill.style.width = Math.min(100, ((WARMUP_SECS - remaining) / WARMUP_SECS) * 100) + '%';
+      /* Escalate embers: 120ms → 40ms as countdown progresses */
+      var warmupProgress = 1 - (remaining / WARMUP_SECS);
+      var emberRate = Math.round(120 - warmupProgress * 80);
+      updateEmbers(emberRate);
+      /* Escalate SVG distortion during warmup */
+      var distortScale = Math.round(18 + warmupProgress * 30);
+      var filterEl = document.querySelector('#heat-distort feDisplacementMap');
+      if (filterEl) filterEl.setAttribute('scale', distortScale);
+      /* Last 60 seconds: add urgent class */
+      if (remaining <= 60) {
+        document.body.classList.add('warmup-urgent');
+        statusBanner.textContent = '⚡ ' + remaining + 's — FIND YOUR SEAT NOW ⚡';
+      } else {
+        document.body.classList.remove('warmup-urgent');
+      }
     } else if (now < hornEnd) {
       setPhase(PHASE.HORN);
     } else if (now < meetingEnd) {
@@ -1790,8 +2394,19 @@ body.phase-live .qr-panel-arrow {
 
   var debugPhase = new URLSearchParams(window.location.search).get('phase');
   if (debugPhase) {
-    if (initOverlay) initOverlay.style.display = 'none';
-    if (debugPhase === 'warmup') {
+    if (debugPhase === 'preheat') {
+      setPhase(PHASE.COUNTDOWN);
+      document.body.classList.add('preheat-mode');
+      countdownGrid.style.display = 'grid';
+      document.getElementById('cd-days').textContent = '00';
+      document.getElementById('cd-hours').textContent = '00';
+      document.getElementById('cd-mins').textContent = '08';
+      document.getElementById('cd-secs').textContent = '24';
+      countdownHeader.textContent = 'DOORS OPEN';
+      statusBanner.textContent = 'NETWORKING MODE \u2022 TODAY: RUSTY SUTTON';
+      statusBanner.className = 'status-banner visible preheat';
+      updateEmbers(220);
+    } else if (debugPhase === 'warmup') {
       setPhase(PHASE.WARMUP);
       warmupTime.textContent = '03:42';
       progressFill.style.width = '26%';
@@ -1799,10 +2414,16 @@ body.phase-live .qr-panel-arrow {
       setPhase(PHASE.HORN);
     } else if (debugPhase === 'live') {
       setPhase(PHASE.LIVE);
+    } else if (debugPhase === 'over') {
+      setPhase(PHASE.OVER);
+      /* Debug: simulate post-meeting — next meeting is the Thursday AFTER the upcoming one */
+      var afterglowDateEl = document.getElementById('afterglow-next-date');
+      if (afterglowDateEl) {
+        var debugNext = new Date(meeting.timestamp + 7 * 86400000);
+        afterglowDateEl.textContent = meetingDateFormatter.format(debugNext) + ' \u2022 4:00 PM';
+      }
     } else {
       setPhase(PHASE.COUNTDOWN);
-      statusBanner.textContent = 'NETWORKING MODE • TODAY: ROBERT COURTS';
-      statusBanner.className = 'status-banner visible preheat';
     }
     updateClock();
     setInterval(updateClock, 1000);
