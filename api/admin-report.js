@@ -397,6 +397,45 @@ function buildRecentWeeks(guests, bizChats, pipeline) {
     });
 }
 
+function buildAttendancePresenterLine(watchlist) {
+  if (!watchlist.length) {
+    return 'Attendance is clean right now, so there is nothing that needs to be called out to the room.';
+  }
+
+  return 'Attendance note: ' + watchlist.slice(0, 3).map(function(entry) {
+    return entry.name + ' has ' + entry.unexcused + ' unexcused, ' + entry.excused + ' excused, and ' + entry.sub + ' sub' + (entry.sub === 1 ? '' : 's');
+  }).join('; ') + '.';
+}
+
+function buildPresenterPayload(report) {
+  const leadDeal = report.recentClosedDeals[0];
+
+  return {
+    guidance: 'Stand at the front, sell the team, hit last week first, then rolling 12 months, and only read attendance if there is actually something to flag.',
+    lastWeekStats: [
+      { label: 'Guests', value: report.currentWeek.guests },
+      { label: 'BizChats', value: report.currentWeek.bizChats },
+      { label: 'Referrals', value: report.currentWeek.referrals },
+      { label: 'Closed Revenue', value: report.currentWeek.closedRevenue }
+    ],
+    rollingStats: [
+      { label: 'Guests Hosted', value: report.kpis.guestsHosted },
+      { label: 'BizChats', value: report.kpis.bizChats },
+      { label: 'Referrals', value: report.kpis.referrals },
+      { label: 'Closed Revenue', value: report.kpis.closedRevenue }
+    ],
+    scriptLines: [
+      'Last week we hosted ' + report.currentWeek.guests + ' guests, logged ' + report.currentWeek.bizChats + ' BizChats, passed ' + report.currentWeek.referrals + ' referrals, and closed ' + report.currentWeek.closedRevenue + '.',
+      'Rolling 12 months, we have hosted ' + report.kpis.guestsHosted + ' guests, logged ' + report.kpis.bizChats + ' BizChats, passed ' + report.kpis.referrals + ' referrals, and closed ' + report.kpis.closedRevenue + '.',
+      buildAttendancePresenterLine(report.attendanceWatchlist),
+      leadDeal
+        ? 'Closed business highlight: ' + leadDeal.dateLabel + ', ' + leadDeal.from + ' to ' + leadDeal.to + ' with ' + leadDeal.prospect + ' for ' + leadDeal.revenue + '.'
+        : 'There is no recent closed business highlight to call out right now.',
+      'If you want to sell the room, lean hard into the revenue and momentum numbers.'
+    ]
+  };
+}
+
 async function buildAdminReport() {
   const [guestReport, attendanceReport, bizChatsReport, pipelineReport] = await Promise.all([
     fetchSheet('Guest Incentive Report'),
@@ -410,7 +449,7 @@ async function buildAdminReport() {
   const bizChats = parseBizChatsReport(bizChatsReport);
   const pipeline = parsePipelineReport(pipelineReport);
 
-  return {
+  const report = {
     generatedAt: new Date().toISOString(),
     kpis: {
       guestsHosted: guests.totalGuests,
@@ -433,6 +472,9 @@ async function buildAdminReport() {
     attendanceWatchlist: attendance.watchlist,
     recentClosedDeals: pipeline.recentClosedDeals
   };
+
+  report.presenter = buildPresenterPayload(report);
+  return report;
 }
 
 module.exports = async function handler(req, res) {
