@@ -30,6 +30,8 @@
     { "src": "/timer.html", "dest": "/timer.html" },
     { "src": "/agenda", "dest": "/agenda.html" },
     { "src": "/agenda.html", "dest": "/agenda.html" },
+    { "src": "/admin", "dest": "/admin.html" },
+    { "src": "/admin.html", "dest": "/admin.html" },
     { "src": "/(.*\\.png)", "dest": "/$1" },
     { "src": "/(.*\\.svg)", "dest": "/$1" },
     { "src": "/(.*\\.ico)", "dest": "/$1" },

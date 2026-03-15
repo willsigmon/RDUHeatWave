@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#E8580C">
+<meta name="robots" content="noindex, nofollow">
+<title>RDU Heatwave — Admin Report</title>
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="icon" type="image/png" href="/icons/heatwave-icon-192.png">
+<link rel="apple-touch-icon" href="/icons/heatwave-icon-180.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --fire: #E8580C;
+    --fire-hover: #FF6A1E;
+    --bg: #1a1412;
+    --surface: #231c18;
+    --surface-2: #2c2420;
+    --text: #f0e6dc;
+    --text-muted: #a89585;
+    --text-faint: #6b5c4e;
+    --success: #5BA847;
+    --danger: #D94444;
+    --border: rgba(232,88,12,0.16);
+    --radius: 20px;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at top, rgba(232,88,12,0.14), transparent 36%),
+      linear-gradient(180deg, #181210 0%, var(--bg) 100%);
+    color: var(--text);
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  }
+
+  .page {
+    width: min(1200px, calc(100vw - 32px));
+    margin: 0 auto;
+    padding: 32px 0 48px;
+  }
+
+  .hero {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: end;
+    margin-bottom: 24px;
+  }
+
+  .eyebrow,
+  .section-label {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.14em;
+    color: var(--fire);
+  }
+
+  .eyebrow { font-size: 1rem; margin-bottom: 8px; }
+
+  h1, h2 {
+    margin: 0;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.06em;
+  }
+
+  h1 { font-size: clamp(2.4rem, 6vw, 4.2rem); line-height: 0.95; }
+  h2 { font-size: 1.7rem; margin-bottom: 14px; }
+
+  .hero p,
+  .card-subtext,
+  .muted,
+  td,
+  th,
+  label,
+  input,
+  button {
+    font-size: 0.97rem;
+    line-height: 1.5;
+  }
+
+  .muted { color: var(--text-muted); }
+
+  .panel,
+  .card,
+  .table-wrap,
+  .login-card {
+    background: rgba(35, 28, 24, 0.92);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 14px 40px rgba(0,0,0,0.26);
+  }
+
+  .login-shell {
+    min-height: calc(100vh - 80px);
+    display: grid;
+    place-items: center;
+  }
+
+  .login-card {
+    width: min(480px, calc(100vw - 32px));
+    padding: 28px;
+  }
+
+  .login-card p { color: var(--text-muted); margin: 10px 0 20px; }
+
+  .login-form {
+    display: grid;
+    gap: 14px;
+  }
+
+  .field {
+    display: grid;
+    gap: 8px;
+  }
+
+  input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: var(--surface-2);
+    color: var(--text);
+    font-family: inherit;
+  }
+
+  input:focus {
+    outline: none;
+    border-color: rgba(232,88,12,0.6);
+    box-shadow: 0 0 0 3px rgba(232,88,12,0.15);
+  }
+
+  button {
+    border: 0;
+    border-radius: 14px;
+    padding: 14px 18px;
+    background: linear-gradient(180deg, var(--fire-hover), var(--fire));
+    color: #fff;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  button.secondary {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--text);
+  }
+
+  .error { color: #ffb8b8; min-height: 1.5em; }
+
+  .report-shell { display: none; }
+  .report-shell.visible { display: block; }
+
+  .actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .kpi-grid,
+  .two-col {
+    display: grid;
+    gap: 16px;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-bottom: 16px;
+  }
+
+  .two-col {
+    grid-template-columns: 1.2fr 0.8fr;
+    margin-bottom: 16px;
+  }
+
+  .card {
+    padding: 18px;
+  }
+
+  .kpi-label,
+  .mini-label {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-faint);
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .kpi-value {
+    margin-top: 10px;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.05em;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1;
+  }
+
+  .snapshot-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .snapshot-item {
+    padding: 12px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .snapshot-value {
+    margin-top: 6px;
+    font-size: 1.35rem;
+    font-weight: 800;
+  }
+
+  .table-wrap {
+    padding: 12px;
+    overflow: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    text-align: left;
+    padding: 12px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    white-space: nowrap;
+  }
+
+  th {
+    color: var(--text-faint);
+    text-transform: uppercase;
+    font-size: 0.76rem;
+    letter-spacing: 0.08em;
+  }
+
+  tr:last-child td { border-bottom: 0; }
+
+  .list {
+    display: grid;
+    gap: 10px;
+  }
+
+  .list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .rank {
+    display: inline-grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background: rgba(232,88,12,0.18);
+    color: var(--fire-hover);
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+
+  .list-main {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .list-text strong {
+    display: block;
+    font-size: 0.95rem;
+  }
+
+  .list-text span {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+  }
+
+  .list-value {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.05em;
+    font-size: 1.6rem;
+    line-height: 1;
+  }
+
+  .empty {
+    color: var(--text-faint);
+    padding: 12px 0 4px;
+  }
+
+  .footer-note {
+    margin-top: 16px;
+    color: var(--text-faint);
+    font-size: 0.82rem;
+  }
+
+  .loading {
+    color: var(--text-muted);
+    padding: 24px 0;
+  }
+
+  @media (max-width: 960px) {
+    .kpi-grid,
+    .snapshot-grid,
+    .two-col {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 680px) {
+    .hero,
+    .actions,
+    .kpi-grid,
+    .snapshot-grid,
+    .two-col {
+      grid-template-columns: 1fr;
+      display: grid;
+      justify-content: stretch;
+    }
+
+    .actions { margin-top: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="login-shell" id="login-shell">
+  <div class="login-card">
+    <div class="eyebrow">RDU Heatwave</div>
+    <h1>Admin Report</h1>
+    <p>Quick weekly readout for guests, BizChats, referrals, revenue, and attendance flags.</p>
+    <form class="login-form" id="login-form">
+      <div class="field">
+        <label for="passcode">Passcode</label>
+        <input id="passcode" name="passcode" type="password" inputmode="numeric" autocomplete="current-password" placeholder="Enter passcode">
+      </div>
+      <button type="submit" id="unlock-btn">Unlock Admin Report</button>
+      <div class="error" id="login-error"></div>
+    </form>
+  </div>
+</div>
+
+<div class="report-shell" id="report-shell">
+  <div class="page">
+    <div class="hero">
+      <div>
+        <div class="eyebrow">RDU Heatwave</div>
+        <h1>Admin Report</h1>
+        <p class="muted">Built to replace spreadsheet-tab scavenger hunts with one clean weekly dashboard.</p>
+      </div>
+      <div class="actions">
+        <button class="secondary" type="button" id="refresh-btn">Refresh</button>
+        <button class="secondary" type="button" id="lock-btn">Lock</button>
+      </div>
+    </div>
+
+    <div id="report-content" class="loading">Loading report…</div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var STORAGE_KEY = 'rdu-admin-passcode';
+  var loginShell = document.getElementById('login-shell');
+  var reportShell = document.getElementById('report-shell');
+  var loginForm = document.getElementById('login-form');
+  var passcodeInput = document.getElementById('passcode');
+  var loginError = document.getElementById('login-error');
+  var reportContent = document.getElementById('report-content');
+  var refreshBtn = document.getElementById('refresh-btn');
+  var lockBtn = document.getElementById('lock-btn');
+
+  function escapeHtml(value) {
+    return String(value || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function setLockedState(isLocked) {
+    loginShell.style.display = isLocked ? 'grid' : 'none';
+    reportShell.classList.toggle('visible', !isLocked);
+  }
+
+  function renderList(items, formatter) {
+    if (!items || !items.length) {
+      return '<div class="empty">Nothing to show right now.</div>';
+    }
+
+    return '<div class="list">' + items.map(formatter).join('') + '</div>';
+  }
+
+  function renderTable(rows) {
+    if (!rows || !rows.length) {
+      return '<div class="empty">No weekly data available yet.</div>';
+    }
+
+    return '<div class="table-wrap"><table><thead><tr>' +
+      '<th>Week</th><th>Guests</th><th>BizChats</th><th>Referrals</th><th>Revenue</th>' +
+      '</tr></thead><tbody>' +
+      rows.map(function(row) {
+        return '<tr>' +
+          '<td>' + escapeHtml(row.week) + '</td>' +
+          '<td>' + escapeHtml(row.guests) + '</td>' +
+          '<td>' + escapeHtml(row.bizChats) + '</td>' +
+          '<td>' + escapeHtml(row.referrals) + '</td>' +
+          '<td>' + escapeHtml(row.revenue) + '</td>' +
+        '</tr>';
+      }).join('') +
+      '</tbody></table></div>';
+  }
+
+  function renderReport(report) {
+    reportContent.className = '';
+    reportContent.innerHTML =
+      '<div class="kpi-grid">' +
+        '<div class="card"><div class="kpi-label">Guests Hosted</div><div class="kpi-value">' + escapeHtml(report.kpis.guestsHosted) + '</div></div>' +
+        '<div class="card"><div class="kpi-label">BizChats</div><div class="kpi-value">' + escapeHtml(report.kpis.bizChats) + '</div></div>' +
+        '<div class="card"><div class="kpi-label">Referrals</div><div class="kpi-value">' + escapeHtml(report.kpis.referrals) + '</div></div>' +
+        '<div class="card"><div class="kpi-label">Closed Revenue</div><div class="kpi-value">' + escapeHtml(report.kpis.closedRevenue) + '</div></div>' +
+      '</div>' +
+
+      '<div class="card" style="margin-bottom:16px;">' +
+        '<div class="section-label">Latest completed week</div>' +
+        '<h2>' + escapeHtml(report.currentWeek.label) + '</h2>' +
+        '<div class="snapshot-grid">' +
+          '<div class="snapshot-item"><div class="mini-label">Guests</div><div class="snapshot-value">' + escapeHtml(report.currentWeek.guests) + '</div></div>' +
+          '<div class="snapshot-item"><div class="mini-label">BizChats</div><div class="snapshot-value">' + escapeHtml(report.currentWeek.bizChats) + '</div></div>' +
+          '<div class="snapshot-item"><div class="mini-label">Referrals</div><div class="snapshot-value">' + escapeHtml(report.currentWeek.referrals) + '</div></div>' +
+          '<div class="snapshot-item"><div class="mini-label">Closed Revenue</div><div class="snapshot-value">' + escapeHtml(report.currentWeek.closedRevenue) + '</div></div>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="card" style="margin-bottom:16px;">' +
+        '<div class="section-label">Recent weeks</div>' +
+        '<h2>Trend line</h2>' +
+        renderTable(report.recentWeeks) +
+      '</div>' +
+
+      '<div class="two-col">' +
+        '<div class="card">' +
+          '<div class="section-label">Leaderboard</div>' +
+          '<h2>Top guest hosts</h2>' +
+          renderList(report.leaders.guestHosts, function(item, index) {
+            return '<div class="list-item">' +
+              '<div class="list-main"><div class="rank">' + (index + 1) + '</div><div class="list-text"><strong>' + escapeHtml(item.name) + '</strong><span>Guest points / hosted guests</span></div></div>' +
+              '<div class="list-value">' + escapeHtml(item.value) + '</div>' +
+            '</div>';
+          }) +
+        '</div>' +
+
+        '<div class="card">' +
+          '<div class="section-label">Leaderboard</div>' +
+          '<h2>Top BizChat activity</h2>' +
+          renderList(report.leaders.bizChats, function(item, index) {
+            return '<div class="list-item">' +
+              '<div class="list-main"><div class="rank">' + (index + 1) + '</div><div class="list-text"><strong>' + escapeHtml(item.name) + '</strong><span>Total BizChats logged</span></div></div>' +
+              '<div class="list-value">' + escapeHtml(item.value) + '</div>' +
+            '</div>';
+          }) +
+        '</div>' +
+      '</div>' +
+
+      '<div class="two-col" style="margin-top:16px;">' +
+        '<div class="card">' +
+          '<div class="section-label">Attendance</div>' +
+          '<h2>Watchlist</h2>' +
+          renderList(report.attendanceWatchlist, function(item) {
+            return '<div class="list-item">' +
+              '<div class="list-text"><strong>' + escapeHtml(item.name) + '</strong><span>' +
+              'Unexcused: ' + escapeHtml(item.unexcused) + ' • Excused: ' + escapeHtml(item.excused) + ' • Subs: ' + escapeHtml(item.sub) +
+              '</span></div>' +
+              '<div class="list-value">' + escapeHtml(item.totalFlags) + '</div>' +
+            '</div>';
+          }) +
+        '</div>' +
+
+        '<div class="card">' +
+          '<div class="section-label">Revenue</div>' +
+          '<h2>Recent closed business</h2>' +
+          renderList(report.recentClosedDeals, function(item) {
+            return '<div class="list-item">' +
+              '<div class="list-text"><strong>' + escapeHtml(item.prospect || 'Closed deal') + '</strong><span>' +
+              escapeHtml(item.dateLabel) + ' • ' + escapeHtml(item.from) + ' → ' + escapeHtml(item.to) +
+              '</span></div>' +
+              '<div class="list-value">' + escapeHtml(item.revenue) + '</div>' +
+            '</div>';
+          }) +
+        '</div>' +
+      '</div>' +
+
+      '<div class="footer-note">Generated from the live published reports and referral pipeline. Good for quick reads; still not a replacement for deep spreadsheet surgery.</div>';
+  }
+
+  async function loadReport(passcode) {
+    reportContent.className = 'loading';
+    reportContent.textContent = 'Loading report…';
+    loginError.textContent = '';
+
+    var response = await fetch('/api/admin-report', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Passcode': passcode
+      },
+      body: JSON.stringify({ passcode: passcode })
+    });
+
+    var payload = await response.json().catch(function() {
+      return null;
+    });
+
+    if (!response.ok || !payload || payload.status !== 'ok') {
+      throw new Error((payload && payload.message) || 'Could not unlock admin report');
+    }
+
+    sessionStorage.setItem(STORAGE_KEY, passcode);
+    setLockedState(false);
+    renderReport(payload.report);
+  }
+
+  loginForm.addEventListener('submit', async function(event) {
+    event.preventDefault();
+    var passcode = passcodeInput.value.trim();
+    if (!passcode) {
+      loginError.textContent = 'Enter the passcode first.';
+      return;
+    }
+
+    try {
+      await loadReport(passcode);
+    } catch (error) {
+      loginError.textContent = error.message || 'Could not unlock admin report.';
+    }
+  });
+
+  refreshBtn.addEventListener('click', function() {
+    var passcode = sessionStorage.getItem(STORAGE_KEY) || '';
+    if (!passcode) {
+      setLockedState(true);
+      return;
+    }
+
+    loadReport(passcode).catch(function(error) {
+      reportContent.className = 'error';
+      reportContent.textContent = error.message || 'Could not refresh admin report.';
+    });
+  });
+
+  lockBtn.addEventListener('click', function() {
+    sessionStorage.removeItem(STORAGE_KEY);
+    passcodeInput.value = '';
+    reportContent.innerHTML = '';
+    setLockedState(true);
+  });
+
+  var savedPasscode = sessionStorage.getItem(STORAGE_KEY);
+  if (savedPasscode) {
+    setLockedState(false);
+    loadReport(savedPasscode).catch(function() {
+      sessionStorage.removeItem(STORAGE_KEY);
+      setLockedState(true);
+    });
+  } else {
+    setLockedState(true);
+  }
+})();
+</script>
+</body>
+</html>
