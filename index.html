@@ -1367,7 +1367,7 @@ button { cursor: pointer; background: none; border: none; }
   bottom: calc(1rem + env(safe-area-inset-bottom));
   left: auto;
   transform: none;
-  width: min(440px, calc(100vw - 2rem));
+  width: min(500px, calc(100vw - 2rem));
   z-index: 140;
   display: flex;
   flex-direction: column;
@@ -1431,7 +1431,7 @@ button { cursor: pointer; background: none; border: none; }
 }
 
 .info-drawer.open .info-drawer-body {
-  max-height: min(72vh, 620px);
+  max-height: min(78vh, 720px);
   padding: 1.35rem 1.35rem 1.45rem;
   overflow: auto;
 }
@@ -1613,6 +1613,41 @@ button { cursor: pointer; background: none; border: none; }
   font-size: 0.8rem;
   line-height: 1.45;
   color: var(--color-text-muted);
+}
+
+.drawer-detail-card ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.42rem;
+}
+
+.drawer-detail-card li {
+  position: relative;
+  padding-left: 0.9rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--color-text-muted);
+}
+
+.drawer-detail-card li::before {
+  content: '';
+  position: absolute;
+  top: 0.52rem;
+  left: 0;
+  width: 0.38rem;
+  height: 0.38rem;
+  border-radius: 50%;
+  background: var(--color-primary);
+  box-shadow: 0 0 10px rgba(232, 88, 12, 0.35);
+}
+
+.drawer-bottom-note {
+  color: rgba(255,255,255,0.64);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  max-width: none;
 }
 
 .drawer-takeaways {
@@ -3075,19 +3110,33 @@ button { cursor: pointer; background: none; border: none; }
     <div class="drawer-meet">
       <div class="drawer-eyebrow">What makes 212 different</div>
       <h3>RDU HEATWAVE</h3>
-      <p class="drawer-lead">Two Twelve is built around the idea that the extra degree changes everything. In practice, that means structured, relationship-first referrals instead of loose networking.</p>
+      <p class="drawer-lead">Two Twelve is built around the idea that the extra degree changes everything. In practice, that means a disciplined referral network where trust, credibility, and follow-through matter more than just showing up and swapping cards.</p>
       <div class="drawer-deep-grid">
         <div class="drawer-detail-card">
-          <h4>The origin</h4>
-          <p>Founder Andy Fulghum built 212 around the boiling-point metaphor: 211 is hot, 212 creates steam, and that extra effort creates momentum.</p>
+          <h4>Why it exists</h4>
+          <p>Founder Andy Fulghum built 212 around the boiling-point metaphor: 211 is hot, 212 creates steam, and that extra effort creates momentum. The whole network is designed around that “extra degree” standard.</p>
         </div>
         <div class="drawer-detail-card">
-          <h4>How it works</h4>
-          <p>Members meet weekly, hold BizChats outside the meeting, learn each other&rsquo;s businesses deeply, and make permission-based introductions they can actually stand behind.</p>
+          <h4>What members actually do</h4>
+          <ul>
+            <li>Meet weekly so the room stays active, visible, and accountable.</li>
+            <li>Hold one-to-one BizChats outside the meeting to really learn each other&rsquo;s business.</li>
+            <li>Make permission-based introductions they can confidently stand behind.</li>
+            <li>Protect category exclusivity so one trusted pro represents each seat.</li>
+          </ul>
         </div>
         <div class="drawer-detail-card">
-          <h4>Why it feels different</h4>
-          <p>If you know BNI, the weekly rhythm will feel familiar. 212 leans harder into gratitude incentives, category exclusivity, fast follow-up, and accountability around real referral outcomes.</p>
+          <h4>The member standard</h4>
+          <ul>
+            <li>Referred business should be handled with exceptional service.</li>
+            <li>Follow-up is expected within 24 hours, not “whenever.”</li>
+            <li>Attendance matters, and substitutes help protect your seat.</li>
+            <li>Renewal is performance-based, not automatic, so value to the team matters.</li>
+          </ul>
+        </div>
+        <div class="drawer-detail-card">
+          <h4>If you know BNI</h4>
+          <p>The weekly chapter rhythm will feel familiar. What changes here is the emphasis on gratitude, deeper relationship-building before referrals, and a tighter standard around who gets endorsed and how fast they respond.</p>
         </div>
       </div>
       <div class="drawer-takeaways">
@@ -3095,7 +3144,9 @@ button { cursor: pointer; background: none; border: none; }
         <span>Warm intros</span>
         <span>One seat per category</span>
         <span>Fast follow-up</span>
+        <span>Performance-based renewal</span>
       </div>
+      <p class="drawer-bottom-note">Best fit for people who want structured referrals, real accountability, and a room full of partners who know how to talk about their business clearly.</p>
       <a class="drawer-site" href="https://rduheatwave.team">RDUHEATWAVE.TEAM &rarr;</a>
     </div>
   </div>
