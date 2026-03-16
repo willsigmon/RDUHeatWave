@@ -99,17 +99,17 @@ body {
 /* === SLIDER === */
 .slider {
   display: flex;
-  width: 300vw;
+  width: 300%;
   min-height: 100dvh;
   height: 100dvh;
   transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  transform: translateX(-100vw); /* Start on center panel (form) */
+  transform: translate3d(-33.333333%, 0, 0); /* Start on center panel (form) */
   will-change: transform;
 }
 
 .panel {
-  flex: 0 0 100vw;
-  width: 100vw;
+  flex: 0 0 calc(100% / 3);
+  width: calc(100% / 3);
   height: 100dvh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -130,7 +130,7 @@ body {
   transform: translateX(-50%);
   display: flex;
   gap: 0.6rem;
-  z-index: 100;
+  z-index: 150;
   padding: 0.4rem 0.75rem;
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(12px);
@@ -138,6 +138,43 @@ body {
   border-radius: var(--radius-full);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
+
+.panel-arrow {
+  position: fixed;
+  top: 50%;
+  z-index: 145;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.75rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid rgba(232, 88, 12, 0.18);
+  background: rgba(20, 16, 14, 0.86);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: rgba(255, 255, 255, 0.84);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.34);
+  transform: translateY(-50%);
+  transition: opacity 0.2s ease, transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.panel-arrow:hover:not(:disabled) {
+  transform: translateY(-50%) scale(1.02);
+  border-color: rgba(232, 88, 12, 0.38);
+  background: rgba(28, 22, 19, 0.95);
+}
+
+.panel-arrow:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.panel-arrow-left { left: 1rem; }
+.panel-arrow-right { right: 1rem; }
 
 .nav-dot {
   width: 9px;
@@ -1321,11 +1358,15 @@ button { cursor: pointer; background: none; border: none; }
 /* === 212 SLIDE-UP DRAWER === */
 .info-drawer {
   position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(480px, 94vw);
-  z-index: 200;
+  right: 1rem;
+  bottom: calc(1rem + env(safe-area-inset-bottom));
+  left: auto;
+  transform: none;
+  width: min(360px, calc(100vw - 2rem));
+  z-index: 140;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   pointer-events: auto;
 }
 
@@ -1338,23 +1379,26 @@ button { cursor: pointer; background: none; border: none; }
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
-  width: 100%;
-  padding: 0.6rem 1.4rem;
+  width: auto;
+  min-width: 224px;
+  max-width: 100%;
+  padding: 0.7rem 1.1rem;
   background: linear-gradient(180deg, rgba(232, 88, 12, 0.95) 0%, rgba(196, 74, 10, 0.98) 100%);
   border: none;
-  border-radius: 0.75rem 0.75rem 0 0;
+  border-radius: 999px;
   color: #fff;
   font-family: var(--font-display);
   font-size: 0.85rem;
   letter-spacing: 0.14em;
   cursor: pointer;
-  transition: background 0.2s, box-shadow 0.2s;
-  box-shadow: 0 -4px 20px rgba(232, 88, 12, 0.3);
+  transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+  box-shadow: 0 14px 30px rgba(232, 88, 12, 0.22);
 }
 
 .info-drawer-tab:hover {
   background: rgba(255, 106, 30, 0.98);
-  box-shadow: 0 -6px 30px rgba(232, 88, 12, 0.5);
+  box-shadow: 0 18px 36px rgba(232, 88, 12, 0.28);
+  transform: translateY(-1px);
 }
 
 .info-drawer-tab .chevron {
@@ -1366,20 +1410,24 @@ button { cursor: pointer; background: none; border: none; }
 .info-drawer.open .info-drawer-tab .chevron { transform: rotate(180deg); }
 
 .info-drawer-body {
+  width: 100%;
+  margin-top: 0.7rem;
   max-height: 0;
   overflow: hidden;
   background: rgba(20, 16, 14, 0.98);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border-top: 1px solid rgba(232, 88, 12, 0.3);
+  border: 1px solid rgba(232, 88, 12, 0.24);
+  border-radius: 1.35rem;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.44);
   transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  padding: 0 1.6rem;
+  padding: 0 1.35rem;
   text-align: center;
 }
 
 .info-drawer.open .info-drawer-body {
   max-height: 440px;
-  padding: 1.6rem 1.6rem 1.8rem;
+  padding: 1.35rem 1.35rem 1.45rem;
 }
 
 /* Thermometer visual */
@@ -1628,6 +1676,10 @@ button { cursor: pointer; background: none; border: none; }
   .countdown-value { font-size: 1.75rem; }
   .nav-dots { bottom: 0.75rem; }
 }
+
+@media (max-width: 960px) {
+  .panel-arrow { display: none; }
+}
 </style>
 </head>
 <body>
@@ -1651,6 +1703,9 @@ button { cursor: pointer; background: none; border: none; }
   <button class="nav-dot active" type="button" data-index="1" aria-label="Go to check-in panel" aria-current="true"></button>
   <button class="nav-dot" type="button" data-index="2" aria-label="Go to venue panel" aria-current="false"></button>
 </div>
+
+<button class="panel-arrow panel-arrow-left" type="button" id="panel-arrow-left" aria-label="Go to the previous panel">&larr; Team</button>
+<button class="panel-arrow panel-arrow-right" type="button" id="panel-arrow-right" aria-label="Go to the next panel">Clouds &rarr;</button>
 
 <div class="swipe-peek swipe-peek-left" id="swipe-peek-left" aria-hidden="true">
   <span class="swipe-peek-arrow">&larr;</span>
@@ -1933,6 +1988,10 @@ button { cursor: pointer; background: none; border: none; }
   var swipePeekRight = document.getElementById('swipe-peek-right');
   var swipePeekLeftLabel = document.getElementById('swipe-peek-left-label');
   var swipePeekRightLabel = document.getElementById('swipe-peek-right-label');
+  var panelArrowLeft = document.getElementById('panel-arrow-left');
+  var panelArrowRight = document.getElementById('panel-arrow-right');
+  var panelCount = slider ? slider.querySelectorAll('.panel').length : 0;
+  var maxPanelIndex = Math.max(0, panelCount - 1);
   var currentPanel = 1; // Form is default (center)
   var touchStartX = 0;
   var touchStartY = 0;
@@ -1945,6 +2004,15 @@ button { cursor: pointer; background: none; border: none; }
   var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   var touchCapable = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
   var panelPeekLabels = ['Team', 'Check In', 'Clouds'];
+
+  function getPanelWidth() {
+    if (!slider || !panelCount) return window.innerWidth || document.documentElement.clientWidth || 0;
+    return slider.getBoundingClientRect().width / panelCount;
+  }
+
+  function setSliderOffset(offsetPx) {
+    slider.style.transform = 'translate3d(' + offsetPx + 'px, 0, 0)';
+  }
 
   function clearPeekTimers() {
     peekTimers.forEach(function(timerId) {
@@ -1984,12 +2052,13 @@ button { cursor: pointer; background: none; border: none; }
     clearPeekTimers();
     peekTimers.push(window.setTimeout(function() {
       if (currentPanel !== 1 || swipeLocked) return;
+      var panelWidth = getPanelWidth();
       peekHasRun = true;
       pulseSwipePeekLabels();
       slider.style.transition = 'transform 0.3s ease';
-      slider.style.transform = 'translateX(calc(-100vw + 18px))';
+      setSliderOffset((-panelWidth) + 18);
       peekTimers.push(window.setTimeout(function() {
-        slider.style.transform = 'translateX(calc(-100vw - 18px))';
+        setSliderOffset((-panelWidth) - 18);
       }, 320));
       peekTimers.push(window.setTimeout(function() {
         slider.style.transition = 'transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
@@ -1998,10 +2067,32 @@ button { cursor: pointer; background: none; border: none; }
     }, delay || 900));
   }
 
+  function updatePanelArrows() {
+    if (panelArrowLeft) {
+      if (currentPanel > 0) {
+        panelArrowLeft.disabled = false;
+        panelArrowLeft.textContent = '← ' + panelPeekLabels[currentPanel - 1];
+        panelArrowLeft.setAttribute('aria-label', 'Go to the ' + panelPeekLabels[currentPanel - 1] + ' panel');
+      } else {
+        panelArrowLeft.disabled = true;
+      }
+    }
+
+    if (panelArrowRight) {
+      if (currentPanel < maxPanelIndex) {
+        panelArrowRight.disabled = false;
+        panelArrowRight.textContent = panelPeekLabels[currentPanel + 1] + ' →';
+        panelArrowRight.setAttribute('aria-label', 'Go to the ' + panelPeekLabels[currentPanel + 1] + ' panel');
+      } else {
+        panelArrowRight.disabled = true;
+      }
+    }
+  }
+
   function goToPanel(index) {
-    if (index < 0 || index > 2) return;
+    if (index < 0 || index > maxPanelIndex) return;
     currentPanel = index;
-    slider.style.transform = 'translateX(' + (-index * 100) + 'vw)';
+    setSliderOffset(-index * getPanelWidth());
     dots.forEach(function(d, i) {
       var isActive = i === index;
       d.classList.toggle('active', isActive);
@@ -2013,6 +2104,7 @@ button { cursor: pointer; background: none; border: none; }
     }
 
     updateSwipePeek();
+    updatePanelArrows();
   }
 
   // Touch swipe handling
@@ -2045,18 +2137,18 @@ button { cursor: pointer; background: none; border: none; }
     touchDeltaX = dx;
 
     var resistance = 1;
-    if ((currentPanel === 0 && dx > 0) || (currentPanel === 2 && dx < 0)) {
+    if ((currentPanel === 0 && dx > 0) || (currentPanel === maxPanelIndex && dx < 0)) {
       resistance = 0.35;
     }
-    var offset = (-currentPanel * window.innerWidth) + (dx * resistance);
-    slider.style.transform = 'translateX(' + offset + 'px)';
+    var offset = (-currentPanel * getPanelWidth()) + (dx * resistance);
+    setSliderOffset(offset);
   }, { passive: false });
 
   function finishSwipe() {
     slider.style.transition = 'transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
     if (isSwiping) {
-      var threshold = window.innerWidth * 0.16;
-      if (touchDeltaX < -threshold && currentPanel < 2) {
+      var threshold = getPanelWidth() * 0.16;
+      if (touchDeltaX < -threshold && currentPanel < maxPanelIndex) {
         goToPanel(currentPanel + 1);
       } else if (touchDeltaX > threshold && currentPanel > 0) {
         goToPanel(currentPanel - 1);
@@ -2092,9 +2184,11 @@ button { cursor: pointer; background: none; border: none; }
     var dy = e.clientY - touchStartY;
     if (Math.abs(dy) > Math.abs(dx) * 1.2 && Math.abs(dx) < 15) return;
     touchDeltaX = dx;
-    var base = -(currentPanel * 100);
-    var pct = (dx / slider.offsetWidth) * 100;
-    slider.style.transform = 'translateX(' + (base + pct) + '%)';
+    var resistance = 1;
+    if ((currentPanel === 0 && dx > 0) || (currentPanel === maxPanelIndex && dx < 0)) {
+      resistance = 0.35;
+    }
+    setSliderOffset((-currentPanel * getPanelWidth()) + (dx * resistance));
   });
   window.addEventListener('mouseup', function() {
     if (!mouseDown) return;
@@ -2110,6 +2204,43 @@ button { cursor: pointer; background: none; border: none; }
     });
   });
 
+  if (panelArrowLeft) {
+    panelArrowLeft.addEventListener('click', function() {
+      cancelPeek();
+      goToPanel(currentPanel - 1);
+    });
+  }
+
+  if (panelArrowRight) {
+    panelArrowRight.addEventListener('click', function() {
+      cancelPeek();
+      goToPanel(currentPanel + 1);
+    });
+  }
+
+  window.addEventListener('keydown', function(e) {
+    if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.target && e.target.closest('input, textarea, select, button, [contenteditable]')) return;
+    if (e.key === 'ArrowLeft' && currentPanel > 0) {
+      cancelPeek();
+      goToPanel(currentPanel - 1);
+    } else if (e.key === 'ArrowRight' && currentPanel < maxPanelIndex) {
+      cancelPeek();
+      goToPanel(currentPanel + 1);
+    }
+  });
+
+  function realignPanels() {
+    if (mouseDown || isSwiping) return;
+    goToPanel(currentPanel);
+  }
+
+  window.addEventListener('resize', realignPanels);
+  if (window.visualViewport && window.visualViewport.addEventListener) {
+    window.visualViewport.addEventListener('resize', realignPanels);
+  }
+
+  goToPanel(currentPanel);
   updateSwipePeek();
   schedulePeek(900);
 
@@ -2871,7 +3002,7 @@ button { cursor: pointer; background: none; border: none; }
     <div class="drawer-divider"></div>
     <div class="drawer-meet">
       <h3>RDU HEATWAVE</h3>
-      <p>Carrying the 212&deg; mission forward in Raleigh-Durham with permission-based referrals, gratitude, and fast follow-up &mdash; more trusted introductions, less random card swapping.</p>
+      <p>Carrying the 212&deg; mission forward in Raleigh-Durham with relationship-first, category-exclusive referrals that actually move.</p>
       <a class="drawer-site" href="https://rduheatwave.team">RDUHEATWAVE.TEAM &rarr;</a>
     </div>
   </div>
