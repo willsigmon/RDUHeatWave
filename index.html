@@ -173,6 +173,11 @@ body {
   pointer-events: none;
 }
 
+body.drawer-open .panel-arrow {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .panel-arrow-left { left: 1rem; }
 .panel-arrow-right { right: 1rem; }
 
@@ -1362,7 +1367,7 @@ button { cursor: pointer; background: none; border: none; }
   bottom: calc(1rem + env(safe-area-inset-bottom));
   left: auto;
   transform: none;
-  width: min(360px, calc(100vw - 2rem));
+  width: min(440px, calc(100vw - 2rem));
   z-index: 140;
   display: flex;
   flex-direction: column;
@@ -1426,8 +1431,9 @@ button { cursor: pointer; background: none; border: none; }
 }
 
 .info-drawer.open .info-drawer-body {
-  max-height: 440px;
+  max-height: min(72vh, 620px);
   padding: 1.35rem 1.35rem 1.45rem;
+  overflow: auto;
 }
 
 /* Thermometer visual */
@@ -1541,6 +1547,16 @@ button { cursor: pointer; background: none; border: none; }
 /* Meet section */
 .drawer-meet {
   margin-top: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.drawer-eyebrow {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  color: rgba(232, 88, 12, 0.88);
 }
 
 .drawer-meet h3 {
@@ -1562,9 +1578,65 @@ button { cursor: pointer; background: none; border: none; }
   margin-right: auto;
 }
 
+.drawer-lead {
+  color: #efe2d5;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  max-width: none;
+}
+
+.drawer-deep-grid {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 0.1rem;
+}
+
+.drawer-detail-card {
+  padding: 0.8rem 0.9rem;
+  border-radius: 1rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  text-align: left;
+}
+
+.drawer-detail-card h4 {
+  margin: 0 0 0.3rem;
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  color: var(--color-primary);
+}
+
+.drawer-detail-card p {
+  margin: 0;
+  max-width: none;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--color-text-muted);
+}
+
+.drawer-takeaways {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.45rem;
+  margin-top: 0.1rem;
+}
+
+.drawer-takeaways span {
+  padding: 0.32rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(232, 88, 12, 0.1);
+  border: 1px solid rgba(232, 88, 12, 0.2);
+  color: rgba(255,255,255,0.8);
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
 .drawer-site {
   display: inline-block;
-  margin-top: 0.7rem;
+  margin-top: 0.25rem;
   padding: 0.4rem 1.2rem;
   background: rgba(232, 88, 12, 0.15);
   border: 1px solid rgba(232, 88, 12, 0.3);
@@ -3001,8 +3073,29 @@ button { cursor: pointer; background: none; border: none; }
     </div>
     <div class="drawer-divider"></div>
     <div class="drawer-meet">
+      <div class="drawer-eyebrow">What makes 212 different</div>
       <h3>RDU HEATWAVE</h3>
-      <p>Carrying the 212&deg; mission forward in Raleigh-Durham with relationship-first, category-exclusive referrals that actually move.</p>
+      <p class="drawer-lead">Two Twelve is built around the idea that the extra degree changes everything. In practice, that means structured, relationship-first referrals instead of loose networking.</p>
+      <div class="drawer-deep-grid">
+        <div class="drawer-detail-card">
+          <h4>The origin</h4>
+          <p>Founder Andy Fulghum built 212 around the boiling-point metaphor: 211 is hot, 212 creates steam, and that extra effort creates momentum.</p>
+        </div>
+        <div class="drawer-detail-card">
+          <h4>How it works</h4>
+          <p>Members meet weekly, hold BizChats outside the meeting, learn each other&rsquo;s businesses deeply, and make permission-based introductions they can actually stand behind.</p>
+        </div>
+        <div class="drawer-detail-card">
+          <h4>Why it feels different</h4>
+          <p>If you know BNI, the weekly rhythm will feel familiar. 212 leans harder into gratitude incentives, category exclusivity, fast follow-up, and accountability around real referral outcomes.</p>
+        </div>
+      </div>
+      <div class="drawer-takeaways">
+        <span>BizChats</span>
+        <span>Warm intros</span>
+        <span>One seat per category</span>
+        <span>Fast follow-up</span>
+      </div>
       <a class="drawer-site" href="https://rduheatwave.team">RDUHEATWAVE.TEAM &rarr;</a>
     </div>
   </div>
@@ -3014,6 +3107,7 @@ button { cursor: pointer; background: none; border: none; }
   if (drawer && tab) {
     tab.addEventListener('click', function() {
       var isOpen = drawer.classList.toggle('open');
+      document.body.classList.toggle('drawer-open', isOpen);
       tab.setAttribute('aria-expanded', isOpen);
     });
   }
