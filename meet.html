@@ -752,12 +752,12 @@ body.phase-over .meeting-schedule { display: none; }
 }
 
 body.phase-live .heat-orb {
-  animation-duration: 18s;
-  opacity: 0.45;
+  animation-duration: 30s;
+  opacity: 0.25;
 }
 body.phase-live .heat-line {
-  animation-duration: 34s;
-  opacity: 0.35;
+  animation-duration: 40s;
+  opacity: 0.15;
 }
 /* LIVE: kill GPU-heavy effects for smooth carousel */
 body.phase-live .carousel-zone {
@@ -795,6 +795,27 @@ body.phase-live .carousel-card.active:hover {
 body.phase-live .qr-panel-arrow {
   animation-duration: 3.5s;
 }
+
+/* === SPOTIFY EMBED === */
+#spotify-embed {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 50;
+  width: 320px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  transition: opacity 0.5s ease, transform 0.3s ease;
+}
+#spotify-embed iframe {
+  border-radius: 12px;
+  border: none;
+  display: block;
+}
+body.phase-horn #spotify-embed { display: none; }
+body.phase-over #spotify-embed { display: none; }
+body.phase-live #spotify-embed { opacity: 0.3; pointer-events: none; }
 
 /* === RESPONSIVE === */
 @media (max-width: 1024px) {
@@ -925,6 +946,16 @@ body.phase-live .qr-panel-arrow {
   100% { opacity: 1; }
 }
 
+/* === PREHEAT PHASE — BUILDING ENERGY === */
+body.preheat-mode .heat-orb {
+  opacity: 0.55;
+  animation-duration: 8s;
+}
+body.preheat-mode .heat-glow {
+  opacity: 0.5;
+  transition: opacity 2s ease;
+}
+
 /* === WARMUP PHASE — PARIS NIGHTCLUB === */
 body.phase-warmup .heat-distortion { height: 50vh; }
 body.phase-warmup .heat-glow {
@@ -999,6 +1030,33 @@ body.warmup-urgent .warmup-edge-glow {
 @keyframes warmup-urgent-edge {
   0% { box-shadow: inset 0 0 150px rgba(255,50,0,0.3), inset 0 0 300px rgba(217,68,68,0.1); }
   100% { box-shadow: inset 0 0 250px rgba(255,50,0,0.5), inset 0 0 500px rgba(217,68,68,0.2); }
+}
+
+/* Last 30s — SHAKE mode */
+body.warmup-shake .lobby {
+  animation: screen-shake 0.15s ease-in-out infinite;
+}
+@keyframes screen-shake {
+  0%, 100% { transform: translate(0, 0) rotate(0); }
+  25% { transform: translate(-3px, 2px) rotate(-0.5deg); }
+  50% { transform: translate(2px, -3px) rotate(0.3deg); }
+  75% { transform: translate(-2px, 1px) rotate(-0.2deg); }
+}
+body.warmup-shake .screen-flash {
+  background: rgba(255, 20, 0, 0.18) !important;
+  animation: shake-strobe 0.3s ease-in-out infinite !important;
+}
+@keyframes shake-strobe {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+body.warmup-shake .warmup-time {
+  animation: warmup-shake-throb 0.3s ease-in-out infinite alternate !important;
+  color: #FF0000 !important;
+}
+@keyframes warmup-shake-throb {
+  0% { transform: scale(1); text-shadow: 0 0 80px rgba(255,0,0,0.8); }
+  100% { transform: scale(1.15); text-shadow: 0 0 160px rgba(255,0,0,1), 0 0 300px rgba(255,60,0,0.5); }
 }
 
 /* === HORN PHASE — FULL SCREEN TAKEOVER === */
@@ -1156,11 +1214,11 @@ body.phase-live .lobby {
   opacity: 0.92;
   transition: opacity 1s ease;
 }
-body.phase-live .heat-distortion { height: 20vh; }
+body.phase-live .heat-distortion { height: 10vh; }
 body.phase-live .heat-glow {
-  height: 15vh;
-  opacity: 0.4;
-  background: radial-gradient(ellipse 120% 100% at 50% 100%, rgba(232,88,12,0.08) 0%, transparent 70%);
+  height: 10vh;
+  opacity: 0.2;
+  background: radial-gradient(ellipse 120% 100% at 50% 100%, rgba(232,88,12,0.04) 0%, transparent 70%);
 }
 
 /* === OVER PHASE — AFTERGLOW NUDGE === */
@@ -1723,6 +1781,11 @@ body.phase-over .ticker-wrap { display: none !important; }
 <div class="screen-flash" id="screen-flash" style="display:none" aria-hidden="true"></div>
 <div class="edge-glow" id="edge-glow" style="display:none" aria-hidden="true"></div>
 
+<!-- Spotify embed — hype playlist for pre-meeting energy -->
+<div id="spotify-embed">
+  <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+</div>
+
 <!-- Audio cues are synthesized locally via Web Audio API -->
 
 <script>
@@ -1850,7 +1913,7 @@ body.phase-over .ticker-wrap { display: none !important; }
     if (!audioContext) {
       audioContext = new AudioContextCtor();
       masterGain = audioContext.createGain();
-      masterGain.gain.value = 0.16;
+      masterGain.gain.value = 1.0;
       masterGain.connect(audioContext.destination);
     }
     return audioContext;
@@ -1914,7 +1977,7 @@ body.phase-over .ticker-wrap { display: none !important; }
   function queueWarmupPulse() {
     warmupIntensity = Math.min(warmupIntensity + 1, 100);
     var intensity = warmupIntensity / 100;
-    var baseVol = 0.04 + intensity * 0.08;
+    var baseVol = 0.15 + intensity * 0.35;
     var baseFreq = 56 + intensity * 80;
     rememberSoundCleanup(playTone({ frequency: baseFreq, type: 'sine', volume: baseVol, duration: 0.15 }));
     rememberSoundCleanup(playTone({ frequency: baseFreq * 1.5, type: 'triangle', volume: baseVol * 0.5, duration: 0.1, delay: 0.12 }));
@@ -2046,7 +2109,7 @@ body.phase-over .ticker-wrap { display: none !important; }
     }
     clearScheduledSounds();
     stopHornJokes();
-    if (masterGain) masterGain.gain.value = 0.16;
+    if (masterGain) masterGain.gain.value = 1.0;
   }
 
   // Auto-start kiosk; audio will init on first user interaction
@@ -2203,7 +2266,9 @@ body.phase-over .ticker-wrap { display: none !important; }
     screenFlash.className = 'screen-flash';
     edgeGlow.style.display = 'none';
     edgeGlow.className = 'edge-glow';
-    document.body.classList.remove('warmup-urgent');
+    document.body.classList.remove('warmup-urgent', 'warmup-shake');
+    document.body.style.backgroundColor = '';
+    if (warmupTime) warmupTime.style.transform = '';
     /* Reset heat distortion to default */
     var filterEl = document.querySelector('#heat-distort feDisplacementMap');
     if (filterEl) filterEl.setAttribute('scale', '18');
@@ -2265,7 +2330,7 @@ body.phase-over .ticker-wrap { display: none !important; }
       case PHASE.LIVE:
         stopAllAudio();
         startCardRotation();
-        updateEmbers(1500);
+        updateEmbers(0);
         countdownHeader.textContent = 'MEETING IN PROGRESS';
         countdownGrid.style.display = 'none';
         statusBanner.textContent = 'RDU HEATWAVE \u2022 NETWORKING MEETING IN SESSION';
@@ -2292,39 +2357,111 @@ body.phase-over .ticker-wrap { display: none !important; }
     ensureAudioReady().then(function(ready) {
       if (!ready) return;
       currentSoundMode = 'horn';
-      if (masterGain) masterGain.gain.value = 0.35;
-      /* === SIREN — oscillating between two frequencies === */
+      if (masterGain) masterGain.gain.value = 1.0;
+
       var ctx = getAudioContext();
-      if (ctx && masterGain) {
-        var sirenOsc = ctx.createOscillator();
-        var sirenGain = ctx.createGain();
-        sirenOsc.type = 'sawtooth';
-        sirenGain.gain.setValueAtTime(0.12, ctx.currentTime);
-        sirenOsc.connect(sirenGain);
-        sirenGain.connect(masterGain);
-        /* Sweep between 600Hz and 1200Hz every 0.8s */
-        var sirenStart = ctx.currentTime;
-        var sweepDur = 0.8;
-        for (var s = 0; s < 40; s++) {
-          var t = sirenStart + s * sweepDur;
-          sirenOsc.frequency.setValueAtTime(600, t);
-          sirenOsc.frequency.linearRampToValueAtTime(1200, t + sweepDur * 0.5);
-          sirenOsc.frequency.linearRampToValueAtTime(600, t + sweepDur);
-        }
-        sirenOsc.start(sirenStart);
-        sirenOsc.stop(sirenStart + HORN_DURATION / 1000);
+      if (!ctx || !masterGain) return;
+      var now = ctx.currentTime;
+      var dur = HORN_DURATION / 1000;
+
+      function makeOsc(type, freq, gainVal, startDelay, length) {
+        var osc = ctx.createOscillator();
+        var g = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, now);
+        g.gain.setValueAtTime(0.0001, now);
+        g.gain.exponentialRampToValueAtTime(gainVal, now + (startDelay || 0) + 0.1);
+        osc.connect(g);
+        g.connect(masterGain);
+        osc.start(now + (startDelay || 0));
+        osc.stop(now + (startDelay || 0) + (length || dur));
         rememberSoundCleanup(function() {
-          try { sirenOsc.stop(); } catch(e) {}
-          try { sirenOsc.disconnect(); } catch(e) {}
-          try { sirenGain.disconnect(); } catch(e) {}
+          try { osc.stop(); } catch(e) {}
+          try { osc.disconnect(); } catch(e) {}
+          try { g.disconnect(); } catch(e) {}
         });
-        /* Sub bass rumble underneath */
-        rememberSoundCleanup(playTone({ frequency: 80, type: 'sine', volume: 0.08, duration: HORN_DURATION / 1000, attack: 0.1, release: 1 }));
-        /* Impact hit at the start */
-        rememberSoundCleanup(playTone({ frequency: 150, type: 'square', volume: 0.1, duration: 0.4, attack: 0.01, release: 0.3 }));
+        return { osc: osc, gain: g };
       }
+
+      /* === LAYER 1: FOG HORN — two detuned sawtooth oscillators === */
+      var foghorn1 = makeOsc('sawtooth', 130, 0.5, 0, dur);
+      var foghorn2 = makeOsc('sawtooth', 135, 0.45, 0, dur);
+      /* Slow attack swell for fog horn feel */
+      foghorn1.gain.gain.setValueAtTime(0.0001, now);
+      foghorn1.gain.gain.exponentialRampToValueAtTime(0.5, now + 0.3);
+      foghorn2.gain.gain.setValueAtTime(0.0001, now);
+      foghorn2.gain.gain.exponentialRampToValueAtTime(0.45, now + 0.35);
+
+      /* === LAYER 2: WIDE SIREN SWEEP === */
+      var siren1 = makeOsc('sawtooth', 400, 0.5, 0, dur);
+      var siren2 = makeOsc('sawtooth', 405, 0.3, 0, dur);
+      /* Sweep 400-1400Hz every 0.8s */
+      var sweepDur = 0.8;
+      for (var s = 0; s < Math.ceil(dur / sweepDur); s++) {
+        var t = now + s * sweepDur;
+        siren1.osc.frequency.setValueAtTime(400, t);
+        siren1.osc.frequency.linearRampToValueAtTime(1400, t + sweepDur * 0.5);
+        siren1.osc.frequency.linearRampToValueAtTime(400, t + sweepDur);
+        siren2.osc.frequency.setValueAtTime(405, t);
+        siren2.osc.frequency.linearRampToValueAtTime(1405, t + sweepDur * 0.5);
+        siren2.osc.frequency.linearRampToValueAtTime(405, t + sweepDur);
+      }
+
+      /* === LAYER 3: SUB BASS === */
+      makeOsc('sine', 55, 0.4, 0, dur);
+
+      /* === LAYER 4: IMPACT BURSTS at start === */
+      rememberSoundCleanup(playTone({ frequency: 100, type: 'square', volume: 0.5, duration: 0.3, attack: 0.01, release: 0.25, delay: 0 }));
+      rememberSoundCleanup(playTone({ frequency: 100, type: 'square', volume: 0.45, duration: 0.25, attack: 0.01, release: 0.2, delay: 0.5 }));
+      rememberSoundCleanup(playTone({ frequency: 100, type: 'square', volume: 0.4, duration: 0.2, attack: 0.01, release: 0.15, delay: 1.0 }));
+
+      /* === LAYER 5: HIGH ALARM — alternating tone === */
+      var alarm = makeOsc('square', 1000, 0.15, 0, dur);
+      for (var a = 0; a < Math.ceil(dur / 1.0); a++) {
+        var at = now + a * 1.0;
+        alarm.osc.frequency.setValueAtTime(1000, at);
+        alarm.osc.frequency.setValueAtTime(800, at + 0.5);
+      }
+
+      /* === LAYER 6: SYNTH "WOOO!" — frequency sweep bursts === */
+      function synthWoo(delay) {
+        var wooOsc = ctx.createOscillator();
+        var wooGain = ctx.createGain();
+        var vibrato = ctx.createOscillator();
+        var vibratoGain = ctx.createGain();
+        wooOsc.type = 'sine';
+        vibrato.type = 'sine';
+        vibrato.frequency.setValueAtTime(6, now);
+        vibratoGain.gain.setValueAtTime(50, now);
+        vibrato.connect(vibratoGain);
+        vibratoGain.connect(wooOsc.frequency);
+        wooOsc.frequency.setValueAtTime(300, now + delay);
+        wooOsc.frequency.exponentialRampToValueAtTime(1200, now + delay + 0.3);
+        wooOsc.frequency.exponentialRampToValueAtTime(800, now + delay + 0.8);
+        wooGain.gain.setValueAtTime(0.0001, now + delay);
+        wooGain.gain.exponentialRampToValueAtTime(0.4, now + delay + 0.08);
+        wooGain.gain.exponentialRampToValueAtTime(0.0001, now + delay + 1.0);
+        wooOsc.connect(wooGain);
+        wooGain.connect(masterGain);
+        wooOsc.start(now + delay);
+        wooOsc.stop(now + delay + 1.1);
+        vibrato.start(now + delay);
+        vibrato.stop(now + delay + 1.1);
+        rememberSoundCleanup(function() {
+          try { wooOsc.stop(); } catch(e) {}
+          try { vibrato.stop(); } catch(e) {}
+          try { wooOsc.disconnect(); } catch(e) {}
+          try { wooGain.disconnect(); } catch(e) {}
+          try { vibrato.disconnect(); } catch(e) {}
+          try { vibratoGain.disconnect(); } catch(e) {}
+        });
+      }
+      synthWoo(3);
+      synthWoo(12);
+      synthWoo(22);
+
       hornTimeout = setTimeout(function() {
-        if (masterGain) masterGain.gain.value = 0.16;
+        if (masterGain) masterGain.gain.value = 1.0;
         stopAllAudio();
       }, HORN_DURATION);
     });
@@ -2363,7 +2500,10 @@ body.phase-over .ticker-wrap { display: none !important; }
         countdownHeader.textContent = 'DOORS OPEN';
         statusBanner.textContent = 'NETWORKING MODE • TODAY: RUSTY SUTTON';
         statusBanner.className = 'status-banner visible preheat';
-        updateEmbers(220);
+        /* Gradually ramp embers from 400ms (15min out) → 220ms (0min) */
+        var preheatProgress = 1 - (diff / (PREHEAT_WINDOW_SECS * 1000));
+        var preheatEmberRate = Math.round(400 - preheatProgress * 180);
+        updateEmbers(preheatEmberRate);
       } else if (mins < 10) {
         updateEmbers(300);
       } else if (mins < 30) {
@@ -2378,20 +2518,35 @@ body.phase-over .ticker-wrap { display: none !important; }
       var warmupSeconds = remaining % 60;
       warmupTime.textContent = String(warmupMinutes).padStart(2, '0') + ':' + String(warmupSeconds).padStart(2, '0');
       progressFill.style.width = Math.min(100, ((WARMUP_SECS - remaining) / WARMUP_SECS) * 100) + '%';
-      /* Escalate embers: 120ms → 40ms as countdown progresses */
+      /* Escalate embers: 120ms → 10ms as countdown progresses */
       var warmupProgress = 1 - (remaining / WARMUP_SECS);
-      var emberRate = Math.round(120 - warmupProgress * 80);
+      var emberRate = Math.round(120 - warmupProgress * 110);
       updateEmbers(emberRate);
       /* Escalate SVG distortion during warmup */
-      var distortScale = Math.round(18 + warmupProgress * 30);
+      var distortScale = Math.round(18 + warmupProgress * 42);
       var filterEl = document.querySelector('#heat-distort feDisplacementMap');
       if (filterEl) filterEl.setAttribute('scale', distortScale);
+      /* Scale warmup timer as it progresses */
+      var timerScale = 1 + warmupProgress * 0.4;
+      warmupTime.style.transform = 'scale(' + timerScale + ')';
+      /* Shift background toward deep red */
+      var redShift = Math.min(1, warmupProgress * 1.5);
+      var bgR = Math.round(26 + redShift * 40);
+      var bgG = Math.round(20 - redShift * 12);
+      var bgB = Math.round(24 - redShift * 18);
+      document.body.style.backgroundColor = 'rgb(' + bgR + ',' + bgG + ',' + bgB + ')';
       /* Last 60 seconds: add urgent class */
       if (remaining <= 60) {
         document.body.classList.add('warmup-urgent');
         statusBanner.textContent = '⚡ ' + remaining + 's — FIND YOUR SEAT NOW ⚡';
       } else {
         document.body.classList.remove('warmup-urgent');
+      }
+      /* Last 30 seconds: add shake class */
+      if (remaining <= 30) {
+        document.body.classList.add('warmup-shake');
+      } else {
+        document.body.classList.remove('warmup-shake');
       }
     } else if (now < hornEnd) {
       setPhase(PHASE.HORN);
