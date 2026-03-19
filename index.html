@@ -224,6 +224,7 @@ body.drawer-open .panel-arrow {
   color: var(--color-primary);
   margin-bottom: 0.75rem;
   line-height: 1;
+  text-align: center;
 }
 
 .info-card p {
@@ -231,6 +232,7 @@ body.drawer-open .panel-arrow {
   color: #f0e6dc;
   line-height: 1.5;
   margin-bottom: 1.5rem;
+  text-align: center;
 }
 
 .principle-box {
@@ -239,6 +241,7 @@ body.drawer-open .panel-arrow {
   border-radius: 1rem;
   border: 1px solid rgba(255,255,255,0.1);
   margin-bottom: 1.5rem;
+  text-align: center;
 }
 
 .principle-box h3 {
@@ -269,6 +272,7 @@ body.drawer-open .panel-arrow {
   font-size: 1.25rem;
   letter-spacing: 0.08em;
   color: var(--color-primary);
+  text-align: center;
 }
 
 .visitor-brief-grid {
@@ -307,6 +311,7 @@ body.drawer-open .panel-arrow {
   color: rgba(255,255,255,0.55);
   font-size: 0.82rem;
   line-height: 1.45;
+  text-align: center;
 }
 
 .team-grid {
@@ -327,6 +332,7 @@ body.drawer-open .panel-arrow {
   font-size: 1.05rem;
   letter-spacing: 0.08em;
   color: rgba(255, 255, 255, 0.55);
+  text-align: center;
 }
 
 .team-grid-cards {
@@ -1856,7 +1862,7 @@ button { cursor: pointer; background: none; border: none; }
       <div class="visitor-brief-note">Translation: less random card-swapping, more trusted introductions and real follow-through.</div>
     </div>
 
-    <h3 style="font-family: var(--font-display); font-size: 1.5rem; color: var(--color-primary); letter-spacing: 0.05em; margin-bottom: 0.5rem;">Our Team</h3>
+    <h3 style="font-family: var(--font-display); font-size: 1.5rem; color: var(--color-primary); letter-spacing: 0.05em; margin-bottom: 0.5rem; text-align: center;">Our Team</h3>
     <div class="team-grid" id="team-grid"></div>
     <div class="swipe-hint">Swipe left to check in &rarr;</div>
   </div>
@@ -2480,10 +2486,10 @@ button { cursor: pointer; background: none; border: none; }
   var MAX_LOCAL_ENTRIES = 250;
   // Single source of truth for the public team list and the "Guest Of" dropdown.
   var TEAM_MEMBERS = [
-    { name: 'Carter Helms', title: 'Team Chair', company: 'Highstreet Ins & Financial Svcs', website: 'https://carterhelms.com', leader: true },
-    { name: 'Craig Morrill', title: 'Vice Chair', company: 'Summit Global', website: '', leader: true },
-    { name: 'Will Sigmon', title: 'Team Admin', company: 'Will Sigmon Media', website: 'https://willsigmon.media', leader: true },
-    { name: 'Rusty Sutton', title: 'Team Marketing Specialist', company: 'Monkey Fans Creative', website: 'https://monkeyfansraleigh.com', leader: true, specialTitle: true },
+    { name: 'Carter Helms', title: 'Team Chair', profession: 'Insurance & Financial Services', company: 'Highstreet Ins & Financial Svcs', website: 'https://carterhelms.com', leader: true },
+    { name: 'Craig Morrill', title: 'Vice Chair', profession: 'Financial Planning', company: 'Summit Global', website: '', leader: true },
+    { name: 'Will Sigmon', title: 'Team Admin', profession: 'Media & Marketing', company: 'Will Sigmon Media', website: 'https://willsigmon.media', leader: true },
+    { name: 'Rusty Sutton', title: 'Team Marketing Specialist', profession: 'Marketing & Planning', company: 'Monkey Fans Creative', website: 'https://monkeyfansraleigh.com', leader: true, specialTitle: true },
     { name: 'Robert Courts', title: 'Mortgage Lending', company: 'Advantage Lending', website: 'https://advantagelending.com', leader: false },
     { name: 'Dana Walsh', title: 'Magazine Publisher', company: 'Stroll Magazine', website: 'https://strollmag.com/locations/hayes-barton-nc', leader: false },
     { name: 'Nathan Senn', title: 'Property Restoration', company: 'Franco Restorations', website: 'https://francorestorations.com', leader: false },
@@ -2511,10 +2517,11 @@ button { cursor: pointer; background: none; border: none; }
 
     function renderMemberCards(members) {
       return members.map(function(member) {
+        var subtitle = member.profession || member.company || '';
         return '<div class="team-member' + (member.leader ? ' leader' : '') + '">' +
           '<strong class="' + (member.specialTitle ? 'team-member-title-special' : '') + '">' + escapeHtml(member.title) + '</strong>' +
           '<span>' + escapeHtml(member.name) + '</span>' +
-          '<div class="team-member-company">' + escapeHtml(member.company || '') + '</div>' +
+          '<div class="team-member-company">' + escapeHtml(subtitle) + '</div>' +
         '</div>';
       }).join('');
     }
