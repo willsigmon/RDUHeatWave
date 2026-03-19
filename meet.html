@@ -796,27 +796,6 @@ body.phase-live .qr-panel-arrow {
   animation-duration: 3.5s;
 }
 
-/* === SPOTIFY EMBED === */
-#spotify-embed {
-  position: fixed;
-  bottom: 1rem;
-  right: 1rem;
-  z-index: 50;
-  width: 320px;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-  transition: opacity 0.5s ease, transform 0.3s ease;
-}
-#spotify-embed iframe {
-  border-radius: 12px;
-  border: none;
-  display: block;
-}
-body.phase-horn #spotify-embed { display: none; }
-body.phase-over #spotify-embed { display: none; }
-body.phase-live #spotify-embed { opacity: 0.3; pointer-events: none; }
-
 /* === RESPONSIVE === */
 @media (max-width: 1024px) {
   .header { padding: 1rem 2rem; }
@@ -1597,7 +1576,8 @@ body.phase-over .ticker-wrap { display: none !important; }
 
       <!-- Card 1: Today's speaker -->
       <div class="carousel-card" data-card="0">
-        <img class="card-headshot" src="https://mytrustedcircle.net/rdu-heatwave/wp-content/uploads/sites/76/2026/01/Headshot-Rusty-2-300x300.png" alt="Rusty Sutton">
+        <img class="card-headshot" src="https://mytrustedcircle.net/rdu-heatwave/wp-content/uploads/sites/76/2026/01/Headshot-Rusty-2-300x300.png" alt="Rusty Sutton" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="card-headshot-fallback" style="display:none; width:120px; height:120px; border-radius:50%; border:3px solid var(--color-primary); background:var(--color-surface-2); align-items:center; justify-content:center; font-family:var(--font-display); font-size:2.5rem; color:var(--color-primary); letter-spacing:0.05em; margin:0 auto 1rem;">RS</div>
         <div class="card-heading">TODAY&rsquo;S<br>SPOTLIGHT</div>
         <div class="card-body">Rusty Sutton from MonkeyFans Creative is up today. Give him your full attention &mdash; and a warm intro if someone comes to mind.</div>
         <div class="card-stat">
@@ -1758,7 +1738,7 @@ body.phase-over .ticker-wrap { display: none !important; }
     <div class="afterglow-message">Don&rsquo;t leave yet &mdash; stick around and connect.</div>
     <div class="afterglow-divider"></div>
     <div class="afterglow-clouds">
-      <img src="https://images.squarespace-cdn.com/content/v1/592b235859cc6892f601724f/352e270b-0ec7-41c4-819d-ac473b71a4b3/cb_simplifiedlogo_v1_White2-01.png" alt="Clouds Brewing" class="afterglow-clouds-logo">
+      <img src="clouds-brewing-logo.png" alt="Clouds Brewing" class="afterglow-clouds-logo">
       <div class="afterglow-clouds-text">Clouds Brewing has 17 taps and great food.<br>Grab a drink &mdash; you&rsquo;ve earned it.</div>
     </div>
     <div class="afterglow-divider"></div>
@@ -1780,11 +1760,6 @@ body.phase-over .ticker-wrap { display: none !important; }
 <!-- Screen flash overlay -->
 <div class="screen-flash" id="screen-flash" style="display:none" aria-hidden="true"></div>
 <div class="edge-glow" id="edge-glow" style="display:none" aria-hidden="true"></div>
-
-<!-- Spotify embed — hype playlist for pre-meeting energy -->
-<div id="spotify-embed">
-  <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-</div>
 
 <!-- Audio cues are synthesized locally via Web Audio API -->
 
