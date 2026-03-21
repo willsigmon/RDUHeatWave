@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#01696f">
+  <title>RDU Heatwave Member Survey</title>
+  <meta name="description" content="Quick anonymous feedback survey for RDU Heatwave members. Help us make the team better.">
+  <link rel="canonical" href="https://rduheatwave.team/survey">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" href="/icons/heatwave-icon-192.png">
+  <link rel="apple-touch-icon" href="/icons/heatwave-icon-180.png">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="RDU Heatwave Member Survey">
+  <meta property="og:description" content="Quick anonymous feedback survey for RDU Heatwave members.">
+  <meta property="og:url" content="https://rduheatwave.team/survey">
+  <meta property="og:image" content="https://rduheatwave.team/icons/heatwave-icon-512.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    /* ─── Design Tokens ───────────────────────────────── */
+    :root, [data-theme="light"] {
+      --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
+      --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
+      --text-base: clamp(1rem,     0.95rem + 0.25vw, 1.125rem);
+      --text-lg:   clamp(1.125rem, 1rem    + 0.75vw, 1.5rem);
+      --text-xl:   clamp(1.5rem,   1.2rem  + 1.25vw, 2.25rem);
+      --text-2xl:  clamp(2rem,     1.2rem  + 2.5vw,  3.5rem);
+
+      --space-1: .25rem; --space-2: .5rem; --space-3: .75rem;
+      --space-4: 1rem;   --space-5: 1.25rem; --space-6: 1.5rem;
+      --space-8: 2rem;   --space-10: 2.5rem; --space-12: 3rem;
+      --space-16: 4rem;
+
+      --color-bg:             #f7f6f2;
+      --color-surface:        #f9f8f5;
+      --color-surface-2:      #fbfbf9;
+      --color-surface-offset: #f3f0ec;
+      --color-divider:        #dcd9d5;
+      --color-border:         #d4d1ca;
+
+      --color-text:        #28251d;
+      --color-text-muted:  #7a7974;
+      --color-text-faint:  #bab9b4;
+
+      --color-primary:          #01696f;
+      --color-primary-hover:    #0c4e54;
+      --color-primary-highlight:#cedcd8;
+
+      --color-accent: #e05c2a; /* fire/heatwave orange */
+      --color-accent-hover: #c44520;
+
+      --radius-sm: .375rem; --radius-md: .5rem;
+      --radius-lg: .75rem;  --radius-xl: 1rem;
+
+      --shadow-sm: 0 1px 2px oklch(0.2 0.01 80 / .06);
+      --shadow-md: 0 4px 12px oklch(0.2 0.01 80 / .08);
+      --shadow-lg: 0 12px 32px oklch(0.2 0.01 80 / .12);
+
+      --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+
+      --font-display: 'Instrument Serif', Georgia, serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+
+      --content-narrow: 640px;
+    }
+
+    [data-theme="dark"] {
+      --color-bg:             #171614;
+      --color-surface:        #1c1b19;
+      --color-surface-2:      #201f1d;
+      --color-surface-offset: #1d1c1a;
+      --color-divider:        #262523;
+      --color-border:         #393836;
+      --color-text:           #cdccca;
+      --color-text-muted:     #797876;
+      --color-text-faint:     #5a5957;
+      --color-primary:        #4f98a3;
+      --color-primary-hover:  #227f8b;
+      --color-primary-highlight: #313b3b;
+      --color-accent: #f47b4a;
+      --color-accent-hover: #e05c2a;
+      --shadow-sm: 0 1px 2px oklch(0 0 0 / .2);
+      --shadow-md: 0 4px 12px oklch(0 0 0 / .3);
+      --shadow-lg: 0 12px 32px oklch(0 0 0 / .4);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme]) {
+        --color-bg: #171614; --color-surface: #1c1b19; --color-surface-2: #201f1d;
+        --color-surface-offset: #1d1c1a; --color-divider: #262523; --color-border: #393836;
+        --color-text: #cdccca; --color-text-muted: #797876; --color-text-faint: #5a5957;
+        --color-primary: #4f98a3; --color-primary-hover: #227f8b;
+        --color-primary-highlight: #313b3b; --color-accent: #f47b4a; --color-accent-hover: #e05c2a;
+        --shadow-sm: 0 1px 2px oklch(0 0 0 / .2); --shadow-md: 0 4px 12px oklch(0 0 0 / .3);
+        --shadow-lg: 0 12px 32px oklch(0 0 0 / .4);
+      }
+    }
+
+    /* ─── Base Reset ────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; scroll-padding-top: var(--space-8); }
+    body {
+      min-height: 100dvh;
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      color: var(--color-text);
+      background: var(--color-bg);
+      line-height: 1.6;
+    }
+    img, svg { display: block; max-width: 100%; }
+    input, button, textarea, select { font: inherit; color: inherit; }
+    button { cursor: pointer; background: none; border: none; }
+    ::selection { background: oklch(from var(--color-primary) l c h / .25); color: var(--color-text); }
+    :focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; border-radius: var(--radius-sm); }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+
+    /* ─── Layout ────────────────────────────────────── */
+    .page-wrapper {
+      min-height: 100dvh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .site-header {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--color-surface);
+      border-bottom: 1px solid oklch(from var(--color-text) l c h / .08);
+      box-shadow: var(--shadow-sm);
+      padding: var(--space-3) var(--space-6);
+      display: flex; align-items: center; justify-content: space-between;
+      gap: var(--space-4);
+    }
+
+    .logo-mark {
+      display: flex; align-items: center; gap: var(--space-3);
+      text-decoration: none; color: var(--color-text);
+    }
+    .logo-mark svg { flex-shrink: 0; }
+    .logo-text { font-family: var(--font-display); font-size: var(--text-lg); line-height: 1.1; }
+    .logo-sub { font-size: var(--text-xs); color: var(--color-text-muted); letter-spacing: .06em; text-transform: uppercase; font-family: var(--font-body); }
+
+    .header-actions { display: flex; align-items: center; gap: var(--space-2); }
+    .theme-toggle {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--color-text-muted);
+      transition: background var(--transition), color var(--transition);
+    }
+    .theme-toggle:hover { background: var(--color-surface-offset); color: var(--color-text); }
+
+    /* ─── Hero Banner ───────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, var(--color-primary) 0%, #014d52 100%);
+      color: white;
+      padding: var(--space-12) var(--space-6);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 80% 50%, oklch(0.7 0.15 50 / .15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      background: oklch(1 0 0 / .15); border: 1px solid oklch(1 0 0 / .2);
+      border-radius: var(--radius-full, 9999px);
+      padding: var(--space-1) var(--space-4);
+      font-size: var(--text-xs); letter-spacing: .08em; text-transform: uppercase;
+      margin-bottom: var(--space-4); color: oklch(0.95 0.02 190);
+    }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      line-height: 1.1;
+      color: white;
+      margin-bottom: var(--space-3);
+    }
+    .hero h1 em { font-style: italic; color: oklch(0.92 0.06 70); }
+    .hero p {
+      font-size: var(--text-base);
+      color: oklch(0.9 0.02 190);
+      max-width: 52ch;
+      margin-inline: auto;
+      line-height: 1.65;
+    }
+    .hero-meta {
+      margin-top: var(--space-6);
+      display: flex; align-items: center; justify-content: center; gap: var(--space-6); flex-wrap: wrap;
+    }
+    .hero-pill {
+      display: flex; align-items: center; gap: var(--space-2);
+      font-size: var(--text-xs); color: oklch(0.85 0.03 190);
+    }
+    .hero-pill svg { opacity: .7; }
+
+    /* ─── Main Content ──────────────────────────────── */
+    main {
+      padding: var(--space-10) var(--space-4) var(--space-16);
+    }
+
+    .survey-container {
+      max-width: var(--content-narrow);
+      margin-inline: auto;
+    }
+
+    /* Progress bar */
+    .progress-wrap {
+      margin-bottom: var(--space-8);
+    }
+    .progress-label {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: var(--space-2);
+      font-size: var(--text-xs); color: var(--color-text-muted);
+    }
+    .progress-track {
+      height: 4px;
+      background: var(--color-divider);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--color-accent);
+      border-radius: 9999px;
+      width: 0%;
+      transition: width .4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Section headers */
+    .section-title {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      color: var(--color-text);
+      margin-bottom: var(--space-1);
+      line-height: 1.15;
+    }
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--color-divider);
+      margin: var(--space-8) 0 var(--space-6);
+    }
+    .section-group-label {
+      font-size: var(--text-xs);
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+      margin-bottom: var(--space-4);
+    }
+
+    /* ─── Question Cards ────────────────────────────── */
+    .q-card {
+      background: var(--color-surface);
+      border: 1px solid oklch(from var(--color-text) l c h / .08);
+      border-radius: var(--radius-xl);
+      padding: var(--space-6);
+      margin-bottom: var(--space-4);
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow var(--transition), border-color var(--transition);
+    }
+    .q-card:focus-within {
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-md), 0 0 0 3px oklch(from var(--color-primary) l c h / .1);
+    }
+
+    .q-number {
+      font-size: var(--text-xs);
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--color-text-faint);
+      margin-bottom: var(--space-2);
+    }
+
+    .q-label {
+      font-size: var(--text-base);
+      font-weight: 600;
+      color: var(--color-text);
+      line-height: 1.4;
+      margin-bottom: var(--space-1);
+    }
+    .q-hint {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-4);
+      line-height: 1.5;
+    }
+
+    /* Radio / Checkbox options */
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      list-style: none;
+    }
+    .options-list.two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-2);
+    }
+    @media (max-width: 480px) { .options-list.two-col { grid-template-columns: 1fr; } }
+
+    .option-item label {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      background: var(--color-surface-2);
+      border: 1.5px solid oklch(from var(--color-text) l c h / .07);
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+      font-size: var(--text-sm);
+      color: var(--color-text);
+      line-height: 1.4;
+    }
+    .option-item label:hover {
+      background: var(--color-primary-highlight);
+      border-color: oklch(from var(--color-primary) l c h / .3);
+    }
+    .option-item input[type="radio"],
+    .option-item input[type="checkbox"] {
+      flex-shrink: 0;
+      width: 18px; height: 18px;
+      accent-color: var(--color-primary);
+      cursor: pointer;
+    }
+    .option-item input:checked + span { color: var(--color-primary); font-weight: 500; }
+    .option-item:has(input:checked) label {
+      background: var(--color-primary-highlight);
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px oklch(from var(--color-primary) l c h / .12);
+    }
+
+    /* Scale / Rating */
+    .scale-row {
+      display: flex;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+    }
+    .scale-item { flex: 1; min-width: 44px; }
+    .scale-item label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-1);
+      padding: var(--space-3) var(--space-2);
+      background: var(--color-surface-2);
+      border: 1.5px solid oklch(from var(--color-text) l c h / .07);
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      text-align: center;
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .scale-item label:hover { background: var(--color-primary-highlight); border-color: oklch(from var(--color-primary) l c h / .3); }
+    .scale-item input[type="radio"] { width: 16px; height: 16px; accent-color: var(--color-primary); cursor: pointer; }
+    .scale-item:has(input:checked) label {
+      background: var(--color-primary-highlight);
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+    .scale-labels {
+      display: flex; justify-content: space-between;
+      font-size: var(--text-xs); color: var(--color-text-faint);
+      margin-top: var(--space-1); padding-inline: var(--space-1);
+    }
+
+    /* Textarea */
+    .q-textarea {
+      width: 100%;
+      min-height: 96px;
+      padding: var(--space-3) var(--space-4);
+      background: var(--color-surface-2);
+      border: 1.5px solid oklch(from var(--color-text) l c h / .1);
+      border-radius: var(--radius-lg);
+      font-size: var(--text-sm);
+      color: var(--color-text);
+      resize: vertical;
+      transition: border-color var(--transition), box-shadow var(--transition);
+      line-height: 1.6;
+    }
+    .q-textarea::placeholder { color: var(--color-text-faint); }
+    .q-textarea:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px oklch(from var(--color-primary) l c h / .1);
+    }
+
+    /* ─── Submit Section ────────────────────────────── */
+    .submit-section {
+      margin-top: var(--space-8);
+      text-align: center;
+    }
+    .anon-notice {
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      font-size: var(--text-xs); color: var(--color-text-muted);
+      background: var(--color-surface);
+      border: 1px solid var(--color-divider);
+      border-radius: var(--radius-full, 9999px);
+      padding: var(--space-2) var(--space-4);
+      margin-bottom: var(--space-5);
+    }
+    .btn-submit {
+      display: inline-flex; align-items: center; gap: var(--space-3);
+      background: var(--color-accent);
+      color: white;
+      font-size: var(--text-base);
+      font-weight: 600;
+      padding: var(--space-4) var(--space-10);
+      border-radius: var(--radius-lg);
+      border: none;
+      cursor: pointer;
+      box-shadow: var(--shadow-md);
+      transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+      letter-spacing: .01em;
+    }
+    .btn-submit:hover { background: var(--color-accent-hover); box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+    .btn-submit:active { transform: translateY(0); }
+
+    /* ─── Thank You State ───────────────────────────── */
+    .thank-you {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: var(--space-16) var(--space-6);
+      gap: var(--space-4);
+    }
+    .thank-you.visible { display: flex; }
+    .survey-form.hidden { display: none; }
+    .ty-icon {
+      width: 72px; height: 72px;
+      background: var(--color-primary-highlight);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--color-primary);
+    }
+    .ty-icon svg { width: 36px; height: 36px; }
+    .thank-you h2 { font-family: var(--font-display); font-size: var(--text-xl); }
+    .thank-you p { color: var(--color-text-muted); max-width: 44ch; font-size: var(--text-base); }
+
+    /* ─── Footer ────────────────────────────────────── */
+    .site-footer {
+      border-top: 1px solid var(--color-divider);
+      padding: var(--space-5) var(--space-6);
+      text-align: center;
+      font-size: var(--text-xs);
+      color: var(--color-text-faint);
+    }
+    .site-footer a { color: var(--color-text-muted); text-decoration: none; }
+    .site-footer a:hover { color: var(--color-primary); }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <a class="logo-mark" href="#">
+      <!-- Flame / Heatwave SVG logo -->
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-label="RDU Heatwave" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="16" r="16" fill="var(--color-primary)"/>
+        <path d="M16 5C14 9 10 11 11 15.5C11.8 18.5 14.5 19.5 14 22C14 22 17 20 17 17C17 17 19 19 18.5 22C20.5 19.5 22 16.5 19.5 13.5C20.5 15 20.5 16.5 20 18C20 18 23 15 20.5 10.5C20.5 10.5 19 14 17.5 14C19 11 18 8 16 5Z" fill="#f47b4a"/>
+        <path d="M16 13C15 15 13.5 16.5 14 18.5C14.3 19.8 15.5 20.5 15 22C16.2 21 17 19.5 17 18C17.5 19 17.5 20.5 17 22C18.5 20.5 19 18.5 18 17C18.5 17.8 18.5 18.8 18 19.5C18 19.5 20 17.5 18.5 14.5C18.5 16 18 17 17.5 17C18 15.5 17.5 14 16 13Z" fill="white" opacity="0.8"/>
+      </svg>
+      <div>
+        <div class="logo-text">RDU Heatwave</div>
+        <div class="logo-sub">Two Twelve Referral Network</div>
+      </div>
+    </a>
+    <div class="header-actions">
+      <button class="theme-toggle" data-theme-toggle aria-label="Switch to dark mode">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" role="banner">
+    <div class="hero-badge">
+      <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#f47b4a"/></svg>
+      Member Feedback · 2026
+    </div>
+    <h1>How's the <em>heat</em> treating you?</h1>
+    <p>A quick, anonymous pulse check from your RDU Heatwave team. Five minutes, ten questions — your honest feedback helps us fire on all cylinders.</p>
+    <div class="hero-meta">
+      <span class="hero-pill">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        ~5 minutes
+      </span>
+      <span class="hero-pill">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Fully anonymous
+      </span>
+      <span class="hero-pill">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Current members only
+      </span>
+    </div>
+  </section>
+
+  <!-- MAIN -->
+  <main>
+    <div class="survey-container">
+
+      <!-- Progress -->
+      <div class="progress-wrap" aria-live="polite">
+        <div class="progress-label">
+          <span id="progress-text">Question 1 of 10</span>
+          <span id="progress-pct">0% complete</span>
+        </div>
+        <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress-bar-wrap">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+      </div>
+
+      <form class="survey-form" id="survey-form" novalidate>
+
+        <!-- ── SECTION 1: EXPERIENCE ── -->
+        <p class="section-group-label">Member Experience</p>
+
+        <!-- Q1 -->
+        <div class="q-card" data-q="1">
+          <p class="q-number">Question 1 of 10</p>
+          <p class="q-label">Overall, how satisfied are you with your experience as a member of RDU Heatwave so far?</p>
+          <ul class="options-list" role="radiogroup" aria-label="Overall satisfaction">
+            <li class="option-item"><label><input type="radio" name="q1" value="5" required><span>😍 Very satisfied</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q1" value="4"><span>😊 Satisfied</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q1" value="3"><span>😐 Neutral — still feeling it out</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q1" value="2"><span>😕 Dissatisfied</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q1" value="1"><span>😞 Very dissatisfied</span></label></li>
+          </ul>
+        </div>
+
+        <!-- Q2 -->
+        <div class="q-card" data-q="2">
+          <p class="q-number">Question 2 of 10</p>
+          <p class="q-label">How clearly do you understand what makes Two Twelve different — permission-based referrals, the covenant, and the Gratitude Incentive?</p>
+          <ul class="options-list" role="radiogroup" aria-label="Understanding of Two Twelve">
+            <li class="option-item"><label><input type="radio" name="q2" value="4" required><span>Crystal clear — I could explain it to anyone</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q2" value="3"><span>Mostly clear — a few details still fuzzy</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q2" value="2"><span>Somewhat clear — I'd appreciate a refresher</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q2" value="1"><span>Still learning — it hasn't fully clicked yet</span></label></li>
+          </ul>
+        </div>
+
+        <!-- Q3 -->
+        <div class="q-card" data-q="3">
+          <p class="q-number">Question 3 of 10</p>
+          <p class="q-label">How likely are you to invite a trusted business contact to visit an RDU Heatwave meeting?</p>
+          <p class="q-hint">On a scale of 1 (not at all) to 5 (absolutely).</p>
+          <div class="scale-row" role="radiogroup" aria-label="Likelihood to invite a guest">
+            <div class="scale-item"><label><input type="radio" name="q3" value="1" required><span>1</span></label></div>
+            <div class="scale-item"><label><input type="radio" name="q3" value="2"><span>2</span></label></div>
+            <div class="scale-item"><label><input type="radio" name="q3" value="3"><span>3</span></label></div>
+            <div class="scale-item"><label><input type="radio" name="q3" value="4"><span>4</span></label></div>
+            <div class="scale-item"><label><input type="radio" name="q3" value="5"><span>5</span></label></div>
+          </div>
+          <div class="scale-labels"><span>Not at all</span><span>Absolutely</span></div>
+        </div>
+
+        <hr class="section-divider">
+        <!-- ── SECTION 2: MEETINGS ── -->
+        <p class="section-group-label">Meeting Format &amp; Value</p>
+
+        <!-- Q4 -->
+        <div class="q-card" data-q="4">
+          <p class="q-number">Question 4 of 10</p>
+          <p class="q-label">Which parts of the weekly meeting do you find most valuable? <em style="font-weight:400;color:var(--color-text-muted)">(Pick up to two.)</em></p>
+          <ul class="options-list two-col" role="group" aria-label="Most valuable meeting segments">
+            <li class="option-item"><label><input type="checkbox" name="q4" value="intros"><span>30-second member intros</span></label></li>
+            <li class="option-item"><label><input type="checkbox" name="q4" value="gratitude"><span>Gratitude / contributions</span></label></li>
+            <li class="option-item"><label><input type="checkbox" name="q4" value="spotlight"><span>Member spotlight</span></label></li>
+            <li class="option-item"><label><input type="checkbox" name="q4" value="mentor"><span>Mentor moment</span></label></li>
+            <li class="option-item"><label><input type="checkbox" name="q4" value="bizchat"><span>BizChat scheduling</span></label></li>
+            <li class="option-item"><label><input type="checkbox" name="q4" value="reports"><span>Referral / performance reports</span></label></li>
+          </ul>
+        </div>
+
+        <!-- Q5 -->
+        <div class="q-card" data-q="5">
+          <p class="q-number">Question 5 of 10</p>
+          <p class="q-label">How well does our current meeting structure help you build real relationships and generate referrals?</p>
+          <ul class="options-list" role="radiogroup" aria-label="Meeting effectiveness">
+            <li class="option-item"><label><input type="radio" name="q5" value="5" required><span>Extremely well — I'm already seeing results</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q5" value="4"><span>Very well — it's working, I just need more time</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q5" value="3"><span>Moderately — the structure is solid but I'm not clicking yet</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q5" value="2"><span>Slightly — I'm here, but not fully getting value</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q5" value="1"><span>Not at all — something isn't working for me</span></label></li>
+          </ul>
+        </div>
+
+        <!-- Q6 -->
+        <div class="q-card" data-q="6">
+          <p class="q-number">Question 6 of 10</p>
+          <p class="q-label">In the last 60 days, how many BizChats (one-on-one meetings) have you had as a result of RDU Heatwave?</p>
+          <p class="q-hint">A BizChat is any one-on-one scheduled from a meeting — in person, phone, or video. No one should leave without at least one scheduled.</p>
+          <ul class="options-list" role="radiogroup" aria-label="BizChats count">
+            <li class="option-item"><label><input type="radio" name="q6" value="0" required><span>0 — I have not had any yet</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q6" value="1-9"><span>1–9 — getting started</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q6" value="10-19"><span>10–19 — making progress</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q6" value="20-29"><span>20–29 — solid momentum</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q6" value="30+"><span>30 or more — Carter would be proud 🔥</span></label></li>
+          </ul>
+        </div>
+
+        <hr class="section-divider">
+        <!-- ── SECTION 3: REFERRALS ── -->
+        <p class="section-group-label">Referrals &amp; Results</p>
+
+        <!-- Q7 -->
+        <div class="q-card" data-q="7">
+          <p class="q-number">Question 7 of 10</p>
+          <p class="q-label">How would you rate the quality of referrals you've received from the team in the last 90 days?</p>
+          <ul class="options-list" role="radiogroup" aria-label="Referral quality">
+            <li class="option-item"><label><input type="radio" name="q7" value="5" required><span>Excellent — exactly the right people</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q7" value="4"><span>Good — solid leads, a couple duds</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q7" value="3"><span>Fair — some were useful, some weren't a fit</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q7" value="2"><span>Poor — most weren't a good match</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q7" value="n/a"><span>Haven't received any referrals yet</span></label></li>
+          </ul>
+        </div>
+
+        <!-- Q8 -->
+        <div class="q-card" data-q="8">
+          <p class="q-number">Question 8 of 10</p>
+          <p class="q-label">What's your main focus with RDU Heatwave right now?</p>
+          <ul class="options-list" role="radiogroup" aria-label="Current focus">
+            <li class="option-item"><label><input type="radio" name="q8" value="referrals" required><span>Getting more (and better) referrals</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q8" value="relationships"><span>Building deeper relationships through BizChats</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q8" value="presence"><span>Improving my 30-second intro or spotlight</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q8" value="guests"><span>Inviting guests and growing the team</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q8" value="learning"><span>Still learning the ropes / mentorship</span></label></li>
+          </ul>
+        </div>
+
+        <hr class="section-divider">
+        <!-- ── SECTION 4: FEEDBACK ── -->
+        <p class="section-group-label">Communication &amp; Improvements</p>
+
+        <!-- Q9 -->
+        <div class="q-card" data-q="9">
+          <p class="q-number">Question 9 of 10</p>
+          <p class="q-label">How satisfied are you with team communication and leadership (Chair, Vice Chair, Admin, expectations, reminders)?</p>
+          <ul class="options-list" role="radiogroup" aria-label="Leadership satisfaction">
+            <li class="option-item"><label><input type="radio" name="q9" value="5" required><span>Very satisfied — running like a well-oiled machine</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q9" value="4"><span>Satisfied — things are generally clear and well run</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q9" value="3"><span>Neutral — some things could be tighter</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q9" value="2"><span>Dissatisfied — needs more structure or clarity</span></label></li>
+            <li class="option-item"><label><input type="radio" name="q9" value="1"><span>Very dissatisfied</span></label></li>
+          </ul>
+        </div>
+
+        <!-- Q10 -->
+        <div class="q-card" data-q="10">
+          <p class="q-number">Question 10 of 10</p>
+          <p class="q-label">What's one thing we could change or improve in the next 30 days to make RDU Heatwave more valuable for you?</p>
+          <p class="q-hint">Be as specific or as brief as you like — no wrong answers.</p>
+          <textarea class="q-textarea" name="q10" id="q10" rows="4" placeholder="e.g. More structured BizChat matching, a Slack/group chat, better guest follow-up process…" aria-label="Open feedback"></textarea>
+        </div>
+
+        <!-- Submit -->
+        <div class="submit-section">
+          <div class="anon-notice" aria-live="polite">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Your response is completely anonymous
+          </div>
+          <br>
+          <button type="submit" class="btn-submit" id="submit-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Submit My Feedback
+          </button>
+        </div>
+
+      </form>
+
+      <!-- Thank You -->
+      <div class="thank-you" id="thank-you" role="alert" aria-live="polite">
+        <div class="ty-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <h2>Thanks for keeping it hot 🔥</h2>
+        <p>Your feedback goes straight to the governing committee. We'll put it to work — see you Friday at Clouds Brewing.</p>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>RDU Heatwave · <a href="https://twotwelvereferrals.com" target="_blank" rel="noopener">Two Twelve Referral Network</a> · Clouds Brewing Taproom, Raleigh NC · Fridays 8 AM</p>
+  </footer>
+</div>
+
+<script>
+  // Theme toggle
+  (function(){
+    const t = document.querySelector('[data-theme-toggle]');
+    const r = document.documentElement;
+    let d = matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light';
+    r.setAttribute('data-theme', d);
+    const sunIcon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+    const moonIcon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+    if (d === 'dark' && t) t.innerHTML = sunIcon;
+    t && t.addEventListener('click', () => {
+      d = d === 'dark' ? 'light' : 'dark';
+      r.setAttribute('data-theme', d);
+      t.setAttribute('aria-label', 'Switch to ' + (d === 'dark' ? 'light' : 'dark') + ' mode');
+      t.innerHTML = d === 'dark' ? sunIcon : moonIcon;
+    });
+  })();
+
+  // Progress tracker
+  const form = document.getElementById('survey-form');
+  const progressFill = document.getElementById('progress-fill');
+  const progressText = document.getElementById('progress-text');
+  const progressPct  = document.getElementById('progress-pct');
+  const progressWrap = document.getElementById('progress-bar-wrap');
+  const totalQ = 10;
+
+  function updateProgress() {
+    let answered = 0;
+    for (let i = 1; i <= totalQ; i++) {
+      const radios = form.querySelectorAll(`input[name="q${i}"]:checked`);
+      const checks = form.querySelectorAll(`input[name="q${i}"][type="checkbox"]:checked`);
+      const textarea = form.querySelector(`#q${i}`);
+      if (radios.length > 0 || checks.length > 0) answered++;
+      else if (textarea && textarea.value.trim() !== '') answered++;
+    }
+    const pct = Math.round((answered / totalQ) * 100);
+    progressFill.style.width = pct + '%';
+    progressWrap.setAttribute('aria-valuenow', pct);
+    progressText.textContent = answered < totalQ
+      ? `Question ${answered + 1} of ${totalQ}`
+      : 'All questions answered!';
+    progressPct.textContent = pct + '% complete';
+  }
+
+  form.addEventListener('change', updateProgress);
+  form.querySelector('#q10').addEventListener('input', updateProgress);
+  updateProgress();
+
+  // Limit checkboxes to 2
+  form.querySelectorAll('input[name="q4"]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const checked = Array.from(form.querySelectorAll('input[name="q4"]:checked'));
+      if (checked.length > 2) { cb.checked = false; }
+    });
+  });
+
+  // Spinner animation
+  const spinStyle = document.createElement('style');
+  spinStyle.textContent = '@keyframes spin{to{transform:rotate(360deg)}}';
+  document.head.appendChild(spinStyle);
+
+  // Submit
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submit-btn');
+    const origHTML = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin .8s linear infinite"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="12"/></svg> Submitting\u2026';
+
+    const payload = {};
+    for (let i = 1; i <= totalQ; i++) {
+      const radios = form.querySelectorAll('input[name="q' + i + '"]:checked');
+      const checks = form.querySelectorAll('input[name="q' + i + '"][type="checkbox"]:checked');
+      const textarea = form.querySelector('#q' + i);
+      if (checks.length > 0) {
+        payload['q' + i] = Array.from(checks).map(function(c) { return c.value; });
+      } else if (radios.length > 0) {
+        payload['q' + i] = radios[0].value;
+      } else if (textarea) {
+        payload['q' + i] = textarea.value.trim();
+      }
+    }
+
+    try {
+      const res = await fetch('/api/survey', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(function() { return {}; });
+        throw new Error(data.message || 'Submission failed');
+      }
+      form.classList.add('hidden');
+      document.querySelector('.progress-wrap').style.display = 'none';
+      document.getElementById('thank-you').classList.add('visible');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err) {
+      btn.disabled = false;
+      btn.innerHTML = origHTML;
+      var existing = btn.parentNode.querySelector('.submit-error');
+      if (existing) existing.remove();
+      var notice = document.createElement('p');
+      notice.className = 'submit-error';
+      notice.style.cssText = 'color:var(--color-accent);font-size:var(--text-sm);margin-top:var(--space-3);';
+      notice.textContent = err.message || 'Something went wrong. Please try again.';
+      btn.parentNode.appendChild(notice);
+    }
+  });
+</script>
+
+</body>
+</html>

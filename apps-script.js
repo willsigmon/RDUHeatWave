@@ -11,13 +11,18 @@ var SHEET_ID = '1WWSxfqJ1UdMqJxKLaiIzb06n3rSQj5-AVN3m07wAkSA';
 var SHEET_NAME = 'Guest Check In';
 var MEMBERS_SHEET_NAMES = ['Membership Directory', 'BKP Member Directory'];
 var HEADER_ROW = 3;
-var HEADER_COUNT = 9;
+var HEADER_COUNT = 10;
+var GUEST_INCENTIVE_SHEET_NAME = 'Guest Incentive Report';
+var GUEST_INCENTIVE_HEADER_ROW = 3;
+var GUEST_INCENTIVE_SUBHEADER_ROW = 4;
+var GUEST_INCENTIVE_DATA_START_ROW = 5;
 var LIVE_HEADERS = [
   'Timestamp',
   'Meeting Date',
   'First name',
   'Last name',
   'Profession',
+  'Company',
   'Email',
   'Phone',
   'Guest of',
@@ -39,8 +44,101 @@ var MEMBER_FIELD_ALIASES = {
   leader: ['leader', 'iscouncil', 'isteamadmin', 'admin', 'officer', 'councilmember'],
   specialTitle: ['specialtitle', 'highlighttitle']
 };
+var GUEST_INCENTIVE_HOST_ALIASES = {
+  carter: ['carter helms'],
+  chad: ['chad haywood'],
+  craig: ['craig morrill'],
+  dana: ['dana walsh'],
+  nate: ['nathan senn', 'nate senn'],
+  rusty: ['rusty sutton'],
+  robert: ['robert courts'],
+  roni: ['roni payne'],
+  will: ['will sigmon']
+};
+
+function onOpen() {
+  SpreadsheetApp.getUi()
+    .createMenu('Heatwave Tools')
+    .addItem('Sync Guest Incentive Report', 'syncGuestIncentiveReport')
+    .addItem('Install Guest Sync Trigger', 'installGuestSyncTrigger')
+    .addToUi();
+}
+
+function onEdit(e) {
+  if (!e || !e.range) return;
+
+  var sheet = e.range.getSheet();
+  var sheetName = sheet.getName();
+  var row = e.range.getRow();
+
+  if (sheetName === SHEET_NAME && row > HEADER_ROW) {
+    syncGuestIncentiveReport();
+    return;
+  }
+
+  if (sheetName === GUEST_INCENTIVE_SHEET_NAME && row >= GUEST_INCENTIVE_DATA_START_ROW) {
+    syncGuestIncentiveReport();
+  }
+}
+
+function onChange(e) {
+  if (!e || !e.changeType) return;
+
+  var supportedChangeTypes = {
+    EDIT: true,
+    INSERT_ROW: true,
+    REMOVE_ROW: true,
+    INSERT_COLUMN: true,
+    REMOVE_COLUMN: true
+  };
+
+  if (supportedChangeTypes[e.changeType]) {
+    syncGuestIncentiveReport();
+  }
+}
+
+function syncGuestIncentiveReport() {
+  var spreadsheet = SpreadsheetApp.openById(SHEET_ID);
+  syncGuestIncentiveReport_(spreadsheet);
+}
+
+function installGuestSyncTrigger() {
+  var hasTrigger = ScriptApp.getProjectTriggers().some(function(trigger) {
+    return trigger.getHandlerFunction() === 'onChange';
+  });
+
+  if (!hasTrigger) {
+    ScriptApp.newTrigger('onChange')
+      .forSpreadsheet(SHEET_ID)
+      .onChange()
+      .create();
+  }
+
+  SpreadsheetApp.getUi().alert('Guest sync trigger is ready.');
+}
+
+var SURVEY_SHEET_NAME = 'Survey Responses';
+var SURVEY_HEADERS = [
+  'Timestamp',
+  'Q1 - Overall Satisfaction',
+  'Q2 - Understanding 212',
+  'Q3 - Invite Likelihood',
+  'Q4 - Valuable Meeting Parts',
+  'Q5 - Meeting Effectiveness',
+  'Q6 - BizChats (60 days)',
+  'Q7 - Referral Quality',
+  'Q8 - Main Focus',
+  'Q9 - Leadership Satisfaction',
+  'Q10 - Open Feedback'
+];
 
 function doPost(e) {
+  var params = (e && e.parameter) || {};
+
+  if (cleanValue_(params.source) === 'survey') {
+    return doPostSurvey_(params);
+  }
+
   var spreadsheet = SpreadsheetApp.openById(SHEET_ID);
   var sheet = spreadsheet.getSheetByName(SHEET_NAME) || spreadsheet.getSheets()[0] || spreadsheet.insertSheet(SHEET_NAME);
   var now = new Date();
@@ -60,6 +158,8 @@ function doPost(e) {
         return cleanValue_(params.lastName);
       case 'profession':
         return cleanValue_(params.profession);
+      case 'company':
+        return cleanValue_(params.companyName);
       case 'email':
         return cleanValue_(params.email);
       case 'phone':
@@ -76,6 +176,42 @@ function doPost(e) {
   var targetRow = Math.max(sheet.getLastRow() + 1, HEADER_ROW + 1);
   sheet.getRange(targetRow, 1, 1, HEADER_COUNT).setValues([row]);
 
+  try {
+    syncGuestIncentiveReport_(spreadsheet);
+  } catch (error) {
+    Logger.log('Guest incentive sync failed after form submit: ' + error);
+  }
+
+  return jsonOutput_({ status: 'ok' });
+}
+
+function doPostSurvey_(params) {
+  var spreadsheet = SpreadsheetApp.openById(SHEET_ID);
+  var sheet = spreadsheet.getSheetByName(SURVEY_SHEET_NAME);
+
+  if (!sheet) {
+    sheet = spreadsheet.insertSheet(SURVEY_SHEET_NAME);
+    sheet.getRange(1, 1, 1, SURVEY_HEADERS.length).setValues([SURVEY_HEADERS]);
+    sheet.getRange(1, 1, 1, SURVEY_HEADERS.length).setFontWeight('bold');
+    sheet.setFrozenRows(1);
+  }
+
+  var now = new Date();
+  var row = [
+    now,
+    cleanValue_(params.q1),
+    cleanValue_(params.q2),
+    cleanValue_(params.q3),
+    cleanValue_(params.q4),
+    cleanValue_(params.q5),
+    cleanValue_(params.q6),
+    cleanValue_(params.q7),
+    cleanValue_(params.q8),
+    cleanValue_(params.q9),
+    cleanValue_(params.q10)
+  ];
+
+  sheet.appendRow(row);
   return jsonOutput_({ status: 'ok' });
 }
 
@@ -83,6 +219,10 @@ function doGet(e) {
   var requestType = normalizeHeader_(((e && e.parameter && (e.parameter.resource || e.parameter.action || e.parameter.type)) || ''));
   if (requestType === 'members' || requestType === 'memberdirectory' || requestType === 'directory') {
     return jsonOutput_(buildMembersResponse_());
+  }
+  if (requestType === 'syncguestincentive' || requestType === 'guestincentive') {
+    syncGuestIncentiveReport();
+    return jsonOutput_({ status: 'ok', report: GUEST_INCENTIVE_SHEET_NAME, mode: 'points-only' });
   }
 
   return ContentService
@@ -225,6 +365,193 @@ function getLiveHeaders_(sheet) {
   return headerRow.map(function(cell, index) {
     return String(cell || '').trim() || LIVE_HEADERS[index];
   });
+}
+
+function syncGuestIncentiveReport_(spreadsheet) {
+  var lock = LockService.getDocumentLock();
+  if (!lock.tryLock(5000)) return;
+
+  try {
+    var guestSheet = spreadsheet.getSheetByName(SHEET_NAME);
+    var reportSheet = spreadsheet.getSheetByName(GUEST_INCENTIVE_SHEET_NAME);
+    if (!guestSheet || !reportSheet) return;
+
+    var reportLastRow = reportSheet.getLastRow();
+    var reportLastColumn = reportSheet.getLastColumn();
+    if (reportLastRow < GUEST_INCENTIVE_DATA_START_ROW) return;
+
+    var timezone = spreadsheet.getSpreadsheetTimeZone() || Session.getScriptTimeZone() || 'America/New_York';
+    var hostColumns = getGuestIncentiveHostColumns_(reportSheet);
+    if (!hostColumns.length) return;
+
+    var counts = buildGuestCountsByWeek_(guestSheet, timezone);
+    var members = buildMembersResponse_().members || [];
+    var rowCount = reportLastRow - GUEST_INCENTIVE_DATA_START_ROW + 1;
+    var reportValues = reportSheet.getRange(GUEST_INCENTIVE_DATA_START_ROW, 1, rowCount, 1).getValues();
+
+    hostColumns.forEach(function(config) {
+      config.aliases = resolveGuestIncentiveAliases_(config.label, members);
+    });
+
+    // Only write to Points columns for rows that have a valid date.
+    // NEVER touch Bonus columns (Carter's manual entries).
+    // NEVER touch Weekly Total columns (have spreadsheet formulas).
+    // NEVER touch totals rows at the bottom (have SUM formulas).
+    hostColumns.forEach(function(config) {
+      var output = [];
+      var hasDateRows = 0;
+
+      reportValues.forEach(function(row) {
+        var weekKey = toDateKey_(row[0], timezone);
+        if (!weekKey) {
+          // No date = totals row or spacer — skip by not including in output
+          return;
+        }
+        hasDateRows += 1;
+        var count = getGuestCountForAliases_(counts, weekKey, config.aliases);
+        output.push([count]);
+      });
+
+      if (hasDateRows > 0) {
+        reportSheet.getRange(GUEST_INCENTIVE_DATA_START_ROW, config.col, hasDateRows, 1).setValues(output);
+      }
+    });
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function buildGuestCountsByWeek_(guestSheet, timezone) {
+  var rowCount = Math.max(guestSheet.getLastRow() - HEADER_ROW, 0);
+  var counts = {};
+  if (!rowCount) return counts;
+
+  var rows = guestSheet.getRange(HEADER_ROW + 1, 1, rowCount, HEADER_COUNT).getValues();
+  rows.forEach(function(row) {
+    var weekKey = toDateKey_(row[1], timezone);
+    var guestOf = normalizePerson_(row[7]);
+    if (!weekKey || !guestOf) return;
+
+    if (!counts[weekKey]) counts[weekKey] = {};
+    counts[weekKey][guestOf] = (counts[weekKey][guestOf] || 0) + 1;
+  });
+
+  return counts;
+}
+
+function getGuestIncentiveHostColumns_(reportSheet) {
+  var lastColumn = reportSheet.getLastColumn();
+  var headerLabels = getMergedHeaderLabels_(reportSheet, GUEST_INCENTIVE_HEADER_ROW, lastColumn);
+  var subheaders = reportSheet.getRange(GUEST_INCENTIVE_SUBHEADER_ROW, 1, 1, lastColumn).getDisplayValues()[0];
+  var hostColumns = [];
+
+  for (var col = 1; col <= lastColumn; col += 1) {
+    var label = cleanValue_(headerLabels[col]);
+    var subheader = normalizeHeader_(subheaders[col - 1]);
+
+    if (!label || normalizeHeader_(label) === 'weeklytotal') continue;
+    if (subheader !== 'points') continue;
+
+    var bonusCol = col + 1 <= lastColumn && normalizeHeader_(subheaders[col]) === 'bonus' ? col + 1 : null;
+    hostColumns.push({
+      label: label,
+      col: col,
+      bonusCol: bonusCol
+    });
+  }
+
+  return hostColumns;
+}
+
+// getGuestIncentiveWeeklyTotalColumns_ removed — Weekly Total columns
+// have spreadsheet formulas maintained by Carter. Never overwrite them.
+
+function getMergedHeaderLabels_(sheet, rowNumber, lastColumn) {
+  var labels = {};
+  var rowRange = sheet.getRange(rowNumber, 1, 1, lastColumn);
+  var values = rowRange.getDisplayValues()[0];
+
+  values.forEach(function(value, index) {
+    if (cleanValue_(value)) labels[index + 1] = cleanValue_(value);
+  });
+
+  rowRange.getMergedRanges().forEach(function(range) {
+    var label = cleanValue_(range.getDisplayValue());
+    if (!label || range.getRow() !== rowNumber) return;
+
+    for (var col = range.getColumn(); col < range.getColumn() + range.getNumColumns(); col += 1) {
+      labels[col] = label;
+    }
+  });
+
+  return labels;
+}
+
+function resolveGuestIncentiveAliases_(label, members) {
+  var aliases = {};
+  var normalizedLabel = normalizePerson_(label);
+  if (!normalizedLabel) return [];
+
+  aliases[normalizedLabel] = true;
+
+  var overrideAliases = GUEST_INCENTIVE_HOST_ALIASES[normalizedLabel] || [];
+  overrideAliases.forEach(function(alias) {
+    aliases[normalizePerson_(alias)] = true;
+  });
+
+  members.forEach(function(member) {
+    if (!member || !member.name) return;
+
+    var fullName = cleanValue_(member.name);
+    var firstName = cleanValue_(fullName.split(/\s+/)[0]);
+    if (normalizePerson_(fullName) === normalizedLabel || normalizePerson_(firstName) === normalizedLabel) {
+      aliases[normalizePerson_(fullName)] = true;
+      aliases[normalizePerson_(firstName)] = true;
+    }
+  });
+
+  return Object.keys(aliases).filter(function(alias) {
+    return !!alias;
+  });
+}
+
+function getGuestCountForAliases_(counts, weekKey, aliases) {
+  var weekCounts = counts[weekKey] || {};
+  return aliases.reduce(function(sum, alias) {
+    return sum + (weekCounts[alias] || 0);
+  }, 0);
+}
+
+function toDateKey_(value, timezone) {
+  if (Object.prototype.toString.call(value) === '[object Date]' && !isNaN(value)) {
+    return Utilities.formatDate(value, timezone, 'M/d/yyyy');
+  }
+
+  var cleaned = cleanValue_(value);
+  if (!cleaned) return '';
+
+  var normalized = cleaned.replace(/-/g, '/');
+  var parsed = new Date(normalized);
+  if (!isNaN(parsed)) {
+    return Utilities.formatDate(parsed, timezone, 'M/d/yyyy');
+  }
+
+  return cleaned;
+}
+
+function normalizePerson_(value) {
+  return cleanValue_(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
+function asNumber_(value) {
+  if (typeof value === 'number' && !isNaN(value)) return value;
+  var cleaned = cleanValue_(value);
+  if (!cleaned) return 0;
+  var numeric = Number(cleaned);
+  return isNaN(numeric) ? 0 : numeric;
 }
 
 function normalizeBoolean_(value) {
