@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#01696f">
+  <meta name="theme-color" content="#E8580C">
   <title>RDU Heatwave Member Survey</title>
   <meta name="description" content="Quick anonymous feedback survey for RDU Heatwave members. Help us make the team better.">
   <link rel="canonical" href="https://rduheatwave.team/survey">
@@ -17,13 +17,13 @@
   <meta property="og:image" content="https://rduheatwave.team/icons/heatwave-icon-512.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    /* ─── Design Tokens ───────────────────────────────── */
-    :root, [data-theme="light"] {
+    /* ─── Design Tokens (Dark Fire Theme) ──────────────── */
+    :root, [data-theme="dark"] {
       --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
       --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
-      --text-base: clamp(1rem,     0.95rem + 0.25vw, 1.125rem);
+      --text-base: clamp(1rem,     0.9rem  + 0.5vw,  1.125rem);
       --text-lg:   clamp(1.125rem, 1rem    + 0.75vw, 1.5rem);
       --text-xl:   clamp(1.5rem,   1.2rem  + 1.25vw, 2.25rem);
       --text-2xl:  clamp(2rem,     1.2rem  + 2.5vw,  3.5rem);
@@ -33,69 +33,38 @@
       --space-8: 2rem;   --space-10: 2.5rem; --space-12: 3rem;
       --space-16: 4rem;
 
-      --color-bg:             #f7f6f2;
-      --color-surface:        #f9f8f5;
-      --color-surface-2:      #fbfbf9;
-      --color-surface-offset: #f3f0ec;
-      --color-divider:        #dcd9d5;
-      --color-border:         #d4d1ca;
+      --color-bg:             #1a1412;
+      --color-surface:        #231c18;
+      --color-surface-2:      #2c2420;
+      --color-surface-offset: #1e1714;
+      --color-divider:        rgba(232, 88, 12, 0.12);
+      --color-border:         rgba(232, 88, 12, 0.2);
 
-      --color-text:        #28251d;
-      --color-text-muted:  #7a7974;
-      --color-text-faint:  #bab9b4;
+      --color-text:        #f0e6dc;
+      --color-text-muted:  #a89585;
+      --color-text-faint:  #6b5c4e;
 
-      --color-primary:          #01696f;
-      --color-primary-hover:    #0c4e54;
-      --color-primary-highlight:#cedcd8;
+      --color-primary:          #E8580C;
+      --color-primary-hover:    #FF6A1E;
+      --color-primary-highlight: rgba(232, 88, 12, 0.12);
 
-      --color-accent: #e05c2a; /* fire/heatwave orange */
-      --color-accent-hover: #c44520;
+      --color-accent: #E8580C;
+      --color-accent-hover: #C44A0A;
 
       --radius-sm: .375rem; --radius-md: .5rem;
       --radius-lg: .75rem;  --radius-xl: 1rem;
 
-      --shadow-sm: 0 1px 2px oklch(0.2 0.01 80 / .06);
-      --shadow-md: 0 4px 12px oklch(0.2 0.01 80 / .08);
-      --shadow-lg: 0 12px 32px oklch(0.2 0.01 80 / .12);
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+      --shadow-glow: 0 0 80px rgba(232, 88, 12, 0.12), 0 0 160px rgba(232, 88, 12, 0.06);
 
       --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
 
-      --font-display: 'Instrument Serif', Georgia, serif;
-      --font-body: 'Inter', system-ui, sans-serif;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
 
       --content-narrow: 640px;
-    }
-
-    [data-theme="dark"] {
-      --color-bg:             #171614;
-      --color-surface:        #1c1b19;
-      --color-surface-2:      #201f1d;
-      --color-surface-offset: #1d1c1a;
-      --color-divider:        #262523;
-      --color-border:         #393836;
-      --color-text:           #cdccca;
-      --color-text-muted:     #797876;
-      --color-text-faint:     #5a5957;
-      --color-primary:        #4f98a3;
-      --color-primary-hover:  #227f8b;
-      --color-primary-highlight: #313b3b;
-      --color-accent: #f47b4a;
-      --color-accent-hover: #e05c2a;
-      --shadow-sm: 0 1px 2px oklch(0 0 0 / .2);
-      --shadow-md: 0 4px 12px oklch(0 0 0 / .3);
-      --shadow-lg: 0 12px 32px oklch(0 0 0 / .4);
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme]) {
-        --color-bg: #171614; --color-surface: #1c1b19; --color-surface-2: #201f1d;
-        --color-surface-offset: #1d1c1a; --color-divider: #262523; --color-border: #393836;
-        --color-text: #cdccca; --color-text-muted: #797876; --color-text-faint: #5a5957;
-        --color-primary: #4f98a3; --color-primary-hover: #227f8b;
-        --color-primary-highlight: #313b3b; --color-accent: #f47b4a; --color-accent-hover: #e05c2a;
-        --shadow-sm: 0 1px 2px oklch(0 0 0 / .2); --shadow-md: 0 4px 12px oklch(0 0 0 / .3);
-        --shadow-lg: 0 12px 32px oklch(0 0 0 / .4);
-      }
     }
 
     /* ─── Base Reset ────────────────────────────────── */
@@ -109,10 +78,22 @@
       background: var(--color-bg);
       line-height: 1.6;
     }
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%;
+      left: 50%;
+      width: 600px;
+      height: 600px;
+      transform: translateX(-50%);
+      background: radial-gradient(circle, rgba(232, 88, 12, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: -1;
+    }
     img, svg { display: block; max-width: 100%; }
     input, button, textarea, select { font: inherit; color: inherit; }
     button { cursor: pointer; background: none; border: none; }
-    ::selection { background: oklch(from var(--color-primary) l c h / .25); color: var(--color-text); }
+    ::selection { background: rgba(232, 88, 12, 0.3); color: var(--color-text); }
     :focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; border-radius: var(--radius-sm); }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
@@ -128,7 +109,7 @@
     .site-header {
       position: sticky; top: 0; z-index: 100;
       background: var(--color-surface);
-      border-bottom: 1px solid oklch(from var(--color-text) l c h / .08);
+      border-bottom: 1px solid rgba(232, 88, 12, 0.15);
       box-shadow: var(--shadow-sm);
       padding: var(--space-3) var(--space-6);
       display: flex; align-items: center; justify-content: space-between;
@@ -144,18 +125,10 @@
     .logo-sub { font-size: var(--text-xs); color: var(--color-text-muted); letter-spacing: .06em; text-transform: uppercase; font-family: var(--font-body); }
 
     .header-actions { display: flex; align-items: center; gap: var(--space-2); }
-    .theme-toggle {
-      width: 36px; height: 36px;
-      border-radius: var(--radius-md);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--color-text-muted);
-      transition: background var(--transition), color var(--transition);
-    }
-    .theme-toggle:hover { background: var(--color-surface-offset); color: var(--color-text); }
 
     /* ─── Hero Banner ───────────────────────────────── */
     .hero {
-      background: linear-gradient(135deg, var(--color-primary) 0%, #014d52 100%);
+      background: linear-gradient(135deg, #E8580C 0%, #C44A0A 50%, #8B3508 100%);
       color: white;
       padding: var(--space-12) var(--space-6);
       text-align: center;
@@ -165,7 +138,7 @@
     .hero::before {
       content: '';
       position: absolute; inset: 0;
-      background: radial-gradient(ellipse at 80% 50%, oklch(0.7 0.15 50 / .15) 0%, transparent 60%);
+      background: radial-gradient(ellipse at 80% 50%, rgba(255, 153, 51, 0.2) 0%, transparent 60%);
       pointer-events: none;
     }
     .hero-badge {
@@ -174,7 +147,7 @@
       border-radius: var(--radius-full, 9999px);
       padding: var(--space-1) var(--space-4);
       font-size: var(--text-xs); letter-spacing: .08em; text-transform: uppercase;
-      margin-bottom: var(--space-4); color: oklch(0.95 0.02 190);
+      margin-bottom: var(--space-4); color: rgba(255,255,255,0.9);
     }
     .hero h1 {
       font-family: var(--font-display);
@@ -182,11 +155,12 @@
       line-height: 1.1;
       color: white;
       margin-bottom: var(--space-3);
+      letter-spacing: 0.03em;
     }
-    .hero h1 em { font-style: italic; color: oklch(0.92 0.06 70); }
+    .hero h1 em { font-style: normal; color: #FFD4A8; }
     .hero p {
       font-size: var(--text-base);
-      color: oklch(0.9 0.02 190);
+      color: rgba(255,255,255,0.8);
       max-width: 52ch;
       margin-inline: auto;
       line-height: 1.65;
@@ -197,7 +171,7 @@
     }
     .hero-pill {
       display: flex; align-items: center; gap: var(--space-2);
-      font-size: var(--text-xs); color: oklch(0.85 0.03 190);
+      font-size: var(--text-xs); color: rgba(255,255,255,0.7);
     }
     .hero-pill svg { opacity: .7; }
 
@@ -259,7 +233,7 @@
     /* ─── Question Cards ────────────────────────────── */
     .q-card {
       background: var(--color-surface);
-      border: 1px solid oklch(from var(--color-text) l c h / .08);
+      border: 1px solid rgba(232, 88, 12, 0.1);
       border-radius: var(--radius-xl);
       padding: var(--space-6);
       margin-bottom: var(--space-4);
@@ -268,7 +242,7 @@
     }
     .q-card:focus-within {
       border-color: var(--color-primary);
-      box-shadow: var(--shadow-md), 0 0 0 3px oklch(from var(--color-primary) l c h / .1);
+      box-shadow: var(--shadow-md), 0 0 0 3px rgba(232, 88, 12, 0.1);
     }
 
     .q-number {
@@ -314,7 +288,7 @@
       gap: var(--space-3);
       padding: var(--space-3) var(--space-4);
       background: var(--color-surface-2);
-      border: 1.5px solid oklch(from var(--color-text) l c h / .07);
+      border: 1.5px solid rgba(232, 88, 12, 0.08);
       border-radius: var(--radius-lg);
       cursor: pointer;
       transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
@@ -324,7 +298,7 @@
     }
     .option-item label:hover {
       background: var(--color-primary-highlight);
-      border-color: oklch(from var(--color-primary) l c h / .3);
+      border-color: rgba(232, 88, 12, 0.3);
     }
     .option-item input[type="radio"],
     .option-item input[type="checkbox"] {
@@ -337,7 +311,7 @@
     .option-item:has(input:checked) label {
       background: var(--color-primary-highlight);
       border-color: var(--color-primary);
-      box-shadow: 0 0 0 2px oklch(from var(--color-primary) l c h / .12);
+      box-shadow: 0 0 0 2px rgba(232, 88, 12, 0.15);
     }
 
     /* Scale / Rating */
@@ -354,7 +328,7 @@
       gap: var(--space-1);
       padding: var(--space-3) var(--space-2);
       background: var(--color-surface-2);
-      border: 1.5px solid oklch(from var(--color-text) l c h / .07);
+      border: 1.5px solid rgba(232, 88, 12, 0.08);
       border-radius: var(--radius-lg);
       cursor: pointer;
       font-size: var(--text-xs);
@@ -362,7 +336,7 @@
       text-align: center;
       transition: background var(--transition), border-color var(--transition);
     }
-    .scale-item label:hover { background: var(--color-primary-highlight); border-color: oklch(from var(--color-primary) l c h / .3); }
+    .scale-item label:hover { background: var(--color-primary-highlight); border-color: rgba(232, 88, 12, 0.3); }
     .scale-item input[type="radio"] { width: 16px; height: 16px; accent-color: var(--color-primary); cursor: pointer; }
     .scale-item:has(input:checked) label {
       background: var(--color-primary-highlight);
@@ -382,7 +356,7 @@
       min-height: 96px;
       padding: var(--space-3) var(--space-4);
       background: var(--color-surface-2);
-      border: 1.5px solid oklch(from var(--color-text) l c h / .1);
+      border: 1.5px solid rgba(232, 88, 12, 0.1);
       border-radius: var(--radius-lg);
       font-size: var(--text-sm);
       color: var(--color-text);
@@ -394,7 +368,7 @@
     .q-textarea:focus {
       outline: none;
       border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px oklch(from var(--color-primary) l c h / .1);
+      box-shadow: 0 0 0 3px rgba(232, 88, 12, 0.1);
     }
 
     /* ─── Submit Section ────────────────────────────── */
@@ -459,6 +433,7 @@
       color: var(--color-text-faint);
     }
     .site-footer a { color: var(--color-text-muted); text-decoration: none; }
+    .site-footer a { transition: color var(--transition); }
     .site-footer a:hover { color: var(--color-primary); }
   </style>
 </head>
@@ -471,7 +446,7 @@
     <a class="logo-mark" href="#">
       <!-- Flame / Heatwave SVG logo -->
       <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-label="RDU Heatwave" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="16" cy="16" r="16" fill="var(--color-primary)"/>
+        <circle cx="16" cy="16" r="16" fill="#E8580C"/>
         <path d="M16 5C14 9 10 11 11 15.5C11.8 18.5 14.5 19.5 14 22C14 22 17 20 17 17C17 17 19 19 18.5 22C20.5 19.5 22 16.5 19.5 13.5C20.5 15 20.5 16.5 20 18C20 18 23 15 20.5 10.5C20.5 10.5 19 14 17.5 14C19 11 18 8 16 5Z" fill="#f47b4a"/>
         <path d="M16 13C15 15 13.5 16.5 14 18.5C14.3 19.8 15.5 20.5 15 22C16.2 21 17 19.5 17 18C17.5 19 17.5 20.5 17 22C18.5 20.5 19 18.5 18 17C18.5 17.8 18.5 18.8 18 19.5C18 19.5 20 17.5 18.5 14.5C18.5 16 18 17 17.5 17C18 15.5 17.5 14 16 13Z" fill="white" opacity="0.8"/>
       </svg>
@@ -480,11 +455,7 @@
         <div class="logo-sub">Two Twelve Referral Network</div>
       </div>
     </a>
-    <div class="header-actions">
-      <button class="theme-toggle" data-theme-toggle aria-label="Switch to dark mode">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-      </button>
-    </div>
+    <div class="header-actions"></div>
   </header>
 
   <!-- HERO -->
@@ -704,22 +675,8 @@
 </div>
 
 <script>
-  // Theme toggle
-  (function(){
-    const t = document.querySelector('[data-theme-toggle]');
-    const r = document.documentElement;
-    let d = matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light';
-    r.setAttribute('data-theme', d);
-    const sunIcon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
-    const moonIcon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
-    if (d === 'dark' && t) t.innerHTML = sunIcon;
-    t && t.addEventListener('click', () => {
-      d = d === 'dark' ? 'light' : 'dark';
-      r.setAttribute('data-theme', d);
-      t.setAttribute('aria-label', 'Switch to ' + (d === 'dark' ? 'light' : 'dark') + ' mode');
-      t.innerHTML = d === 'dark' ? sunIcon : moonIcon;
-    });
-  })();
+  // Dark theme locked
+  document.documentElement.setAttribute('data-theme', 'dark');
 
   // Progress tracker
   const form = document.getElementById('survey-form');
