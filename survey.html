@@ -134,7 +134,15 @@
       text-align: center;
       position: relative;
       overflow: hidden;
+      transition: padding 0.4s ease;
     }
+    .hero.compact {
+      padding: var(--space-4) var(--space-6);
+    }
+    .hero.compact .hero-badge,
+    .hero.compact .hero p,
+    .hero.compact .hero-meta { display: none; }
+    .hero.compact h1 { margin-bottom: 0; font-size: var(--text-xl); }
     .hero::before {
       content: '';
       position: absolute; inset: 0;
@@ -755,6 +763,7 @@
       }
       form.classList.add('hidden');
       document.querySelector('.progress-wrap').style.display = 'none';
+      document.querySelector('.hero').classList.add('compact');
       document.getElementById('thank-you').classList.add('visible');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
