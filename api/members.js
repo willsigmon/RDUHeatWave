@@ -15,16 +15,16 @@ var LEADER_OVERRIDES = {
 
 var DEFAULT_MEMBERS = [
   { name: 'Carter Helms', title: 'Team Chair', company: 'Highstreet Ins & Financial Svcs', leader: true, website: 'https://carterhelms.com' },
-  { name: 'Craig Morrill', title: 'Vice Chair', company: 'Summit Global', leader: true, website: '' },
-  { name: 'Will Sigmon', title: 'Team Admin', company: 'Will Sigmon Media', leader: true, website: 'https://willsigmon.media' },
-  { name: 'Rusty Sutton', title: 'Team Marketing Specialist', company: 'Monkey Fans Creative', leader: false, specialTitle: true, website: 'https://monkeyfansraleigh.com' },
-  { name: 'Robert Courts', title: 'Mortgage Lending', company: 'Advantage Lending', leader: false, website: 'https://advantagelending.com' },
+  { name: 'Craig Morrill', title: 'Vice Chair', company: 'Summit Global Investments', leader: true, website: 'https://sgiam.com' },
+  { name: 'Will Sigmon', title: 'Team Admin', company: 'Will Sigmon Media Co.', leader: true, website: 'https://willsigmon.media' },
+  { name: 'Rusty Sutton', title: 'Team Marketing Specialist', company: 'MonkeyFans Creative', leader: false, specialTitle: true, website: 'https://monkeyfansraleigh.com/about' },
+  { name: 'Robert Courts', title: 'Mortgage Lending', company: 'Advantage Lending', leader: false, website: 'https://advantagelending.com/mortgage-loan-services' },
   { name: 'Dana Walsh', title: 'Magazine Publisher', company: 'Stroll Magazine', leader: false, website: 'https://strollmag.com/locations/hayes-barton-nc' },
   { name: 'Nathan Senn', title: 'Property Restoration', company: 'Franco Restorations', leader: false, website: 'https://francorestorations.com' },
-  { name: 'Roni Payne', title: 'Accounting / Tax', company: 'R. Payne LLC', leader: false, website: '' },
-  { name: 'Shannida Ramsey', title: 'Property Management', company: 'Ramz Services', leader: false, website: '' },
-  { name: 'David Mercado', title: 'HOA Management', company: 'WM Douglas', leader: false, website: '' },
-  { name: 'Sue Kerata', title: 'Realtor', company: '', leader: false, website: 'https://suekhomes.com' }
+  { name: 'Roni Payne', title: 'Accounting / Tax', company: 'R. Payne LLC', leader: false, website: 'https://rpayne.org/about' },
+  { name: 'Shannida Ramsey', title: 'Property Maintenance', company: 'Ram-Z Services LLC', leader: false, website: 'https://ramzservices.com' },
+  { name: 'David Mercado', title: 'HOA Management', company: 'William Douglas Management', leader: false, website: 'https://wmdouglas.com/raleigh-hoa-management' },
+  { name: 'Sue Kerata', title: 'Realtor', company: 'Century 21 Triangle Group', leader: false, website: 'https://suekhomes.com' }
 ];
 
 // ── Field mapping ───────────────────────────────────────────────────

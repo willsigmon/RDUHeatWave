@@ -299,6 +299,14 @@ body.drawer-open .panel-arrow {
   box-shadow: inset 0 0 0 1px rgba(232, 88, 12, 0.16);
 }
 
+.team-member.leader.chair {
+  grid-column: 1 / -1;
+  text-align: center;
+  border-left: none;
+  border-bottom: 3px solid var(--color-primary);
+  padding: 1.1rem 1rem;
+}
+
 .team-member strong {
   color: #fff;
   display: block;
@@ -2447,17 +2455,17 @@ button { cursor: pointer; background: none; border: none; }
   var MAX_LOCAL_ENTRIES = 250;
   // Single source of truth for the public team list and the "Guest Of" dropdown.
   var TEAM_MEMBERS = [
-    { name: 'Carter Helms', title: 'Team Chair', profession: 'Personal Insurance', company: 'Highstreet Ins & Financial Svcs', website: 'https://carterhelms.com', leader: true },
-    { name: 'Craig Morrill', title: 'Vice Chair', profession: 'Financial Planning', company: 'Summit Global Investments', website: '', leader: true },
-    { name: 'Will Sigmon', title: 'Team Admin', profession: 'Website & Software Development', company: 'Will Sigmon Media', website: 'https://willsigmon.media', leader: true },
-    { name: 'Rusty Sutton', title: 'Team Marketing Specialist', profession: 'Digital Marketing', company: 'Monkey Fans Creative', website: 'https://monkeyfansraleigh.com', leader: false, specialTitle: true },
-    { name: 'Robert Courts', title: 'Mortgage Lending', company: 'Advantage Lending', website: 'https://advantagelending.com', leader: false },
+    { name: 'Carter Helms', title: 'Team Chair', profession: 'Community Insurance Agent', company: 'Highstreet Ins & Financial Svcs', website: 'https://carterhelms.com', leader: true },
+    { name: 'Craig Morrill', title: 'Vice Chair', profession: 'Financial Advisor', company: 'Summit Global Investments', website: 'https://sgiam.com', leader: true },
+    { name: 'Will Sigmon', title: 'Team Admin', profession: 'Software & Creative', company: 'Will Sigmon Media Co.', website: 'https://willsigmon.media', leader: true },
+    { name: 'Rusty Sutton', title: 'Team Marketing Specialist', profession: 'Digital Marketing', company: 'MonkeyFans Creative', website: 'https://monkeyfansraleigh.com/about', leader: false, specialTitle: true },
+    { name: 'Robert Courts', title: 'Mortgage Lending', company: 'Advantage Lending', website: 'https://advantagelending.com/mortgage-loan-services', leader: false },
     { name: 'Dana Walsh', title: 'Magazine Publisher', company: 'Stroll Magazine', website: 'https://strollmag.com/locations/hayes-barton-nc', leader: false },
     { name: 'Nathan Senn', title: 'Property Restoration', company: 'Franco Restorations', website: 'https://francorestorations.com', leader: false },
-    { name: 'Roni Payne', title: 'Accounting / Tax', company: 'R. Payne LLC', website: '', leader: false },
-    { name: 'Shannida Ramsey', title: 'Property Management', company: 'Ramz Services', website: '', leader: false },
-    { name: 'David Mercado', title: 'HOA Management', company: 'WM Douglas', website: '', leader: false },
-    { name: 'Sue Kerata', title: 'Realtor', company: '', website: 'https://suekhomes.com', leader: false }
+    { name: 'Roni Payne', title: 'Accounting / Tax', company: 'R. Payne LLC', website: 'https://rpayne.org/about', leader: false },
+    { name: 'Shannida Ramsey', title: 'Property Maintenance', company: 'Ram-Z Services LLC', website: 'https://ramzservices.com', leader: false },
+    { name: 'David Mercado', title: 'HOA Management', company: 'William Douglas Management', website: 'https://wmdouglas.com/raleigh-hoa-management', leader: false },
+    { name: 'Sue Kerata', title: 'Realtor', company: 'Century 21 Triangle Group', website: 'https://suekhomes.com', leader: false }
   ];
 
   function keepLatestLocalEntries(entries) {
@@ -2479,12 +2487,15 @@ button { cursor: pointer; background: none; border: none; }
     var governanceMembers = TEAM_MEMBERS.filter(function(member) { return member.leader; });
     var memberRoster = TEAM_MEMBERS.filter(function(member) { return !member.leader; });
 
-    function renderMemberCards(members) {
-      return members.map(function(member) {
+    function renderMemberCards(members, options) {
+      var isGovernance = options && options.governance;
+      return members.map(function(member, index) {
+        var isChair = isGovernance && index === 0;
         var topLine = member.leader ? (member.profession || member.title) : member.title;
         var subtitle = member.leader ? (member.company || '') : (member.profession || member.company || '');
         var roleBadge = member.leader ? '<div class="team-member-role">' + escapeHtml(member.title) + '</div>' : '';
-        return '<div class="team-member' + (member.leader ? ' leader' : '') + '">' +
+        var classes = 'team-member' + (member.leader ? ' leader' : '') + (isChair ? ' chair' : '');
+        return '<div class="' + classes + '">' +
           '<strong class="' + (member.specialTitle ? 'team-member-title-special' : '') + '">' + escapeHtml(topLine) + '</strong>' +
           '<span>' + escapeHtml(member.name) + '</span>' +
           '<div class="team-member-company">' + escapeHtml(subtitle) + '</div>' +
@@ -2496,7 +2507,7 @@ button { cursor: pointer; background: none; border: none; }
     teamGrid.innerHTML =
       '<div class="team-grid-group">' +
         '<div class="team-grid-label">Governance Committee</div>' +
-        '<div class="team-grid-cards">' + renderMemberCards(governanceMembers) + '</div>' +
+        '<div class="team-grid-cards">' + renderMemberCards(governanceMembers, { governance: true }) + '</div>' +
       '</div>' +
       '<div class="team-grid-group">' +
         '<div class="team-grid-label">Members</div>' +
