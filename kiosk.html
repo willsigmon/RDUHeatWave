@@ -1360,11 +1360,14 @@ body {
     { name: 'Carter Helms', title: 'Team Chair', company: 'Highstreet Ins & Financial Svcs', website: 'https://carterhelms.com', leader: true },
     { name: 'Craig Morrill', title: 'Vice Chair', company: 'Summit Global', website: '', leader: true },
     { name: 'Will Sigmon', title: 'Team Admin', company: 'Will Sigmon Media', website: 'https://willsigmon.media', leader: true },
-    { name: 'Rusty Sutton', title: 'Team Marketing Specialist', company: 'Monkey Fans Creative', website: 'https://monkeyfansraleigh.com', leader: true, specialTitle: true },
+    { name: 'Rusty Sutton', title: 'Team Marketing Specialist', company: 'Monkey Fans Creative', website: 'https://monkeyfansraleigh.com', leader: false, specialTitle: true },
     { name: 'Robert Courts', title: 'Mortgage Lending', company: 'Advantage Lending', website: 'https://advantagelending.com', leader: false },
     { name: 'Dana Walsh', title: 'Magazine Publisher', company: 'Stroll Magazine', website: 'https://strollmag.com/locations/hayes-barton-nc', leader: false },
     { name: 'Nathan Senn', title: 'Property Restoration', company: 'Franco Restorations', website: 'https://francorestorations.com', leader: false },
-    { name: 'Roni Payne', title: 'Accounting / Tax', company: 'R. Payne LLC', website: '', leader: false }
+    { name: 'Roni Payne', title: 'Accounting / Tax', company: 'R. Payne LLC', website: '', leader: false },
+    { name: 'Shannida Ramsey', title: 'Property Management', company: 'Ramz Services', website: '', leader: false },
+    { name: 'David Mercado', title: 'HOA Management', company: 'WM Douglas', website: '', leader: false },
+    { name: 'Sue Kerata', title: 'Realtor', company: '', website: 'https://suekhomes.com', leader: false }
   ];
 
   var INDUSTRIES = [
@@ -1568,6 +1571,16 @@ body {
   }
 
   renderGuestQuickPicks();
+
+  // Fetch live roster from API — update guest picks if successful
+  fetchWithTimeout('/api/members', { method: 'GET' }, 5000)
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
+      if (data.status !== 'ok' || !Array.isArray(data.members) || !data.members.length) return;
+      TEAM_MEMBERS = data.members;
+      renderGuestQuickPicks();
+    })
+    .catch(function() { /* fallback already rendered */ });
 
   guestQuickPicks.addEventListener('click', function(event) {
     var button = event.target.closest('.guest-chip');
