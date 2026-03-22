@@ -1,0 +1,1850 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#E8580C">
+<title>RDU Heatwave — Kiosk Check-In</title>
+<meta name="description" content="RDU Heatwave kiosk check-in. Thursdays at 4:00 PM ET at Clouds Brewing.">
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="icon" type="image/png" href="/icons/heatwave-icon-192.png">
+<link rel="apple-touch-icon" href="/icons/heatwave-icon-180.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared.css">
+
+<style>
+/* Kiosk display overrides — intentionally darker for venue tablet */
+:root {
+  --color-bg: #0c0c0e;
+  --color-surface: #161618;
+  --color-surface-2: #1e1e22;
+  --color-divider: rgba(232, 88, 12, 0.18);
+  --color-border: rgba(232, 88, 12, 0.25);
+  --color-text: #f0ece8;
+  --color-text-muted: #a09898;
+  --color-text-faint: #686060;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-bg);
+  overflow: hidden;
+  position: relative;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* === HEAT BACKGROUND (full page) === */
+.heat-bg {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+}
+.heat-line {
+  position: absolute; width: 200%; height: 1px; left: -50%;
+  background: linear-gradient(90deg, transparent 0%, rgba(232,88,12,0.06) 20%, rgba(232,88,12,0.1) 50%, rgba(232,88,12,0.06) 80%, transparent 100%);
+  animation: heat-drift linear infinite;
+}
+.heat-line:nth-child(1) { top: 15%; animation-duration: 18s; }
+.heat-line:nth-child(2) { top: 30%; animation-duration: 22s; animation-delay: -4s; opacity: 0.7; }
+.heat-line:nth-child(3) { top: 50%; animation-duration: 16s; animation-delay: -8s; }
+.heat-line:nth-child(4) { top: 70%; animation-duration: 20s; animation-delay: -12s; opacity: 0.5; }
+.heat-line:nth-child(5) { top: 85%; animation-duration: 24s; animation-delay: -6s; opacity: 0.6; }
+@keyframes heat-drift {
+  0% { transform: translateX(-25%) scaleY(1); }
+  25% { transform: translateX(0%) scaleY(2); }
+  50% { transform: translateX(25%) scaleY(1); }
+  75% { transform: translateX(0%) scaleY(1.5); }
+  100% { transform: translateX(-25%) scaleY(1); }
+}
+
+/* Heat orb */
+.heat-orb {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 100vw; height: 100vw; max-width: 1000px; max-height: 1000px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(232, 88, 12, 0.14) 0%, rgba(255, 106, 30, 0.06) 30%, transparent 70%);
+  mix-blend-mode: screen;
+  pointer-events: none; z-index: 0;
+  animation: orb-pulse 6s ease-in-out infinite;
+}
+@keyframes orb-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  50% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.6; }
+}
+
+/* Heat waves at bottom */
+.heat-waves {
+  position: fixed; bottom: 0; left: 0; width: 100%; height: 35vh;
+  z-index: 2; pointer-events: none; overflow: hidden;
+}
+.hw-wave {
+  position: absolute; bottom: -10vh; left: 0; width: 200%; height: 120%;
+  background: radial-gradient(ellipse at bottom, rgba(232, 88, 12, 0.4) 0%, rgba(255, 106, 30, 0.1) 40%, transparent 70%);
+  transform-origin: bottom center;
+  animation: wave-undulate linear infinite alternate;
+  mix-blend-mode: screen;
+}
+.hw-wave:nth-child(1) { animation-duration: 6s; opacity: 0.8; }
+.hw-wave:nth-child(2) { animation-duration: 9s; opacity: 0.6; animation-delay: -2s; transform: scaleY(1.3) translateX(-10%); }
+.hw-wave:nth-child(3) { animation-duration: 12s; opacity: 0.4; animation-delay: -5s; transform: scaleY(0.9) translateX(10%); background: radial-gradient(ellipse at bottom, rgba(255, 106, 30, 0.3) 0%, transparent 60%); }
+.hw-wave:nth-child(4) { animation-duration: 15s; opacity: 0.3; animation-delay: -8s; transform: scaleY(1.5); }
+
+.hw-shimmer {
+  position: absolute; bottom: 10vh; width: 200%; height: 4px;
+  background: linear-gradient(90deg, transparent, rgba(255, 153, 51, 0.6), transparent);
+  animation: wave-undulate 8s linear infinite;
+  filter: blur(2px);
+  mix-blend-mode: screen;
+}
+@keyframes wave-undulate {
+  0% { transform: translateX(0) scaleY(1); }
+  100% { transform: translateX(-30%) scaleY(1.2); }
+}
+
+/* Heat distortion SVG filter */
+.heat-distortion {
+  position: fixed; bottom: 0; left: 0; width: 100%; height: 35vh;
+  z-index: 3; pointer-events: none;
+  filter: url(#heat-distort);
+  -webkit-mask-image: linear-gradient(to top, black 0%, rgba(0,0,0,0.8) 20%, rgba(0,0,0,0.3) 50%, transparent 80%);
+  mask-image: linear-gradient(to top, black 0%, rgba(0,0,0,0.8) 20%, rgba(0,0,0,0.3) 50%, transparent 80%);
+  backdrop-filter: blur(1.5px);
+  -webkit-backdrop-filter: blur(1.5px);
+}
+
+/* Heat glow at bottom */
+.heat-glow {
+  position: fixed; bottom: 0; left: 0; width: 100%; height: 20vh;
+  z-index: 2; pointer-events: none;
+  background: radial-gradient(ellipse 120% 100% at 50% 100%, rgba(232,88,12,0.15) 0%, rgba(255,106,30,0.06) 40%, transparent 80%);
+  animation: glow-pulse 3s ease-in-out infinite alternate;
+}
+@keyframes glow-pulse {
+  0% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+/* Film grain noise */
+.film-grain {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  opacity: 0.035;
+  filter: url(#noise-filter);
+  mix-blend-mode: overlay;
+}
+
+/* Ember particles container */
+#embers-container {
+  position: fixed; inset: 0; pointer-events: none; z-index: 1;
+}
+.ember {
+  position: absolute; bottom: -10px;
+  background: radial-gradient(circle, #FF9933 0%, #FF3300 40%, transparent 70%);
+  border-radius: 50%;
+  animation: ember-float linear forwards;
+}
+@keyframes ember-float {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  20% { opacity: 0.6; }
+  60% { opacity: 0.3; }
+  100% { transform: translateY(-65vh) scale(0.4); opacity: 0; }
+}
+
+/* === KIOSK LAYOUT === */
+.kiosk-layout {
+  position: relative;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: 45% 55%;
+  grid-template-rows: 2.2rem 1fr;
+  width: 100vw;
+  height: 100dvh;
+  overflow: hidden;
+}
+.kiosk-ticker {
+  grid-column: 1 / -1;
+  grid-row: 1;
+}
+.kiosk-left,
+.kiosk-right {
+  grid-row: 2;
+}
+
+/* === LEFT COLUMN === */
+.kiosk-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 1vh 1.2vw;
+  overflow: hidden;
+  gap: 0;
+  position: relative;
+}
+
+/* Subtle vertical divider */
+.kiosk-left::after {
+  content: '';
+  position: absolute;
+  top: 10%;
+  right: 0;
+  bottom: 10%;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, rgba(232, 88, 12, 0.2), rgba(232, 88, 12, 0.3), rgba(232, 88, 12, 0.2), transparent);
+}
+
+.kiosk-brand {
+  display: flex;
+  align-items: center;
+  gap: 1vw;
+}
+
+.kiosk-logo {
+  width: clamp(56px, 7vw, 80px);
+  height: auto;
+  filter: drop-shadow(0 4px 24px rgba(232, 88, 12, 0.6));
+}
+
+.kiosk-brand-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+}
+
+.kiosk-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.5vw, 3rem);
+  letter-spacing: 0.08em;
+  color: var(--color-primary);
+  line-height: 1;
+  text-shadow: 0 4px 16px rgba(232, 88, 12, 0.3);
+}
+
+.kiosk-tt-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-full);
+  padding: 0.25rem 0.75rem 0.25rem 0.4rem;
+}
+
+.kiosk-tt-badge img {
+  height: clamp(20px, 2.5vw, 30px);
+  width: auto;
+  filter: brightness(1.3) drop-shadow(0 0 6px rgba(107, 204, 244, 0.4));
+}
+
+.kiosk-tt-badge span {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* Countdown */
+.kiosk-countdown-section {
+  text-align: center;
+  width: 100%;
+  max-width: 420px;
+}
+
+.kiosk-meeting-label {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  letter-spacing: 0.15em;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.kiosk-meeting-datetime {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.75rem;
+}
+
+.kiosk-countdown-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.6rem;
+}
+
+.kiosk-cd-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.kiosk-cd-value {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 4vw, 3.5rem);
+  letter-spacing: 0.04em;
+  background: linear-gradient(180deg, #ffffff 0%, #e6d8cc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  line-height: 1;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+  width: 100%;
+  text-align: center;
+  background-color: rgba(22, 22, 24, 0.4);
+  border: 1px solid rgba(232, 88, 12, 0.2);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+  border-radius: var(--radius-lg);
+  padding: 0.4rem 0.1rem 0.3rem;
+}
+
+.kiosk-cd-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-text-faint);
+  margin-top: 0.3rem;
+}
+
+.kiosk-meeting-status {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  letter-spacing: 0.06em;
+  color: var(--color-primary);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Schedule */
+.kiosk-schedule {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 420px;
+}
+
+.kiosk-schedule-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.5rem 0.4rem;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.kiosk-schedule-time {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  color: var(--color-primary);
+}
+
+.kiosk-schedule-desc {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  line-height: 1.25;
+}
+
+/* Venue */
+.kiosk-venue {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  line-height: 1.4;
+}
+
+.kiosk-venue strong {
+  color: var(--color-text);
+}
+
+/* QR Code */
+.kiosk-qr-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.kiosk-qr-label {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  color: var(--color-text-faint);
+  text-transform: uppercase;
+}
+
+.kiosk-qr-img {
+  width: clamp(160px, 20vw, 260px);
+  height: auto;
+  border-radius: var(--radius-lg);
+  border: 6px solid rgba(255,255,255,0.95);
+  background: white;
+  padding: 10px;
+  filter: drop-shadow(0 0 32px rgba(255,255,255,0.25));
+}
+
+/* === CURRENT TIME === */
+.kiosk-clock {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
+  letter-spacing: 0.06em;
+  color: var(--color-text);
+  text-align: center;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+.kiosk-clock-date {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  letter-spacing: 0.04em;
+  margin-top: 0.15rem;
+}
+
+/* Two Twelve subtitle */
+.kiosk-tt-text {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-top: -0.2rem;
+}
+
+/* === TICKER BAR === */
+.kiosk-ticker {
+  background: rgba(10, 8, 6, 0.92);
+  border-bottom: 1px solid rgba(232, 88, 12, 0.25);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+.kiosk-ticker-track {
+  display: flex;
+  white-space: nowrap;
+  animation: ticker-scroll 45s linear infinite;
+}
+.kiosk-ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 2rem;
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+}
+.kiosk-ticker-item .ticker-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  flex-shrink: 0;
+}
+.kiosk-ticker-item .ticker-highlight {
+  color: var(--color-primary);
+}
+@keyframes ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* === WELCOME TOAST === */
+.kiosk-toast {
+  position: fixed;
+  top: 3.5rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(-120%);
+  z-index: 200;
+  background: linear-gradient(135deg, rgba(30, 26, 22, 0.96), rgba(20, 16, 14, 0.98));
+  border: 1px solid rgba(232, 88, 12, 0.4);
+  border-radius: var(--radius-xl);
+  padding: 1rem 1.8rem;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.7), 0 0 40px rgba(232, 88, 12, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  opacity: 0;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+  pointer-events: none;
+  max-width: 90vw;
+}
+.kiosk-toast.visible {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+.kiosk-toast-name {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  letter-spacing: 0.06em;
+  color: var(--color-primary);
+  margin-bottom: 0.25rem;
+}
+.kiosk-toast-message {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+/* === RIGHT COLUMN === */
+.kiosk-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5vh 2vw 1.5vh 1.5vw;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Scrollbar styling */
+.kiosk-right::-webkit-scrollbar {
+  width: 4px;
+}
+.kiosk-right::-webkit-scrollbar-track {
+  background: transparent;
+}
+.kiosk-right::-webkit-scrollbar-thumb {
+  background: rgba(232, 88, 12, 0.25);
+  border-radius: 2px;
+}
+
+/* Form card */
+.kiosk-form-card {
+  width: 100%;
+  max-width: min(560px, 48vw);
+  background: rgba(22, 22, 24, 0.85);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(232, 88, 12, 0.2);
+  border-radius: var(--radius-2xl);
+  padding: 1.5vh 1.75vw 1.75vh;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 0 80px rgba(232, 88, 12, 0.08);
+  animation: card-enter 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes card-enter {
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.kiosk-form-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.kiosk-form-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.15rem;
+}
+
+.kiosk-form-title-row img {
+  width: 36px;
+  height: auto;
+  filter: drop-shadow(0 2px 8px rgba(232, 88, 12, 0.5));
+}
+
+.kiosk-form-title {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  letter-spacing: 0.06em;
+  color: var(--color-text);
+}
+
+.kiosk-form-subtitle {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+/* === FORM FIELDS === */
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+
+.field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.field-label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0.3rem;
+  white-space: nowrap;
+}
+
+.field-input {
+  width: 100%;
+  padding: 0.7rem 0.875rem;
+  min-height: 48px;
+  font-size: 16px;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: rgba(44, 36, 32, 0.7);
+  border: 1px solid rgba(232, 88, 12, 0.25);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.field-input::placeholder {
+  color: var(--color-text-faint);
+}
+
+.field-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(232, 88, 12, 0.2);
+}
+
+.field-input.error {
+  border-color: var(--color-error);
+  box-shadow: 0 0 0 3px rgba(217, 68, 68, 0.15);
+}
+
+.field-error {
+  display: none;
+  font-size: 0.72rem;
+  color: var(--color-error);
+  margin-top: 0.2rem;
+  font-weight: 500;
+}
+
+.field-error.visible {
+  display: block;
+}
+
+.field-optional {
+  font-weight: 400;
+  color: var(--color-text-faint);
+  font-size: 0.82em;
+}
+
+/* Profession autocomplete */
+.profession-picker {
+  position: relative;
+}
+
+.profession-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  max-height: 12rem;
+  overflow-y: auto;
+  background: var(--color-surface);
+  border: 1px solid rgba(232, 88, 12, 0.3);
+  border-radius: var(--radius-md);
+  margin-top: 0.3rem;
+  padding: 0.35rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.profession-results:empty {
+  display: none;
+}
+
+.profession-result {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.profession-result:hover,
+.profession-result.active {
+  background: rgba(232, 88, 12, 0.14);
+}
+
+/* Guest picker */
+.guest-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.guest-quick-picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.guest-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid rgba(232, 88, 12, 0.24);
+  border-radius: var(--radius-full);
+  background: rgba(44, 36, 32, 0.72);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.guest-chip:active {
+  transform: scale(0.97);
+}
+
+.guest-chip.active {
+  background: rgba(232, 88, 12, 0.18);
+  border-color: rgba(232, 88, 12, 0.7);
+  box-shadow: 0 0 0 3px rgba(232, 88, 12, 0.14);
+}
+
+.guest-chip--leader {
+  border-color: rgba(232, 88, 12, 0.35);
+  color: var(--color-text);
+}
+
+.guest-chip--other {
+  border-style: dashed;
+}
+
+.guest-search-input {
+  margin-top: 0.05rem;
+}
+
+.guest-results {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-height: 12rem;
+  overflow-y: auto;
+}
+
+.guest-results:empty {
+  display: none;
+}
+
+.guest-result {
+  width: 100%;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid rgba(232, 88, 12, 0.18);
+  border-radius: var(--radius-md);
+  background: rgba(44, 36, 32, 0.58);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.12rem;
+  min-height: 44px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.guest-result:active {
+  transform: scale(0.98);
+}
+
+.guest-result.active {
+  background: rgba(232, 88, 12, 0.18);
+  border-color: rgba(232, 88, 12, 0.7);
+  box-shadow: 0 0 0 3px rgba(232, 88, 12, 0.14);
+}
+
+.guest-result-name {
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.guest-result-meta {
+  font-size: 0.74rem;
+  color: var(--color-text-muted);
+  line-height: 1.2;
+}
+
+.guest-picker.error .guest-quick-picks {
+  padding: 0.25rem;
+  margin: -0.25rem;
+  border-radius: calc(var(--radius-md) + 0.25rem);
+  box-shadow: 0 0 0 2px rgba(217, 68, 68, 0.14);
+}
+
+/* Submit button */
+.submit-wrap {
+  margin-top: 0.4rem;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 0.875rem 2rem;
+  min-height: 56px;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  letter-spacing: 0.1em;
+  color: #fff;
+  background: var(--gradient-fire);
+  border: none;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 4px 16px rgba(232, 88, 12, 0.4);
+}
+
+.submit-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 8px rgba(232, 88, 12, 0.3);
+}
+
+.submit-btn.loading .btn-text { visibility: hidden; }
+.submit-btn.loading .spinner { display: block; }
+
+.spinner {
+  display: none;
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -12px;
+  margin-left: -12px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* === SUCCESS SCREEN === */
+.success-screen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.25rem;
+  padding: 3rem 1.5rem;
+}
+
+.success-icon { width: 72px; height: 72px; }
+.success-icon svg { width: 100%; height: 100%; fill: none; stroke: var(--color-success); stroke-width: 2; }
+
+.success-check {
+  stroke-dasharray: 30;
+  stroke-dashoffset: 30;
+  animation: check-draw 0.5s ease forwards 0.2s;
+}
+
+@keyframes check-draw { to { stroke-dashoffset: 0; } }
+
+.success-title {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  color: #fff;
+  letter-spacing: 0.04em;
+}
+
+.success-subtitle {
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  max-width: 360px;
+}
+
+.reset-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.75rem;
+  min-height: 52px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: rgba(232, 88, 12, 0.1);
+  border: 1px solid rgba(232, 88, 12, 0.3);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.reset-btn:active {
+  background: rgba(232, 88, 12, 0.25);
+  transform: scale(0.97);
+}
+
+/* === CONFETTI CANVAS === */
+#confetti-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 200;
+}
+
+/* === REDUCED MOTION === */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+<noscript><div class="noscript-banner">JavaScript is required to use this page.</div></noscript>
+
+<!-- SVG Filters (hidden) -->
+<svg style="position:absolute;width:0;height:0" aria-hidden="true">
+  <defs>
+    <filter id="heat-distort">
+      <feTurbulence type="turbulence" baseFrequency="0.01 0.04" numOctaves="3" seed="2" result="turb">
+        <animate attributeName="baseFrequency" values="0.01 0.04;0.015 0.06;0.01 0.04" dur="8s" repeatCount="indefinite"/>
+      </feTurbulence>
+      <feDisplacementMap in="SourceGraphic" in2="turb" scale="12" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="noise-filter">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="4" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise"/>
+    </filter>
+  </defs>
+</svg>
+
+<!-- Heat Background Elements (full page) -->
+<div class="heat-bg" aria-hidden="true">
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+</div>
+<div class="heat-orb" aria-hidden="true"></div>
+<div id="embers-container" aria-hidden="true"></div>
+<div class="heat-waves" aria-hidden="true">
+  <div class="hw-wave"></div>
+  <div class="hw-wave"></div>
+  <div class="hw-wave"></div>
+  <div class="hw-wave"></div>
+  <div class="hw-shimmer"></div>
+</div>
+<div class="heat-distortion" aria-hidden="true"></div>
+<div class="heat-glow" aria-hidden="true"></div>
+<div class="film-grain" aria-hidden="true"></div>
+
+<!-- Confetti Canvas -->
+<canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+<!-- Welcome Toast -->
+<div class="kiosk-toast" id="kiosk-toast" aria-live="polite">
+  <div class="kiosk-toast-name" id="toast-name"></div>
+  <div class="kiosk-toast-message">Grab a seat and get ready to network. We start at 4:00!</div>
+</div>
+
+<!-- === KIOSK LAYOUT === -->
+<div class="kiosk-layout">
+
+  <!-- LEFT COLUMN: Branding & Info -->
+  <div class="kiosk-left">
+
+    <!-- Current Time -->
+    <div class="kiosk-clock">
+      <div id="kiosk-time"></div>
+      <div class="kiosk-clock-date" id="kiosk-date"></div>
+    </div>
+
+    <div class="kiosk-brand">
+      <img src="heatwave-logo.png" alt="RDU Heatwave logo" class="kiosk-logo">
+      <div class="kiosk-brand-text">
+        <div class="kiosk-title">RDU HEATWAVE</div>
+        <div class="kiosk-tt-badge">
+          <img src="twotwelve-logo.png" alt="Two Twelve">
+          <span>Two Twelve Referral Network</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Countdown -->
+    <div class="kiosk-countdown-section">
+      <div class="kiosk-meeting-label">Next Meeting</div>
+      <div class="kiosk-meeting-datetime" id="meeting-datetime">Loading...</div>
+      <div class="kiosk-countdown-grid" id="countdown-grid">
+        <div class="kiosk-cd-unit">
+          <div class="kiosk-cd-value" id="cd-days">--</div>
+          <div class="kiosk-cd-label">Days</div>
+        </div>
+        <div class="kiosk-cd-unit">
+          <div class="kiosk-cd-value" id="cd-hours">--</div>
+          <div class="kiosk-cd-label">Hrs</div>
+        </div>
+        <div class="kiosk-cd-unit">
+          <div class="kiosk-cd-value" id="cd-mins">--</div>
+          <div class="kiosk-cd-label">Mins</div>
+        </div>
+        <div class="kiosk-cd-unit">
+          <div class="kiosk-cd-value" id="cd-secs">--</div>
+          <div class="kiosk-cd-label">Secs</div>
+        </div>
+      </div>
+      <div class="kiosk-meeting-status" id="meeting-status" style="display:none;"></div>
+    </div>
+
+    <!-- Schedule -->
+    <div class="kiosk-schedule">
+      <div class="kiosk-schedule-item">
+        <div class="kiosk-schedule-time">3:45 PM</div>
+        <div class="kiosk-schedule-desc">Networking</div>
+      </div>
+      <div class="kiosk-schedule-item">
+        <div class="kiosk-schedule-time">4:00 PM</div>
+        <div class="kiosk-schedule-desc">Meeting</div>
+      </div>
+      <div class="kiosk-schedule-item">
+        <div class="kiosk-schedule-time">5:00 PM</div>
+        <div class="kiosk-schedule-desc">Connect</div>
+      </div>
+    </div>
+
+    <!-- Venue -->
+    <div class="kiosk-venue">
+      <strong>Clouds Brewing</strong> &bull; 1233 Front St, Raleigh NC
+    </div>
+
+    <!-- QR Code -->
+    <div class="kiosk-qr-section">
+      <div class="kiosk-qr-label">Scan to Check In</div>
+      <a href="https://rduheatwave.team" target="_blank" rel="noopener">
+        <img src="qr-rduheatwave.svg" alt="Scan to check in at rduheatwave.team" class="kiosk-qr-img">
+      </a>
+    </div>
+
+  </div>
+
+  <!-- TICKER BAR -->
+  <div class="kiosk-ticker" aria-hidden="true">
+    <div class="kiosk-ticker-track" id="ticker-track"></div>
+  </div>
+
+  <!-- RIGHT COLUMN: Check-in Form -->
+  <div class="kiosk-right">
+    <div class="kiosk-form-card" id="form-card">
+
+      <div class="kiosk-form-header">
+        <div class="kiosk-form-title-row">
+          <img src="heatwave-logo.png" alt="">
+          <h1 class="kiosk-form-title">CHECK IN</h1>
+        </div>
+        <p class="kiosk-form-subtitle">Tap to type on screen, or use a keyboard if one is connected.</p>
+      </div>
+
+      <form id="checkin-form" class="form-fields" novalidate>
+        <div class="form-row">
+          <div class="field">
+            <label class="field-label" for="firstName">First Name</label>
+            <input class="field-input" type="text" id="firstName" name="firstName" placeholder="John" autocomplete="given-name" maxlength="80" required>
+            <div class="field-error" id="firstName-error">Please enter your first name</div>
+          </div>
+          <div class="field">
+            <label class="field-label" for="lastName">Last Name</label>
+            <input class="field-input" type="text" id="lastName" name="lastName" placeholder="Doe" autocomplete="family-name" maxlength="80" required>
+            <div class="field-error" id="lastName-error">Please enter your last name</div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label class="field-label" for="profession">Profession</label>
+            <div class="profession-picker" id="profession-picker">
+              <input class="field-input" type="text" id="profession" name="profession" placeholder="Start typing..." maxlength="120" autocomplete="off" autocapitalize="words" spellcheck="false" required>
+              <div class="profession-results" id="profession-results" role="listbox" aria-label="Industry suggestions"></div>
+            </div>
+            <div class="field-error" id="profession-error">Please enter your profession</div>
+          </div>
+          <div class="field">
+            <label class="field-label" for="companyName">Company <span class="field-optional">(optional)</span></label>
+            <input class="field-input" type="text" id="companyName" name="companyName" placeholder="e.g. Advantage Lending" maxlength="120">
+            <div class="field-error" id="companyName-error">Please enter your company name</div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label class="field-label" for="phone">Phone</label>
+            <input class="field-input" type="tel" id="phone" name="phone" placeholder="(919) 555-0123" autocomplete="tel" inputmode="tel" maxlength="40" required>
+            <div class="field-error" id="phone-error">Please enter your phone number</div>
+          </div>
+          <div class="field">
+            <label class="field-label" for="email">Email</label>
+            <input class="field-input" type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" maxlength="254" required>
+            <div class="field-error" id="email-error">Please enter a valid email</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Guest Of</label>
+          <div class="guest-picker" id="guestOf-picker">
+            <div class="guest-quick-picks" id="guestOf-quick" role="group" aria-label="Quick host picks"></div>
+            <input class="field-input guest-search-input" type="text" id="guestOfSearch" style="display:none" maxlength="120" autocomplete="off">
+            <div class="guest-results" id="guestOf-results" role="listbox" style="display:none"></div>
+          </div>
+          <input type="hidden" id="guestOf" name="guestOf">
+          <div class="field-error" id="guestOf-error">Please let us know who invited you</div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="idealReferral">Ideal Referral <span class="field-optional">(optional)</span></label>
+          <input class="field-input" type="text" id="idealReferral" name="idealReferral" placeholder="Who would be a great intro for you?" maxlength="180">
+        </div>
+
+        <!-- Honeypot -->
+        <div style="position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden;" aria-hidden="true">
+          <label for="companyWebsite">Leave this field blank</label>
+          <input type="text" id="companyWebsite" name="companyWebsite" tabindex="-1" autocomplete="off">
+        </div>
+
+        <div class="submit-wrap">
+          <button type="button" class="submit-btn" id="submit-btn">
+            <span class="btn-text">CHECK IN</span>
+            <div class="spinner" role="status" aria-label="Submitting"></div>
+          </button>
+        </div>
+      </form>
+
+      <!-- Success Screen -->
+      <div class="success-screen" id="success-screen">
+        <div class="success-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path class="success-check" d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <h2 class="success-title" id="success-title">Welcome to the Heatwave!</h2>
+        <p class="success-subtitle" id="success-subtitle">Your registration has been submitted. We look forward to connecting with you.</p>
+        <button class="reset-btn" id="reset-btn" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          Submit Another Response
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ===== EMBER PARTICLES =====
+  var embersContainer = document.getElementById('embers-container');
+  var EMBER_INTERVAL = 800;
+
+  function spawnEmber() {
+    var ember = document.createElement('div');
+    ember.className = 'ember';
+    var size = 3 + Math.random() * 6;
+    ember.style.width = size + 'px';
+    ember.style.height = size + 'px';
+    ember.style.left = (Math.random() * 100) + '%';
+    ember.style.animationDuration = (4 + Math.random() * 5) + 's';
+    embersContainer.appendChild(ember);
+    setTimeout(function() {
+      if (ember.parentNode) ember.parentNode.removeChild(ember);
+    }, 9000);
+  }
+
+  setInterval(spawnEmber, EMBER_INTERVAL);
+
+  // ===== COUNTDOWN TIMER =====
+  var MEETING_DAY = 4;
+  var MEETING_HOUR = 16;
+  var MEETING_MIN = 0;
+  var MEETING_TIME_LABEL = '4:00 PM ET';
+  var MEETING_TIME_ZONE = 'America/New_York';
+  var MEETING_DURATION = 2 * 60 * 60 * 1000;
+  var meetingDateFormatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: MEETING_TIME_ZONE,
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric'
+  });
+  var meetingPartsFormatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: MEETING_TIME_ZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  });
+
+  function getMeetingParts(date) {
+    var parts = {};
+    meetingPartsFormatter.formatToParts(date).forEach(function(part) {
+      if (part.type !== 'literal') parts[part.type] = part.value;
+    });
+    return {
+      year: Number(parts.year),
+      month: Number(parts.month),
+      day: Number(parts.day),
+      hour: Number(parts.hour),
+      minute: Number(parts.minute),
+      second: Number(parts.second)
+    };
+  }
+
+  function getMeetingOffsetMs(date) {
+    var parts = getMeetingParts(date);
+    var zonedAsUtc = Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute, parts.second);
+    return zonedAsUtc - date.getTime();
+  }
+
+  function getMeetingTimestamp(year, month, day, hour, minute) {
+    var utcGuess = Date.UTC(year, month - 1, day, hour, minute, 0);
+    var offset = getMeetingOffsetMs(new Date(utcGuess));
+    var timestamp = utcGuess - offset;
+    var refinedOffset = getMeetingOffsetMs(new Date(timestamp));
+    if (refinedOffset !== offset) {
+      timestamp = utcGuess - refinedOffset;
+    }
+    return timestamp;
+  }
+
+  function getNextMeeting() {
+    var eastNow = getMeetingParts(new Date());
+    var todayUtc = new Date(Date.UTC(eastNow.year, eastNow.month - 1, eastNow.day));
+    var dow = todayUtc.getUTCDay();
+    var daysUntil = (MEETING_DAY - dow + 7) % 7;
+    var meetingEndMinutes = (MEETING_HOUR * 60) + MEETING_MIN + (MEETING_DURATION / 60000);
+    var currentMinutes = (eastNow.hour * 60) + eastNow.minute + (eastNow.second / 60);
+
+    if (daysUntil === 0 && currentMinutes >= meetingEndMinutes) {
+      daysUntil = 7;
+    }
+
+    todayUtc.setUTCDate(todayUtc.getUTCDate() + daysUntil);
+    var year = todayUtc.getUTCFullYear();
+    var month = todayUtc.getUTCMonth() + 1;
+    var day = todayUtc.getUTCDate();
+    var timestamp = getMeetingTimestamp(year, month, day, MEETING_HOUR, MEETING_MIN);
+
+    return {
+      timestamp: timestamp,
+      dateStr: meetingDateFormatter.format(new Date(timestamp))
+    };
+  }
+
+  var meeting = getNextMeeting();
+  var datetimeEl = document.getElementById('meeting-datetime');
+  var countdownGrid = document.getElementById('countdown-grid');
+  var statusEl = document.getElementById('meeting-status');
+
+  datetimeEl.textContent = meeting.dateStr + ' \u2022 ' + MEETING_TIME_LABEL;
+
+  function updateCountdown() {
+    var now = Date.now();
+    var diff = meeting.timestamp - now;
+
+    if (diff <= 0) {
+      countdownGrid.style.display = 'none';
+      statusEl.style.display = 'block';
+      if (diff > -2 * 60 * 60 * 1000) {
+        statusEl.textContent = 'MEETING IN PROGRESS';
+      } else {
+        meeting = getNextMeeting();
+        datetimeEl.textContent = meeting.dateStr + ' \u2022 ' + MEETING_TIME_LABEL;
+        countdownGrid.style.display = 'grid';
+        statusEl.style.display = 'none';
+      }
+      return;
+    }
+
+    var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    var secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+    document.getElementById('cd-days').textContent = String(days).padStart(2, '0');
+    document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+    document.getElementById('cd-mins').textContent = String(mins).padStart(2, '0');
+    document.getElementById('cd-secs').textContent = String(secs).padStart(2, '0');
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // ===== LIVE CLOCK =====
+  var kioskTimeEl = document.getElementById('kiosk-time');
+  var kioskDateEl = document.getElementById('kiosk-date');
+  function updateKioskClock() {
+    var now = new Date();
+    var opts = { timeZone: MEETING_TIME_ZONE };
+    kioskTimeEl.textContent = now.toLocaleTimeString('en-US', Object.assign({ hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true }, opts));
+    kioskDateEl.textContent = now.toLocaleDateString('en-US', Object.assign({ weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }, opts));
+  }
+  updateKioskClock();
+  setInterval(updateKioskClock, 1000);
+
+  // ===== TICKER =====
+  var tickerItems = [
+    '8 ACTIVE MEMBERS',
+    'THURSDAYS AT 4:00 PM ET',
+    'CLOUDS BREWING \u2022 RALEIGH NC',
+    'THE EXTRA DEGREE MAKES ALL THE DIFFERENCE',
+    '211\u00B0 IS HOT \u2022 212\u00B0 BOILS \u2022 STEAM = POWER',
+    'CATEGORY-EXCLUSIVE NETWORKING',
+    'BIZCHAT \u2022 GRATITUDE INCENTIVES \u2022 ACCOUNTABILITY',
+    'TRUSTED REFERRALS \u2022 REAL FOLLOW-THROUGH',
+    'RDUHEATWAVE.TEAM'
+  ];
+  var tickerTrack = document.getElementById('ticker-track');
+  var tickerHtml = '';
+  for (var t = 0; t < 2; t++) {
+    tickerItems.forEach(function(item) {
+      tickerHtml += '<span class="kiosk-ticker-item"><span class="ticker-dot"></span>' + item + '</span>';
+    });
+  }
+  tickerTrack.innerHTML = tickerHtml;
+
+  // ===== CONFIG =====
+  var FORM_ENDPOINT = '/api/checkin';
+  var FORM_TIMEOUT_MS = 12000;
+  var MAX_LOCAL_ENTRIES = 250;
+
+  var TEAM_MEMBERS = [
+    { name: 'Carter Helms', title: 'Team Chair', company: 'Highstreet Ins & Financial Svcs', website: 'https://carterhelms.com', leader: true },
+    { name: 'Craig Morrill', title: 'Vice Chair', company: 'Summit Global', website: '', leader: true },
+    { name: 'Will Sigmon', title: 'Team Admin', company: 'Will Sigmon Media', website: 'https://willsigmon.media', leader: true },
+    { name: 'Rusty Sutton', title: 'Team Marketing Specialist', company: 'Monkey Fans Creative', website: 'https://monkeyfansraleigh.com', leader: true, specialTitle: true },
+    { name: 'Robert Courts', title: 'Mortgage Lending', company: 'Advantage Lending', website: 'https://advantagelending.com', leader: false },
+    { name: 'Dana Walsh', title: 'Magazine Publisher', company: 'Stroll Magazine', website: 'https://strollmag.com/locations/hayes-barton-nc', leader: false },
+    { name: 'Nathan Senn', title: 'Property Restoration', company: 'Franco Restorations', website: 'https://francorestorations.com', leader: false },
+    { name: 'Roni Payne', title: 'Accounting / Tax', company: 'R. Payne LLC', website: '', leader: false }
+  ];
+
+  var INDUSTRIES = [
+    'Accounting', 'Architecture', 'Auto Sales', 'Banking', 'Business Consulting',
+    'Chiropractic', 'Commercial Real Estate', 'Construction', 'Copywriting',
+    'Cyber Security', 'Dental', 'Education', 'Electrical', 'Event Planning',
+    'Financial Planning', 'Fitness & Wellness', 'Graphic Design', 'Healthcare',
+    'Home Inspection', 'Home Services', 'HVAC', 'Insurance', 'Interior Design',
+    'IT Services', 'Landscaping', 'Legal', 'Lending & Mortgage', 'Marketing',
+    'Massage Therapy', 'Media & Video', 'Mental Health', 'Nonprofit',
+    'Nutrition', 'Painting', 'Pest Control', 'Pet Services', 'Photography',
+    'Physical Therapy', 'Plumbing', 'Printing', 'Property Management',
+    'Property Restoration', 'Publishing', 'Real Estate', 'Recruiting',
+    'Roofing', 'Solar Energy', 'Staffing', 'Tax Preparation', 'Technology',
+    'Travel', 'Veterinary', 'Wealth Management', 'Web Development'
+  ];
+
+  // ===== UTILITIES =====
+  function escapeHtml(value) {
+    return String(value || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function keepLatestLocalEntries(entries) {
+    return entries.slice(-MAX_LOCAL_ENTRIES);
+  }
+
+  function fetchWithTimeout(url, options, timeoutMs) {
+    if (typeof AbortController === 'undefined') {
+      return fetch(url, options);
+    }
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function() { controller.abort(); }, timeoutMs);
+    var requestOptions = Object.assign({}, options, { signal: controller.signal });
+    return fetch(url, requestOptions).finally(function() { clearTimeout(timeoutId); });
+  }
+
+  // ===== LOCAL BACKUP =====
+  function saveToLocal(data) {
+    try {
+      var entries = JSON.parse(localStorage.getItem('heatwave_entries') || '[]');
+      var savedEntry = Object.assign({}, data, {
+        timestamp: new Date().toISOString(),
+        synced: false
+      });
+      entries.push(savedEntry);
+      localStorage.setItem('heatwave_entries', JSON.stringify(keepLatestLocalEntries(entries)));
+      return savedEntry;
+    } catch(e) { return null; }
+  }
+
+  function markLocalEntrySynced(timestamp) {
+    if (!timestamp) return;
+    try {
+      var entries = JSON.parse(localStorage.getItem('heatwave_entries') || '[]');
+      var updatedEntries = entries.map(function(entry) {
+        if (entry.timestamp === timestamp) {
+          return Object.assign({}, entry, { synced: true });
+        }
+        return entry;
+      });
+      localStorage.setItem('heatwave_entries', JSON.stringify(keepLatestLocalEntries(updatedEntries)));
+    } catch(e) { /* storage unavailable */ }
+  }
+
+  // ===== DOM REFS =====
+  var form = document.getElementById('checkin-form');
+  var submitBtn = document.getElementById('submit-btn');
+  var successScreen = document.getElementById('success-screen');
+  var successTitle = document.getElementById('success-title');
+  var successSubtitle = document.getElementById('success-subtitle');
+  var resetBtn = document.getElementById('reset-btn');
+  var confettiCanvas = document.getElementById('confetti-canvas');
+  var companyWebsite = document.getElementById('companyWebsite');
+
+  var defaultSuccessTitle = 'Welcome to the Heatwave!';
+  var defaultSuccessSubtitle = 'Your registration has been submitted. We look forward to connecting with you.';
+  var localOnlySuccessTitle = 'Saved on this device';
+  var localOnlySuccessSubtitle = 'Google Sheets is not connected yet, so this check-in is stored locally on this device only.';
+  var syncFailedSuccessSubtitle = 'We saved this check-in on this device, but the Google Sheets sync did not complete.';
+  var submitFailedTitle = 'We could not confirm your check-in';
+  var submitFailedSubtitle = 'This browser could not save a local backup, and the network sync did not complete. Please try again or ask the host to retry.';
+
+  var fields = ['firstName', 'lastName', 'profession', 'phone', 'email', 'guestOf'];
+  var optionalFields = ['companyName', 'idealReferral'];
+  var allFields = fields.concat(optionalFields);
+
+  var guestPicker = document.getElementById('guestOf-picker');
+  var guestQuickPicks = document.getElementById('guestOf-quick');
+  var guestSearchInput = document.getElementById('guestOfSearch');
+  var guestResults = document.getElementById('guestOf-results');
+  var guestOfHidden = document.getElementById('guestOf');
+
+  // ===== PROFESSION AUTOCOMPLETE =====
+  var professionInput = document.getElementById('profession');
+  var professionResults = document.getElementById('profession-results');
+
+  function getProfessionMatches(query) {
+    var q = query.trim().toLowerCase();
+    if (!q) return [];
+    return INDUSTRIES.filter(function(industry) {
+      return industry.toLowerCase().indexOf(q) !== -1;
+    }).slice(0, 6);
+  }
+
+  function renderProfessionResults() {
+    var matches = getProfessionMatches(professionInput.value);
+    if (!matches.length || professionInput.value.trim().toLowerCase() === matches[0].toLowerCase()) {
+      professionResults.innerHTML = '';
+      return;
+    }
+    professionResults.innerHTML = matches.map(function(industry) {
+      return '<button type="button" class="profession-result" data-value="' + escapeHtml(industry) + '">' + escapeHtml(industry) + '</button>';
+    }).join('');
+  }
+
+  professionInput.addEventListener('input', function() { renderProfessionResults(); });
+  professionInput.addEventListener('focus', function() {
+    if (professionInput.value.trim()) renderProfessionResults();
+  });
+  professionInput.addEventListener('blur', function() {
+    window.setTimeout(function() { professionResults.innerHTML = ''; }, 120);
+  });
+  professionResults.addEventListener('click', function(event) {
+    var button = event.target.closest('.profession-result');
+    if (!button) return;
+    professionInput.value = button.getAttribute('data-value');
+    professionResults.innerHTML = '';
+    professionInput.blur();
+    validateField('profession');
+  });
+
+  // ===== GUEST OF PICKER =====
+  function normalizeGuestValue(value) {
+    return String(value || '').trim().toLowerCase();
+  }
+
+  function findGuestMember(value) {
+    var normalized = normalizeGuestValue(value);
+    if (!normalized) return null;
+    return TEAM_MEMBERS.find(function(member) {
+      return normalizeGuestValue(member.name) === normalized;
+    }) || null;
+  }
+
+  function syncGuestQuickPicks() {
+    var selectedOption = guestQuickPicks.getAttribute('data-selected-option') || '';
+    guestQuickPicks.querySelectorAll('.guest-chip').forEach(function(button) {
+      button.classList.toggle('active', button.getAttribute('data-value') === selectedOption);
+    });
+  }
+
+  function renderGuestQuickPicks() {
+    guestQuickPicks.innerHTML = TEAM_MEMBERS.map(function(member) {
+      return '<button type="button" class="guest-chip' + (member.leader ? ' guest-chip--leader' : '') + '" data-value="' + escapeHtml(member.name) + '">' + escapeHtml(member.name) + '</button>';
+    }).join('') +
+    '<button type="button" class="guest-chip guest-chip--other" data-value="Other">Someone Else</button>';
+    syncGuestQuickPicks();
+  }
+
+  function getGuestMatches(query) {
+    var normalized = normalizeGuestValue(query);
+    if (!normalized) return [];
+    return TEAM_MEMBERS.filter(function(member) {
+      return [member.name, member.title, member.company].some(function(part) {
+        return normalizeGuestValue(part).indexOf(normalized) !== -1;
+      });
+    }).slice(0, 6);
+  }
+
+  function renderGuestResults() {
+    var query = guestSearchInput.value.trim();
+    var matches = getGuestMatches(query);
+    var selectedValue = guestOfHidden.value;
+    if (!query) { guestResults.innerHTML = ''; return; }
+    guestResults.innerHTML = matches.map(function(member) {
+      var activeClass = member.name === selectedValue ? ' active' : '';
+      return '<button type="button" class="guest-result' + activeClass + '" data-value="' + escapeHtml(member.name) + '">' +
+        '<span class="guest-result-name">' + escapeHtml(member.name) + '</span>' +
+        '<span class="guest-result-meta">' + escapeHtml(member.title) + ' &bull; ' + escapeHtml(member.company || '') + '</span>' +
+      '</button>';
+    }).join('');
+  }
+
+  function setGuestSelection(value, options) {
+    var nextValue = String(value || '').trim();
+    var exactMember = findGuestMember(nextValue);
+    var isCustom = !!(nextValue && !exactMember);
+    guestOfHidden.value = exactMember ? exactMember.name : nextValue;
+    if (!options || !options.keepTypedValue) {
+      guestSearchInput.value = guestOfHidden.value;
+    }
+    guestQuickPicks.setAttribute('data-selected-option', exactMember && exactMember.leader ? exactMember.name : (isCustom ? 'Other' : ''));
+    syncGuestQuickPicks();
+    renderGuestResults();
+    validateField('guestOf');
+  }
+
+  renderGuestQuickPicks();
+
+  guestQuickPicks.addEventListener('click', function(event) {
+    var button = event.target.closest('.guest-chip');
+    if (!button) return;
+    var value = button.getAttribute('data-value');
+    if (value === 'Other') {
+      guestQuickPicks.setAttribute('data-selected-option', 'Other');
+      guestOfHidden.value = guestSearchInput.value.trim();
+      syncGuestQuickPicks();
+      guestSearchInput.focus();
+      validateField('guestOf');
+      return;
+    }
+    setGuestSelection(value);
+  });
+
+  guestSearchInput.addEventListener('focus', function() { renderGuestResults(); });
+  guestSearchInput.addEventListener('input', function() {
+    setGuestSelection(this.value, { keepTypedValue: true });
+  });
+  guestSearchInput.addEventListener('blur', function() {
+    window.setTimeout(function() {
+      guestResults.innerHTML = '';
+      setGuestSelection(guestSearchInput.value);
+    }, 120);
+  });
+  guestResults.addEventListener('click', function(event) {
+    var button = event.target.closest('.guest-result');
+    if (!button) return;
+    setGuestSelection(button.getAttribute('data-value'));
+    guestResults.innerHTML = '';
+    guestSearchInput.blur();
+  });
+
+  // ===== VALIDATION =====
+  function validateField(name) {
+    var input = document.getElementById(name);
+    var errorEl = document.getElementById(name + '-error');
+    var valid = true;
+
+    if (name === 'guestOf') {
+      valid = !!guestOfHidden.value.trim();
+      guestPicker.classList.toggle('error', !valid);
+      guestSearchInput.classList.toggle('error', !valid);
+      if (errorEl) errorEl.classList.toggle('visible', !valid);
+      return valid;
+    }
+
+    if (optionalFields.indexOf(name) !== -1 && !input.value.trim()) {
+      input.classList.remove('error');
+      if (errorEl) errorEl.classList.remove('visible');
+      return true;
+    }
+
+    if (!input.value.trim()) valid = false;
+
+    if (name === 'email' && input.value.trim()) {
+      var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      valid = emailPattern.test(input.value.trim());
+    }
+
+    if (valid) {
+      input.classList.remove('error');
+      if (errorEl) errorEl.classList.remove('visible');
+    } else {
+      input.classList.add('error');
+      if (errorEl) errorEl.classList.add('visible');
+    }
+
+    return valid;
+  }
+
+  function validateAll() {
+    var allValid = true;
+    fields.forEach(function(name) {
+      if (!validateField(name)) allValid = false;
+    });
+    return allValid;
+  }
+
+  allFields.forEach(function(name) {
+    if (name === 'guestOf') return;
+    var input = document.getElementById(name);
+    if (!input || input.type === 'hidden') return;
+    input.addEventListener('blur', function() {
+      if (input.value.trim() || fields.indexOf(name) !== -1) validateField(name);
+    });
+    input.addEventListener('change', function() { validateField(name); });
+    input.addEventListener('input', function() {
+      if (input.classList.contains('error')) validateField(name);
+    });
+  });
+
+  // ===== FORM SUBMIT =====
+  submitBtn.addEventListener('click', function() {
+    try {
+      if (!validateAll()) {
+        var firstError = form.querySelector('.field-input.error');
+        if (firstError) firstError.focus();
+        return;
+      }
+
+      submitBtn.classList.add('loading');
+      submitBtn.disabled = true;
+
+      var entry = {};
+      allFields.forEach(function(name) {
+        entry[name] = document.getElementById(name).value.trim();
+      });
+
+      var savedEntry = saveToLocal(entry);
+
+      fetchWithTimeout(FORM_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+        body: new URLSearchParams(Object.assign({}, entry, {
+          companyWebsite: companyWebsite.value.trim()
+        })).toString()
+      }, FORM_TIMEOUT_MS).then(function(response) {
+        if (!response.ok) throw new Error('submit-failed');
+        return response.json();
+      }).then(function(result) {
+        if (!result || result.status !== 'ok') throw new Error('submit-failed');
+        markLocalEntrySynced(savedEntry && savedEntry.timestamp);
+        showSuccess();
+      }).catch(function() {
+        if (savedEntry) {
+          showSuccess({ localOnly: true, reason: 'sync-failed' });
+          return;
+        }
+        showSubmissionIssue();
+      });
+    } catch(err) {
+      submitBtn.classList.remove('loading');
+      submitBtn.disabled = false;
+    }
+  });
+
+  var kioskToast = document.getElementById('kiosk-toast');
+  var toastNameEl = document.getElementById('toast-name');
+  var toastTimer = null;
+  var autoResetTimer = null;
+
+  function showWelcomeToast(firstName) {
+    if (!firstName) return;
+    toastNameEl.textContent = 'WELCOME, ' + firstName.toUpperCase() + '!';
+    kioskToast.classList.add('visible');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function() {
+      kioskToast.classList.remove('visible');
+    }, 8000);
+  }
+
+  function showSuccess(options) {
+    var localOnly = !!(options && options.localOnly);
+    var reason = options && options.reason;
+    var firstName = (document.getElementById('firstName').value || '').trim();
+    submitBtn.classList.remove('loading');
+    submitBtn.disabled = false;
+    successTitle.textContent = localOnly ? localOnlySuccessTitle : ('Welcome, ' + (firstName || 'Guest') + '!');
+    successSubtitle.textContent = localOnly
+      ? (reason === 'sync-failed' ? syncFailedSuccessSubtitle : localOnlySuccessSubtitle)
+      : 'You\u2019re all set. Grab a seat, introduce yourself to someone new, and get ready \u2014 we kick off at 4:00!';
+    form.style.display = 'none';
+    document.querySelector('.kiosk-form-header').style.display = 'none';
+    successScreen.style.display = 'flex';
+    launchConfetti();
+    showWelcomeToast(firstName);
+    clearTimeout(autoResetTimer);
+    autoResetTimer = setTimeout(function() {
+      resetBtn.click();
+    }, 15000);
+  }
+
+  function showSubmissionIssue() {
+    submitBtn.classList.remove('loading');
+    submitBtn.disabled = false;
+    successTitle.textContent = submitFailedTitle;
+    successSubtitle.textContent = submitFailedSubtitle;
+    form.style.display = 'none';
+    document.querySelector('.kiosk-form-header').style.display = 'none';
+    successScreen.style.display = 'flex';
+  }
+
+  // ===== RESET =====
+  resetBtn.addEventListener('click', function() {
+    clearTimeout(autoResetTimer);
+    kioskToast.classList.remove('visible');
+    successScreen.style.display = 'none';
+    form.style.display = 'flex';
+    document.querySelector('.kiosk-form-header').style.display = 'block';
+    form.reset();
+    guestOfHidden.value = '';
+    guestSearchInput.value = '';
+    guestResults.innerHTML = '';
+    guestQuickPicks.setAttribute('data-selected-option', '');
+    companyWebsite.value = '';
+    successTitle.textContent = defaultSuccessTitle;
+    successSubtitle.textContent = defaultSuccessSubtitle;
+    allFields.forEach(function(name) {
+      var input = document.getElementById(name);
+      var errorEl = document.getElementById(name + '-error');
+      if (input) { input.value = ''; input.classList.remove('error'); }
+      if (errorEl) errorEl.classList.remove('visible');
+    });
+    syncGuestQuickPicks();
+    guestPicker.classList.remove('error');
+    guestSearchInput.classList.remove('error');
+    document.getElementById('firstName').focus();
+  });
+
+  // ===== CONFETTI =====
+  function launchConfetti() {
+    var ctx = confettiCanvas.getContext('2d');
+    confettiCanvas.width = window.innerWidth;
+    confettiCanvas.height = window.innerHeight;
+
+    var particles = [];
+    var colors = ['#E8580C', '#FF6A1E', '#f0ece8', '#C44A0A', '#FFB347', '#F5A623'];
+
+    for (var i = 0; i < 100; i++) {
+      particles.push({
+        x: Math.random() * confettiCanvas.width,
+        y: -20 - Math.random() * 200,
+        w: 4 + Math.random() * 6,
+        h: 4 + Math.random() * 6,
+        vx: (Math.random() - 0.5) * 4,
+        vy: 2 + Math.random() * 4,
+        rot: Math.random() * 360,
+        rotSpeed: (Math.random() - 0.5) * 8,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        opacity: 1
+      });
+    }
+
+    var startTime = Date.now();
+
+    function animate() {
+      var elapsed = Date.now() - startTime;
+      if (elapsed > 3500) {
+        ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+        return;
+      }
+
+      ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+
+      particles.forEach(function(p) {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.1;
+        p.rot += p.rotSpeed;
+
+        if (elapsed > 2500) {
+          p.opacity = Math.max(0, 1 - (elapsed - 2500) / 1000);
+        }
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot * Math.PI / 180);
+        ctx.globalAlpha = p.opacity;
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+      });
+
+      requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  window.addEventListener('resize', function() {
+    confettiCanvas.width = window.innerWidth;
+    confettiCanvas.height = window.innerHeight;
+  });
+
+})();
+</script>
+</body>
+</html>

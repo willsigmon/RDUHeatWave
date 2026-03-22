@@ -25,65 +25,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared.css">
 
 <style>
-/* === BASE RESET === */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html {
-  -moz-text-size-adjust: none;
-  -webkit-text-size-adjust: none;
-  text-size-adjust: none;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  scroll-behavior: smooth;
-}
-
-/* === DESIGN TOKENS === */
-:root, [data-theme="dark"] {
-  --font-display: 'Bebas Neue', sans-serif;
-  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
-
-  --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
-  --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
-  --text-base: clamp(1rem,     0.9rem  + 0.5vw,  1.125rem);
-  --text-lg:   clamp(1.125rem, 0.95rem + 0.85vw, 1.5rem);
-  --text-xl:   clamp(1.5rem,   1rem    + 1.5vw,  2.25rem);
-  --text-2xl:  clamp(2rem,     1.2rem  + 2.5vw,  3.5rem);
-
-  --space-1:  0.25rem;
-  --space-2:  0.5rem;
-  --space-3:  0.75rem;
-  --space-4:  1rem;
-  --space-6:  1.5rem;
-  --space-8:  2rem;
-
-  --color-bg:             #1a1412;
-  --color-surface:        #231c18;
-  --color-surface-2:      #2c2420;
-  --color-divider:        rgba(232, 88, 12, 0.12);
-  --color-border:         rgba(232, 88, 12, 0.2);
-
-  --color-text:           #f0e6dc;
-  --color-text-muted:     #a89585;
-  --color-text-faint:     #6b5c4e;
-
-  --color-primary:        #E8580C;
-  --gradient-fire:        linear-gradient(135deg, #E8580C 0%, #FF6A1E 50%, #FF9933 100%);
-  --color-primary-hover:  #FF6A1E;
-
-  --color-success:        #5BA847;
-  --color-error:          #D94444;
-
-  --radius-sm: 0.375rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
-  --radius-full: 9999px;
-
-  --shadow-glow: 0 0 80px rgba(232, 88, 12, 0.12), 0 0 160px rgba(232, 88, 12, 0.06);
-}
-
+html { scroll-behavior: smooth; }
 body {
   min-height: 100dvh;
   margin: 0;
@@ -379,6 +324,21 @@ body.drawer-open .panel-arrow {
 .team-member-title-special {
   color: #ffb36b;
   letter-spacing: 0.07em;
+}
+
+.team-member-role {
+  display: inline-block;
+  margin-top: 0.45rem;
+  padding: 0.18rem 0.55rem;
+  font-size: 0.62rem;
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #E8580C;
+  background: rgba(232, 88, 12, 0.14);
+  border: 1px solid rgba(232, 88, 12, 0.3);
+  border-radius: 999px;
+  line-height: 1.4;
 }
 
 .swipe-hint {
@@ -1796,6 +1756,7 @@ button { cursor: pointer; background: none; border: none; }
 </style>
 </head>
 <body>
+<noscript><div class="noscript-banner">JavaScript is required to use this page.</div></noscript>
 
 <!-- Heat shimmer background -->
 <div class="heat-bg" aria-hidden="true">
@@ -2486,10 +2447,10 @@ button { cursor: pointer; background: none; border: none; }
   var MAX_LOCAL_ENTRIES = 250;
   // Single source of truth for the public team list and the "Guest Of" dropdown.
   var TEAM_MEMBERS = [
-    { name: 'Carter Helms', title: 'Team Chair', profession: 'Insurance & Financial Services', company: 'Highstreet Ins & Financial Svcs', website: 'https://carterhelms.com', leader: true },
-    { name: 'Craig Morrill', title: 'Vice Chair', profession: 'Financial Planning', company: 'Summit Global', website: '', leader: true },
-    { name: 'Will Sigmon', title: 'Team Admin', profession: 'Media & Marketing', company: 'Will Sigmon Media', website: 'https://willsigmon.media', leader: true },
-    { name: 'Rusty Sutton', title: 'Team Marketing Specialist', profession: 'Marketing & Planning', company: 'Monkey Fans Creative', website: 'https://monkeyfansraleigh.com', leader: true, specialTitle: true },
+    { name: 'Carter Helms', title: 'Team Chair', profession: 'Personal Insurance', company: 'Highstreet Ins & Financial Svcs', website: 'https://carterhelms.com', leader: true },
+    { name: 'Craig Morrill', title: 'Vice Chair', profession: 'Financial Planning', company: 'Summit Global Investments', website: '', leader: true },
+    { name: 'Will Sigmon', title: 'Team Admin', profession: 'Website & Software Development', company: 'Will Sigmon Media', website: 'https://willsigmon.media', leader: true },
+    { name: 'Rusty Sutton', title: 'Team Marketing Specialist', profession: 'Digital Marketing', company: 'Monkey Fans Creative', website: 'https://monkeyfansraleigh.com', leader: true, specialTitle: true },
     { name: 'Robert Courts', title: 'Mortgage Lending', company: 'Advantage Lending', website: 'https://advantagelending.com', leader: false },
     { name: 'Dana Walsh', title: 'Magazine Publisher', company: 'Stroll Magazine', website: 'https://strollmag.com/locations/hayes-barton-nc', leader: false },
     { name: 'Nathan Senn', title: 'Property Restoration', company: 'Franco Restorations', website: 'https://francorestorations.com', leader: false },
@@ -2517,11 +2478,14 @@ button { cursor: pointer; background: none; border: none; }
 
     function renderMemberCards(members) {
       return members.map(function(member) {
-        var subtitle = member.profession || member.company || '';
+        var topLine = member.leader ? (member.profession || member.title) : member.title;
+        var subtitle = member.leader ? (member.company || '') : (member.profession || member.company || '');
+        var roleBadge = member.leader ? '<div class="team-member-role">' + escapeHtml(member.title) + '</div>' : '';
         return '<div class="team-member' + (member.leader ? ' leader' : '') + '">' +
-          '<strong class="' + (member.specialTitle ? 'team-member-title-special' : '') + '">' + escapeHtml(member.title) + '</strong>' +
+          '<strong class="' + (member.specialTitle ? 'team-member-title-special' : '') + '">' + escapeHtml(topLine) + '</strong>' +
           '<span>' + escapeHtml(member.name) + '</span>' +
           '<div class="team-member-company">' + escapeHtml(subtitle) + '</div>' +
+          roleBadge +
         '</div>';
       }).join('');
     }

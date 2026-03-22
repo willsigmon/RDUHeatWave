@@ -24,6 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared.css">
 
 <style>
   @page {
@@ -31,8 +32,7 @@
     margin: 0.5in;
   }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+  /* Print page — light theme overrides shared dark tokens */
   body {
     font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     color: #1a1412;
@@ -709,6 +709,7 @@
 </style>
 </head>
 <body>
+<noscript><div class="noscript-banner">JavaScript is required to use this page.</div></noscript>
 
 <!-- ==================== PAGE 1: AGENDA ==================== -->
 <div class="page">

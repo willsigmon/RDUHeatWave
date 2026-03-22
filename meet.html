@@ -24,18 +24,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared.css">
 
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
-
+/* TV display overrides — intentionally darker for bar/venue screens */
 :root {
-  --font-display: 'Bebas Neue', sans-serif;
-  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
   --color-bg: #0c0c0e;
   --color-surface: #161618;
   --color-surface-2: #1e1e22;
@@ -44,26 +37,13 @@ html {
   --color-text: #f0ece8;
   --color-text-muted: #a09898;
   --color-text-faint: #686060;
-  --color-primary: #E8580C;
-  --gradient-fire: linear-gradient(135deg, #E8580C 0%, #FF6A1E 50%, #FF9933 100%);
   --gradient-heat: linear-gradient(135deg, #FF6A1E 0%, #E8580C 100%);
-  --color-primary-hover: #FF6A1E;
   --color-warning: #FFB800;
-  --color-success: #5BA847;
-  --color-error: #D94444;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
-  --radius-2xl: 1.25rem;
-  --shadow-glow: 0 0 80px rgba(232, 88, 12, 0.12), 0 0 160px rgba(232, 88, 12, 0.06);
-  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
   --overscan: 0px;
   --content-max: 1760px;
   --shell-pad: max(var(--overscan), calc((100vw - var(--content-max)) / 2 + var(--overscan)));
-  /* Scale entire page to fit within TV overscan — applied to body via zoom */
   --scale: calc(1 - (var(--overscan) * 2 / 1920));
 }
-
 
 body {
   min-height: 100dvh;
@@ -1475,6 +1455,7 @@ body.phase-over .ticker-wrap { display: none !important; }
 </style>
 </head>
 <body>
+<noscript><div class="noscript-banner">JavaScript is required to use this page.</div></noscript>
 <!-- Kiosk Initialization Overlay (Bypasses Autoplay Policy) -->
 
 <!-- Ambient Noise Overlay -->

@@ -1,18 +1,14 @@
 'use strict';
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxkchMEuPQlPe91xWx3QGeSD_yk0q4g-1iBZ0gumknVqBu1s57_A0Dg2pbd64huh21D/exec';
-const APPS_SCRIPT_TIMEOUT_MS = 10 * 1000;
-const BURST_WINDOW_MS = 60 * 1000;
-const BURST_LIMIT = 6;
-const HOURLY_WINDOW_MS = 60 * 60 * 1000;
-const HOURLY_LIMIT = 20;
-const MAX_BODY_BYTES = 50 * 1024;
+var shared = require('./_lib/shared');
 
-const RADIO_FIELDS = ['q1', 'q2', 'q3', 'q5', 'q6', 'q7', 'q8', 'q9'];
-const CHECKBOX_FIELDS = ['q4'];
-const TEXT_FIELDS = ['q10'];
+var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxkchMEuPQlPe91xWx3QGeSD_yk0q4g-1iBZ0gumknVqBu1s57_A0Dg2pbd64huh21D/exec';
+var RADIO_FIELDS = ['q1', 'q2', 'q3', 'q5', 'q6', 'q7', 'q8', 'q9'];
+var CHECKBOX_FIELDS = ['q4'];
+var TEXT_FIELDS = ['q10'];
+var RATE_LIMITS = { burst: 6, burstWindowMs: 60 * 1000, hourly: 20 };
 
-const ALLOWED_VALUES = {
+var ALLOWED_VALUES = {
   q1: ['1', '2', '3', '4', '5'],
   q2: ['1', '2', '3', '4'],
   q3: ['1', '2', '3', '4', '5'],
@@ -24,131 +20,27 @@ const ALLOWED_VALUES = {
   q9: ['1', '2', '3', '4', '5']
 };
 
-// TODO: Replace with Vercel KV or Upstash Redis — in-memory Map does not
-// persist across serverless invocations, so rate limiting is ineffective.
-const rateLimitStore = new Map();
-
-function sendJson(res, statusCode, payload) {
-  res.statusCode = statusCode;
-  res.setHeader('Cache-Control', 'no-store, max-age=0');
-  res.setHeader('Content-Type', 'application/json; charset=utf-8');
-  res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.end(JSON.stringify(payload));
-}
-
-function getClientIp(req) {
-  const forwardedFor = normalizeText(req.headers['x-forwarded-for']);
-  if (forwardedFor) {
-    return normalizeText(forwardedFor.split(',')[0]);
-  }
-  return normalizeText(req.headers['x-real-ip']);
-}
-
-function isAllowedOriginValue(value) {
-  if (!value) return true;
-  try {
-    const origin = new URL(value).origin;
-    return origin === 'https://rduheatwave.team' ||
-      origin === 'https://www.rduheatwave.team' ||
-      /^https:\/\/rduheat-[a-z0-9-]+-wsmco\.vercel\.app$/i.test(origin);
-  } catch (error) {
-    return false;
-  }
-}
-
-function hasAllowedOrigin(req) {
-  const origin = req.headers.origin;
-  const referer = req.headers.referer;
-  if (req.method === 'POST' && !origin && !referer) return false;
-  return isAllowedOriginValue(origin) && isAllowedOriginValue(referer);
-}
-
-function isRateLimited(ipAddress) {
-  if (!ipAddress) return false;
-  const now = Date.now();
-  const recentRequests = (rateLimitStore.get(ipAddress) || []).filter(function(timestamp) {
-    return (now - timestamp) < HOURLY_WINDOW_MS;
-  });
-  const requestsInBurstWindow = recentRequests.filter(function(timestamp) {
-    return (now - timestamp) < BURST_WINDOW_MS;
-  });
-  if (requestsInBurstWindow.length >= BURST_LIMIT || recentRequests.length >= HOURLY_LIMIT) {
-    rateLimitStore.set(ipAddress, recentRequests);
-    return true;
-  }
-  recentRequests.push(now);
-  rateLimitStore.set(ipAddress, recentRequests);
-  return false;
-}
-
-async function readRequestBody(req) {
-  const contentType = String(req.headers['content-type'] || '')
-    .split(';')[0]
-    .trim()
-    .toLowerCase();
-
-  if (typeof req.body === 'string') {
-    return parseRawBody(req.body, contentType);
-  }
-  if (Buffer.isBuffer(req.body)) {
-    return parseRawBody(req.body.toString('utf8'), contentType);
-  }
-  if (req.body && typeof req.body === 'object') {
-    return req.body;
-  }
-
-  const chunks = [];
-  let totalBytes = 0;
-  for await (const chunk of req) {
-    totalBytes += chunk.length;
-    if (totalBytes > MAX_BODY_BYTES) {
-      throw new Error('Request body too large');
-    }
-    chunks.push(Buffer.from(chunk));
-  }
-  const rawBody = Buffer.concat(chunks).toString('utf8');
-  return parseRawBody(rawBody, contentType);
-}
-
-function parseRawBody(rawBody, contentType) {
-  if (!rawBody) return {};
-  if (contentType === 'application/json') {
-    try {
-      return JSON.parse(rawBody);
-    } catch (error) {
-      throw new Error('Invalid JSON body');
-    }
-  }
-  throw new Error('Unsupported content type');
-}
-
-function normalizeText(value) {
-  return String(value || '').replace(/\s+/g, ' ').trim();
-}
-
 function validateSurvey(body) {
-  for (const field of RADIO_FIELDS) {
-    const value = normalizeText(body[field]);
-    if (!value) {
-      return 'Missing answer for ' + field;
-    }
+  for (var i = 0; i < RADIO_FIELDS.length; i++) {
+    var field = RADIO_FIELDS[i];
+    var value = shared.normalizeText(body[field]);
+    if (!value) return 'Missing answer for ' + field;
     if (ALLOWED_VALUES[field] && ALLOWED_VALUES[field].indexOf(value) === -1) {
       return 'Invalid value for ' + field;
     }
   }
 
-  for (const field of CHECKBOX_FIELDS) {
-    const value = body[field];
-    if (!value || (Array.isArray(value) && value.length === 0)) {
-      return 'Missing answer for ' + field;
+  for (var j = 0; j < CHECKBOX_FIELDS.length; j++) {
+    var cbField = CHECKBOX_FIELDS[j];
+    var cbValue = body[cbField];
+    if (!cbValue || (Array.isArray(cbValue) && cbValue.length === 0)) {
+      return 'Missing answer for ' + cbField;
     }
-    const values = Array.isArray(value) ? value : [value];
-    if (values.length > 2) {
-      return 'Too many selections for ' + field;
-    }
-    for (const v of values) {
-      if (ALLOWED_VALUES[field].indexOf(normalizeText(v)) === -1) {
-        return 'Invalid value for ' + field;
+    var values = Array.isArray(cbValue) ? cbValue : [cbValue];
+    if (values.length > 2) return 'Too many selections for ' + cbField;
+    for (var k = 0; k < values.length; k++) {
+      if (ALLOWED_VALUES[cbField].indexOf(shared.normalizeText(values[k])) === -1) {
+        return 'Invalid value for ' + cbField;
       }
     }
   }
@@ -157,136 +49,59 @@ function validateSurvey(body) {
 }
 
 function buildEntry(body) {
-  const entry = { source: 'survey' };
+  var entry = { source: 'survey' };
 
-  for (const field of RADIO_FIELDS) {
-    entry[field] = normalizeText(body[field]);
-  }
+  RADIO_FIELDS.forEach(function (field) {
+    entry[field] = shared.normalizeText(body[field]);
+  });
 
-  for (const field of CHECKBOX_FIELDS) {
-    const value = body[field];
-    const values = Array.isArray(value) ? value : [value];
-    entry[field] = values.map(normalizeText).join(', ');
-  }
+  CHECKBOX_FIELDS.forEach(function (field) {
+    var value = body[field];
+    var values = Array.isArray(value) ? value : [value];
+    entry[field] = values.map(shared.normalizeText).join(', ');
+  });
 
-  for (const field of TEXT_FIELDS) {
-    const text = normalizeText(body[field]);
-    entry[field] = text.substring(0, 2000);
-  }
+  TEXT_FIELDS.forEach(function (field) {
+    entry[field] = shared.normalizeText(body[field]).substring(0, 2000);
+  });
 
   return entry;
 }
 
-async function forwardToAppsScript(entry) {
-  const formData = new URLSearchParams();
-  Object.keys(entry).forEach(function(field) {
-    formData.append(field, entry[field]);
-  });
-
-  const controller = new AbortController();
-  const timeoutId = setTimeout(function() {
-    controller.abort();
-  }, APPS_SCRIPT_TIMEOUT_MS);
-  let response;
-
-  try {
-    response = await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
-      },
-      body: formData.toString(),
-      redirect: 'follow',
-      signal: controller.signal
-    });
-  } catch (error) {
-    if (error && error.name === 'AbortError') {
-      throw new Error('Apps Script request timed out');
-    }
-    throw error;
-  } finally {
-    clearTimeout(timeoutId);
-  }
-
-  const text = await response.text();
-  const isSuccess = response.ok && /"status"\s*:\s*"ok"/.test(text);
-  return { ok: isSuccess, statusCode: response.status, body: text };
-}
-
 module.exports = async function handler(req, res) {
   if (req.method === 'GET' || req.method === 'HEAD') {
-    if (req.method === 'HEAD') {
-      res.statusCode = 200;
-      res.setHeader('Cache-Control', 'no-store, max-age=0');
-      res.setHeader('X-Content-Type-Options', 'nosniff');
-      return res.end();
-    }
-    return sendJson(res, 200, { status: 'ok', target: 'survey' });
+    if (req.method === 'HEAD') return shared.handleHead(res);
+    return shared.sendJson(res, 200, { status: 'ok', target: 'survey' });
   }
-
-  if (req.method === 'OPTIONS') {
-    res.statusCode = 204;
-    res.setHeader('Allow', 'GET, HEAD, POST, OPTIONS');
-    res.setHeader('Cache-Control', 'no-store, max-age=0');
-    return res.end();
-  }
-
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', 'GET, HEAD, POST, OPTIONS');
-    return sendJson(res, 405, { status: 'error', message: 'Method not allowed' });
-  }
+  if (req.method === 'OPTIONS') return shared.handleOptions(res, ['GET', 'HEAD', 'POST', 'OPTIONS']);
+  if (req.method !== 'POST') return shared.handleMethodNotAllowed(req, res, ['GET', 'HEAD', 'POST', 'OPTIONS']);
 
   try {
-    if (!hasAllowedOrigin(req)) {
-      return sendJson(res, 403, { status: 'error', message: 'Origin not allowed' });
+    if (!shared.hasAllowedOrigin(req)) {
+      return shared.sendJson(res, 403, { status: 'error', message: 'Origin not allowed' });
     }
 
-    if (isRateLimited(getClientIp(req))) {
-      return sendJson(res, 429, { status: 'error', message: 'Too many submissions. Please try again shortly.' });
+    if (shared.isRateLimited(shared.getClientIp(req), RATE_LIMITS)) {
+      return shared.sendJson(res, 429, { status: 'error', message: 'Too many submissions. Please try again shortly.' });
     }
 
-    const body = await readRequestBody(req);
-    const validationError = validateSurvey(body);
-
+    var body = await shared.readRequestBody(req);
+    var validationError = validateSurvey(body);
     if (validationError) {
-      return sendJson(res, 400, { status: 'error', message: validationError });
+      return shared.sendJson(res, 400, { status: 'error', message: validationError });
     }
 
-    const entry = buildEntry(body);
-    const result = await forwardToAppsScript(entry);
-
+    var entry = buildEntry(body);
+    var result = await shared.forwardToAppsScript(APPS_SCRIPT_URL, entry);
     if (!result.ok) {
-      return sendJson(res, 502, { status: 'error', message: 'Google Sheets sync failed' });
+      console.error('[api/survey] Apps Script sync failed:', result.statusCode);
+      return shared.sendJson(res, 502, { status: 'error', message: 'Google Sheets sync failed' });
     }
 
-    return sendJson(res, 200, { status: 'ok' });
+    return shared.sendJson(res, 200, { status: 'ok' });
   } catch (error) {
-    const errorMessage = error && error.message ? String(error.message) : '';
-    const isInvalidJsonError =
-      errorMessage === 'Invalid JSON body' ||
-      (error && error.name === 'SyntaxError') ||
-      /unexpected token|unexpected end|json/i.test(errorMessage);
-
-    const message = errorMessage === 'Request body too large'
-      ? 'Request body too large'
-      : isInvalidJsonError
-        ? 'Invalid JSON body'
-        : errorMessage === 'Apps Script request timed out'
-          ? 'Google Sheets sync timed out'
-          : errorMessage === 'Unsupported content type'
-            ? 'Unsupported content type'
-            : 'Unable to process survey';
-
-    const statusCode = message === 'Request body too large'
-      ? 413
-      : message === 'Invalid JSON body'
-        ? 400
-        : message === 'Google Sheets sync timed out'
-          ? 504
-          : message === 'Unsupported content type'
-            ? 415
-            : 500;
-
-    return sendJson(res, statusCode, { status: 'error', message: message });
+    console.error('[api/survey]', error);
+    var mapped = shared.mapErrorToResponse(error, 'Unable to process survey');
+    return shared.sendJson(res, mapped.status, { status: 'error', message: mapped.message });
   }
 };
