@@ -51,6 +51,12 @@ function getLatestCompletedRow(rows) {
   return completed.length ? completed[completed.length - 1] : null;
 }
 
+function getPreviousWeekRow(rows) {
+  var completed = getCompletedRows(rows);
+  // Previous week = second-to-last completed row
+  return completed.length >= 2 ? completed[completed.length - 2] : (completed[0] || null);
+}
+
 function parseGuestReport(report) {
   var weeklyTotalIndex = report.cols.findIndex(function (label) {
     return label.toLowerCase() === 'weekly total points';
@@ -85,7 +91,7 @@ function parseGuestReport(report) {
     .slice(-1)[0] || [];
 
   return {
-    currentWeek: getLatestCompletedRow(weeklyRows),
+    lastWeek: getPreviousWeekRow(weeklyRows),
     recentWeeks: getCompletedRows(weeklyRows).slice(-6),
     totalGuests: weeklyTotalIndex >= 0 ? shared.parseNumber(totalsRow[weeklyTotalIndex]) : 0,
     totalGuestPointsWithBonus: grandTotalIndex >= 0 ? shared.parseNumber(totalsRow[grandTotalIndex]) : 0,
@@ -130,7 +136,7 @@ function parseBizChatsReport(report) {
     .slice(-1)[0] || [];
 
   return {
-    currentWeek: getLatestCompletedRow(weeklyRows),
+    lastWeek: getPreviousWeekRow(weeklyRows),
     recentWeeks: getCompletedRows(weeklyRows).slice(-6),
     totalBizChats: weeklyTotalIndex >= 0 ? shared.parseNumber(totalsRow[weeklyTotalIndex]) : 0,
     leaderboard: memberColumns.map(function (entry) {
@@ -219,7 +225,7 @@ function parsePipelineReport(report) {
   var recentWeeks = Array.from(weekly.values()).sort(compareRowsByDateAsc);
 
   return {
-    currentWeek: getLatestCompletedRow(recentWeeks),
+    lastWeek: getPreviousWeekRow(recentWeeks),
     recentWeeks: recentWeeks.slice(-6),
     totalReferrals: totalReferrals,
     totalClosedDeals: totalClosedDeals,
@@ -291,10 +297,10 @@ function buildPresenterPayload(report) {
   return {
     guidance: 'Stand at the front, sell the team, hit last week first, then rolling 12 months, and only read attendance if there is actually something to flag.',
     lastWeekStats: [
-      { label: 'Guests', value: report.currentWeek.guests },
-      { label: 'BizChats', value: report.currentWeek.bizChats },
-      { label: 'Referrals', value: report.currentWeek.referrals },
-      { label: 'Closed Revenue', value: report.currentWeek.closedRevenue }
+      { label: 'Guests', value: report.lastWeek.guests },
+      { label: 'BizChats', value: report.lastWeek.bizChats },
+      { label: 'Referrals', value: report.lastWeek.referrals },
+      { label: 'Closed Revenue', value: report.lastWeek.closedRevenue }
     ],
     rollingStats: [
       { label: 'Guests Hosted', value: report.kpis.guestsHosted },
@@ -303,7 +309,7 @@ function buildPresenterPayload(report) {
       { label: 'Closed Revenue', value: report.kpis.closedRevenue }
     ],
     scriptLines: [
-      'Last week we hosted ' + report.currentWeek.guests + ' guests, logged ' + report.currentWeek.bizChats + ' BizChats, passed ' + report.currentWeek.referrals + ' referrals, and closed ' + report.currentWeek.closedRevenue + '.',
+      'Last week we hosted ' + report.lastWeek.guests + ' guests, logged ' + report.lastWeek.bizChats + ' BizChats, passed ' + report.lastWeek.referrals + ' referrals, and closed ' + report.lastWeek.closedRevenue + '.',
       'Rolling 12 months, we have hosted ' + report.kpis.guestsHosted + ' guests, logged ' + report.kpis.bizChats + ' BizChats, passed ' + report.kpis.referrals + ' referrals, and closed ' + report.kpis.closedRevenue + '.',
       buildAttendancePresenterLine(report.attendanceWatchlist),
       leadDeal
@@ -335,12 +341,12 @@ async function buildAdminReport() {
       referrals: pipeline.totalReferrals,
       closedRevenue: formatCurrency(pipeline.totalRevenue)
     },
-    currentWeek: {
-      label: (guests.currentWeek && guests.currentWeek.dateLabel) || (bizChats.currentWeek && bizChats.currentWeek.dateLabel) || (pipeline.currentWeek && pipeline.currentWeek.dateLabel) || 'Latest',
-      guests: guests.currentWeek ? guests.currentWeek.guests : 0,
-      bizChats: bizChats.currentWeek ? bizChats.currentWeek.total : 0,
-      referrals: pipeline.currentWeek ? pipeline.currentWeek.referrals : 0,
-      closedRevenue: formatCurrency(pipeline.currentWeek ? pipeline.currentWeek.revenue : 0)
+    lastWeek: {
+      label: (guests.lastWeek && guests.lastWeek.dateLabel) || (bizChats.lastWeek && bizChats.lastWeek.dateLabel) || (pipeline.lastWeek && pipeline.lastWeek.dateLabel) || 'Previous',
+      guests: guests.lastWeek ? guests.lastWeek.guests : 0,
+      bizChats: bizChats.lastWeek ? bizChats.lastWeek.total : 0,
+      referrals: pipeline.lastWeek ? pipeline.lastWeek.referrals : 0,
+      closedRevenue: formatCurrency(pipeline.lastWeek ? pipeline.lastWeek.revenue : 0)
     },
     recentWeeks: buildRecentWeeks(guests, bizChats, pipeline),
     leaders: {

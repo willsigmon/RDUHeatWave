@@ -119,6 +119,9 @@ function installGuestSyncTrigger() {
   SpreadsheetApp.getUi().alert('Guest sync trigger is ready.');
 }
 
+var BIZCHAT_REPORT_SHEET_NAME = 'BizChats Report';
+var REFERRAL_PIPELINE_SHEET_NAME = 'Referral Pipeline';
+var REFERRAL_PIPELINE_HEADERS = ['Given From', 'Given To', 'Date Recorded', "Prospect's Name", 'Disposition', 'Revenue'];
 var SURVEY_SHEET_NAME = 'Survey Responses';
 var SURVEY_HEADERS = [
   'Timestamp',
@@ -139,6 +142,12 @@ function doPost(e) {
 
   if (cleanValue_(params.source) === 'survey') {
     return doPostSurvey_(params);
+  }
+  if (cleanValue_(params.source) === 'bizchat') {
+    return doPostBizChat_(params);
+  }
+  if (cleanValue_(params.source) === 'referral') {
+    return doPostReferral_(params);
   }
 
   var spreadsheet = SpreadsheetApp.openById(SHEET_ID);
@@ -214,6 +223,120 @@ function doPostSurvey_(params) {
 
   sheet.appendRow(row);
   return jsonOutput_({ status: 'ok' });
+}
+
+function doPostBizChat_(params) {
+  var member = cleanValue_(params.member);
+  var metWith = cleanValue_(params.metWith);
+  var dateStr = cleanValue_(params.date);
+
+  if (!member || !metWith || !dateStr) {
+    return jsonOutput_({ status: 'error', message: 'Missing required fields' });
+  }
+
+  var spreadsheet = SpreadsheetApp.openById(SHEET_ID);
+  var sheet = spreadsheet.getSheetByName(BIZCHAT_REPORT_SHEET_NAME);
+  if (!sheet) {
+    return jsonOutput_({ status: 'error', message: 'BizChats Report sheet not found' });
+  }
+
+  var lock = LockService.getDocumentLock();
+  if (!lock.tryLock(10000)) {
+    return jsonOutput_({ status: 'error', message: 'Sheet is busy, try again' });
+  }
+
+  try {
+    var lastRow = sheet.getLastRow();
+    var lastCol = sheet.getLastColumn();
+    var headers = sheet.getRange(1, 1, 1, lastCol).getDisplayValues()[0];
+
+    // Find the column for each member (first-name match)
+    var memberFirstName = normalizePerson_(member.split(/\s+/)[0]);
+    var metWithFirstName = normalizePerson_(metWith.split(/\s+/)[0]);
+
+    var memberCol = -1;
+    var metWithCol = -1;
+    for (var col = 1; col < headers.length; col++) {
+      var headerName = normalizePerson_(headers[col]);
+      if (headerName === 'weeklytotal' || !headerName) continue;
+      if (headerName === memberFirstName) memberCol = col + 1;
+      if (headerName === metWithFirstName) metWithCol = col + 1;
+    }
+
+    if (memberCol === -1 || metWithCol === -1) {
+      return jsonOutput_({ status: 'error', message: 'Member not found in BizChats Report columns' });
+    }
+
+    // Find the row for the meeting week containing this date
+    var targetDate = new Date(dateStr);
+    var timezone = spreadsheet.getSpreadsheetTimeZone() || 'America/New_York';
+    var targetKey = Utilities.formatDate(targetDate, timezone, 'M/d/yyyy');
+
+    var dateCol = sheet.getRange(1, 1, lastRow, 1).getDisplayValues();
+    var targetRow = -1;
+
+    // Find exact date match or closest preceding date
+    for (var row = lastRow - 1; row >= 1; row--) {
+      var cellDate = cleanValue_(dateCol[row][0]);
+      if (!cellDate) continue;
+      if (cellDate === targetKey) {
+        targetRow = row + 1;
+        break;
+      }
+      // Check if the cell date is <= target date
+      var cellParsed = new Date(cellDate);
+      if (!isNaN(cellParsed) && cellParsed <= targetDate) {
+        targetRow = row + 1;
+        break;
+      }
+    }
+
+    if (targetRow === -1) {
+      return jsonOutput_({ status: 'error', message: 'No matching week found for date ' + dateStr });
+    }
+
+    // Increment both members' counts
+    var memberCell = sheet.getRange(targetRow, memberCol);
+    var metWithCell = sheet.getRange(targetRow, metWithCol);
+
+    var memberVal = asNumber_(memberCell.getValue());
+    var metWithVal = asNumber_(metWithCell.getValue());
+
+    memberCell.setValue(memberVal + 1);
+    metWithCell.setValue(metWithVal + 1);
+
+    return jsonOutput_({ status: 'ok', message: member + ' + ' + metWith + ' BizChat logged' });
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function doPostReferral_(params) {
+  var givenFrom = cleanValue_(params.givenFrom);
+  var givenTo = cleanValue_(params.givenTo);
+  var prospect = cleanValue_(params.prospect);
+  var dateStr = cleanValue_(params.date);
+  var disposition = cleanValue_(params.disposition) || 'New';
+  var revenue = cleanValue_(params.revenue) || '$0';
+
+  if (!givenFrom || !givenTo || !prospect || !dateStr) {
+    return jsonOutput_({ status: 'error', message: 'Missing required fields' });
+  }
+
+  var spreadsheet = SpreadsheetApp.openById(SHEET_ID);
+  var sheet = spreadsheet.getSheetByName(REFERRAL_PIPELINE_SHEET_NAME);
+
+  if (!sheet) {
+    sheet = spreadsheet.insertSheet(REFERRAL_PIPELINE_SHEET_NAME);
+    sheet.getRange(1, 1, 1, REFERRAL_PIPELINE_HEADERS.length).setValues([REFERRAL_PIPELINE_HEADERS]);
+    sheet.getRange(1, 1, 1, REFERRAL_PIPELINE_HEADERS.length).setFontWeight('bold');
+    sheet.setFrozenRows(1);
+  }
+
+  var row = [givenFrom, givenTo, dateStr, prospect, disposition, revenue];
+  sheet.appendRow(row);
+
+  return jsonOutput_({ status: 'ok', message: 'Referral logged: ' + givenFrom + ' → ' + givenTo });
 }
 
 function doGet(e) {
