@@ -2,20 +2,46 @@
 
 var shared = require('./_lib/shared');
 
-var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxkchMEuPQlPe91xWx3QGeSD_yk0q4g-1iBZ0gumknVqBu1s57_A0Dg2pbd64huh21D/exec';
-var APPS_SCRIPT_TIMEOUT_MS = 10 * 1000;
+var SHEET_ID = '1WWSxfqJ1UdMqJxKLaiIzb06n3rSQj5-AVN3m07wAkSA';
+var SHEET_NAME = 'Membership Directory';
 var CACHE_HEADER = 'public, max-age=0, s-maxage=300, stale-while-revalidate=600';
+
+// Governance committee members (leader: true shows under "Governance" heading)
+var LEADER_OVERRIDES = {
+  'carter helms': true,
+  'craig morrill': true,
+  'will sigmon': true
+};
 
 var DEFAULT_MEMBERS = [
   { name: 'Carter Helms', title: 'Team Chair', company: 'Highstreet Ins & Financial Svcs', leader: true, website: 'https://carterhelms.com' },
   { name: 'Craig Morrill', title: 'Vice Chair', company: 'Summit Global', leader: true, website: '' },
   { name: 'Will Sigmon', title: 'Team Admin', company: 'Will Sigmon Media', leader: true, website: 'https://willsigmon.media' },
-  { name: 'Rusty Sutton', title: 'Team Marketing Specialist', company: 'Monkey Fans Creative', leader: true, specialTitle: true, website: 'https://monkeyfansraleigh.com' },
+  { name: 'Rusty Sutton', title: 'Team Marketing Specialist', company: 'Monkey Fans Creative', leader: false, specialTitle: true, website: 'https://monkeyfansraleigh.com' },
   { name: 'Robert Courts', title: 'Mortgage Lending', company: 'Advantage Lending', leader: false, website: 'https://advantagelending.com' },
   { name: 'Dana Walsh', title: 'Magazine Publisher', company: 'Stroll Magazine', leader: false, website: 'https://strollmag.com/locations/hayes-barton-nc' },
   { name: 'Nathan Senn', title: 'Property Restoration', company: 'Franco Restorations', leader: false, website: 'https://francorestorations.com' },
-  { name: 'Roni Payne', title: 'Accounting / Tax', company: 'R. Payne LLC', leader: false, website: '' }
+  { name: 'Roni Payne', title: 'Accounting / Tax', company: 'R. Payne LLC', leader: false, website: '' },
+  { name: 'Shannida Ramsey', title: 'Property Management', company: 'Ramz Services', leader: false, website: '' },
+  { name: 'David Mercado', title: 'HOA Management', company: 'WM Douglas', leader: false, website: '' },
+  { name: 'Sue Kerata', title: 'Realtor', company: '', leader: false, website: 'https://suekhomes.com' }
 ];
+
+// ── Field mapping ───────────────────────────────────────────────────
+// The Membership Directory tab uses simple headers: Name, Profession,
+// Company, Website. We map them to our member object shape.
+
+var FIELD_ALIASES = {
+  name: ['name', 'fullname', 'member', 'membername'],
+  title: ['profession', 'title', 'category', 'industry'],
+  company: ['company', 'companyname', 'business'],
+  website: ['website', 'url', 'site', 'link'],
+  leader: ['leader', 'governance', 'admin', 'officer']
+};
+
+function normalizeHeader(value) {
+  return shared.normalizeText(value).toLowerCase().replace(/[^a-z0-9]/g, '');
+}
 
 function normalizeBoolean(value) {
   if (typeof value === 'boolean') return value;
@@ -37,41 +63,63 @@ function normalizeWebsite(value) {
   }
 }
 
-function normalizeMember(member) {
-  var normalized = {
-    name: shared.normalizeText(member && member.name),
-    title: shared.normalizeText(member && member.title) || 'Member',
-    company: shared.normalizeText(member && member.company),
-    website: normalizeWebsite(member && member.website),
-    leader: normalizeBoolean(member && member.leader),
-    specialTitle: normalizeBoolean(member && member.specialTitle)
-  };
-  return normalized.name ? normalized : null;
+function findFieldIndex(headers, fieldName) {
+  var aliases = FIELD_ALIASES[fieldName] || [];
+  for (var i = 0; i < headers.length; i++) {
+    if (aliases.indexOf(headers[i]) !== -1) return i;
+  }
+  return -1;
 }
 
-async function fetchRemoteMembers() {
-  var url = new URL(APPS_SCRIPT_URL);
-  url.searchParams.set('resource', 'members');
+function parseMembersFromSheet(report) {
+  // First row is the header if the sheet has labels; gviz cols may be empty
+  // if the sheet uses row 1 as data. Check cols first, fall back to first row.
+  var headers = report.cols.map(function (col) {
+    return normalizeHeader(col);
+  });
 
-  var controller = new AbortController();
-  var timeoutId = setTimeout(function () { controller.abort(); }, APPS_SCRIPT_TIMEOUT_MS);
+  var dataRows = report.rows;
 
-  try {
-    var response = await fetch(url, {
-      method: 'GET',
-      headers: { Accept: 'application/json' },
-      redirect: 'follow',
-      signal: controller.signal
+  // If headers are all empty, treat first data row as headers
+  var hasHeaders = headers.some(function (h) { return h; });
+  if (!hasHeaders && dataRows.length > 0) {
+    headers = dataRows[0].map(function (cell) {
+      return normalizeHeader(cell != null ? String(cell) : '');
     });
-    if (!response.ok) throw new Error('Apps Script members request failed');
-    var payload = await response.json();
-    if (!payload || payload.status !== 'ok' || !Array.isArray(payload.members)) {
-      throw new Error('Apps Script members payload was invalid');
-    }
-    return payload.members.map(normalizeMember).filter(Boolean);
-  } finally {
-    clearTimeout(timeoutId);
+    dataRows = dataRows.slice(1);
   }
+
+  var nameIdx = findFieldIndex(headers, 'name');
+  var titleIdx = findFieldIndex(headers, 'title');
+  var companyIdx = findFieldIndex(headers, 'company');
+  var websiteIdx = findFieldIndex(headers, 'website');
+  var leaderIdx = findFieldIndex(headers, 'leader');
+
+  if (nameIdx < 0) return [];
+
+  return dataRows.map(function (row) {
+    var rawName = shared.normalizeText(row[nameIdx]);
+    if (!rawName) return null;
+
+    var isLeader = leaderIdx >= 0
+      ? normalizeBoolean(row[leaderIdx])
+      : (LEADER_OVERRIDES[rawName.toLowerCase()] || false);
+
+    return {
+      name: rawName,
+      title: titleIdx >= 0 ? shared.normalizeText(row[titleIdx]) || 'Member' : 'Member',
+      company: companyIdx >= 0 ? shared.normalizeText(row[companyIdx]) : '',
+      website: websiteIdx >= 0 ? normalizeWebsite(row[websiteIdx]) : '',
+      leader: isLeader
+    };
+  }).filter(Boolean);
+}
+
+async function fetchMembersFromSheet() {
+  var report = await shared.fetchSheet(SHEET_ID, SHEET_NAME, 8000);
+  var members = parseMembersFromSheet(report);
+  if (!members.length) throw new Error('No members found in sheet');
+  return members;
 }
 
 module.exports = async function handler(req, res) {
@@ -80,10 +128,8 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'GET') return shared.handleMethodNotAllowed(req, res, ['GET', 'HEAD', 'OPTIONS']);
 
   try {
-    var remoteMembers = await fetchRemoteMembers();
-    if (remoteMembers.length) {
-      return shared.sendCachedJson(res, 200, { status: 'ok', source: 'apps-script', members: remoteMembers });
-    }
+    var members = await fetchMembersFromSheet();
+    return shared.sendCachedJson(res, 200, { status: 'ok', source: 'sheet', members: members });
   } catch (error) {
     console.error('[api/members]', error);
   }
@@ -91,6 +137,6 @@ module.exports = async function handler(req, res) {
   return shared.sendCachedJson(res, 200, {
     status: 'ok',
     source: 'fallback',
-    members: DEFAULT_MEMBERS.map(normalizeMember).filter(Boolean)
+    members: DEFAULT_MEMBERS
   });
 };

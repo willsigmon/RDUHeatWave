@@ -32,7 +32,7 @@ var MEMBER_OVERRIDES = {
   'carter helms': { leader: true },
   'craig morrill': { leader: true },
   'will sigmon': { leader: true },
-  'rusty sutton': { leader: true, specialTitle: true }
+  'rusty sutton': { leader: false, specialTitle: true }
 };
 var MEMBER_FIELD_ALIASES = {
   name: ['membername', 'name', 'fullname', 'member', 'memberfullname', 'contactname'],
@@ -46,13 +46,15 @@ var MEMBER_FIELD_ALIASES = {
 };
 var GUEST_INCENTIVE_HOST_ALIASES = {
   carter: ['carter helms'],
-  chad: ['chad haywood'],
   craig: ['craig morrill'],
   dana: ['dana walsh'],
+  david: ['david mercado'],
   nate: ['nathan senn', 'nate senn'],
   rusty: ['rusty sutton'],
   robert: ['robert courts'],
   roni: ['roni payne'],
+  shannida: ['shannida ramsey'],
+  sue: ['sue kerata'],
   will: ['will sigmon']
 };
 
@@ -342,11 +344,14 @@ function buildFallbackMembers_() {
     { name: 'Carter Helms', title: 'Team Chair', company: 'Highstreet Ins & Financial Svcs', website: 'https://carterhelms.com', leader: true, specialTitle: false },
     { name: 'Craig Morrill', title: 'Vice Chair', company: 'Summit Global', website: '', leader: true, specialTitle: false },
     { name: 'Will Sigmon', title: 'Team Admin', company: 'Will Sigmon Media', website: 'https://willsigmon.media', leader: true, specialTitle: false },
-    { name: 'Rusty Sutton', title: 'Team Marketing Specialist', company: 'Monkey Fans Creative', website: 'https://monkeyfansraleigh.com', leader: true, specialTitle: true },
+    { name: 'Rusty Sutton', title: 'Team Marketing Specialist', company: 'Monkey Fans Creative', website: 'https://monkeyfansraleigh.com', leader: false, specialTitle: true },
     { name: 'Robert Courts', title: 'Mortgage Lending', company: 'Advantage Lending', website: 'https://advantagelending.com', leader: false, specialTitle: false },
     { name: 'Dana Walsh', title: 'Magazine Publisher', company: 'Stroll Magazine', website: 'https://strollmag.com/locations/hayes-barton-nc', leader: false, specialTitle: false },
     { name: 'Nathan Senn', title: 'Property Restoration', company: 'Franco Restorations', website: 'https://francorestorations.com', leader: false, specialTitle: false },
-    { name: 'Roni Payne', title: 'Accounting / Tax', company: 'R. Payne LLC', website: '', leader: false, specialTitle: false }
+    { name: 'Roni Payne', title: 'Accounting / Tax', company: 'R. Payne LLC', website: '', leader: false, specialTitle: false },
+    { name: 'Shannida Ramsey', title: 'Property Management', company: 'Ramz Services', website: '', leader: false, specialTitle: false },
+    { name: 'David Mercado', title: 'HOA Management', company: 'WM Douglas', website: '', leader: false, specialTitle: false },
+    { name: 'Sue Kerata', title: 'Realtor', company: '', website: 'https://suekhomes.com', leader: false, specialTitle: false }
   ];
 }
 
