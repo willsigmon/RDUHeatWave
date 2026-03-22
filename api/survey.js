@@ -24,6 +24,8 @@ const ALLOWED_VALUES = {
   q9: ['1', '2', '3', '4', '5']
 };
 
+// TODO: Replace with Vercel KV or Upstash Redis — in-memory Map does not
+// persist across serverless invocations, so rate limiting is ineffective.
 const rateLimitStore = new Map();
 
 function sendJson(res, statusCode, payload) {
@@ -57,7 +59,7 @@ function isAllowedOriginValue(value) {
 function hasAllowedOrigin(req) {
   const origin = req.headers.origin;
   const referer = req.headers.referer;
-  if (!origin && !referer) return true;
+  if (req.method === 'POST' && !origin && !referer) return false;
   return isAllowedOriginValue(origin) && isAllowedOriginValue(referer);
 }
 

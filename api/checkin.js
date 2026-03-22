@@ -21,6 +21,8 @@ const FIELD_LENGTH_LIMITS = {
 };
 const ALLOWED_FIELD_VALUES = {};
 const MAX_BODY_BYTES = 50 * 1024;
+// TODO: Replace with Vercel KV or Upstash Redis — in-memory Map does not
+// persist across serverless invocations, so rate limiting is ineffective.
 const rateLimitStore = new Map();
 
 function sendJson(res, statusCode, payload) {
@@ -57,8 +59,8 @@ function hasAllowedOrigin(req) {
   const origin = req.headers.origin;
   const referer = req.headers.referer;
 
-  if (!origin && !referer) {
-    return true;
+  if (req.method === 'POST' && !origin && !referer) {
+    return false;
   }
 
   return isAllowedOriginValue(origin) && isAllowedOriginValue(referer);
@@ -231,7 +233,7 @@ async function forwardToAppsScript(entry) {
   }
 
   const text = await response.text();
-  const isSuccess = response.ok && /"status"\s*:\s*"ok"/.test(text);
+  const isSuccess = response.ok && (/"status"\s*:\s*"ok"/.test(text) || /"result"\s*:\s*"success"/.test(text));
 
   return {
     ok: isSuccess,

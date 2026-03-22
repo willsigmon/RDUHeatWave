@@ -17,16 +17,16 @@ var GUEST_INCENTIVE_HEADER_ROW = 3;
 var GUEST_INCENTIVE_SUBHEADER_ROW = 4;
 var GUEST_INCENTIVE_DATA_START_ROW = 5;
 var LIVE_HEADERS = [
-  'Timestamp',
-  'Meeting Date',
-  'First name',
-  'Last name',
+  'Meeting',
+  'First Name',
+  'Last Name',
   'Profession',
   'Company',
   'Email',
   'Phone',
-  'Guest of',
-  'First Visit?'
+  'Guest Of',
+  'First Visit?',
+  'Ideal Intro'
 ];
 var MEMBER_OVERRIDES = {
   'carter helms': { leader: true },
@@ -142,15 +142,12 @@ function doPost(e) {
   var spreadsheet = SpreadsheetApp.openById(SHEET_ID);
   var sheet = spreadsheet.getSheetByName(SHEET_NAME) || spreadsheet.getSheets()[0] || spreadsheet.insertSheet(SHEET_NAME);
   var now = new Date();
-  var params = (e && e.parameter) || {};
   var timezone = spreadsheet.getSpreadsheetTimeZone() || Session.getScriptTimeZone() || 'America/New_York';
   var headerRow = getLiveHeaders_(sheet);
 
   var row = headerRow.map(function(headerCell) {
     switch (normalizeHeader_(headerCell)) {
-      case 'timestamp':
-        return now;
-      case 'meetingdate':
+      case 'meeting':
         return Utilities.formatDate(now, timezone, 'M/d/yyyy');
       case 'firstname':
         return cleanValue_(params.firstName);
@@ -167,7 +164,9 @@ function doPost(e) {
       case 'guestof':
         return cleanValue_(params.guestOf);
       case 'firstvisit':
-        return cleanValue_(params.firstVisit);
+        return '';
+      case 'idealintro':
+        return cleanValue_(params.idealReferral);
       default:
         return '';
     }
@@ -428,7 +427,7 @@ function buildGuestCountsByWeek_(guestSheet, timezone) {
 
   var rows = guestSheet.getRange(HEADER_ROW + 1, 1, rowCount, HEADER_COUNT).getValues();
   rows.forEach(function(row) {
-    var weekKey = toDateKey_(row[1], timezone);
+    var weekKey = toDateKey_(row[0], timezone);
     var guestOf = normalizePerson_(row[7]);
     if (!weekKey || !guestOf) return;
 

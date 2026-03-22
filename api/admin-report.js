@@ -4,6 +4,7 @@ const ADMIN_PASSCODE = process.env.ADMIN_PASSCODE || '755671';
 const SHEET_ID = '1WWSxfqJ1UdMqJxKLaiIzb06n3rSQj5-AVN3m07wAkSA';
 const SHEET_BASE_URL = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:json&sheet=';
 const REQUEST_TIMEOUT_MS = 12 * 1000;
+const MAX_BODY_BYTES = 4 * 1024;
 
 function sendJson(res, statusCode, payload) {
   res.statusCode = statusCode;
@@ -32,7 +33,12 @@ async function readRequestBody(req) {
   if (req.body && typeof req.body === 'object') return req.body;
 
   const chunks = [];
+  let totalBytes = 0;
   for await (const chunk of req) {
+    totalBytes += chunk.length;
+    if (totalBytes > MAX_BODY_BYTES) {
+      return {};
+    }
     chunks.push(Buffer.from(chunk));
   }
 
