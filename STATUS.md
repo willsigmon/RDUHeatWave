@@ -50,6 +50,6 @@
 
 ## Deploy Command
 ```bash
-cd "/Users/wsig/GitHub MBA/RDUHeatWave"
+cd "/Volumes/GitHubMaster/RDUHeatWave"
 vercel --yes --prod
 ```

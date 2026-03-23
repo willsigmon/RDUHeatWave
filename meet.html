@@ -1522,27 +1522,27 @@ body.phase-over .ticker-wrap { display: none !important; }
 <!-- Stats Ticker -->
 <div class="ticker-wrap">
   <div class="ticker-content">
-    <span class="ticker-stat">&#x1F4AC; 159 BIZCHATS</span>
+    <span class="ticker-stat" id="ticker-bizchats-1">&#x1F4AC; 159 BIZCHATS</span>
     <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat">&#x1F91D; 114 GUESTS HOSTED</span>
+    <span class="ticker-stat" id="ticker-guests-1">&#x1F91D; 114 GUESTS HOSTED</span>
     <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat">&#x1F4B0; $106,143 REVENUE GENERATED</span>
+    <span class="ticker-stat" id="ticker-revenue-1">&#x1F4B0; $106,143 REVENUE GENERATED</span>
     <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat">&#x1F4E8; 44 REFERRALS PASSED</span>
+    <span class="ticker-stat" id="ticker-referrals-1">&#x1F4E8; 44 REFERRALS PASSED</span>
     <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat">&#x1F31F; 27 GRATITUDE INCENTIVES RECEIVED</span>
+    <span class="ticker-stat" id="ticker-incentives-1">&#x1F31F; 27 GRATITUDE INCENTIVES RECEIVED</span>
     <span class="ticker-sep">&bull;</span>
     <span class="ticker-stat">&#x1F525; ROLLING 12-MONTH STATS &mdash; RDU HEATWAVE</span>
     <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat">&#x1F4AC; 159 BIZCHATS</span>
+    <span class="ticker-stat" id="ticker-bizchats-2">&#x1F4AC; 159 BIZCHATS</span>
     <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat">&#x1F91D; 114 GUESTS HOSTED</span>
+    <span class="ticker-stat" id="ticker-guests-2">&#x1F91D; 114 GUESTS HOSTED</span>
     <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat">&#x1F4B0; $106,143 REVENUE GENERATED</span>
+    <span class="ticker-stat" id="ticker-revenue-2">&#x1F4B0; $106,143 REVENUE GENERATED</span>
     <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat">&#x1F4E8; 44 REFERRALS PASSED</span>
+    <span class="ticker-stat" id="ticker-referrals-2">&#x1F4E8; 44 REFERRALS PASSED</span>
     <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat">&#x1F31F; 27 GRATITUDE INCENTIVES RECEIVED</span>
+    <span class="ticker-stat" id="ticker-incentives-2">&#x1F31F; 27 GRATITUDE INCENTIVES RECEIVED</span>
     <span class="ticker-sep">&bull;</span>
     <span class="ticker-stat">&#x1F525; ROLLING 12-MONTH STATS &mdash; RDU HEATWAVE</span>
   </div>
@@ -2547,6 +2547,78 @@ body.phase-over .ticker-wrap { display: none !important; }
 
   initSpeakerElements();
 
+  /* ── Live stats ticker ──────────────────────────────────────────── */
+  function formatRevenue(n) {
+    return '$' + Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  function updateTickerPair(key, text) {
+    var el1 = document.getElementById('ticker-' + key + '-1');
+    var el2 = document.getElementById('ticker-' + key + '-2');
+    if (el1) el1.textContent = text;
+    if (el2) el2.textContent = text;
+  }
+
+  function fetchLiveStats() {
+    fetch('/api/stats')
+      .then(function(r) { return r.ok ? r.json() : Promise.reject(r.status); })
+      .then(function(data) {
+        var s = (data && data.stats) ? data.stats : null;
+        if (!s) return;
+        if (s.bizChats       != null) updateTickerPair('bizchats',   '\uD83D\uDCAC ' + s.bizChats + ' BIZCHATS');
+        if (s.guestsHosted   != null) updateTickerPair('guests',     '\uD83E\uDD1D ' + s.guestsHosted + ' GUESTS HOSTED');
+        if (s.revenue        != null) updateTickerPair('revenue',    '\uD83D\uDCB0 ' + formatRevenue(s.revenue) + ' REVENUE GENERATED');
+        if (s.referrals      != null) updateTickerPair('referrals',  '\uD83D\uDCE8 ' + s.referrals + ' REFERRALS PASSED');
+        if (s.guestIncentives != null) updateTickerPair('incentives','\uD83C\uDF1F ' + s.guestIncentives + ' GRATITUDE INCENTIVES RECEIVED');
+      })
+      .catch(function() { /* keep hardcoded fallback values */ });
+  }
+
+  fetchLiveStats();
+  /* ─────────────────────────────────────────────────────────────────── */
+
+  /* ── Random member spotlight (when no ?speaker= param) ─────────── */
+  var _hasExplicitSpeaker = !!_qp.get('speaker');
+
+  function applyMemberSpotlight(member) {
+    var name    = member.name    || 'Team Member';
+    var company = member.company || '';
+    var initials = name.split(/\s+/).map(function(w) { return w.charAt(0); }).join('').slice(0, 3).toUpperCase();
+
+    var headshot = document.getElementById('speaker-headshot');
+    if (headshot) {
+      /* No reliable photo URL pattern for arbitrary members — hide img, show initials */
+      headshot.style.display = 'none';
+    }
+    var initialsEl = document.getElementById('speaker-initials');
+    if (initialsEl) {
+      initialsEl.textContent = initials;
+      initialsEl.style.display = 'flex';
+    }
+    var cardBody = document.getElementById('speaker-card-body');
+    if (cardBody) {
+      cardBody.textContent = name + (company ? ' from ' + company : '') + ' is up today. Give them your full attention \u2014 and a warm intro if someone comes to mind.';
+    }
+    var anchorName = document.getElementById('anchor-speaker-name');
+    if (anchorName) anchorName.textContent = name.toUpperCase();
+  }
+
+  function fetchMembersAndRotate() {
+    if (_hasExplicitSpeaker) return; /* URL params take priority */
+    fetch('/api/members')
+      .then(function(r) { return r.ok ? r.json() : Promise.reject(r.status); })
+      .then(function(data) {
+        var list = (data && Array.isArray(data.members) && data.members.length) ? data.members : null;
+        if (!list) return;
+        var pick = list[Math.floor(Math.random() * list.length)];
+        applyMemberSpotlight(pick);
+      })
+      .catch(function() { /* keep Rusty as fallback */ });
+  }
+
+  fetchMembersAndRotate();
+  /* ─────────────────────────────────────────────────────────────────── */
+
   var debugPhase = new URLSearchParams(window.location.search).get('phase');
   if (debugPhase) {
     if (debugPhase === 'preheat') {
@@ -2594,5 +2666,6 @@ body.phase-over .ticker-wrap { display: none !important; }
 })();
 </script>
 
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
 </body>
 </html>

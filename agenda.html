@@ -143,6 +143,26 @@
     line-height: 1.6;
   }
 
+  .speaker-badge {
+    display: none;
+    margin-top: 4pt;
+    margin-left: 5pt;
+    padding: 2pt 8pt 2pt 7pt;
+    background: transparent;
+    color: var(--fire);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 8pt;
+    letter-spacing: 1.5pt;
+    border-radius: 2pt;
+    line-height: 1.6;
+    border: 0.75pt solid var(--fire);
+    vertical-align: top;
+  }
+
+  .speaker-badge.visible {
+    display: inline-block;
+  }
+
   .header-qr {
     text-align: center;
     flex-shrink: 0;
@@ -737,7 +757,7 @@
         <div class="team-name">RDU <span>Heatwave</span></div>
         <div class="team-subtitle">Two Twelve Referral Network</div>
         <div class="team-meta" id="meeting-date-meta">Thursday, March 19, 2026 &bull; 4:00 PM &bull; Clouds Brewing</div>
-        <div class="meeting-badge" id="meeting-number-badge">Meeting #<span id="meeting-number">—</span></div>
+        <div class="meeting-badge" id="meeting-number-badge">Meeting #<span id="meeting-number">—</span></div><div class="speaker-badge" id="speaker-badge">&#9733; <span id="speaker-badge-name"></span></div>
       </div>
       <div class="header-qr">
         <a class="header-qr-link" href="https://rduheatwave.team" aria-label="Visit rduheatwave.team">
@@ -820,7 +840,7 @@
         </li>
         <li class="agenda-item">
           <span class="agenda-glyph">&#9733;</span>
-          <span class="agenda-text">Member Spotlight</span>
+          <span class="agenda-text" id="spotlight-agenda-item">Member Spotlight</span>
         </li>
         <li class="agenda-item">
           <span class="agenda-glyph">&#10070;</span>
@@ -1143,6 +1163,29 @@
       month: 'numeric', day: 'numeric', year: 'numeric'
     });
     footerMeta.textContent = 'Prepared for ' + short + ' \u25c6 Revised ' + revised;
+  }
+
+  // ── Speaker URL param ─────────────────────────────────────
+  var params = new URLSearchParams(window.location.search);
+  var speaker = (params.get('speaker') || '').trim();
+  if (speaker) {
+    // Header pill badge
+    var badge = document.getElementById('speaker-badge');
+    var badgeName = document.getElementById('speaker-badge-name');
+    if (badge && badgeName) {
+      badgeName.textContent = speaker;
+      badge.classList.add('visible');
+    }
+
+    // Agenda list item
+    var spotlightItem = document.getElementById('spotlight-agenda-item');
+    if (spotlightItem) {
+      spotlightItem.textContent = 'Member Spotlight \u2014 ' + speaker;
+    }
+
+    // Spotlight card hero name (right column)
+    var heroName = document.querySelector('.spotlight-hero-name');
+    if (heroName) heroName.textContent = speaker;
   }
 })();
 </script>

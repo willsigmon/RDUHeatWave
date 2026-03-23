@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#E8580C">
+<meta name="robots" content="noindex, nofollow">
+<title>RDU Heatwave — Survey Results</title>
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="icon" type="image/png" href="/icons/heatwave-icon-192.png">
+<link rel="apple-touch-icon" href="/icons/heatwave-icon-180.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared.css">
+<style>
+  :root {
+    --fire: var(--color-primary);
+    --fire-hover: var(--color-primary-hover);
+    --bg: var(--color-bg);
+    --surface: var(--color-surface);
+    --surface-2: var(--color-surface-2);
+    --text: var(--color-text);
+    --text-muted: var(--color-text-muted);
+    --text-faint: var(--color-text-faint);
+    --border: var(--color-divider);
+    --radius: 20px;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at top, rgba(232,88,12,0.14), transparent 36%),
+      linear-gradient(180deg, #181210 0%, var(--bg) 100%);
+    color: var(--text);
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  }
+
+  .page { width: min(900px, calc(100vw - 32px)); margin: 0 auto; padding: 32px 0 48px; }
+
+  .eyebrow { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.14em; color: var(--fire); font-size: 1rem; margin-bottom: 8px; }
+  h1 { margin: 0; font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.06em; font-size: clamp(2.4rem, 6vw, 4rem); line-height: 0.95; }
+  .muted { color: var(--text-muted); }
+
+  .login-card {
+    background: rgba(35, 28, 24, 0.92);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 14px 40px rgba(0,0,0,0.26);
+  }
+
+  .login-shell { min-height: calc(100vh - 80px); display: grid; place-items: center; }
+  .login-card { width: min(480px, calc(100vw - 32px)); padding: 28px; }
+  .login-card p { color: var(--text-muted); margin: 10px 0 20px; font-size: 0.97rem; line-height: 1.5; }
+
+  .field { display: grid; gap: 8px; }
+
+  input[type="password"] {
+    width: 100%; padding: 14px 16px; border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.08); background: var(--surface-2);
+    color: var(--text); font-family: inherit; font-size: 0.97rem; box-sizing: border-box;
+  }
+  input[type="password"]:focus { outline: none; border-color: rgba(232,88,12,0.6); box-shadow: 0 0 0 3px rgba(232,88,12,0.15); }
+
+  button {
+    border: 0; border-radius: 14px; padding: 14px 18px;
+    background: linear-gradient(180deg, var(--fire-hover), var(--fire));
+    color: #fff; font-weight: 800; cursor: pointer; font-family: inherit; font-size: 0.97rem; width: 100%;
+  }
+  button.secondary { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); color: var(--text); width: auto; }
+
+  .error { color: #ffb8b8; min-height: 1.5em; font-size: 0.9rem; }
+
+  .results-shell { display: none; }
+  .results-shell.visible { display: block; }
+
+  .hero { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; margin-bottom: 24px; flex-wrap: wrap; }
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+
+  .kpi-card { padding: 20px 24px; border-radius: var(--radius); background: rgba(232,88,12,0.1); border: 1px solid rgba(232,88,12,0.24); margin-bottom: 20px; }
+  .kpi-label { text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); font-size: 0.78rem; font-weight: 700; }
+  .kpi-value { margin-top: 6px; font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.05em; font-size: clamp(2.4rem, 5vw, 3.4rem); line-height: 1; color: var(--fire); }
+
+  .q-card { padding: 20px 22px; border-radius: var(--radius); background: rgba(35, 28, 24, 0.92); border: 1px solid var(--border); box-shadow: 0 8px 24px rgba(0,0,0,0.18); margin-bottom: 14px; }
+  .q-label { text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); font-size: 0.72rem; font-weight: 700; margin-bottom: 4px; }
+  .q-title { font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 16px; line-height: 1.4; }
+
+  .bar-row { display: grid; grid-template-columns: 1fr 3fr auto; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .bar-row-label { font-size: 0.82rem; color: var(--text-muted); text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .bar-track { height: 26px; background: rgba(255,255,255,0.05); border-radius: 6px; overflow: hidden; }
+  .bar-fill { height: 100%; background: linear-gradient(90deg, var(--fire), var(--fire-hover)); border-radius: 6px; min-width: 2px; }
+  .bar-count { font-size: 0.82rem; font-weight: 700; color: var(--text-muted); min-width: 28px; text-align: right; }
+
+  .feedback-list { display: grid; gap: 8px; max-height: 480px; overflow-y: auto; padding-right: 4px; }
+  .feedback-list::-webkit-scrollbar { width: 4px; }
+  .feedback-list::-webkit-scrollbar-thumb { background: rgba(232,88,12,0.3); border-radius: 4px; }
+  .feedback-item { padding: 12px 14px; border-radius: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); font-size: 0.92rem; line-height: 1.55; color: var(--text-muted); }
+
+  .empty { color: var(--text-faint); font-size: 0.88rem; padding: 8px 0; }
+  .loading { color: var(--text-muted); padding: 24px 0; }
+  .footer-note { margin-top: 20px; color: var(--text-faint); font-size: 0.82rem; }
+
+  @media (max-width: 600px) {
+    .hero { flex-direction: column; align-items: flex-start; }
+    .bar-row { grid-template-columns: 90px 1fr auto; }
+  }
+</style>
+</head>
+<body>
+<noscript><div style="padding:16px;text-align:center;">JavaScript is required to use this page.</div></noscript>
+
+<div class="login-shell" id="login-shell">
+  <div class="login-card">
+    <div class="eyebrow">RDU Heatwave</div>
+    <h1>Survey Results</h1>
+    <p>Aggregated member survey data. Admin passcode required.</p>
+    <form id="login-form" style="display:grid;gap:14px;">
+      <div class="field">
+        <label for="passcode" style="font-size:0.9rem;color:var(--text-muted);">Passcode</label>
+        <input id="passcode" type="password" inputmode="numeric" autocomplete="current-password" placeholder="Enter passcode">
+      </div>
+      <button type="submit">View Survey Results</button>
+      <div class="error" id="login-error"></div>
+    </form>
+  </div>
+</div>
+
+<div class="results-shell" id="results-shell">
+  <div class="page">
+    <div class="hero">
+      <div>
+        <div class="eyebrow">RDU Heatwave</div>
+        <h1>Survey Results</h1>
+        <p class="muted" style="margin:6px 0 0;font-size:0.95rem;">Aggregated member feedback.</p>
+      </div>
+      <div class="actions">
+        <button class="secondary" type="button" id="refresh-btn">Refresh</button>
+        <button class="secondary" type="button" id="lock-btn">Lock</button>
+      </div>
+    </div>
+    <div id="results-content" class="loading">Loading results...</div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var STORAGE_KEY = 'rdu-admin-passcode';
+  var loginShell = document.getElementById('login-shell');
+  var resultsShell = document.getElementById('results-shell');
+  var loginForm = document.getElementById('login-form');
+  var passcodeInput = document.getElementById('passcode');
+  var loginError = document.getElementById('login-error');
+  var resultsContent = document.getElementById('results-content');
+  var refreshBtn = document.getElementById('refresh-btn');
+  var lockBtn = document.getElementById('lock-btn');
+
+  var QUESTIONS = [
+    {
+      key: 'q1', type: 'radio',
+      title: 'How engaged do you feel during weekly meetings?',
+      options: [
+        { value: '5', label: '5 \u2014 Very satisfied' },
+        { value: '4', label: '4 \u2014 Satisfied' },
+        { value: '3', label: '3 \u2014 Neutral' },
+        { value: '2', label: '2 \u2014 Dissatisfied' },
+        { value: '1', label: '1 \u2014 Very dissatisfied' }
+      ]
+    },
+    {
+      key: 'q2', type: 'radio',
+      title: 'How well do you understand the GI system?',
+      options: [
+        { value: '4', label: 'Crystal clear' },
+        { value: '3', label: 'Mostly clear' },
+        { value: '2', label: 'Somewhat clear' },
+        { value: '1', label: 'Still learning' }
+      ]
+    },
+    {
+      key: 'q3', type: 'radio',
+      title: 'How many BizChats have you done this month?',
+      options: [
+        { value: '1', label: '1' },
+        { value: '2', label: '2' },
+        { value: '3', label: '3' },
+        { value: '4', label: '4' },
+        { value: '5', label: '5+' }
+      ]
+    },
+    {
+      key: 'q4', type: 'checkbox',
+      title: 'Which parts of the meeting do you find most valuable?',
+      options: [
+        { value: 'intros',    label: '30-second member intros' },
+        { value: 'gratitude', label: 'Gratitude / contributions' },
+        { value: 'spotlight', label: 'Member spotlight' },
+        { value: 'mentor',    label: 'Mentor moment' },
+        { value: 'bizchat',   label: 'BizChat scheduling' },
+        { value: 'reports',   label: 'Referral / performance reports' }
+      ]
+    },
+    {
+      key: 'q5', type: 'radio',
+      title: 'How likely are you to recommend 212 to a colleague?',
+      options: [
+        { value: '5', label: '5 \u2014 Extremely likely' },
+        { value: '4', label: '4 \u2014 Very likely' },
+        { value: '3', label: '3 \u2014 Moderately likely' },
+        { value: '2', label: '2 \u2014 Slightly likely' },
+        { value: '1', label: '1 \u2014 Not at all' }
+      ]
+    },
+    {
+      key: 'q6', type: 'radio',
+      title: 'Estimated revenue from referrals received through 212?',
+      options: [
+        { value: '0',     label: '$0 \u2014 No referrals yet' },
+        { value: '1-9',   label: '$1K\u2013$9K \u2014 Getting started' },
+        { value: '10-19', label: '$10K\u2013$19K \u2014 Making progress' },
+        { value: '20-29', label: '$20K\u2013$29K \u2014 Solid momentum' },
+        { value: '30+',   label: '$30K+ \u2014 Carter would be proud' }
+      ]
+    },
+    {
+      key: 'q7', type: 'radio',
+      title: 'How satisfied are you with leadership?',
+      options: [
+        { value: '5',   label: '5 \u2014 Excellent' },
+        { value: '4',   label: '4 \u2014 Good' },
+        { value: '3',   label: '3 \u2014 Fair' },
+        { value: '2',   label: '2 \u2014 Poor' },
+        { value: 'n/a', label: 'No opinion / N/A' }
+      ]
+    },
+    {
+      key: 'q8', type: 'radio',
+      title: "What's your main motivation right now in the group?",
+      options: [
+        { value: 'referrals',     label: 'Getting more referrals' },
+        { value: 'relationships', label: 'Deeper relationships / BizChats' },
+        { value: 'presence',      label: 'Improving my intro / spotlight' },
+        { value: 'guests',        label: 'Inviting guests' },
+        { value: 'learning',      label: 'Still learning the ropes' }
+      ]
+    },
+    {
+      key: 'q9', type: 'radio',
+      title: 'Overall satisfaction?',
+      options: [
+        { value: '5', label: '5 \u2014 Very satisfied' },
+        { value: '4', label: '4 \u2014 Satisfied' },
+        { value: '3', label: '3 \u2014 Neutral' },
+        { value: '2', label: '2 \u2014 Dissatisfied' },
+        { value: '1', label: '1 \u2014 Very dissatisfied' }
+      ]
+    },
+    {
+      key: 'q10', type: 'text',
+      title: 'Open feedback \u2014 what would make 212 better for you?'
+    }
+  ];
+
+  function setLockedState(isLocked) {
+    loginShell.style.display = isLocked ? 'grid' : 'none';
+    resultsShell.classList.toggle('visible', !isLocked);
+  }
+
+  function el(tag, className) {
+    var node = document.createElement(tag);
+    if (className) node.className = className;
+    return node;
+  }
+
+  function buildBarRow(label, count, max) {
+    var pct = max > 0 ? Math.round((count / max) * 100) : 0;
+    var row = el('div', 'bar-row');
+    var labelEl = el('div', 'bar-row-label');
+    labelEl.title = label;
+    labelEl.textContent = label;
+    var track = el('div', 'bar-track');
+    var fill = el('div', 'bar-fill');
+    fill.style.width = pct + '%';
+    track.appendChild(fill);
+    var countEl = el('div', 'bar-count');
+    countEl.textContent = count;
+    row.appendChild(labelEl);
+    row.appendChild(track);
+    row.appendChild(countEl);
+    return row;
+  }
+
+  function renderResults(results) {
+    var container = el('div');
+
+    var kpiCard = el('div', 'kpi-card');
+    var kpiLabel = el('div', 'kpi-label');
+    kpiLabel.textContent = 'Total Responses';
+    var kpiValue = el('div', 'kpi-value');
+    kpiValue.textContent = results.totalResponses || 0;
+    kpiCard.appendChild(kpiLabel);
+    kpiCard.appendChild(kpiValue);
+    container.appendChild(kpiCard);
+
+    QUESTIONS.forEach(function (q, i) {
+      var card = el('div', 'q-card');
+      var qLabel = el('div', 'q-label');
+      qLabel.textContent = 'Q' + (i + 1);
+      var qTitle = el('div', 'q-title');
+      qTitle.textContent = q.title;
+      card.appendChild(qLabel);
+      card.appendChild(qTitle);
+
+      if (q.type === 'text') {
+        var items = results[q.key] || [];
+        if (!items.length) {
+          var empty = el('div', 'empty');
+          empty.textContent = 'No open responses yet.';
+          card.appendChild(empty);
+        } else {
+          var list = el('div', 'feedback-list');
+          items.forEach(function (text) {
+            var item = el('div', 'feedback-item');
+            item.textContent = text;
+            list.appendChild(item);
+          });
+          card.appendChild(list);
+        }
+      } else {
+        var data = results[q.key] || {};
+        var max = q.options.reduce(function (m, opt) {
+          return Math.max(m, data[opt.value] || 0);
+        }, 1);
+        q.options.forEach(function (opt) {
+          card.appendChild(buildBarRow(opt.label, data[opt.value] || 0, max));
+        });
+      }
+
+      container.appendChild(card);
+    });
+
+    var footer = el('div', 'footer-note');
+    footer.textContent = 'Data sourced live from the Survey Responses sheet. Refresh to see new submissions.';
+    container.appendChild(footer);
+
+    resultsContent.className = '';
+    resultsContent.textContent = '';
+    resultsContent.appendChild(container);
+  }
+
+  async function loadResults(passcode) {
+    resultsContent.className = 'loading';
+    resultsContent.textContent = 'Loading results...';
+    loginError.textContent = '';
+
+    var response = await fetch('/api/survey-results', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Passcode': passcode
+      },
+      body: JSON.stringify({ passcode: passcode })
+    });
+
+    var payload = await response.json().catch(function () { return null; });
+
+    if (!response.ok || !payload || payload.status !== 'ok') {
+      throw new Error((payload && payload.message) || 'Could not load survey results');
+    }
+
+    sessionStorage.setItem(STORAGE_KEY, passcode);
+    setLockedState(false);
+    renderResults(payload.results);
+  }
+
+  loginForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+    var passcode = passcodeInput.value.trim();
+    if (!passcode) { loginError.textContent = 'Enter the passcode first.'; return; }
+    loadResults(passcode).catch(function (err) {
+      loginError.textContent = err.message || 'Could not unlock results.';
+    });
+  });
+
+  refreshBtn.addEventListener('click', function () {
+    var passcode = sessionStorage.getItem(STORAGE_KEY) || '';
+    if (!passcode) { setLockedState(true); return; }
+    loadResults(passcode).catch(function (err) {
+      resultsContent.className = 'error';
+      resultsContent.textContent = err.message || 'Could not refresh.';
+    });
+  });
+
+  lockBtn.addEventListener('click', function () {
+    sessionStorage.removeItem(STORAGE_KEY);
+    passcodeInput.value = '';
+    resultsContent.textContent = '';
+    setLockedState(true);
+  });
+
+  var saved = sessionStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    setLockedState(false);
+    loadResults(saved).catch(function () {
+      sessionStorage.removeItem(STORAGE_KEY);
+      setLockedState(true);
+    });
+  } else {
+    setLockedState(true);
+  }
+})();
+</script>
+</body>
+</html>

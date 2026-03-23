@@ -10,7 +10,9 @@
     { "src": "*.ico", "use": "@vercel/static" },
     { "src": "*.txt", "use": "@vercel/static" },
     { "src": "*.xml", "use": "@vercel/static" },
-    { "src": "*.webmanifest", "use": "@vercel/static" }
+    { "src": "*.webmanifest", "use": "@vercel/static" },
+    { "src": "sw.js", "use": "@vercel/static" },
+    { "src": "shared-form.js", "use": "@vercel/static" }
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1.js" },
@@ -26,6 +28,7 @@
       },
       "continue": true
     },
+    { "src": "/sw\\.js", "dest": "/sw.js", "headers": { "Cache-Control": "no-cache", "Service-Worker-Allowed": "/" } },
     { "src": "/meet", "dest": "/meet.html" },
     { "src": "/meet.html", "dest": "/meet.html" },
     { "src": "/timer", "dest": "/timer.html" },
@@ -46,6 +49,8 @@
     { "src": "/about.html", "dest": "/about.html" },
     { "src": "/remind", "dest": "/remind.html" },
     { "src": "/remind.html", "dest": "/remind.html" },
+    { "src": "/survey-results", "dest": "/survey-results.html" },
+    { "src": "/survey-results.html", "dest": "/survey-results.html" },
     { "src": "/(.*\\.css)", "dest": "/$1" },
     { "src": "/(.*\\.png)", "dest": "/$1" },
     { "src": "/(.*\\.svg)", "dest": "/$1" },
@@ -53,6 +58,7 @@
     { "src": "/(.*\\.txt)", "dest": "/$1" },
     { "src": "/(.*\\.xml)", "dest": "/$1" },
     { "src": "/(.*\\.webmanifest)", "dest": "/$1" },
+    { "src": "/shared-form\\.js", "dest": "/shared-form.js" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 }

@@ -432,6 +432,37 @@
     flex-direction: column;
   }
 
+  /* === SVG Sparkline row === */
+  .sparkline-row {
+    display: flex;
+    gap: 24px;
+    align-items: flex-end;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .sparkline-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .sparkline-item-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-faint);
+  }
+
+  svg.sparkline {
+    display: block;
+    vertical-align: middle;
+    overflow: visible;
+  }
+
   /* === Last-refreshed indicator === */
   .refresh-indicator {
     margin-top: 6px;
@@ -605,6 +636,26 @@
     return '<td class="bar-cell" style="--bar-pct:' + pct + '%"><span>' + escapeHtml(value) + '</span></td>';
   }
 
+  function renderSparkline(values, color) {
+    if (!values || values.length < 2) return '';
+    var w = 80, h = 24, pad = 2;
+    var max = Math.max.apply(null, values) || 1;
+    var min = Math.min.apply(null, values);
+    var range = max - min || 1;
+    var points = values.map(function(v, i) {
+      var x = pad + (i / (values.length - 1)) * (w - pad * 2);
+      var y = h - pad - ((v - min) / range) * (h - pad * 2);
+      return x.toFixed(1) + ',' + y.toFixed(1);
+    }).join(' ');
+    var lastPoint = points.split(' ').pop();
+    var lastX = lastPoint.split(',')[0];
+    var lastY = lastPoint.split(',')[1];
+    return '<svg width="' + w + '" height="' + h + '" class="sparkline">' +
+      '<polyline points="' + points + '" fill="none" stroke="' + (color || 'rgba(232,88,12,0.7)') + '" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '<circle cx="' + lastX + '" cy="' + lastY + '" r="2" fill="' + (color || '#E8580C') + '"/>' +
+    '</svg>';
+  }
+
   function renderTable(rows) {
     if (!rows || !rows.length) {
       return '<div class="empty">No weekly data available yet.</div>';
@@ -697,6 +748,23 @@
         '<div class="card" style="margin-bottom:16px;">' +
           '<div class="section-label">Recent weeks</div>' +
           '<h2>Trend line</h2>' +
+          (function() {
+            var weeks = report.recentWeeks;
+            if (weeks && weeks.length >= 2) {
+              var ordered = weeks.slice().reverse();
+              var guests   = ordered.map(function(r) { return parseNumeric(r.guests); });
+              var bizChats = ordered.map(function(r) { return parseNumeric(r.bizChats); });
+              var refs     = ordered.map(function(r) { return parseNumeric(r.referrals); });
+              var rev      = ordered.map(function(r) { return parseNumeric(r.revenue); });
+              return '<div class="sparkline-row">' +
+                '<div class="sparkline-item">' + renderSparkline(guests,   'rgba(232,88,12,0.8)')  + '<span class="sparkline-item-label">Guests</span></div>' +
+                '<div class="sparkline-item">' + renderSparkline(bizChats, 'rgba(107,204,244,0.8)') + '<span class="sparkline-item-label">BizChats</span></div>' +
+                '<div class="sparkline-item">' + renderSparkline(refs,     'rgba(91,168,71,0.8)')   + '<span class="sparkline-item-label">Referrals</span></div>' +
+                '<div class="sparkline-item">' + renderSparkline(rev,      'rgba(255,215,0,0.8)')   + '<span class="sparkline-item-label">Revenue</span></div>' +
+              '</div>';
+            }
+            return '';
+          })() +
           renderTable(report.recentWeeks) +
         '</div>' +
 

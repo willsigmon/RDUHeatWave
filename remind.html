@@ -13,39 +13,95 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared.css">
 <style>
-:root { --fire:#E8580C; --fire-hover:#FF6A1E; --fire-active:#C44A0A; --bg:#1a1412; --surface:#231c18; --surface-2:#2c2420; --text:#f0e6dc; --text-muted:#a89585; --text-faint:#6b5c4e; --success:#5BA847; --danger:#D94444; --border:rgba(232,88,12,.16); --radius:16px; }
-*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
-html { -webkit-text-size-adjust:none; text-size-adjust:none; -webkit-font-smoothing:antialiased; }
-body { min-height:100dvh; background:radial-gradient(circle at 50% 0%,rgba(232,88,12,.12),transparent 40%),var(--bg); color:var(--text); font-family:'Plus Jakarta Sans',system-ui,sans-serif; padding:24px 16px 48px; }
-.page { max-width:420px; margin:0 auto; }
-.eyebrow { font-family:'Bebas Neue',sans-serif; letter-spacing:.14em; color:var(--fire); font-size:.875rem; margin-bottom:4px; }
-h1 { font-family:'Bebas Neue',sans-serif; font-size:clamp(2rem,6vw,2.8rem); letter-spacing:.04em; line-height:1; margin-bottom:8px; }
-.subtitle { color:var(--text-muted); font-size:.875rem; margin-bottom:24px; }
-.card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:16px; }
-.card-label { font-family:'Bebas Neue',sans-serif; letter-spacing:.1em; color:var(--fire); font-size:.8rem; margin-bottom:12px; }
-select { width:100%; padding:12px 16px; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; color:var(--text); font-family:inherit; font-size:1rem; appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a89585' fill='none' stroke-width='1.5'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; cursor:pointer; }
-select:focus { outline:2px solid var(--fire); outline-offset:-1px; }
-.stat-row { display:flex; align-items:baseline; gap:12px; margin-top:16px; }
-.stat-value { font-family:'Bebas Neue',sans-serif; font-size:3rem; line-height:1; color:var(--fire); }
-.stat-label { color:var(--text-muted); font-size:.875rem; }
-.nudge { margin-top:12px; padding:12px 16px; background:var(--surface-2); border-radius:10px; font-size:.9rem; line-height:1.5; }
-.nudge.hot  { border-left:3px solid var(--success); }
-.nudge.warm { border-left:3px solid var(--fire); }
-.nudge.cold { border-left:3px solid var(--danger); }
-.btn { display:block; width:100%; padding:14px 20px; border:none; border-radius:10px; font-family:'Bebas Neue',sans-serif; font-size:1.15rem; letter-spacing:.08em; cursor:pointer; text-align:center; text-decoration:none; transition:background .15s; }
-.btn-primary { background:var(--fire); color:#fff; }
-.btn-primary:hover { background:var(--fire-hover); }
-.btn-primary:active { background:var(--fire-active); }
-.btn-secondary { background:var(--surface-2); color:var(--text); border:1px solid var(--border); margin-top:10px; }
-.btn-secondary:hover { background:var(--surface); }
-.reminder-row { display:flex; gap:10px; align-items:center; margin-top:12px; }
-.reminder-row input[type="time"] { flex:1; padding:10px 14px; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; color:var(--text); font-family:inherit; font-size:1rem; }
-.reminder-row input[type="time"]:focus { outline:2px solid var(--fire); outline-offset:-1px; }
-.reminder-row .btn { flex:1; margin-top:0; }
-.status-msg { margin-top:8px; font-size:.8rem; color:var(--text-muted); min-height:1.2em; }
-.hidden { display:none; }
-noscript .noscript-banner { display:block; background:var(--danger); color:#fff; text-align:center; padding:12px; font-size:.9rem; border-radius:10px; margin-bottom:16px; }
+body {
+  min-height: 100dvh;
+  background: radial-gradient(circle at 50% 0%, rgba(232,88,12,.12), transparent 40%), var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  padding: 24px 16px 48px;
+}
+.page { max-width: 420px; margin: 0 auto; }
+.eyebrow { font-family: var(--font-display); letter-spacing: .14em; color: var(--color-primary); font-size: .875rem; margin-bottom: 4px; }
+h1 { font-family: var(--font-display); font-size: clamp(2rem,6vw,2.8rem); letter-spacing: .04em; line-height: 1; margin-bottom: 8px; }
+.subtitle { color: var(--color-text-muted); font-size: .875rem; margin-bottom: 24px; }
+
+/* ── Cards ──────────────────────────────────────────────────────── */
+.card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: 20px; margin-bottom: 16px; }
+.card-label { font-family: var(--font-display); letter-spacing: .1em; color: var(--color-primary); font-size: .8rem; margin-bottom: 12px; }
+
+/* ── Form controls ──────────────────────────────────────────────── */
+select, input[type="time"], input[type="date"] {
+  width: 100%; padding: 10px 14px;
+  background: var(--color-surface-2); border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg); color: var(--color-text);
+  font-family: inherit; font-size: 1rem; appearance: none;
+}
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a89585' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center;
+  cursor: pointer;
+}
+select:focus, input[type="time"]:focus, input[type="date"]:focus {
+  outline: 2px solid var(--color-primary); outline-offset: -1px;
+}
+
+/* ── Stats ──────────────────────────────────────────────────────── */
+.stat-row { display: flex; align-items: baseline; gap: 12px; margin-top: 16px; }
+.stat-value { font-family: var(--font-display); font-size: 3rem; line-height: 1; color: var(--color-primary); }
+.stat-label { color: var(--color-text-muted); font-size: .875rem; }
+.nudge { margin-top: 12px; padding: 12px 16px; background: var(--color-surface-2); border-radius: var(--radius-lg); font-size: .9rem; line-height: 1.5; }
+.nudge.hot  { border-left: 3px solid var(--color-success); }
+.nudge.warm { border-left: 3px solid var(--color-primary); }
+.nudge.cold { border-left: 3px solid var(--color-error); }
+
+/* ── Week progress ──────────────────────────────────────────────── */
+.week-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; margin-bottom: 6px; font-size: .8rem; color: var(--color-text-muted); }
+.week-meta strong { color: var(--color-text); font-weight: 600; }
+.progress-track { height: 8px; background: var(--color-surface-2); border-radius: var(--radius-full); overflow: hidden; }
+.progress-fill { height: 100%; background: var(--color-primary); border-radius: var(--radius-full); transition: width .4s ease; }
+.week-days { display: flex; gap: 6px; margin-top: 10px; }
+.day-pip { flex: 1; height: 4px; border-radius: var(--radius-full); background: var(--color-surface-2); }
+.day-pip.past { background: var(--color-text-faint); }
+.day-pip.today { background: var(--color-primary); }
+
+/* ── Buttons ────────────────────────────────────────────────────── */
+.btn { display: block; width: 100%; padding: 14px 20px; border: none; border-radius: var(--radius-lg); font-family: var(--font-display); font-size: 1.15rem; letter-spacing: .08em; cursor: pointer; text-align: center; text-decoration: none; transition: background .15s; }
+.btn-primary { background: var(--color-primary); color: #fff; }
+.btn-primary:hover { background: var(--color-primary-hover); }
+.btn-primary:active { background: var(--color-primary-active); }
+.btn-secondary { background: var(--color-surface-2); color: var(--color-text); border: 1px solid var(--color-border); }
+.btn-secondary:hover { background: var(--color-surface); }
+.btn-sm { display: inline-block; width: auto; padding: 7px 14px; font-size: .85rem; }
+
+/* ── Reminder rows ──────────────────────────────────────────────── */
+.reminder-row { display: flex; gap: 10px; align-items: center; margin-top: 10px; }
+.reminder-row input[type="time"] { flex: 1; }
+.reminder-row label { font-size: .78rem; color: var(--color-text-faint); white-space: nowrap; }
+
+/* ── Status pills ───────────────────────────────────────────────── */
+.pill-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; min-height: 1.5em; }
+.pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 10px; border-radius: var(--radius-full);
+  background: rgba(232,88,12,.15); border: 1px solid rgba(232,88,12,.3);
+  font-size: .78rem; color: var(--color-primary);
+}
+.status-msg { margin-top: 6px; font-size: .8rem; color: var(--color-text-muted); min-height: 1.2em; }
+
+/* ── Quick-log inline form ──────────────────────────────────────── */
+.quick-log-form { display: flex; flex-direction: column; gap: 8px; }
+.field-label { font-size: .78rem; color: var(--color-text-muted); margin-bottom: 2px; display: block; }
+.form-row { display: flex; gap: 8px; }
+.form-row > * { flex: 1; }
+.feedback { margin-top: 4px; font-size: .82rem; min-height: 1.2em; }
+.feedback.ok  { color: var(--color-success); }
+.feedback.err { color: var(--color-error); }
+.btn-row { display: flex; gap: 8px; margin-top: 12px; }
+.btn-row .btn { flex: 1; margin: 0; }
+
+.hidden { display: none; }
 </style>
 </head>
 <body>
@@ -53,10 +109,11 @@ noscript .noscript-banner { display:block; background:var(--danger); color:#fff;
 <div class="page">
   <div class="eyebrow">RDU Heatwave</div>
   <h1>BizChat Reminder</h1>
-  <p class="subtitle">Track your weekly BizChats and set a daily nudge.</p>
+  <p class="subtitle">Track your weekly BizChats and set daily nudges.</p>
 
+  <!-- ── Member + Stats ─────────────────────────────────────────── -->
   <div class="card">
-    <div class="card-label">Select Your Name</div>
+    <div class="card-label">Your Name</div>
     <select id="member-select" disabled>
       <option value="">Loading members...</option>
     </select>
@@ -66,68 +123,175 @@ noscript .noscript-banner { display:block; background:var(--danger); color:#fff;
         <span class="stat-label">BizChats this week</span>
       </div>
       <div id="nudge-msg" class="nudge hidden"></div>
+
+      <div class="week-meta">
+        <span>Weekly goal: <strong id="goal-label">3</strong></span>
+        <span id="days-left-label"></span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+      <div class="week-days" id="week-days" aria-hidden="true"></div>
     </div>
   </div>
 
-  <a href="/bizchat" class="btn btn-primary">Log a BizChat Now</a>
-
-  <div class="card" style="margin-top:16px">
-    <div class="card-label">Daily Reminder</div>
-    <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:8px">
-      Pick a time and we'll nudge you each day while this tab is open.
-    </p>
-    <div class="reminder-row">
-      <input type="time" id="reminder-time" value="09:00">
-      <button class="btn btn-secondary" id="reminder-btn">Set Reminder</button>
+  <!-- ── Quick Log ──────────────────────────────────────────────── -->
+  <div class="card">
+    <div class="card-label">Quick Log</div>
+    <div class="quick-log-form">
+      <div>
+        <label class="field-label" for="ql-met-with">Met with</label>
+        <select id="ql-met-with" disabled>
+          <option value="">Choose member...</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label" for="ql-date">Date</label>
+        <input type="date" id="ql-date">
+      </div>
+      <button class="btn btn-primary" id="ql-submit" style="margin-top:4px">Log BizChat</button>
+      <div class="feedback" id="ql-feedback"></div>
     </div>
-    <div class="status-msg" id="reminder-status"></div>
+  </div>
+
+  <!-- ── Reminders ─────────────────────────────────────────────── -->
+  <div class="card">
+    <div class="card-label">Daily Reminders</div>
+    <p style="color:var(--color-text-muted);font-size:.82rem;margin-bottom:10px">
+      Browser notifications at your chosen times each day. The interval checker runs every minute while this tab is open.
+    </p>
+
+    <div class="reminder-row">
+      <label for="remind-am">Morning</label>
+      <input type="time" id="remind-am" value="09:00">
+    </div>
+    <div class="reminder-row">
+      <label for="remind-pm">Afternoon</label>
+      <input type="time" id="remind-pm" value="15:00">
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary btn-sm" id="remind-enable">Enable Reminders</button>
+      <button class="btn btn-secondary btn-sm" id="remind-disable" disabled>Disable</button>
+    </div>
+
+    <div class="pill-row" id="active-pills"></div>
+    <div class="status-msg" id="remind-status"></div>
   </div>
 </div>
 
 <script>
-(function() {
+(function () {
   'use strict';
+
   var SHEET_ID = '1WWSxfqJ1UdMqJxKLaiIzb06n3rSQj5-AVN3m07wAkSA';
   var GVIZ = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:json&sheet=';
-  var $sel = document.getElementById('member-select');
-  var $stats = document.getElementById('stats-area');
-  var $count = document.getElementById('bizchat-count');
-  var $nudge = document.getElementById('nudge-msg');
-  var $rBtn = document.getElementById('reminder-btn');
-  var $rTime = document.getElementById('reminder-time');
-  var $rStatus = document.getElementById('reminder-status');
-  var bizData = null, rTimer = null;
-  var savedMember = localStorage.getItem('remind_member') || '';
-  var savedTime = localStorage.getItem('remind_time') || '09:00';
-  $rTime.value = savedTime;
+  var WEEKLY_GOAL = 3;
+  var CHECK_INTERVAL_MS = 60 * 1000;
 
-  // ── Fetch members ───────────────────────────────────────────────
-  fetch('/api/members').then(function(r) { return r.json(); }).then(function(d) {
-    var list = (d.members || d || []).map(function(m) { return m.name; }).filter(Boolean).sort();
-    $sel.innerHTML = '<option value="">Choose your name...</option>';
-    list.forEach(function(n) {
+  // ── State ──────────────────────────────────────────────────────
+  var state = loadState();
+  var bizData = null;
+  var allMembers = [];
+  var checkIntervalId = null;
+  var lastFiredAm = null;
+  var lastFiredPm = null;
+
+  function loadState() {
+    try {
+      var s = JSON.parse(localStorage.getItem('remind_v2') || 'null');
+      if (s && typeof s === 'object') return s;
+    } catch (e) { /* ignore parse errors */ }
+    return { enabled: false, am: '09:00', pm: '15:00', member: '' };
+  }
+
+  function saveState() {
+    localStorage.setItem('remind_v2', JSON.stringify(state));
+  }
+
+  // ── DOM refs ───────────────────────────────────────────────────
+  var $sel      = document.getElementById('member-select');
+  var $stats    = document.getElementById('stats-area');
+  var $count    = document.getElementById('bizchat-count');
+  var $nudge    = document.getElementById('nudge-msg');
+  var $fill     = document.getElementById('progress-fill');
+  var $daysLeft = document.getElementById('days-left-label');
+  var $weekDays = document.getElementById('week-days');
+
+  var $qlMetWith  = document.getElementById('ql-met-with');
+  var $qlDate     = document.getElementById('ql-date');
+  var $qlSubmit   = document.getElementById('ql-submit');
+  var $qlFeedback = document.getElementById('ql-feedback');
+
+  var $remAm     = document.getElementById('remind-am');
+  var $remPm     = document.getElementById('remind-pm');
+  var $remEnable = document.getElementById('remind-enable');
+  var $remDisable= document.getElementById('remind-disable');
+  var $pills     = document.getElementById('active-pills');
+  var $remStatus = document.getElementById('remind-status');
+
+  // ── Init ────────────────────────────────────────────────────────
+  $remAm.value = state.am;
+  $remPm.value = state.pm;
+  $qlDate.value = todayIso();
+  document.getElementById('goal-label').textContent = String(WEEKLY_GOAL);
+
+  // ── Fetch members ──────────────────────────────────────────────
+  fetch('/api/members').then(function (r) { return r.json(); }).then(function (d) {
+    allMembers = (d.members || d || []).map(function (m) { return m.name; }).filter(Boolean).sort();
+    populateMemberSelect();
+    populateMetWithSelect();
+    if (state.member) onMemberChange();
+  }).catch(function () {
+    $sel.innerHTML = '';
+    var opt = document.createElement('option');
+    opt.textContent = 'Failed to load members';
+    $sel.appendChild(opt);
+  });
+
+  function populateMemberSelect() {
+    while ($sel.firstChild) $sel.removeChild($sel.firstChild);
+    var placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = 'Choose your name\u2026';
+    $sel.appendChild(placeholder);
+    allMembers.forEach(function (n) {
       var o = document.createElement('option');
-      o.value = n; o.textContent = n;
-      if (n === savedMember) o.selected = true;
+      o.value = n;
+      o.textContent = n;
+      if (n === state.member) o.selected = true;
       $sel.appendChild(o);
     });
     $sel.disabled = false;
-    if (savedMember) onSelect();
-  }).catch(function() {
-    $sel.innerHTML = '<option value="">Failed to load members</option>';
-  });
+  }
 
-  // ── Fetch BizChats Report via gviz ──────────────────────────────
-  fetch(GVIZ + encodeURIComponent('BizChats Report')).then(function(r) {
+  function populateMetWithSelect() {
+    while ($qlMetWith.firstChild) $qlMetWith.removeChild($qlMetWith.firstChild);
+    var placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = 'Choose member\u2026';
+    $qlMetWith.appendChild(placeholder);
+    allMembers.forEach(function (n) {
+      if (n === state.member) return;
+      var o = document.createElement('option');
+      o.value = n;
+      o.textContent = n;
+      $qlMetWith.appendChild(o);
+    });
+    $qlMetWith.disabled = false;
+  }
+
+  // ── Fetch BizChats gviz ────────────────────────────────────────
+  fetch(GVIZ + encodeURIComponent('BizChats Report')).then(function (r) {
     return r.text();
-  }).then(function(text) {
-    var m = text.match(/setResponse\(([\s\S]+)\);?\s*$/);
-    if (!m) throw new Error('Bad gviz');
+  }).then(function (text) {
+    var m = text.match(/setResponse\(([\s\S]+?)\);\s*$/);
+    if (!m) throw new Error('Bad gviz response');
     var t = JSON.parse(m[1]).table;
     bizData = {
-      cols: (t.cols || []).map(function(c) { return (c.label || '').trim(); }),
-      rows: (t.rows || []).map(function(r) {
-        return (r.c || []).map(function(cell) {
+      cols: (t.cols || []).map(function (c) { return (c.label || '').trim(); }),
+      rows: (t.rows || []).map(function (r) {
+        return (r.c || []).map(function (cell) {
           if (!cell) return '';
           if (typeof cell.v === 'string' && /^Date\(/.test(cell.v))
             return new Date(cell.v.replace('Date(', '').replace(')', ''));
@@ -136,85 +300,260 @@ noscript .noscript-banner { display:block; background:var(--danger); color:#fff;
       })
     };
     if ($sel.value) updateStats($sel.value);
-  }).catch(function() { /* stats stay as "-" */ });
+  }).catch(function () { /* stats stay as "-" */ });
 
-  // ── Member change ───────────────────────────────────────────────
-  $sel.addEventListener('change', onSelect);
-  function onSelect() {
+  // ── Member select ──────────────────────────────────────────────
+  $sel.addEventListener('change', onMemberChange);
+  function onMemberChange() {
     var name = $sel.value;
-    if (!name) { $stats.classList.add('hidden'); localStorage.removeItem('remind_member'); return; }
-    localStorage.setItem('remind_member', name);
+    state.member = name;
+    saveState();
+    if (!name) { $stats.classList.add('hidden'); return; }
     $stats.classList.remove('hidden');
+    populateMetWithSelect();
     updateStats(name);
   }
 
   function updateStats(name) {
     if (!bizData) { $count.textContent = '...'; $nudge.classList.add('hidden'); return; }
-    var col = -1, lo = name.toLowerCase();
+    var col = -1;
+    var lo = name.toLowerCase();
     for (var i = 0; i < bizData.cols.length; i++) {
       if (bizData.cols[i].toLowerCase() === lo) { col = i; break; }
     }
     if (col < 0) {
       $count.textContent = '?';
-      $nudge.textContent = 'Could not find your column in the BizChats Report.';
-      $nudge.className = 'nudge cold'; $nudge.classList.remove('hidden');
+      setNudge('Could not find your column in the BizChats Report.', 'cold');
       return;
     }
-    var now = new Date(), todayMs = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
-    var best = null, count = 0;
-    bizData.rows.forEach(function(row) {
-      var dv = row[0]; if (!dv) return;
+    var now = new Date();
+    var todayMs = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+    var best = null;
+    var count = 0;
+    bizData.rows.forEach(function (row) {
+      var dv = row[0];
+      if (!dv) return;
       var d = dv instanceof Date ? dv : new Date(dv);
       if (isNaN(d.getTime())) return;
       var ms = d.getTime();
-      if (ms <= todayMs + 86400000 && (!best || ms > best)) { best = ms; count = parseInt(row[col], 10) || 0; }
+      if (ms <= todayMs + 86400000 && (!best || ms > best)) {
+        best = ms;
+        count = parseInt(row[col], 10) || 0;
+      }
     });
+
     $count.textContent = String(count);
-    var msg, cls;
-    if (count === 0) { msg = 'No BizChats logged this week yet \u2014 schedule one today!'; cls = 'nudge cold'; }
-    else if (count <= 2) { msg = 'Good start! Can you squeeze in one more?'; cls = 'nudge warm'; }
-    else { msg = "You're on fire! Keep the momentum going."; cls = 'nudge hot'; }
-    $nudge.textContent = msg; $nudge.className = cls; $nudge.classList.remove('hidden');
+    renderWeekProgress(count);
+
+    if (count === 0)     setNudge('No BizChats logged this week yet \u2014 schedule one today!', 'cold');
+    else if (count <= 2) setNudge('Good start! Can you squeeze in one more?', 'warm');
+    else                 setNudge('You\u2019re on fire! Keep the momentum going.', 'hot');
   }
 
-  // ── Notification reminder ───────────────────────────────────────
-  $rBtn.addEventListener('click', function() {
-    if (rTimer) {
-      clearTimeout(rTimer); rTimer = null;
-      $rBtn.textContent = 'Set Reminder'; $rStatus.textContent = 'Reminder cleared.';
-      localStorage.removeItem('remind_time'); return;
+  function setNudge(msg, cls) {
+    $nudge.textContent = msg;
+    $nudge.className = 'nudge ' + cls;
+    $nudge.classList.remove('hidden');
+  }
+
+  // ── Week progress ──────────────────────────────────────────────
+  function renderWeekProgress(count) {
+    var pct = Math.min(100, Math.round((count / WEEKLY_GOAL) * 100));
+    $fill.style.width = pct + '%';
+
+    var now = new Date();
+    var dow = now.getDay(); // 0=Sun … 6=Sat
+    var weekdayIndex = dow === 0 ? 4 : dow === 6 ? 4 : dow - 1; // clamp Mon-Fri to 0-4
+    var remaining = Math.max(0, 4 - weekdayIndex);
+    $daysLeft.textContent = remaining === 0
+      ? 'Last day this week'
+      : remaining + ' day' + (remaining === 1 ? '' : 's') + ' left';
+
+    while ($weekDays.firstChild) $weekDays.removeChild($weekDays.firstChild);
+    var dayLabels = ['M', 'T', 'W', 'T', 'F'];
+    for (var i = 0; i < 5; i++) {
+      var pip = document.createElement('div');
+      var cls = 'day-pip';
+      if (i < weekdayIndex) cls += ' past';
+      else if (i === weekdayIndex) cls += ' today';
+      pip.className = cls;
+      pip.setAttribute('title', dayLabels[i]);
+      $weekDays.appendChild(pip);
     }
-    if (!('Notification' in window)) { $rStatus.textContent = 'Notifications not supported.'; return; }
-    Notification.requestPermission().then(function(p) {
-      if (p !== 'granted') { $rStatus.textContent = 'Permission denied. Enable in browser settings.'; return; }
-      startReminder();
+  }
+
+  // ── Quick-log ──────────────────────────────────────────────────
+  $qlSubmit.addEventListener('click', function () {
+    var member  = state.member;
+    var metWith = $qlMetWith.value;
+    var date    = $qlDate.value;
+
+    if (!member)  { setFeedback('Select your name first.', 'err'); return; }
+    if (!metWith) { setFeedback('Choose who you met with.', 'err'); return; }
+    if (!date)    { setFeedback('Pick a date.', 'err'); return; }
+
+    $qlSubmit.disabled = true;
+    $qlSubmit.textContent = 'Logging\u2026';
+
+    fetch('/api/bizchat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ member: member, metWith: metWith, date: date })
+    }).then(function (r) {
+      return r.json();
+    }).then(function (d) {
+      if (d.status === 'ok') {
+        setFeedback('Logged! Great work.', 'ok');
+        $qlMetWith.value = '';
+        $qlDate.value = todayIso();
+      } else {
+        setFeedback(d.message || 'Something went wrong.', 'err');
+      }
+    }).catch(function () {
+      setFeedback('Network error. Try again.', 'err');
+    }).finally(function () {
+      $qlSubmit.disabled = false;
+      $qlSubmit.textContent = 'Log BizChat';
     });
   });
 
-  function startReminder() {
-    var parts = $rTime.value.split(':'), h = +parts[0], m = +parts[1];
-    localStorage.setItem('remind_time', $rTime.value);
-    function msNext() {
-      var now = new Date(), t = new Date(now);
-      t.setHours(h, m, 0, 0);
-      if (t <= now) t.setDate(t.getDate() + 1);
-      return t.getTime() - now.getTime();
-    }
-    function fire() {
-      new Notification('BizChat Reminder', {
-        body: 'Time to log your BizChats! Keep the streak going.',
-        icon: '/icons/heatwave-icon-192.png', tag: 'bizchat-remind'
-      });
-      rTimer = setTimeout(fire, msNext());
-    }
-    var delay = msNext();
-    rTimer = setTimeout(fire, delay);
-    $rBtn.textContent = 'Cancel Reminder';
-    var next = new Date(Date.now() + delay);
-    $rStatus.textContent = 'Next reminder at ' + next.toLocaleTimeString([], { hour:'numeric', minute:'2-digit' }) + ' (keep this tab open).';
+  function setFeedback(msg, cls) {
+    $qlFeedback.textContent = msg;
+    $qlFeedback.className = 'feedback ' + cls;
   }
 
-  if (savedTime && 'Notification' in window && Notification.permission === 'granted') startReminder();
+  // ── Reminder system ────────────────────────────────────────────
+  $remEnable.addEventListener('click', function () {
+    if (!('Notification' in window)) {
+      $remStatus.textContent = 'Notifications are not supported in this browser.';
+      return;
+    }
+    Notification.requestPermission().then(function (perm) {
+      if (perm !== 'granted') {
+        $remStatus.textContent = 'Permission denied \u2014 enable notifications in browser settings.';
+        return;
+      }
+      state.am = $remAm.value;
+      state.pm = $remPm.value;
+      state.enabled = true;
+      saveState();
+      startChecking();
+      syncReminderUI();
+    });
+  });
+
+  $remDisable.addEventListener('click', function () {
+    state.enabled = false;
+    saveState();
+    stopChecking();
+    syncReminderUI();
+    $remStatus.textContent = 'Reminders disabled.';
+  });
+
+  $remAm.addEventListener('change', function () {
+    if (state.enabled) { state.am = $remAm.value; saveState(); syncReminderUI(); }
+  });
+  $remPm.addEventListener('change', function () {
+    if (state.enabled) { state.pm = $remPm.value; saveState(); syncReminderUI(); }
+  });
+
+  function startChecking() {
+    if (checkIntervalId) return;
+    checkIntervalId = setInterval(checkReminderTimes, CHECK_INTERVAL_MS);
+    checkReminderTimes();
+  }
+
+  function stopChecking() {
+    if (checkIntervalId) { clearInterval(checkIntervalId); checkIntervalId = null; }
+  }
+
+  function checkReminderTimes() {
+    if (!state.enabled) return;
+    var now = new Date();
+    var hhmm = pad2(now.getHours()) + ':' + pad2(now.getMinutes());
+    var todayKey = todayIso();
+
+    if (state.am && hhmm === state.am && lastFiredAm !== todayKey) {
+      lastFiredAm = todayKey;
+      fireNotification('BizChat Morning Nudge', 'Plan your BizChats for today! Who can you connect with?');
+    }
+    if (state.pm && hhmm === state.pm && lastFiredPm !== todayKey) {
+      lastFiredPm = todayKey;
+      fireNotification('BizChat Check-in', 'Did you log your BizChats today? Keep that streak going!');
+    }
+  }
+
+  function fireNotification(title, body) {
+    if (Notification.permission !== 'granted') return;
+    new Notification(title, {
+      body: body,
+      icon: '/icons/heatwave-icon-192.png',
+      tag: 'bizchat-remind'
+    });
+  }
+
+  function syncReminderUI() {
+    var on = state.enabled;
+    $remEnable.disabled = on;
+    $remDisable.disabled = !on;
+    while ($pills.firstChild) $pills.removeChild($pills.firstChild);
+    $remStatus.textContent = '';
+
+    if (on) {
+      if (state.am) $pills.appendChild(makePill('AM ' + fmtTime(state.am)));
+      if (state.pm) $pills.appendChild(makePill('PM ' + fmtTime(state.pm)));
+      $remStatus.textContent = 'Active \u2014 checks every minute while tab is open.';
+    }
+  }
+
+  function makePill(label) {
+    var pill = document.createElement('span');
+    pill.className = 'pill';
+
+    var dot = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    dot.setAttribute('width', '8');
+    dot.setAttribute('height', '8');
+    dot.setAttribute('viewBox', '0 0 8 8');
+    dot.setAttribute('aria-hidden', 'true');
+    var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('cx', '4');
+    circle.setAttribute('cy', '4');
+    circle.setAttribute('r', '3');
+    circle.setAttribute('fill', 'currentColor');
+    dot.appendChild(circle);
+
+    var text = document.createTextNode(label);
+    pill.appendChild(dot);
+    pill.appendChild(text);
+    return pill;
+  }
+
+  // ── Auto-start on load if previously enabled ───────────────────
+  if (state.enabled && 'Notification' in window && Notification.permission === 'granted') {
+    startChecking();
+  } else if (state.enabled) {
+    state.enabled = false;
+    saveState();
+  }
+  syncReminderUI();
+
+  // ── Helpers ────────────────────────────────────────────────────
+  function todayIso() {
+    var d = new Date();
+    return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+  }
+
+  function pad2(n) { return n < 10 ? '0' + n : String(n); }
+
+  function fmtTime(hhmm) {
+    var parts = hhmm.split(':');
+    var h = +parts[0];
+    var m = +parts[1];
+    var ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12;
+    return h + ':' + pad2(m) + ' ' + ampm;
+  }
+
 })();
 </script>
 </body>

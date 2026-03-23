@@ -102,18 +102,46 @@ function hasAllowedOrigin(req) {
 }
 
 // ── Rate limiting ───────────────────────────────────────────────────
-// NOTE: In-memory Map resets on every cold start, so this is best-effort
-// only.  Replace with Upstash Redis or Vercel KV for real protection.
+// NOTE: Uses Vercel KV when available (persistent across cold starts).
+// Falls back to an in-memory Map for local dev or when @vercel/kv is not
+// installed — in that case limits reset on every cold start (best-effort).
+
+var kv = null;
+try { kv = require('@vercel/kv'); } catch (_e) { /* KV not available, use in-memory fallback */ }
 
 var rateLimitStore = new Map();
 
-function isRateLimited(ipAddress, limits) {
+async function isRateLimited(ipAddress, limits) {
   if (!ipAddress) return false;
+
   var burstLimit = (limits && limits.burst) || 12;
   var burstWindowMs = (limits && limits.burstWindowMs) || 60 * 1000;
   var hourlyLimit = (limits && limits.hourly) || 60;
   var hourlyWindowMs = 60 * 60 * 1000;
 
+  if (kv && kv.kv) {
+    try {
+      var key = 'rl:' + ipAddress;
+      var burstKey = key + ':burst';
+
+      var results = await Promise.all([
+        kv.kv.incr(burstKey),
+        kv.kv.incr(key)
+      ]);
+      var burstCount = results[0];
+      var hourlyCount = results[1];
+
+      // Set TTL only on the first increment so the window is anchored correctly
+      if (burstCount === 1) await kv.kv.expire(burstKey, Math.ceil(burstWindowMs / 1000));
+      if (hourlyCount === 1) await kv.kv.expire(key, Math.ceil(hourlyWindowMs / 1000));
+
+      return burstCount > burstLimit || hourlyCount > hourlyLimit;
+    } catch (_kvErr) {
+      // KV failed — fall through to in-memory
+    }
+  }
+
+  // ── In-memory fallback ───────────────────────────────────────────
   var now = Date.now();
   var recentRequests = (rateLimitStore.get(ipAddress) || []).filter(function (ts) {
     return (now - ts) < hourlyWindowMs;

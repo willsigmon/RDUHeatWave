@@ -2129,71 +2129,23 @@ button { cursor: pointer; background: none; border: none; }
       <p>1233 Front St &bull; Raleigh, NC</p>
     </div>
 
-    <div class="clouds-hero">
+    <div class="clouds-hero" id="clouds-hero-dynamic">
       <div class="clouds-hero-kicker">
         <span>Fresh Tap List</span>
         <span>&bull;</span>
         <span>Food + 5&ndash;7 PM</span>
       </div>
-      <div class="clouds-hero-copy">Tailwind Margarita, Mean Girl, and Sky Lime are currently featured on the live menu.</div>
-      <div class="clouds-pour-row">
-        <div class="clouds-pour-chip">
-          <span class="clouds-pour-name">Tailwind Margarita</span>
-          <span class="clouds-pour-meta">THC Seltzer &bull; N/A</span>
-        </div>
-        <div class="clouds-pour-chip">
-          <span class="clouds-pour-name">Mean Girl</span>
-          <span class="clouds-pour-meta">Kettle Sour &bull; 5.5%</span>
-        </div>
-        <div class="clouds-pour-chip">
-          <span class="clouds-pour-name">Sky Lime</span>
-          <span class="clouds-pour-meta">Lime Lager &bull; 4.6%</span>
-        </div>
+      <div class="clouds-hero-copy" id="clouds-hero-copy"></div>
+      <div class="clouds-pour-row" id="clouds-pour-row">
+        <noscript>Enable JavaScript to view featured pours.</noscript>
       </div>
     </div>
 
-    <div class="beer-columns">
-      <div class="beer-column">
-        <div class="beer-section-title">Lagers &amp; Pilsners</div>
-        <ul class="beer-list">
-          <li class="beer-item"><span><span class="beer-name">Sky Lime</span> <span class="beer-style">Lime Lager</span></span> <span class="beer-abv">4.6%</span></li>
-          <li class="beer-item"><span><span class="beer-name">Wolkenbrau</span> <span class="beer-style">Hybrid German-American Lager</span></span> <span class="beer-abv">4.5%</span></li>
-          <li class="beer-item"><span><span class="beer-name">Precipitation</span> <span class="beer-style">German Pilsner</span></span> <span class="beer-abv">5.2%</span></li>
-          <li class="beer-item"><span><span class="beer-name">Czech Mate</span> <span class="beer-style">Czech Style Pilsner</span></span> <span class="beer-abv">5.6%</span></li>
-          <li class="beer-item"><span><span class="beer-name">Accumulation</span> <span class="beer-style">Amber Lager</span></span> <span class="beer-abv">5.8%</span></li>
-        </ul>
-
-        <div class="beer-section-title">IPAs &amp; Strong Ales</div>
-        <ul class="beer-list">
-          <li class="beer-item"><span><span class="beer-name">Hop Jam IPA</span> <span class="beer-style">American IPA</span></span> <span class="beer-abv">6.3%</span></li>
-          <li class="beer-item"><span><span class="beer-name">Hazy Hop Jam</span> <span class="beer-style">Hazy IPA</span></span> <span class="beer-abv">6.3%</span></li>
-          <li class="beer-item"><span><span class="beer-name">Double Hop Jam</span> <span class="beer-style">Imperial IPA</span></span> <span class="beer-abv">10.3%</span></li>
-          <li class="beer-item"><span><span class="beer-name">Clouds 9</span> <span class="beer-style">Belgian Golden Strong</span></span> <span class="beer-abv">9%</span></li>
-          <li class="beer-item"><span><span class="beer-name">Donner &amp; Blitzen 25</span> <span class="beer-style">Spiced Belgian Quad</span></span> <span class="beer-abv">10.5%</span></li>
-        </ul>
-      </div>
-
-      <div class="beer-column">
-        <div class="beer-section-title">Sours, Stouts &amp; Porters</div>
-        <ul class="beer-list">
-          <li class="beer-item"><span><span class="beer-name">Mean Girl</span> <span class="beer-style">Blackberry Dragon Fruit Kettle Sour</span></span> <span class="beer-abv">5.5%</span></li>
-          <li class="beer-item"><span><span class="beer-name">Crimea River</span> <span class="beer-style">Baltic Porter</span></span> <span class="beer-abv">8%</span></li>
-          <li class="beer-item"><span><span class="beer-name">Midnight Delight</span> <span class="beer-style">Dark Chocolate Milk Stout</span></span> <span class="beer-abv">6.8%</span></li>
-          <li class="beer-item"><span><span class="beer-name">Coffee at Midnight</span> <span class="beer-style">Coffee Stout</span></span> <span class="beer-abv">7%</span></li>
-          <li class="beer-item"><span><span class="beer-name">Kentucky Moonlight</span> <span class="beer-style">BBA Imperial Stout</span></span> <span class="beer-abv">10.5%</span></li>
-        </ul>
-
-        <div class="beer-section-title">Wheat, THC &amp; N/A</div>
-        <ul class="beer-list">
-          <li class="beer-item"><span><span class="beer-name">El Hefe</span> <span class="beer-style">Bavarian Wheat</span></span> <span class="beer-abv">4.9%</span></li>
-          <li class="beer-item"><span><span class="beer-name">Tailwind Margarita</span> <span class="beer-style">7mg Delta 9 THC Seltzer</span></span> <span class="beer-abv">N/A</span></li>
-          <li class="beer-item"><span><span class="beer-name">Root Beer</span> <span class="beer-style">Non-Alcoholic</span></span> <span class="beer-abv">N/A</span></li>
-        </ul>
-      </div>
+    <div class="beer-columns" id="beer-columns">
+      <noscript>Enable JavaScript to view the tap list.</noscript>
     </div>
 
-
-    <p class="clouds-note">Checked March 12, 2026.</p>
+    <p class="clouds-note" id="clouds-note"></p>
 
     <div class="swipe-hint">&larr; Swipe right to check in</div>
   </div>
@@ -2203,6 +2155,138 @@ button { cursor: pointer; background: none; border: none; }
 
 <script>
 (function() {
+
+  // ===== BEER MENU DATA =====
+  var BEER_MENU = {
+    lastChecked: '2026-03-22',
+    featured: [
+      { name: 'Tailwind Margarita', style: 'THC Seltzer', abv: 'N/A'   },
+      { name: 'Mean Girl',          style: 'Kettle Sour',  abv: '5.5%' },
+      { name: 'Sky Lime',           style: 'Lime Lager',   abv: '4.6%' }
+    ],
+    categories: [
+      {
+        name: 'Lagers & Pilsners',
+        beers: [
+          { name: 'Sky Lime',       style: 'Lime Lager',                   abv: '4.6%'  },
+          { name: 'Wolkenbrau',     style: 'Hybrid German-American Lager', abv: '4.5%'  },
+          { name: 'Precipitation',  style: 'German Pilsner',               abv: '5.2%'  },
+          { name: 'Czech Mate',     style: 'Czech Style Pilsner',          abv: '5.6%'  },
+          { name: 'Accumulation',   style: 'Amber Lager',                  abv: '5.8%'  }
+        ]
+      },
+      {
+        name: 'IPAs & Strong Ales',
+        beers: [
+          { name: 'Hop Jam IPA',         style: 'American IPA',         abv: '6.3%'  },
+          { name: 'Hazy Hop Jam',        style: 'Hazy IPA',             abv: '6.3%'  },
+          { name: 'Double Hop Jam',      style: 'Imperial IPA',         abv: '10.3%' },
+          { name: 'Clouds 9',            style: 'Belgian Golden Strong', abv: '9%'   },
+          { name: 'Donner & Blitzen 25', style: 'Spiced Belgian Quad',  abv: '10.5%' }
+        ]
+      },
+      {
+        name: 'Sours, Stouts & Porters',
+        beers: [
+          { name: 'Mean Girl',          style: 'Blackberry Dragon Fruit Kettle Sour', abv: '5.5%'  },
+          { name: 'Crimea River',       style: 'Baltic Porter',                       abv: '8%'    },
+          { name: 'Midnight Delight',   style: 'Dark Chocolate Milk Stout',           abv: '6.8%'  },
+          { name: 'Coffee at Midnight', style: 'Coffee Stout',                        abv: '7%'    },
+          { name: 'Kentucky Moonlight', style: 'BBA Imperial Stout',                  abv: '10.5%' }
+        ]
+      },
+      {
+        name: 'Wheat, THC & N/A',
+        beers: [
+          { name: 'El Hefe',            style: 'Bavarian Wheat',          abv: '4.9%' },
+          { name: 'Tailwind Margarita', style: '7mg Delta 9 THC Seltzer', abv: 'N/A'  },
+          { name: 'Root Beer',          style: 'Non-Alcoholic',           abv: 'N/A'  }
+        ]
+      }
+    ]
+  };
+
+  // Creates a DOM element with an optional CSS class.
+  function makeEl(tag, cls) {
+    var el = document.createElement(tag);
+    if (cls) el.className = cls;
+    return el;
+  }
+
+  // Clears all children from a node.
+  function clearNode(node) {
+    while (node.firstChild) node.removeChild(node.firstChild);
+  }
+
+  function renderBeerMenu() {
+    var heroCopy    = document.getElementById('clouds-hero-copy');
+    var pourRow     = document.getElementById('clouds-pour-row');
+    var beerColumns = document.getElementById('beer-columns');
+    var cloudsNote  = document.getElementById('clouds-note');
+
+    if (!heroCopy || !pourRow || !beerColumns || !cloudsNote) return;
+
+    // Featured hero copy
+    var names = BEER_MENU.featured.map(function(f) { return f.name; });
+    var last  = names.pop();
+    heroCopy.textContent = names.join(', ') + ', and ' + last + ' are currently featured on the live menu.';
+
+    // Featured pour chips
+    clearNode(pourRow);
+    BEER_MENU.featured.forEach(function(f) {
+      var chip  = makeEl('div',  'clouds-pour-chip');
+      var pname = makeEl('span', 'clouds-pour-name');
+      var pmeta = makeEl('span', 'clouds-pour-meta');
+      pname.textContent = f.name;
+      pmeta.textContent = f.style + ' \u2022 ' + f.abv;
+      chip.appendChild(pname);
+      chip.appendChild(pmeta);
+      pourRow.appendChild(chip);
+    });
+
+    // Beer columns: first half of categories left, second half right
+    var cats   = BEER_MENU.categories;
+    var mid    = Math.ceil(cats.length / 2);
+    var halves = [cats.slice(0, mid), cats.slice(mid)];
+
+    clearNode(beerColumns);
+    halves.forEach(function(group) {
+      var col = makeEl('div', 'beer-column');
+      group.forEach(function(cat) {
+        var title = makeEl('div', 'beer-section-title');
+        title.textContent = cat.name;
+        col.appendChild(title);
+
+        var ul = makeEl('ul', 'beer-list');
+        cat.beers.forEach(function(beer) {
+          var li      = makeEl('li',   'beer-item');
+          var wrapper = makeEl('span');
+          var bname   = makeEl('span', 'beer-name');
+          var bstyle  = makeEl('span', 'beer-style');
+          var babv    = makeEl('span', 'beer-abv');
+          bname.textContent  = beer.name;
+          bstyle.textContent = beer.style;
+          babv.textContent   = beer.abv;
+          wrapper.appendChild(bname);
+          wrapper.appendChild(document.createTextNode(' '));
+          wrapper.appendChild(bstyle);
+          li.appendChild(wrapper);
+          li.appendChild(document.createTextNode(' '));
+          li.appendChild(babv);
+          ul.appendChild(li);
+        });
+        col.appendChild(ul);
+      });
+      beerColumns.appendChild(col);
+    });
+
+    // "Checked" date note
+    var d = new Date(BEER_MENU.lastChecked + 'T00:00:00');
+    var formatted = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    cloudsNote.textContent = 'Checked ' + formatted + '.';
+  }
+
+  renderBeerMenu();
 
   // ===== SWIPE SLIDER =====
   var slider = document.getElementById('slider');
@@ -2591,11 +2675,8 @@ button { cursor: pointer; background: none; border: none; }
   updateCountdown();
   setInterval(updateCountdown, 1000);
 
-  // ===== CONFIG =====
-  var FORM_ENDPOINT = '/api/checkin';
-  var FORM_TIMEOUT_MS = 12000;
-  var MAX_LOCAL_ENTRIES = 250;
-  // Single source of truth for the public team list and the "Guest Of" dropdown.
+  // ===== TEAM GRID (index-specific) =====
+  // TEAM_MEMBERS is kept here for renderTeamGrid; shared-form.js manages its own copy.
   var TEAM_MEMBERS = [
     { name: 'Carter Helms', title: 'Team Chair', profession: 'Community Insurance Agent', company: 'Highstreet Ins & Financial Svcs', website: 'https://carterhelms.com', leader: true },
     { name: 'Craig Morrill', title: 'Vice Chair', profession: 'Financial Advisor', company: 'Summit Global Investments', website: 'https://sgiam.com', leader: true },
@@ -2609,10 +2690,6 @@ button { cursor: pointer; background: none; border: none; }
     { name: 'David Mercado', title: 'HOA Management', company: 'William Douglas Management', website: 'https://wmdouglas.com/raleigh-hoa-management', leader: false },
     { name: 'Sue Kerata', title: 'Realtor', company: 'Century 21 Triangle Group', website: 'https://suekhomes.com', leader: false }
   ];
-
-  function keepLatestLocalEntries(entries) {
-    return entries.slice(-MAX_LOCAL_ENTRIES);
-  }
 
   function escapeHtml(value) {
     return String(value || '')
@@ -2657,570 +2734,29 @@ button { cursor: pointer; background: none; border: none; }
       '</div>';
   }
 
-  function fetchWithTimeout(url, options, timeoutMs) {
-    if (typeof AbortController === 'undefined') {
-      return fetch(url, options);
-    }
-
-    var controller = new AbortController();
-    var timeoutId = setTimeout(function() {
-      controller.abort();
-    }, timeoutMs);
-    var requestOptions = Object.assign({}, options, { signal: controller.signal });
-
-    return fetch(url, requestOptions).finally(function() {
-      clearTimeout(timeoutId);
-    });
-  }
-
-  // ===== LOCAL BACKUP =====
-  function saveToLocal(data) {
-    try {
-      var entries = JSON.parse(localStorage.getItem('heatwave_entries') || '[]');
-      var savedEntry = Object.assign({}, data, {
-        timestamp: new Date().toISOString(),
-        synced: false
-      });
-      entries.push(savedEntry);
-      localStorage.setItem('heatwave_entries', JSON.stringify(keepLatestLocalEntries(entries)));
-      return savedEntry;
-    } catch(e) { /* storage full or unavailable */ }
-    return null;
-  }
-
-  function markLocalEntrySynced(timestamp) {
-    if (!timestamp) return;
-
-    try {
-      var entries = JSON.parse(localStorage.getItem('heatwave_entries') || '[]');
-      var updatedEntries = entries.map(function(entry) {
-        if (entry.timestamp === timestamp) {
-          return Object.assign({}, entry, { synced: true });
-        }
-
-        return entry;
-      });
-
-      localStorage.setItem('heatwave_entries', JSON.stringify(keepLatestLocalEntries(updatedEntries)));
-    } catch(e) { /* storage unavailable */ }
-  }
-
-  function getLocalEntries() {
-    try { return JSON.parse(localStorage.getItem('heatwave_entries') || '[]'); }
-    catch(e) { return []; }
-  }
-
-  function exportCSV() {
-    var entries = getLocalEntries();
-    if (!entries.length) { alert('No local entries saved.'); return; }
-    var header = 'Timestamp,First Name,Last Name,Profession,Company Name,Phone,Email,Guest Of,Ideal Referral\n';
-    var rows = entries.map(function(e) {
-      return [e.timestamp, e.firstName, e.lastName, e.profession, e.companyName, e.phone, e.email, e.guestOf, e.idealReferral]
-        .map(function(v) { return '"' + (v || '').replace(/"/g, '""') + '"'; }).join(',');
-    }).join('\n');
-    var blob = new Blob([header + rows], { type: 'text/csv' });
-    var a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'heatwave-entries-' + new Date().toISOString().slice(0,10) + '.csv';
-    a.click();
-  }
-
-  // Expose for console use: exportCSV()
-  window.exportCSV = exportCSV;
-  window.getLocalEntries = getLocalEntries;
-
-  // ===== DOM REFS =====
-  var form = document.getElementById('checkin-form');
-  var submitBtn = document.getElementById('submit-btn');
-  var successScreen = document.getElementById('success-screen');
-  var successTitle = document.getElementById('success-title');
-  var successSubtitle = document.getElementById('success-subtitle');
-  var resetBtn = document.getElementById('reset-btn');
-  var confettiCanvas = document.getElementById('confetti-canvas');
-  var defaultSuccessTitle = 'Welcome to the Heatwave!';
-  var defaultSuccessSubtitle = 'Your registration has been submitted. We look forward to connecting with you.';
-  var localOnlySuccessTitle = 'Saved on this device';
-  var localOnlySuccessSubtitle = 'Google Sheets is not connected yet, so this check-in is stored locally on this device only.';
-  var syncFailedSuccessSubtitle = 'We saved this check-in on this device, but the Google Sheets sync did not complete.';
-  var submitFailedTitle = 'We could not confirm your check-in';
-  var submitFailedSubtitle = 'This browser could not save a local backup, and the network sync did not complete. Please try again or ask the host to retry.';
-
-  var fields = ['firstName', 'lastName', 'profession', 'phone', 'email', 'guestOf'];
-  var optionalFields = ['companyName', 'idealReferral'];
-  var allFields = fields.concat(optionalFields);
-
-  var guestPicker = document.getElementById('guestOf-picker');
-  var guestQuickPicks = document.getElementById('guestOf-quick');
-  var guestSearchInput = document.getElementById('guestOfSearch');
-  var guestResults = document.getElementById('guestOf-results');
-  var guestOfHidden = document.getElementById('guestOf');
-  var companyWebsite = document.getElementById('companyWebsite');
-  var tapPanelGroups = {
-  };
-
-  function isTeamMember(name) {
-    return TEAM_MEMBERS.some(function(member) {
-      return member.name === name;
-    });
-  }
-
-  function normalizeGuestValue(value) {
-    return String(value || '').trim().toLowerCase();
-  }
-
-  function findGuestMember(value) {
-    var normalized = normalizeGuestValue(value);
-    if (!normalized) return null;
-    return TEAM_MEMBERS.find(function(member) {
-      return normalizeGuestValue(member.name) === normalized;
-    }) || null;
-  }
-
-  function syncGuestQuickPicks() {
-    var selectedOption = guestQuickPicks.getAttribute('data-selected-option') || '';
-
-    guestQuickPicks.querySelectorAll('.guest-chip').forEach(function(button) {
-      button.classList.toggle('active', button.getAttribute('data-value') === selectedOption);
-    });
-  }
-
-  // ===== PROFESSION AUTOCOMPLETE =====
-  var INDUSTRIES = [
-    'Accounting', 'Architecture', 'Auto Sales', 'Banking', 'Business Consulting',
-    'Chiropractic', 'Commercial Real Estate', 'Construction', 'Copywriting',
-    'Cyber Security', 'Dental', 'Education', 'Electrical', 'Event Planning',
-    'Financial Planning', 'Fitness & Wellness', 'Graphic Design', 'Healthcare',
-    'Home Inspection', 'Home Services', 'HVAC', 'Insurance', 'Interior Design',
-    'IT Services', 'Landscaping', 'Legal', 'Lending & Mortgage', 'Marketing',
-    'Massage Therapy', 'Media & Video', 'Mental Health', 'Nonprofit',
-    'Nutrition', 'Painting', 'Pest Control', 'Pet Services', 'Photography',
-    'Physical Therapy', 'Plumbing', 'Printing', 'Property Management',
-    'Property Restoration', 'Publishing', 'Real Estate', 'Recruiting',
-    'Roofing', 'Solar Energy', 'Staffing', 'Tax Preparation', 'Technology',
-    'Travel', 'Veterinary', 'Wealth Management', 'Web Development'
-  ];
-  var professionInput = document.getElementById('profession');
-  var professionResults = document.getElementById('profession-results');
-
-  function getProfessionMatches(query) {
-    var q = query.trim().toLowerCase();
-    if (!q) return [];
-    return INDUSTRIES.filter(function(industry) {
-      return industry.toLowerCase().indexOf(q) !== -1;
-    }).slice(0, 6);
-  }
-
-  function renderProfessionResults() {
-    var matches = getProfessionMatches(professionInput.value);
-    if (!matches.length || professionInput.value.trim().toLowerCase() === matches[0].toLowerCase()) {
-      professionResults.innerHTML = '';
-      return;
-    }
-    professionResults.innerHTML = matches.map(function(industry) {
-      return '<button type="button" class="profession-result" data-value="' + escapeHtml(industry) + '">' + escapeHtml(industry) + '</button>';
-    }).join('');
-  }
-
-  professionInput.addEventListener('input', function() {
-    renderProfessionResults();
-  });
-
-  professionInput.addEventListener('focus', function() {
-    if (professionInput.value.trim()) renderProfessionResults();
-  });
-
-  professionInput.addEventListener('blur', function() {
-    window.setTimeout(function() {
-      professionResults.innerHTML = '';
-    }, 120);
-  });
-
-  professionResults.addEventListener('click', function(event) {
-    var button = event.target.closest('.profession-result');
-    if (!button) return;
-    professionInput.value = button.getAttribute('data-value');
-    professionResults.innerHTML = '';
-    professionInput.blur();
-    validateField('profession');
-  });
-
-  function renderGuestQuickPicks() {
-    guestQuickPicks.innerHTML = TEAM_MEMBERS.filter(function(member) {
-      return member.leader && !member.specialTitle;
-    }).map(function(member) {
-      return '<button type="button" class="guest-chip" data-value="' + escapeHtml(member.name) + '">' + escapeHtml(member.name) + '</button>';
-    }).join('') +
-    '<button type="button" class="guest-chip guest-chip--other" data-value="Other">Someone Else</button>';
-
-    syncGuestQuickPicks();
-  }
-
-  function getGuestMatches(query) {
-    var normalized = normalizeGuestValue(query);
-    if (!normalized) return [];
-
-    return TEAM_MEMBERS.filter(function(member) {
-      return [member.name, member.title, member.company].some(function(part) {
-        return normalizeGuestValue(part).indexOf(normalized) !== -1;
-      });
-    }).slice(0, 6);
-  }
-
-  function renderGuestResults() {
-    var query = guestSearchInput.value.trim();
-    var matches = getGuestMatches(query);
-    var selectedValue = guestOfHidden.value;
-
-    if (!query) {
-      guestResults.innerHTML = '';
-      return;
-    }
-
-    guestResults.innerHTML = matches.map(function(member) {
-      var activeClass = member.name === selectedValue ? ' active' : '';
-      return '<button type="button" class="guest-result' + activeClass + '" data-value="' + escapeHtml(member.name) + '">' +
-        '<span class="guest-result-name">' + escapeHtml(member.name) + '</span>' +
-        '<span class="guest-result-meta">' + escapeHtml(member.title) + ' &bull; ' + escapeHtml(member.company || '') + '</span>' +
-      '</button>';
-    }).join('');
-  }
-
-  function setGuestSelection(value, options) {
-    var nextValue = String(value || '').trim();
-    var exactMember = findGuestMember(nextValue);
-    var isCustom = !!(nextValue && !exactMember);
-
-    guestOfHidden.value = exactMember ? exactMember.name : nextValue;
-    if (!options || !options.keepTypedValue) {
-      guestSearchInput.value = guestOfHidden.value;
-    }
-
-    guestQuickPicks.setAttribute('data-selected-option', exactMember && exactMember.leader ? exactMember.name : (isCustom ? 'Other' : ''));
-    syncGuestQuickPicks();
-    renderGuestResults();
-    validateField('guestOf');
-  }
-
-  function syncPanelGroup(fieldName) {
-    var group = tapPanelGroups[fieldName];
-    var input = document.getElementById(fieldName);
-    if (!group || !input) return;
-
-    group.querySelectorAll('.tap-panel').forEach(function(button) {
-      button.classList.toggle('active', button.getAttribute('data-value') === input.value);
-    });
-  }
-
   renderTeamGrid();
-  renderGuestQuickPicks();
 
-  // Fetch live roster from API — update team grid + guest picks if successful
-  fetchWithTimeout('/api/members', { method: 'GET' }, 5000)
-    .then(function(response) { return response.json(); })
-    .then(function(data) {
-      if (data.status !== 'ok' || !Array.isArray(data.members) || !data.members.length) return;
-      TEAM_MEMBERS = data.members;
+})();
+</script>
+
+<script src="/shared-form.js"></script>
+<script>
+(function() {
+  initCheckinForm({
+    formId: 'checkin-form',
+    isKiosk: false,
+    onReset: function() {
+      var countdown = document.getElementById('countdown-section');
+      if (countdown) countdown.style.display = 'block';
+    },
+    onSuccess: function() {
+      var countdown = document.getElementById('countdown-section');
+      if (countdown) countdown.style.display = 'none';
+    },
+    onMembersLoaded: function(members) {
+      TEAM_MEMBERS = members;
       renderTeamGrid();
-      renderGuestQuickPicks();
-    })
-    .catch(function() { /* fallback already rendered */ });
-
-  Object.keys(tapPanelGroups).forEach(syncPanelGroup);
-
-  guestQuickPicks.addEventListener('click', function(event) {
-    var button = event.target.closest('.guest-chip');
-    if (!button) return;
-
-    var value = button.getAttribute('data-value');
-    if (value === 'Other') {
-      guestQuickPicks.setAttribute('data-selected-option', 'Other');
-      guestOfHidden.value = guestSearchInput.value.trim();
-      syncGuestQuickPicks();
-      guestSearchInput.focus();
-      validateField('guestOf');
-      return;
     }
-
-    setGuestSelection(value);
-  });
-
-  guestSearchInput.addEventListener('focus', function() {
-    renderGuestResults();
-  });
-
-  guestSearchInput.addEventListener('input', function() {
-    setGuestSelection(this.value, { keepTypedValue: true });
-  });
-
-  guestSearchInput.addEventListener('blur', function() {
-    window.setTimeout(function() {
-      guestResults.innerHTML = '';
-      setGuestSelection(guestSearchInput.value);
-    }, 120);
-  });
-
-  guestResults.addEventListener('click', function(event) {
-    var button = event.target.closest('.guest-result');
-    if (!button) return;
-
-    setGuestSelection(button.getAttribute('data-value'));
-    guestResults.innerHTML = '';
-    guestSearchInput.blur();
-  });
-
-  Object.keys(tapPanelGroups).forEach(function(fieldName) {
-    var group = tapPanelGroups[fieldName];
-    group.addEventListener('click', function(event) {
-      var button = event.target.closest('.tap-panel');
-      if (!button) return;
-
-      document.getElementById(fieldName).value = button.getAttribute('data-value');
-      syncPanelGroup(fieldName);
-      validateField(fieldName);
-    });
-  });
-
-  // ===== VALIDATION =====
-  function validateField(name) {
-    var input = document.getElementById(name);
-    var errorEl = document.getElementById(name + '-error');
-    var valid = true;
-
-    if (name === 'guestOf') {
-      valid = !!guestOfHidden.value.trim();
-      guestPicker.classList.toggle('error', !valid);
-      guestSearchInput.classList.toggle('error', !valid);
-      errorEl.classList.toggle('visible', !valid);
-      return valid;
-    }
-
-    if (input.type === 'hidden') {
-      valid = !!input.value.trim();
-      if (tapPanelGroups[name]) tapPanelGroups[name].classList.toggle('error', !valid);
-      if (errorEl) errorEl.classList.toggle('visible', !valid);
-      return valid;
-    }
-
-    if (optionalFields.indexOf(name) !== -1 && !input.value.trim()) {
-      input.classList.remove('error');
-      if (errorEl) errorEl.classList.remove('visible');
-      return true;
-    }
-
-    if (!input.value.trim()) valid = false;
-
-    if (name === 'email' && input.value.trim()) {
-      var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      valid = emailPattern.test(input.value.trim());
-    }
-
-    if (valid) {
-      input.classList.remove('error');
-      if (errorEl) errorEl.classList.remove('visible');
-    } else {
-      input.classList.add('error');
-      if (errorEl) errorEl.classList.add('visible');
-    }
-
-    return valid;
-  }
-
-  function validateAll() {
-    var allValid = true;
-    fields.forEach(function(name) {
-      if (!validateField(name)) allValid = false;
-    });
-    return allValid;
-  }
-
-  allFields.forEach(function(name) {
-    if (name === 'guestOf') return;
-    var input = document.getElementById(name);
-    if (!input || input.type === 'hidden') return;
-    input.addEventListener('blur', function() {
-      if (input.value.trim() || fields.indexOf(name) !== -1) validateField(name);
-    });
-    input.addEventListener('change', function() {
-      validateField(name);
-    });
-    input.addEventListener('input', function() {
-      if (input.classList.contains('error')) validateField(name);
-    });
-  });
-
-
-  // ===== FORM SUBMIT =====
-  submitBtn.addEventListener('click', function(e) {
-    try {
-      if (!validateAll()) {
-        var firstError = form.querySelector('.field-input.error, .tap-panel-grid.error .tap-panel');
-        if (firstError) firstError.focus();
-        return;
-      }
-
-      submitBtn.classList.add('loading');
-      submitBtn.disabled = true;
-
-      // Collect form data
-      var entry = {};
-      allFields.forEach(function(name) {
-        entry[name] = document.getElementById(name).value.trim();
-      });
-
-      // ALWAYS save locally as backup
-      var savedEntry = saveToLocal(entry);
-
-      // Send to same-origin proxy so the UI gets a real success/failure signal
-      fetchWithTimeout(FORM_ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
-          body: new URLSearchParams(Object.assign({}, entry, {
-            companyWebsite: companyWebsite.value.trim()
-          })).toString()
-        }, FORM_TIMEOUT_MS).then(function(response) {
-          if (!response.ok) throw new Error('submit-failed');
-          return response.json();
-        }).then(function(result) {
-          if (!result || result.status !== 'ok') throw new Error('submit-failed');
-          markLocalEntrySynced(savedEntry && savedEntry.timestamp);
-          showSuccess();
-        }).catch(function() {
-          if (savedEntry) {
-            showSuccess({ localOnly: true, reason: 'sync-failed' });
-            return;
-          }
-
-          showSubmissionIssue();
-        });
-    } catch(err) {
-      submitBtn.classList.remove('loading');
-      submitBtn.disabled = false;
-    }
-  });
-
-  function showSuccess(options) {
-    var localOnly = !!(options && options.localOnly);
-    var reason = options && options.reason;
-    submitBtn.classList.remove('loading');
-    submitBtn.disabled = false;
-    successTitle.textContent = localOnly ? localOnlySuccessTitle : defaultSuccessTitle;
-    successSubtitle.textContent = localOnly
-      ? (reason === 'sync-failed' ? syncFailedSuccessSubtitle : localOnlySuccessSubtitle)
-      : defaultSuccessSubtitle;
-    form.style.display = 'none';
-    document.getElementById('countdown-section').style.display = 'none';
-    successScreen.style.display = 'flex';
-    launchConfetti();
-  }
-
-  function showSubmissionIssue() {
-    submitBtn.classList.remove('loading');
-    submitBtn.disabled = false;
-    successTitle.textContent = submitFailedTitle;
-    successSubtitle.textContent = submitFailedSubtitle;
-    form.style.display = 'none';
-    document.getElementById('countdown-section').style.display = 'none';
-    successScreen.style.display = 'flex';
-  }
-
-  // ===== RESET =====
-  resetBtn.addEventListener('click', function() {
-    successScreen.style.display = 'none';
-    form.style.display = 'flex';
-    document.getElementById('countdown-section').style.display = 'block';
-    form.reset();
-    guestOfHidden.value = '';
-    guestSearchInput.value = '';
-    guestResults.innerHTML = '';
-    guestQuickPicks.setAttribute('data-selected-option', '');
-    companyWebsite.value = '';
-    successTitle.textContent = defaultSuccessTitle;
-    successSubtitle.textContent = defaultSuccessSubtitle;
-    allFields.forEach(function(name) {
-      var input = document.getElementById(name);
-      var errorEl = document.getElementById(name + '-error');
-
-      if (input) {
-        input.value = '';
-        input.classList.remove('error');
-      }
-
-      if (tapPanelGroups[name]) {
-        tapPanelGroups[name].classList.remove('error');
-      }
-
-      if (errorEl) errorEl.classList.remove('visible');
-    });
-    syncGuestQuickPicks();
-    Object.keys(tapPanelGroups).forEach(syncPanelGroup);
-    guestPicker.classList.remove('error');
-    guestSearchInput.classList.remove('error');
-    document.getElementById('firstName').focus();
-  });
-
-  // ===== CONFETTI =====
-  function launchConfetti() {
-    var ctx = confettiCanvas.getContext('2d');
-    confettiCanvas.width = window.innerWidth;
-    confettiCanvas.height = window.innerHeight;
-
-    var particles = [];
-    var colors = ['#E8580C', '#FF6A1E', '#f0e6dc', '#C44A0A', '#FFB347', '#F5A623'];
-
-    for (var i = 0; i < 100; i++) {
-      particles.push({
-        x: Math.random() * confettiCanvas.width,
-        y: -20 - Math.random() * 200,
-        w: 4 + Math.random() * 6,
-        h: 4 + Math.random() * 6,
-        vx: (Math.random() - 0.5) * 4,
-        vy: 2 + Math.random() * 4,
-        rot: Math.random() * 360,
-        rotSpeed: (Math.random() - 0.5) * 8,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        opacity: 1
-      });
-    }
-
-    var startTime = Date.now();
-
-    function animate() {
-      var elapsed = Date.now() - startTime;
-      if (elapsed > 3500) {
-        ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-        return;
-      }
-
-      ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-
-      particles.forEach(function(p) {
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vy += 0.1;
-        p.rot += p.rotSpeed;
-
-        if (elapsed > 2500) {
-          p.opacity = Math.max(0, 1 - (elapsed - 2500) / 1000);
-        }
-
-        ctx.save();
-        ctx.globalAlpha = p.opacity;
-        ctx.translate(p.x, p.y);
-        ctx.rotate(p.rot * Math.PI / 180);
-        ctx.fillStyle = p.color;
-        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
-        ctx.restore();
-      });
-
-      requestAnimationFrame(animate);
-    }
-
-    animate();
-  }
-
-  window.addEventListener('resize', function() {
-    confettiCanvas.width = window.innerWidth;
-    confettiCanvas.height = window.innerHeight;
   });
 })();
 </script>
@@ -3326,5 +2862,6 @@ button { cursor: pointer; background: none; border: none; }
   <a href="/remind">REMIND</a>
   <a href="/crm" class="dim">CRM</a>
 </nav>
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
 </body>
 </html>
