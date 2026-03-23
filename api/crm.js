@@ -3,7 +3,7 @@
 var shared = require('./_lib/shared');
 
 var APPS_SCRIPT_URL = process.env.APPS_SCRIPT_URL || 'https://script.google.com/macros/s/AKfycbxkchMEuPQlPe91xWx3QGeSD_yk0q4g-1iBZ0gumknVqBu1s57_A0Dg2pbd64huh21D/exec';
-var RATE_LIMITS = { burst: 20, burstWindowMs: 60 * 1000, hourly: 120 };
+var RATE_LIMITS = { burst: 60, burstWindowMs: 60 * 1000, hourly: 600 };
 
 module.exports = async function handler(req, res) {
   if (req.method === 'GET' || req.method === 'HEAD') {
