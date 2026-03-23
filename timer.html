@@ -246,6 +246,14 @@ h1 {
   .controls { gap: 0.65rem; }
   .btn { width: 100%; }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -370,7 +378,11 @@ h1 {
     startTimer();
   });
 
-  for (var i = 0; i < 18; i += 1) {
+  var MAX_EMBERS = 30;
+  var embersContainer = document.getElementById('embers');
+  var emberCount = Math.min(18, MAX_EMBERS);
+  for (var i = 0; i < emberCount; i += 1) {
+    if (embersContainer.childElementCount >= MAX_EMBERS) break;
     var ember = document.createElement('span');
     ember.className = 'ember';
     ember.style.left = (Math.random() * 100).toFixed(2) + '%';
@@ -378,7 +390,7 @@ h1 {
     ember.style.animationDelay = (-Math.random() * 8).toFixed(2) + 's';
     ember.style.opacity = (0.25 + Math.random() * 0.55).toFixed(2);
     ember.style.setProperty('--drift', ((Math.random() * 120) - 60).toFixed(0) + 'px');
-    document.getElementById('embers').appendChild(ember);
+    embersContainer.appendChild(ember);
   }
 
   render();

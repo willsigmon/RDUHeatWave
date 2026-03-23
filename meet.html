@@ -77,14 +77,6 @@ body.anchor-mode .heat-line {
 .heat-line:nth-child(3) { top: 50%; animation-duration: 16s; animation-delay: -8s; }
 .heat-line:nth-child(4) { top: 70%; animation-duration: 20s; animation-delay: -12s; opacity: 0.5; }
 .heat-line:nth-child(5) { top: 85%; animation-duration: 24s; animation-delay: -6s; opacity: 0.6; }
-@keyframes heat-drift {
-  0% { transform: translateX(-25%) scaleY(1); }
-  25% { transform: translateX(0%) scaleY(2); }
-  50% { transform: translateX(25%) scaleY(1); }
-  75% { transform: translateX(0%) scaleY(1.5); }
-  100% { transform: translateX(-25%) scaleY(1); }
-}
-
 .heat-orb {
   position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
   width: 100vw; height: 100vw; max-width: 1000px; max-height: 1000px; border-radius: 50%;
@@ -93,11 +85,6 @@ body.anchor-mode .heat-line {
   pointer-events: none; z-index: 0;
   animation: orb-pulse 6s ease-in-out infinite;
 }
-@keyframes orb-pulse {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-  50% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.6; }
-}
-
 /* === BIG HEADER === */
 .header {
   position: relative;
@@ -627,17 +614,13 @@ body.phase-over .meeting-schedule { display: none; }
 }
 .screen-flash.final-mode {
   background: rgba(217, 68, 68, 0.08);
-  animation: flash-slow 2s ease-in-out infinite;
+  animation: flash-pulse 2s ease-in-out infinite;
 }
 .screen-flash.horn-mode {
   background: rgba(217, 68, 68, 0.18);
-  animation: flash-strobe 0.3s ease-in-out infinite;
+  animation: flash-pulse 0.3s ease-in-out infinite;
 }
-@keyframes flash-slow {
-  0%, 100% { opacity: 0; }
-  50% { opacity: 1; }
-}
-@keyframes flash-strobe {
+@keyframes flash-pulse {
   0%, 100% { opacity: 0; }
   50% { opacity: 1; }
 }
@@ -650,20 +633,16 @@ body.phase-over .meeting-schedule { display: none; }
 .edge-glow.final-mode {
   box-shadow: inset 0 0 80px rgba(217, 68, 68, 0.2), inset 0 0 160px rgba(217, 68, 68, 0.08);
   opacity: 1;
-  animation: edge-breathe 2s ease-in-out infinite;
+  animation: edge-pulse 2s ease-in-out infinite;
 }
 .edge-glow.horn-mode {
   box-shadow: inset 0 0 150px rgba(217, 68, 68, 0.4), inset 0 0 300px rgba(217, 68, 68, 0.15);
   opacity: 1;
-  animation: edge-strobe 0.5s ease-in-out infinite alternate;
+  animation: edge-pulse 0.5s ease-in-out infinite alternate;
 }
-@keyframes edge-breathe {
+@keyframes edge-pulse {
   0%, 100% { opacity: 0.4; }
   50% { opacity: 1; }
-}
-@keyframes edge-strobe {
-  from { opacity: 0.5; }
-  to { opacity: 1; }
 }
 
 /* === RIGHT: QR PANEL === */
@@ -693,17 +672,6 @@ body.phase-over .meeting-schedule { display: none; }
   align-items: center;
   text-decoration: none;
   gap: 0.8rem;
-}
-.qr-panel-chip {
-  font-family: var(--font-display);
-  font-size: clamp(0.95rem, 1.2vw, 1.1rem);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #101010;
-  background: #ffffff;
-  border-radius: 999px;
-  padding: 0.42rem 0.85rem;
-  box-shadow: 0 10px 24px rgba(0,0,0,0.26);
 }
 .qr-panel-img {
   width: clamp(280px, 28vw, 420px);
@@ -828,12 +796,6 @@ body.phase-live .qr-panel-arrow {
   }
 }
 
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
 .header-divider {
   width: 1px;
   height: 48px;
@@ -866,12 +828,6 @@ body.phase-live .qr-panel-arrow {
   filter: blur(2px);
   mix-blend-mode: screen;
 }
-@keyframes wave-undulate {
-  0% { transform: translateX(0) scaleY(1); }
-  100% { transform: translateX(-30%) scaleY(1.2); }
-}
-
-
 /* Asphalt heat distortion — rising from bottom */
 /* Heat distortion — SVG turbulence warps content like real asphalt shimmer */
 .heat-distortion {
@@ -900,11 +856,6 @@ body.phase-live .qr-panel-arrow {
   background: radial-gradient(ellipse 120% 100% at 50% 100%, rgba(232,88,12,0.15) 0%, rgba(255,106,30,0.06) 40%, transparent 80%);
   animation: glow-pulse 3s ease-in-out infinite alternate;
 }
-@keyframes glow-pulse {
-  0% { opacity: 0.6; }
-  100% { opacity: 1; }
-}
-
 /* === PREHEAT PHASE — BUILDING ENERGY === */
 body.preheat-mode .heat-orb {
   opacity: 0.55;
@@ -1344,13 +1295,6 @@ body.phase-over .ticker-wrap { display: none !important; }
   border-radius: 50%;
   animation: ember-float linear forwards;
 }
-@keyframes ember-float {
-  0% { transform: translateY(0) scale(1); opacity: 0; }
-  20% { opacity: 0.6; }
-  60% { opacity: 0.3; }
-  100% { transform: translateY(-65vh) scale(0.4); opacity: 0; }
-}
-
 /* === EXCITEMENT TIERS === */
 .tier-warm {
   border-color: rgba(232, 88, 12, 0.5) !important;
@@ -1521,7 +1465,7 @@ body.phase-over .ticker-wrap { display: none !important; }
 
 <!-- Stats Ticker (populated from STATS_ vars in script) -->
 <div class="ticker-wrap">
-  <div class="ticker-content">
+  <div class="ticker-content" id="ticker-content">
     <span class="ticker-stat" id="ticker-bizchats-1">&#x1F4AC; 159 BIZCHATS</span>
     <span class="ticker-sep">&bull;</span>
     <span class="ticker-stat" id="ticker-guests-1">&#x1F91D; 114 GUESTS HOSTED</span>
@@ -1625,7 +1569,7 @@ body.phase-over .ticker-wrap { display: none !important; }
 
     <!-- Main countdown -->
     <div class="countdown-grid" id="countdown-grid">
-      <div class="countdown-unit">
+      <div class="countdown-unit" id="cd-days-unit">
         <div class="countdown-value" id="cd-days">--</div>
         <div class="countdown-label">Days</div>
       </div>
@@ -1897,7 +1841,9 @@ body.phase-over .ticker-wrap { display: none !important; }
   });
 
 
+  var MAX_EMBERS = 40;
   function createEmber() {
+    if (embersContainer.children.length >= MAX_EMBERS) return;
     var ember = document.createElement('div');
     ember.className = 'ember';
     var size = Math.random() * 18 + 6;
@@ -2021,10 +1967,6 @@ body.phase-over .ticker-wrap { display: none !important; }
     });
   }
 
-  function safePlay(mode) {
-    startLoopedSound(mode);
-  }
-
   function stopHornJokes() {
     if (hornJokeTimer) {
       clearInterval(hornJokeTimer);
@@ -2124,13 +2066,6 @@ body.phase-over .ticker-wrap { display: none !important; }
     if (masterGain) masterGain.gain.value = 1.0;
   }
 
-  // Auto-start kiosk; audio will init on first user interaction
-  function startKiosk() {
-    ensureAudioReady().then(function() {
-      if (currentPhase === PHASE.WARMUP) safePlay('warmup');
-      else if (currentPhase === PHASE.HORN) playHorn();
-    });
-  }
   // Enable audio on any user interaction (browser autoplay policy)
   document.addEventListener('click', function() { ensureAudioReady(); }, { once: true });
   document.addEventListener('keydown', function() { ensureAudioReady(); }, { once: true });
@@ -2312,7 +2247,7 @@ body.phase-over .ticker-wrap { display: none !important; }
       case PHASE.WARMUP:
         stopAllAudio();
         startCardRotation();
-        safePlay('warmup');
+        startLoopedSound('warmup');
         updateEmbers(120);
         countdownHeader.textContent = 'FIVE-MINUTE COUNTDOWN';
         warmupDisplay.classList.add('visible');
@@ -2495,7 +2430,13 @@ body.phase-over .ticker-wrap { display: none !important; }
       var secs = Math.floor((diff % 60000) / 1000);
       var preheatMode = diff <= (PREHEAT_WINDOW_SECS * 1000);
 
-      document.getElementById('cd-days').textContent = String(days).padStart(2, '0');
+      var daysUnit = document.getElementById('cd-days-unit');
+      if (days === 0) {
+        daysUnit.style.display = 'none';
+      } else {
+        daysUnit.style.display = '';
+        document.getElementById('cd-days').textContent = String(days).padStart(2, '0');
+      }
       document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
       document.getElementById('cd-mins').textContent = String(mins).padStart(2, '0');
       document.getElementById('cd-secs').textContent = String(secs).padStart(2, '0');
@@ -2649,7 +2590,7 @@ body.phase-over .ticker-wrap { display: none !important; }
       setPhase(PHASE.COUNTDOWN);
       document.body.classList.add('preheat-mode');
       countdownGrid.style.display = 'grid';
-      document.getElementById('cd-days').textContent = '00';
+      document.getElementById('cd-days-unit').style.display = 'none';
       document.getElementById('cd-hours').textContent = '00';
       document.getElementById('cd-mins').textContent = '08';
       document.getElementById('cd-secs').textContent = '24';
@@ -2680,11 +2621,11 @@ body.phase-over .ticker-wrap { display: none !important; }
     setInterval(updateClock, 1000);
   } else {
     updateCountdown();
-    setInterval(updateCountdown, 250);
+    setInterval(updateCountdown, 1000);
   }
 
   document.addEventListener('click', function() {
-    if (currentPhase === PHASE.WARMUP) safePlay('warmup');
+    if (currentPhase === PHASE.WARMUP) startLoopedSound('warmup');
     else if (currentPhase === PHASE.HORN) playHorn();
   }, { once: false });
 })();

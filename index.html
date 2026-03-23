@@ -750,14 +750,6 @@ button { cursor: pointer; background: none; border: none; }
 .heat-line:nth-child(4) { top: 70%; animation-duration: 20s; animation-delay: -12s; opacity: 0.5; }
 .heat-line:nth-child(5) { top: 85%; animation-duration: 24s; animation-delay: -6s; opacity: 0.6; }
 
-@keyframes heat-drift {
-  0% { transform: translateX(-25%) scaleY(1); }
-  25% { transform: translateX(0%) scaleY(2); }
-  50% { transform: translateX(25%) scaleY(1); }
-  75% { transform: translateX(0%) scaleY(1.5); }
-  100% { transform: translateX(-25%) scaleY(1); }
-}
-
 /* Warm gradient orb behind the card */
 .heat-orb {
   position: fixed;
@@ -773,11 +765,6 @@ button { cursor: pointer; background: none; border: none; }
   pointer-events: none;
   z-index: 0;
   animation: orb-pulse 6s ease-in-out infinite;
-}
-
-@keyframes orb-pulse {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-  50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.7; }
 }
 
 /* === FORM CARD === */
@@ -838,12 +825,14 @@ button { cursor: pointer; background: none; border: none; }
 
 .flame-particle {
   position: absolute;
+  bottom: 10%;
   width: 5px;
   height: 5px;
   border-radius: 50%;
   background: radial-gradient(circle, #FF6A1E, #E8580C, transparent);
   animation: flame-rise linear infinite;
   opacity: 0;
+  will-change: transform, opacity;
 }
 
 .flame-particle:nth-child(1) { left: 20%; animation-duration: 2.2s; animation-delay: 0s; }
@@ -854,10 +843,10 @@ button { cursor: pointer; background: none; border: none; }
 .flame-particle:nth-child(6) { left: 10%; animation-duration: 1.9s; animation-delay: 1.5s; width: 3px; height: 3px; }
 
 @keyframes flame-rise {
-  0% { bottom: 10%; opacity: 0; transform: translateX(0) scale(1); }
+  0% { opacity: 0; transform: translateX(0) translateY(0) scale(1); }
   15% { opacity: 0.9; }
-  50% { opacity: 0.6; transform: translateX(-8px) scale(0.8); }
-  100% { bottom: 95%; opacity: 0; transform: translateX(8px) scale(0.2); }
+  50% { opacity: 0.6; transform: translateX(-8px) translateY(-40vh) scale(0.8); }
+  100% { opacity: 0; transform: translateX(8px) translateY(-80vh) scale(0.2); }
 }
 
 .flame-ring {
@@ -1331,8 +1320,6 @@ button { cursor: pointer; background: none; border: none; }
   margin-top: -12px;
   margin-left: -12px;
 }
-
-@keyframes spin { to { transform: rotate(360deg); } }
 
 /* === 212 SLIDE-UP DRAWER === */
 .info-drawer {
@@ -1825,8 +1812,6 @@ button { cursor: pointer; background: none; border: none; }
   stroke-dashoffset: 30;
   animation: check-draw 0.5s ease forwards 0.2s;
 }
-
-@keyframes check-draw { to { stroke-dashoffset: 0; } }
 
 .success-title {
   font-family: var(--font-display);
