@@ -1557,10 +1557,10 @@ body.phase-over .ticker-wrap { display: none !important; }
 
       <!-- Card 1: Today's speaker -->
       <div class="carousel-card" data-card="0">
-        <img class="card-headshot" src="https://mytrustedcircle.net/rdu-heatwave/wp-content/uploads/sites/76/2026/01/Headshot-Rusty-2-300x300.png" alt="Rusty Sutton" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-        <div class="card-headshot-fallback" style="display:none; width:120px; height:120px; border-radius:50%; border:3px solid var(--color-primary); background:var(--color-surface-2); align-items:center; justify-content:center; font-family:var(--font-display); font-size:2.5rem; color:var(--color-primary); letter-spacing:0.05em; margin:0 auto 1rem;">RS</div>
+        <img class="card-headshot" id="speaker-headshot" src="https://mytrustedcircle.net/rdu-heatwave/wp-content/uploads/sites/76/2026/01/Headshot-Rusty-2-300x300.png" alt="Rusty Sutton" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="card-headshot-fallback" id="speaker-initials" style="display:none; width:120px; height:120px; border-radius:50%; border:3px solid var(--color-primary); background:var(--color-surface-2); align-items:center; justify-content:center; font-family:var(--font-display); font-size:2.5rem; color:var(--color-primary); letter-spacing:0.05em; margin:0 auto 1rem;">RS</div>
         <div class="card-heading">TODAY&rsquo;S<br>SPOTLIGHT</div>
-        <div class="card-body">Rusty Sutton from MonkeyFans Creative is up today. Give him your full attention &mdash; and a warm intro if someone comes to mind.</div>
+        <div class="card-body" id="speaker-card-body">Rusty Sutton from MonkeyFans Creative is up today. Give him your full attention &mdash; and a warm intro if someone comes to mind.</div>
         <div class="card-stat">
           <div class="card-stat-item">
             <div class="card-stat-value">LIVE</div>
@@ -1683,7 +1683,7 @@ body.phase-over .ticker-wrap { display: none !important; }
 
     <div class="final-display" id="anchor-display">
       <div class="final-label">TODAY&rsquo;S SPEAKER</div>
-      <div class="horn-text" style="font-size:clamp(2.5rem,4vw,3.8rem); letter-spacing:0.08em; animation:none; text-shadow:0 0 48px rgba(232,88,12,0.4);">RUSTY SUTTON</div>
+      <div class="horn-text" id="anchor-speaker-name" style="font-size:clamp(2.5rem,4vw,3.8rem); letter-spacing:0.08em; animation:none; text-shadow:0 0 48px rgba(232,88,12,0.4);">RUSTY SUTTON</div>
       <div class="horn-joke" style="max-width:28ch;">Warm introductions. Trusted professionals. Real follow-through.</div>
     </div>
   </div>
@@ -1761,6 +1761,38 @@ body.phase-over .ticker-wrap { display: none !important; }
   var CARD_SETTLE_DELAY = 1200;
 
   var PHASE = { COUNTDOWN: 0, WARMUP: 1, HORN: 2, LIVE: 3, OVER: 4 };
+
+  /* ── Speaker config via URL params ──────────────────────────────── */
+  var _qp = new URLSearchParams(window.location.search);
+  var SPEAKER_NAME    = _qp.get('speaker') || 'Rusty Sutton';
+  var SPEAKER_COMPANY = _qp.get('company') || 'MonkeyFans Creative';
+  var SPEAKER_PHOTO   = _qp.get('photo')   || 'https://mytrustedcircle.net/rdu-heatwave/wp-content/uploads/sites/76/2026/01/Headshot-Rusty-2-300x300.png';
+
+  var SPEAKER_NAME_UPPER = SPEAKER_NAME.toUpperCase();
+  var SPEAKER_INITIALS = SPEAKER_NAME.split(/\s+/).map(function(w) { return w.charAt(0); }).join('').slice(0, 3).toUpperCase();
+
+  function initSpeakerElements() {
+    var headshot = document.getElementById('speaker-headshot');
+    if (headshot) {
+      headshot.src = SPEAKER_PHOTO;
+      headshot.alt = SPEAKER_NAME;
+    }
+    var initials = document.getElementById('speaker-initials');
+    if (initials) {
+      initials.textContent = SPEAKER_INITIALS;
+    }
+    var cardBody = document.getElementById('speaker-card-body');
+    if (cardBody) {
+      /* Build safely without innerHTML: text + em-dash + text */
+      cardBody.textContent = '';
+      cardBody.appendChild(document.createTextNode(SPEAKER_NAME + ' from ' + SPEAKER_COMPANY + ' is up today. Give them your full attention \u2014 and a warm intro if someone comes to mind.'));
+    }
+    var anchorName = document.getElementById('anchor-speaker-name');
+    if (anchorName) {
+      anchorName.textContent = SPEAKER_NAME_UPPER;
+    }
+  }
+  /* ─────────────────────────────────────────────────────────────────── */
 
   var embersContainer = document.getElementById('embers-container');
   var emberInterval = null;
@@ -2454,7 +2486,7 @@ body.phase-over .ticker-wrap { display: none !important; }
       if (preheatMode) {
         document.body.classList.add('preheat-mode');
         countdownHeader.textContent = 'DOORS OPEN';
-        statusBanner.textContent = 'NETWORKING MODE • TODAY: RUSTY SUTTON';
+        statusBanner.textContent = 'NETWORKING MODE \u2022 TODAY: ' + SPEAKER_NAME_UPPER;
         statusBanner.className = 'status-banner visible preheat';
         /* Gradually ramp embers from 400ms (15min out) → 220ms (0min) */
         var preheatProgress = 1 - (diff / (PREHEAT_WINDOW_SECS * 1000));
@@ -2513,6 +2545,8 @@ body.phase-over .ticker-wrap { display: none !important; }
     }
   }
 
+  initSpeakerElements();
+
   var debugPhase = new URLSearchParams(window.location.search).get('phase');
   if (debugPhase) {
     if (debugPhase === 'preheat') {
@@ -2524,7 +2558,7 @@ body.phase-over .ticker-wrap { display: none !important; }
       document.getElementById('cd-mins').textContent = '08';
       document.getElementById('cd-secs').textContent = '24';
       countdownHeader.textContent = 'DOORS OPEN';
-      statusBanner.textContent = 'NETWORKING MODE \u2022 TODAY: RUSTY SUTTON';
+      statusBanner.textContent = 'NETWORKING MODE \u2022 TODAY: ' + SPEAKER_NAME_UPPER;
       statusBanner.className = 'status-banner visible preheat';
       updateEmbers(220);
     } else if (debugPhase === 'warmup') {

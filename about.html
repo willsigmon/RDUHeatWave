@@ -21,38 +21,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared.css">
 
 <style>
-/* === BASE RESET === */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  scroll-behavior: smooth;
-}
-
-/* === DESIGN TOKENS === */
-:root {
-  --font-display: 'Bebas Neue', sans-serif;
-  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
-  --color-bg: #1a1412;
-  --color-surface: #231c18;
-  --color-surface-2: #2c2420;
-  --color-divider: rgba(232, 88, 12, 0.12);
-  --color-border: rgba(232, 88, 12, 0.2);
-  --color-text: #f0e6dc;
-  --color-text-muted: #a89585;
-  --color-text-faint: #6b5c4e;
-  --color-primary: #E8580C;
-  --color-primary-hover: #FF6A1E;
-  --gradient-fire: linear-gradient(135deg, #E8580C 0%, #FF6A1E 50%, #FF9933 100%);
-  --radius-sm: 0.375rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
-  --shadow-glow: 0 0 80px rgba(232, 88, 12, 0.12), 0 0 160px rgba(232, 88, 12, 0.06);
-}
+html { scroll-behavior: smooth; }
 
 body {
   min-height: 100dvh;
@@ -61,17 +33,6 @@ body {
   line-height: 1.6;
   color: var(--color-text);
   background-color: var(--color-bg);
-}
-
-/* === NOSCRIPT === */
-.noscript-banner {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
-  padding: 0.75rem 1rem;
-  background: #D94444;
-  color: #fff;
-  text-align: center;
-  font-weight: 600;
-  font-size: 0.875rem;
 }
 
 /* === STICKY NAV === */

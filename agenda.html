@@ -130,6 +130,19 @@
     color: var(--text-mid);
   }
 
+  .meeting-badge {
+    display: inline-block;
+    margin-top: 4pt;
+    padding: 2pt 7pt 2pt 6pt;
+    background: var(--fire);
+    color: #fff;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 8pt;
+    letter-spacing: 1.5pt;
+    border-radius: 2pt;
+    line-height: 1.6;
+  }
+
   .header-qr {
     text-align: center;
     flex-shrink: 0;
@@ -691,6 +704,8 @@
   @media print {
     body { background: #fff; }
     .no-print { display: none !important; }
+    /* Ensure page content isn't clipped on print */
+    .page { overflow: visible; }
   }
 
   /* ===== SCREEN PREVIEW ===== */
@@ -721,7 +736,8 @@
       <div class="header-text">
         <div class="team-name">RDU <span>Heatwave</span></div>
         <div class="team-subtitle">Two Twelve Referral Network</div>
-        <div class="team-meta">Thursday, March 19, 2026 &bull; 4:00 PM &bull; Clouds Brewing</div>
+        <div class="team-meta" id="meeting-date-meta">Thursday, March 19, 2026 &bull; 4:00 PM &bull; Clouds Brewing</div>
+        <div class="meeting-badge" id="meeting-number-badge">Meeting #<span id="meeting-number">—</span></div>
       </div>
       <div class="header-qr">
         <a class="header-qr-link" href="https://rduheatwave.team" aria-label="Visit rduheatwave.team">
@@ -1052,12 +1068,84 @@
 
   <!-- Footer -->
   <div class="page-footer">
-    <span>Prepared for Thurs, March 19, 2026 &nbsp;&#9670;&nbsp; Revised 3/19/2026</span>
+    <span id="footer-date-meta">Prepared for Thurs, March 19, 2026 &nbsp;&#9670;&nbsp; Revised 3/19/2026</span>
     <img class="logo-twotwelve" src="twotwelve-logo.png" alt="Two Twelve" style="height:14pt; opacity:0.5;">
     <span class="fire">rduheatwave.team</span>
   </div>
 
 </div>
+
+<script>
+(function () {
+  // ── Config ────────────────────────────────────────────────
+  // First meeting: Thursday, January 9, 2025 (adjust if needed)
+  var FIRST_MEETING = new Date('2025-01-09T00:00:00');
+  var MEETING_TIME  = '4:00 PM';
+  var MEETING_VENUE = 'Clouds Brewing';
+
+  // ── Next-Thursday calculation (ET-aware) ──────────────────
+  // Get today's date in America/New_York so we don't shift on
+  // the day of the meeting due to the viewer's local timezone.
+  function todayInET() {
+    var parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/New_York',
+      year: 'numeric', month: '2-digit', day: '2-digit'
+    }).formatToParts(new Date());
+    var p = {};
+    parts.forEach(function (x) { p[x.type] = x.value; });
+    return new Date(p.year + '-' + p.month + '-' + p.day + 'T00:00:00');
+  }
+
+  function nextThursday(from) {
+    var d = new Date(from);
+    var dow = d.getDay(); // 0=Sun … 4=Thu
+    var diff = dow === 4 ? 0 : (4 - dow + 7) % 7;
+    d.setDate(d.getDate() + diff);
+    return d;
+  }
+
+  function formatLong(d) {
+    return d.toLocaleDateString('en-US', {
+      weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
+    });
+  }
+
+  function formatShort(d) {
+    return d.toLocaleDateString('en-US', {
+      weekday: 'short', month: 'numeric', day: 'numeric', year: 'numeric'
+    });
+  }
+
+  // ── Meeting number ────────────────────────────────────────
+  function meetingNumber(meetingDate) {
+    var ms = meetingDate - FIRST_MEETING;
+    if (ms < 0) return 1;
+    return Math.round(ms / (7 * 24 * 60 * 60 * 1000)) + 1;
+  }
+
+  // ── Inject ────────────────────────────────────────────────
+  var today = todayInET();
+  var meeting = nextThursday(today);
+  var num = meetingNumber(meeting);
+
+  var dateMeta = document.getElementById('meeting-date-meta');
+  if (dateMeta) {
+    dateMeta.textContent = formatLong(meeting) + ' \u2022 ' + MEETING_TIME + ' \u2022 ' + MEETING_VENUE;
+  }
+
+  var numSpan = document.getElementById('meeting-number');
+  if (numSpan) numSpan.textContent = num;
+
+  var footerMeta = document.getElementById('footer-date-meta');
+  if (footerMeta) {
+    var short = formatShort(meeting);
+    var revised = new Date().toLocaleDateString('en-US', {
+      month: 'numeric', day: 'numeric', year: 'numeric'
+    });
+    footerMeta.textContent = 'Prepared for ' + short + ' \u25c6 Revised ' + revised;
+  }
+})();
+</script>
 
 </body>
 </html>
