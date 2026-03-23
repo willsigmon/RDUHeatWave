@@ -1501,7 +1501,7 @@ body.phase-over .ticker-wrap { display: none !important; }
 
       <!-- Card 1: Today's speaker -->
       <div class="carousel-card" data-card="0">
-        <img class="card-headshot" id="speaker-headshot" src="https://mytrustedcircle.net/rdu-heatwave/wp-content/uploads/sites/76/2026/01/Headshot-Rusty-2-300x300.png" alt="Rusty Sutton" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <img class="card-headshot" id="speaker-headshot" src="/headshot-rusty.png" alt="Rusty Sutton" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
         <div class="card-headshot-fallback" id="speaker-initials" style="display:none; width:120px; height:120px; border-radius:50%; border:3px solid var(--color-primary); background:var(--color-surface-2); align-items:center; justify-content:center; font-family:var(--font-display); font-size:2.5rem; color:var(--color-primary); letter-spacing:0.05em; margin:0 auto 1rem;">RS</div>
         <div class="card-heading">TODAY&rsquo;S<br>SPOTLIGHT</div>
         <div class="card-body" id="speaker-card-body">Rusty Sutton from MonkeyFans Creative is up today. Give him your full attention &mdash; and a warm intro if someone comes to mind.</div>
@@ -1734,7 +1734,7 @@ body.phase-over .ticker-wrap { display: none !important; }
   var _qp = new URLSearchParams(window.location.search);
   var SPEAKER_NAME    = _qp.get('speaker') || 'Rusty Sutton';
   var SPEAKER_COMPANY = _qp.get('company') || 'MonkeyFans Creative';
-  var SPEAKER_PHOTO   = _qp.get('photo')   || 'https://mytrustedcircle.net/rdu-heatwave/wp-content/uploads/sites/76/2026/01/Headshot-Rusty-2-300x300.png';
+  var SPEAKER_PHOTO   = _qp.get('photo')   || '/headshot-rusty.png';
 
   var SPEAKER_NAME_UPPER = SPEAKER_NAME.toUpperCase();
   var SPEAKER_INITIALS = SPEAKER_NAME.split(/\s+/).map(function(w) { return w.charAt(0); }).join('').slice(0, 3).toUpperCase();
@@ -2575,7 +2575,11 @@ body.phase-over .ticker-wrap { display: none !important; }
       .then(function(data) {
         var list = (data && Array.isArray(data.members) && data.members.length) ? data.members : null;
         if (!list) return;
-        var pick = list[Math.floor(Math.random() * list.length)];
+        // Seed by ISO week number so the same member shows all day on meeting day
+        var now = new Date();
+        var startOfYear = new Date(now.getFullYear(), 0, 1);
+        var weekNum = Math.ceil(((now - startOfYear) / 86400000 + startOfYear.getDay() + 1) / 7);
+        var pick = list[weekNum % list.length];
         applyMemberSpotlight(pick);
       })
       .catch(function() { /* keep Rusty as fallback */ });

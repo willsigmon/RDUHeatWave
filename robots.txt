@@ -1,4 +1,10 @@
 User-agent: *
 Allow: /
+Disallow: /agenda
+Disallow: /admin
+Disallow: /crm
+Disallow: /remind
+Disallow: /kiosk
+Disallow: /timer
 
 Sitemap: https://rduheatwave.team/sitemap.xml

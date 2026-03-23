@@ -7,16 +7,35 @@
   "display": "standalone",
   "background_color": "#1a1412",
   "theme_color": "#E8580C",
+  "categories": ["business", "networking"],
   "icons": [
     {
       "src": "/icons/heatwave-icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "/icons/heatwave-icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Meeting Lobby",
+      "short_name": "Lobby",
+      "description": "Open the meeting countdown and kiosk display",
+      "url": "/meet",
+      "icons": [{ "src": "/icons/heatwave-icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Check In",
+      "short_name": "Check In",
+      "description": "Register or check in for the meeting",
+      "url": "/",
+      "icons": [{ "src": "/icons/heatwave-icon-192.png", "sizes": "192x192" }]
     }
   ]
 }

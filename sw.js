@@ -1,4 +1,4 @@
-const CACHE_NAME = 'heatwave-v1';
+const CACHE_NAME = 'heatwave-v2';
 
 const PRECACHE_URLS = [
   '/',
@@ -34,8 +34,8 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Only handle same-origin requests
-  if (url.origin !== location.origin) return;
+  // Only handle same-origin GET requests
+  if (url.origin !== location.origin || request.method !== 'GET') return;
 
   if (STATIC_EXTENSIONS.test(url.pathname)) {
     // Cache-first for static assets
@@ -55,13 +55,13 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          if (response.ok && request.method === 'GET') {
+          if (response.ok) {
             const clone = response.clone();
             caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
           }
           return response;
         })
-        .catch(() => caches.match(request))
+        .catch(() => caches.match(request) || new Response('Offline — check your connection.', { status: 503, headers: { 'Content-Type': 'text/plain' } }))
     );
   }
 });
