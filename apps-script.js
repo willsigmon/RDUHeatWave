@@ -120,8 +120,6 @@ function installGuestSyncTrigger() {
 }
 
 var BIZCHAT_REPORT_SHEET_NAME = 'BizChats Report';
-var REFERRAL_PIPELINE_SHEET_NAME = 'Referral Pipeline';
-var REFERRAL_PIPELINE_HEADERS = ['Given From', 'Given To', 'Date Recorded', "Prospect's Name", 'Disposition', 'Revenue'];
 var SURVEY_SHEET_NAME = 'Survey Responses';
 var SURVEY_HEADERS = [
   'Timestamp',
@@ -146,10 +144,9 @@ function doPost(e) {
   if (cleanValue_(params.source) === 'bizchat') {
     return doPostBizChat_(params);
   }
-  if (cleanValue_(params.source) === 'referral') {
-    return doPostReferral_(params);
+  if (cleanValue_(params.source) === 'crm-update') {
+    return doPostCrmUpdate_(params);
   }
-
   var spreadsheet = SpreadsheetApp.openById(SHEET_ID);
   var sheet = spreadsheet.getSheetByName(SHEET_NAME) || spreadsheet.getSheets()[0] || spreadsheet.insertSheet(SHEET_NAME);
   var now = new Date();
@@ -311,32 +308,69 @@ function doPostBizChat_(params) {
   }
 }
 
-function doPostReferral_(params) {
-  var givenFrom = cleanValue_(params.givenFrom);
-  var givenTo = cleanValue_(params.givenTo);
-  var prospect = cleanValue_(params.prospect);
-  var dateStr = cleanValue_(params.date);
-  var disposition = cleanValue_(params.disposition) || 'New';
-  var revenue = cleanValue_(params.revenue) || '$0';
+// ── CRM cell updates ──────────────────────────────────────────────
+// Writes a single cell value. Requires admin passcode.
+// params: source=crm-update, passcode, sheet (tab name), cell (e.g. "B5"), value
+var CRM_PASSCODE = 'heatwave2026'; // Must match ADMIN_PASSCODE env var
+function doPostCrmUpdate_(params) {
+  var suppliedPasscode = cleanValue_(params.passcode);
+  if (!suppliedPasscode || suppliedPasscode !== CRM_PASSCODE) {
+    return jsonOutput_({ status: 'error', message: 'Invalid passcode' });
+  }
 
-  if (!givenFrom || !givenTo || !prospect || !dateStr) {
-    return jsonOutput_({ status: 'error', message: 'Missing required fields' });
+  var sheetName = cleanValue_(params.sheet);
+  var cellRef = cleanValue_(params.cell);
+  var value = params.value != null ? String(params.value) : '';
+
+  if (!sheetName || !cellRef) {
+    return jsonOutput_({ status: 'error', message: 'Missing sheet or cell reference' });
+  }
+
+  // Validate cell reference format (A1 notation)
+  if (!/^[A-Z]{1,3}\d{1,6}$/.test(cellRef)) {
+    return jsonOutput_({ status: 'error', message: 'Invalid cell reference: ' + cellRef });
+  }
+
+  // Prevent writing to protected tabs
+  var readOnlyTabs = ['Survey Responses', 'Team Stats', 'Team Stats 2026', 'BKP Member Directory', 'Guest Check In'];
+  for (var i = 0; i < readOnlyTabs.length; i++) {
+    if (sheetName.toLowerCase() === readOnlyTabs[i].toLowerCase()) {
+      return jsonOutput_({ status: 'error', message: 'This tab is read-only' });
+    }
   }
 
   var spreadsheet = SpreadsheetApp.openById(SHEET_ID);
-  var sheet = spreadsheet.getSheetByName(REFERRAL_PIPELINE_SHEET_NAME);
-
+  var sheet = spreadsheet.getSheetByName(sheetName);
   if (!sheet) {
-    sheet = spreadsheet.insertSheet(REFERRAL_PIPELINE_SHEET_NAME);
-    sheet.getRange(1, 1, 1, REFERRAL_PIPELINE_HEADERS.length).setValues([REFERRAL_PIPELINE_HEADERS]);
-    sheet.getRange(1, 1, 1, REFERRAL_PIPELINE_HEADERS.length).setFontWeight('bold');
-    sheet.setFrozenRows(1);
+    return jsonOutput_({ status: 'error', message: 'Tab not found: ' + sheetName });
   }
 
-  var row = [givenFrom, givenTo, dateStr, prospect, disposition, revenue];
-  sheet.appendRow(row);
+  var lock = LockService.getDocumentLock();
+  if (!lock.tryLock(10000)) {
+    return jsonOutput_({ status: 'error', message: 'Sheet is busy, try again' });
+  }
 
-  return jsonOutput_({ status: 'ok', message: 'Referral logged: ' + givenFrom + ' → ' + givenTo });
+  try {
+    var range = sheet.getRange(cellRef);
+
+    // Check if cell has a formula (protected)
+    var formula = range.getFormula();
+    if (formula) {
+      return jsonOutput_({ status: 'error', message: 'Cannot edit formula cell' });
+    }
+
+    // Coerce numeric values
+    var numericValue = Number(value);
+    if (value !== '' && !isNaN(numericValue) && String(numericValue) === value) {
+      range.setValue(numericValue);
+    } else {
+      range.setValue(value);
+    }
+
+    return jsonOutput_({ status: 'ok', message: 'Cell ' + cellRef + ' updated' });
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 function doGet(e) {

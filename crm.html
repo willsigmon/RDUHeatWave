@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#E8580C">
+<title>RDU Heatwave — Team CRM</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="icon" type="image/png" href="/icons/heatwave-icon-192.png">
+<link rel="apple-touch-icon" href="/icons/heatwave-icon-180.png">
+<link rel="manifest" href="/site.webmanifest">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared.css">
+
+<style>
+/* ── CRM-specific tokens ────────────────────────────────── */
+:root {
+  --sidebar-w: 220px;
+  --topbar-h: 56px;
+  --cell-edit-bg: #2a2218;
+  --cell-readonly-bg: rgba(255,255,255,0.03);
+  --row-hover: rgba(232, 88, 12, 0.06);
+  --row-totals: rgba(232, 88, 12, 0.10);
+}
+
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Login gate ──────────────────────────────────────────── */
+.login-gate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(232,88,12,0.12), transparent 28rem),
+    var(--color-bg);
+}
+
+.login-box {
+  text-align: center;
+  max-width: 360px;
+  width: 100%;
+  padding: 0 var(--space-4);
+}
+
+.login-box h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  color: var(--color-primary);
+  margin-bottom: var(--space-2);
+}
+
+.login-box p {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-6);
+}
+
+.login-input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-size: var(--text-base);
+  text-align: center;
+  letter-spacing: 0.15em;
+  margin-bottom: var(--space-4);
+}
+
+.login-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(232,88,12,0.15);
+}
+
+.login-btn {
+  width: 100%;
+  padding: 0.875rem;
+  background: var(--gradient-fire);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  letter-spacing: 0.08em;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.login-btn:hover { opacity: 0.9; }
+.login-error {
+  color: var(--color-error);
+  font-size: var(--text-sm);
+  margin-top: var(--space-3);
+}
+
+/* ── App shell ───────────────────────────────────────────── */
+.app { display: none; height: 100vh; flex-direction: column; }
+.app.active { display: flex; }
+
+/* Topbar */
+.topbar {
+  height: var(--topbar-h);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-divider);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-4);
+  gap: var(--space-4);
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.topbar-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--color-primary);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.topbar-tab-name {
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.topbar-spacer { flex: 1; }
+
+.topbar-search {
+  padding: 0.4rem 0.75rem;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-full);
+  color: var(--color-text);
+  font-size: var(--text-xs);
+  width: 200px;
+}
+
+.topbar-search:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.topbar-status {
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+  white-space: nowrap;
+}
+
+.topbar-status.saving { color: var(--color-primary); }
+.topbar-status.saved { color: var(--color-success); }
+.topbar-status.error { color: var(--color-error); }
+
+/* ── Layout ──────────────────────────────────────────────── */
+.main-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Sidebar */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-divider);
+  overflow-y: auto;
+  flex-shrink: 0;
+  padding: var(--space-3) 0;
+}
+
+.sidebar-section {
+  padding: var(--space-2) var(--space-4) var(--space-1);
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.45rem var(--space-4);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+}
+
+.sidebar-item:hover {
+  background: rgba(232,88,12,0.08);
+  color: var(--color-text);
+}
+
+.sidebar-item.active {
+  background: rgba(232,88,12,0.14);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.sidebar-badge {
+  margin-left: auto;
+  font-size: 0.65rem;
+  background: var(--color-surface-2);
+  color: var(--color-text-faint);
+  padding: 0.1rem 0.4rem;
+  border-radius: var(--radius-full);
+}
+
+.sidebar-badge.rw {
+  background: rgba(232,88,12,0.15);
+  color: var(--color-primary);
+}
+
+/* ── Table area ──────────────────────────────────────────── */
+.table-area {
+  flex: 1;
+  overflow: auto;
+  padding: 0;
+}
+
+.table-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--color-text-faint);
+  font-size: var(--text-sm);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-xs);
+  table-layout: auto;
+}
+
+.data-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.data-table th {
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.5rem 0.6rem;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--color-divider);
+  cursor: pointer;
+  user-select: none;
+}
+
+.data-table th:hover {
+  color: var(--color-text);
+  background: rgba(232,88,12,0.08);
+}
+
+.data-table th .sort-arrow {
+  font-size: 0.5rem;
+  margin-left: 0.3rem;
+  opacity: 0.5;
+}
+
+.data-table td {
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid var(--color-divider);
+  white-space: nowrap;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.data-table tr:hover td {
+  background: var(--row-hover);
+}
+
+.data-table tr.totals-row td {
+  background: var(--row-totals);
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+/* Editable cells */
+td.editable {
+  cursor: text;
+  position: relative;
+}
+
+td.editable:hover {
+  background: var(--cell-edit-bg);
+  outline: 1px solid var(--color-border);
+  outline-offset: -1px;
+}
+
+td.readonly {
+  color: var(--color-text-faint);
+  cursor: default;
+}
+
+/* Inline edit input */
+.cell-editor {
+  position: absolute;
+  inset: 0;
+  padding: 0.4rem 0.6rem;
+  background: var(--color-surface);
+  border: 2px solid var(--color-primary);
+  color: var(--color-text);
+  font: inherit;
+  font-size: inherit;
+  z-index: 8;
+  outline: none;
+}
+
+/* Row numbers */
+td.row-num {
+  color: var(--color-text-faint);
+  font-size: 0.6rem;
+  text-align: right;
+  padding-right: 0.4rem;
+  width: 2rem;
+  user-select: none;
+}
+
+/* ── Empty state ─────────────────────────────────────────── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--color-text-faint);
+  gap: var(--space-2);
+}
+
+.empty-state h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  color: var(--color-text-muted);
+}
+
+/* ── Toast ───────────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: var(--space-4);
+  right: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-md);
+  padding: 0.6rem 1rem;
+  font-size: var(--text-xs);
+  color: var(--color-text);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(120%);
+  opacity: 0;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  z-index: 100;
+}
+
+.toast.visible { transform: translateY(0); opacity: 1; }
+.toast.success { border-color: var(--color-success); }
+.toast.error { border-color: var(--color-error); }
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  :root { --sidebar-w: 0px; }
+  .sidebar { display: none; }
+  .topbar-search { width: 120px; }
+}
+</style>
+</head>
+
+<body>
+<noscript><div class="noscript-banner">JavaScript is required to use the CRM.</div></noscript>
+
+<!-- Login gate -->
+<div class="login-gate" id="login-gate">
+  <div class="login-box">
+    <h1>TEAM CRM</h1>
+    <p>Enter the admin passcode to access team data.</p>
+    <form id="login-form">
+      <input type="password" class="login-input" id="passcode-input" placeholder="Passcode" autocomplete="off" autofocus>
+      <button type="submit" class="login-btn">ENTER</button>
+      <div class="login-error" id="login-error"></div>
+    </form>
+  </div>
+</div>
+
+<!-- Main app (hidden until auth) -->
+<div class="app" id="app">
+  <div class="topbar">
+    <span class="topbar-title">HEATWAVE CRM</span>
+    <span class="topbar-tab-name" id="topbar-tab-name"></span>
+    <span class="topbar-spacer"></span>
+    <input type="search" class="topbar-search" id="search-input" placeholder="Filter rows...">
+    <span class="topbar-status" id="topbar-status"></span>
+  </div>
+
+  <div class="main-layout">
+    <nav class="sidebar" id="sidebar"></nav>
+    <div class="table-area" id="table-area">
+      <div class="empty-state">
+        <h2>SELECT A TAB</h2>
+        <p>Choose a data source from the sidebar.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ── Tab configuration ─────────────────────────────────────────────
+  // Each tab defines its sheet name, display label, editability, and
+  // which columns/rows are read-only (formulas, totals, automated).
+  var TABS = [
+    {
+      section: 'People',
+      tabs: [
+        { sheet: 'Membership Directory', label: 'Members', rw: true },
+        { sheet: 'Applications', label: 'Applications', rw: true,
+          readOnlyCols: [] },
+        { sheet: 'Guest Check In', label: 'Check-ins', rw: false },
+      ]
+    },
+    {
+      section: 'Performance',
+      tabs: [
+        { sheet: 'Guest Incentive Report', label: 'Guest Incentive', rw: true,
+          readOnlyCols: ['weekly total points', 'total'],
+          hasTotalsRow: true },
+        { sheet: 'BizChats Report', label: 'BizChats', rw: true,
+          readOnlyCols: ['weekly total'],
+          hasTotalsRow: true },
+        { sheet: 'Referral Pipeline', label: 'Referrals', rw: true },
+        { sheet: 'Revenue Report', label: 'Revenue', rw: true,
+          readOnlyCols: ['weekly total given', 'rcvd'],
+          hasTotalsRow: true },
+        { sheet: 'Attendance Report', label: 'Attendance', rw: true,
+          hasTotalsRow: true },
+      ]
+    },
+    {
+      section: 'Feedback',
+      tabs: [
+        { sheet: 'Survey Responses', label: 'Surveys', rw: false },
+      ]
+    },
+    {
+      section: 'Archive',
+      tabs: [
+        { sheet: 'Team Stats', label: 'Team Stats (Legacy)', rw: false },
+        { sheet: 'Team Stats 2026', label: 'Team Stats 2026', rw: false },
+        { sheet: 'BKP Member Directory', label: 'Backup Directory', rw: false },
+      ]
+    }
+  ];
+
+  var SHEET_ID = '1WWSxfqJ1UdMqJxKLaiIzb06n3rSQj5-AVN3m07wAkSA';
+  var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxkchMEuPQlPe91xWx3QGeSD_yk0q4g-1iBZ0gumknVqBu1s57_A0Dg2pbd64huh21D/exec';
+
+  // ── State ─────────────────────────────────────────────────────────
+  var passcode = '';
+  var activeTab = null;
+  var currentData = null; // { cols: [], rows: [] }
+  var sortCol = -1;
+  var sortAsc = true;
+  var searchQuery = '';
+  var editingCell = null;
+
+  // ── DOM refs ──────────────────────────────────────────────────────
+  var loginGate = document.getElementById('login-gate');
+  var loginForm = document.getElementById('login-form');
+  var passcodeInput = document.getElementById('passcode-input');
+  var loginError = document.getElementById('login-error');
+  var app = document.getElementById('app');
+  var sidebar = document.getElementById('sidebar');
+  var tableArea = document.getElementById('table-area');
+  var tabNameEl = document.getElementById('topbar-tab-name');
+  var searchInput = document.getElementById('search-input');
+  var statusEl = document.getElementById('topbar-status');
+  var toastEl = document.getElementById('toast');
+
+  // ── Login ─────────────────────────────────────────────────────────
+  loginForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    passcode = passcodeInput.value.trim();
+    if (!passcode) { loginError.textContent = 'Passcode required'; return; }
+
+    // Validate by hitting admin-report (lightweight check)
+    loginError.textContent = '';
+    fetch('/api/admin-report', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Passcode': passcode
+      },
+      body: JSON.stringify({ passcode: passcode })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.status === 'ok') {
+        loginGate.style.display = 'none';
+        app.classList.add('active');
+        buildSidebar();
+      } else {
+        loginError.textContent = 'Invalid passcode';
+        passcode = '';
+      }
+    })
+    .catch(function() {
+      loginError.textContent = 'Network error';
+    });
+  });
+
+  // ── Sidebar ───────────────────────────────────────────────────────
+  function buildSidebar() {
+    var html = '';
+    TABS.forEach(function(section) {
+      html += '<div class="sidebar-section">' + escapeHtml(section.section) + '</div>';
+      section.tabs.forEach(function(tab) {
+        html += '<button class="sidebar-item" data-sheet="' + escapeHtml(tab.sheet) + '">' +
+          escapeHtml(tab.label) +
+          '<span class="sidebar-badge ' + (tab.rw ? 'rw' : '') + '">' +
+          (tab.rw ? 'R/W' : 'Read') +
+          '</span></button>';
+      });
+    });
+    sidebar.innerHTML = html;
+    sidebar.addEventListener('click', function(e) {
+      var btn = e.target.closest('.sidebar-item');
+      if (!btn) return;
+      var sheet = btn.dataset.sheet;
+      loadTab(sheet);
+    });
+  }
+
+  function findTabConfig(sheetName) {
+    for (var i = 0; i < TABS.length; i++) {
+      for (var j = 0; j < TABS[i].tabs.length; j++) {
+        if (TABS[i].tabs[j].sheet === sheetName) return TABS[i].tabs[j];
+      }
+    }
+    return null;
+  }
+
+  function setActiveTab(sheetName) {
+    var items = sidebar.querySelectorAll('.sidebar-item');
+    items.forEach(function(item) {
+      item.classList.toggle('active', item.dataset.sheet === sheetName);
+    });
+  }
+
+  // ── Data fetching (gviz) ──────────────────────────────────────────
+  function fetchTab(sheetName) {
+    var url = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID +
+      '/gviz/tq?tqx=out:json&sheet=' + encodeURIComponent(sheetName);
+
+    return fetch(url)
+      .then(function(r) { return r.text(); })
+      .then(function(text) {
+        var match = text.match(/setResponse\(([\s\S]+)\);?\s*$/);
+        if (!match) throw new Error('Invalid gviz response');
+        var payload = JSON.parse(match[1]);
+        var cols = (payload.table.cols || []).map(function(c) {
+          return (c.label || '').replace(/\s+/g, ' ').trim();
+        });
+        var rows = (payload.table.rows || []).map(function(row) {
+          return (row.c || []).map(function(cell) {
+            if (!cell) return '';
+            return cell.f != null ? String(cell.f) : (cell.v != null ? String(cell.v) : '');
+          });
+        });
+        return { cols: cols, rows: rows };
+      });
+  }
+
+  // ── Load a tab ────────────────────────────────────────────────────
+  function loadTab(sheetName) {
+    activeTab = findTabConfig(sheetName);
+    if (!activeTab) return;
+
+    setActiveTab(sheetName);
+    tabNameEl.textContent = activeTab.label;
+    searchInput.value = '';
+    searchQuery = '';
+    sortCol = -1;
+    sortAsc = true;
+
+    tableArea.innerHTML = '<div class="table-loading">Loading ' + escapeHtml(activeTab.label) + '...</div>';
+
+    fetchTab(sheetName)
+      .then(function(data) {
+        currentData = data;
+        renderTable();
+      })
+      .catch(function(err) {
+        tableArea.innerHTML = '<div class="table-loading" style="color:var(--color-error)">Failed to load: ' + escapeHtml(err.message) + '</div>';
+      });
+  }
+
+  // ── Render table ──────────────────────────────────────────────────
+  function isReadOnlyCol(colIndex) {
+    if (!activeTab || !activeTab.rw) return true;
+    if (!activeTab.readOnlyCols) return false;
+    var colLabel = currentData.cols[colIndex].toLowerCase();
+    return activeTab.readOnlyCols.some(function(ro) {
+      return colLabel === ro || colLabel.indexOf(ro) !== -1;
+    });
+  }
+
+  function isTotalsRow(rowIndex) {
+    if (!activeTab || !activeTab.hasTotalsRow) return false;
+    var firstCell = currentData.rows[rowIndex][0];
+    if (firstCell && firstCell.trim()) return false;
+    // A row with no date/label in col A but with data elsewhere = totals
+    return currentData.rows[rowIndex].some(function(cell, i) {
+      return i > 0 && cell && cell.trim();
+    });
+  }
+
+  function renderTable() {
+    if (!currentData || !currentData.cols.length) {
+      tableArea.innerHTML = '<div class="table-loading">No data in this tab.</div>';
+      return;
+    }
+
+    // Filter out entirely empty columns
+    var visibleCols = [];
+    for (var c = 0; c < currentData.cols.length; c++) {
+      var hasData = currentData.cols[c] || currentData.rows.some(function(row) {
+        return row[c] && row[c].trim();
+      });
+      if (hasData) visibleCols.push(c);
+    }
+
+    // Build filtered + sorted rows
+    var rowIndices = [];
+    for (var r = 0; r < currentData.rows.length; r++) {
+      if (searchQuery) {
+        var rowText = currentData.rows[r].join(' ').toLowerCase();
+        if (rowText.indexOf(searchQuery) === -1) continue;
+      }
+      rowIndices.push(r);
+    }
+
+    if (sortCol >= 0) {
+      rowIndices.sort(function(a, b) {
+        var va = currentData.rows[a][sortCol] || '';
+        var vb = currentData.rows[b][sortCol] || '';
+        // Try numeric comparison
+        var na = parseFloat(va.replace(/[$,]/g, ''));
+        var nb = parseFloat(vb.replace(/[$,]/g, ''));
+        if (!isNaN(na) && !isNaN(nb)) {
+          return sortAsc ? na - nb : nb - na;
+        }
+        return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+      });
+    }
+
+    var html = '<table class="data-table"><thead><tr><th>#</th>';
+    visibleCols.forEach(function(colIdx) {
+      var label = currentData.cols[colIdx] || ('Col ' + (colIdx + 1));
+      var arrow = '';
+      if (sortCol === colIdx) arrow = '<span class="sort-arrow">' + (sortAsc ? '▲' : '▼') + '</span>';
+      var roFlag = isReadOnlyCol(colIdx) ? ' style="opacity:0.6"' : '';
+      html += '<th data-col="' + colIdx + '"' + roFlag + '>' + escapeHtml(label) + arrow + '</th>';
+    });
+    html += '</tr></thead><tbody>';
+
+    rowIndices.forEach(function(rowIdx) {
+      var isTotals = isTotalsRow(rowIdx);
+      html += '<tr' + (isTotals ? ' class="totals-row"' : '') + '>';
+      html += '<td class="row-num">' + (rowIdx + 1) + '</td>';
+
+      visibleCols.forEach(function(colIdx) {
+        var value = currentData.rows[rowIdx][colIdx] || '';
+        var isRO = !activeTab.rw || isReadOnlyCol(colIdx) || isTotals;
+        var cls = isRO ? 'readonly' : 'editable';
+        html += '<td class="' + cls + '"' +
+          (isRO ? '' : ' data-row="' + rowIdx + '" data-col="' + colIdx + '"') +
+          ' title="' + escapeHtml(value) + '">' +
+          escapeHtml(value) + '</td>';
+      });
+      html += '</tr>';
+    });
+
+    html += '</tbody></table>';
+    tableArea.innerHTML = html;
+    setStatus(rowIndices.length + ' rows', '');
+  }
+
+  // ── Inline editing ────────────────────────────────────────────────
+  tableArea.addEventListener('dblclick', function(e) {
+    var td = e.target.closest('td.editable');
+    if (!td || editingCell) return;
+    startEditing(td);
+  });
+
+  function startEditing(td) {
+    var row = parseInt(td.dataset.row, 10);
+    var col = parseInt(td.dataset.col, 10);
+    var value = currentData.rows[row][col] || '';
+
+    editingCell = { td: td, row: row, col: col, original: value };
+
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'cell-editor';
+    input.value = value;
+    td.style.position = 'relative';
+    td.textContent = '';
+    td.appendChild(input);
+    input.focus();
+    input.select();
+
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { commitEdit(input.value); }
+      if (e.key === 'Escape') { cancelEdit(); }
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        commitEdit(input.value);
+        // Move to next editable cell
+        var next = e.shiftKey ? td.previousElementSibling : td.nextElementSibling;
+        if (next && next.classList.contains('editable')) {
+          setTimeout(function() { startEditing(next); }, 50);
+        }
+      }
+    });
+
+    input.addEventListener('blur', function() {
+      if (editingCell) commitEdit(input.value);
+    });
+  }
+
+  function cancelEdit() {
+    if (!editingCell) return;
+    editingCell.td.textContent = editingCell.original;
+    editingCell.td.title = editingCell.original;
+    editingCell = null;
+  }
+
+  function commitEdit(newValue) {
+    if (!editingCell) return;
+    var row = editingCell.row;
+    var col = editingCell.col;
+    var original = editingCell.original;
+    var td = editingCell.td;
+
+    td.textContent = newValue;
+    td.title = newValue;
+    currentData.rows[row][col] = newValue;
+    editingCell = null;
+
+    if (newValue === original) return; // No change
+
+    // Write back to sheet
+    var colLetter = colIndexToLetter(col);
+    // gviz rows are 0-indexed data rows; sheet row = row + 2 (header in row 1)
+    var sheetRow = row + 2;
+
+    setStatus('Saving...', 'saving');
+    writeCell(activeTab.sheet, colLetter + sheetRow, newValue)
+      .then(function() {
+        setStatus('Saved', 'saved');
+        showToast('Cell updated', 'success');
+        setTimeout(function() { setStatus(currentData.rows.length + ' rows', ''); }, 2000);
+      })
+      .catch(function(err) {
+        // Revert
+        currentData.rows[row][col] = original;
+        td.textContent = original;
+        td.title = original;
+        setStatus('Save failed', 'error');
+        showToast('Failed: ' + (err.message || 'Unknown error'), 'error');
+      });
+  }
+
+  // ── Write to sheet via Apps Script ────────────────────────────────
+  function writeCell(sheetName, cellRef, value) {
+    var formData = new URLSearchParams();
+    formData.append('source', 'crm-update');
+    formData.append('passcode', passcode);
+    formData.append('sheet', sheetName);
+    formData.append('cell', cellRef);
+    formData.append('value', value);
+
+    return fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8' },
+      body: formData.toString(),
+      redirect: 'follow'
+    })
+    .then(function(r) { return r.text(); })
+    .then(function(text) {
+      if (/"status"\s*:\s*"ok"/.test(text)) return;
+      throw new Error('Sheet write failed');
+    });
+  }
+
+  // ── Sorting ───────────────────────────────────────────────────────
+  tableArea.addEventListener('click', function(e) {
+    var th = e.target.closest('th[data-col]');
+    if (!th) return;
+    var col = parseInt(th.dataset.col, 10);
+    if (sortCol === col) {
+      sortAsc = !sortAsc;
+    } else {
+      sortCol = col;
+      sortAsc = true;
+    }
+    renderTable();
+  });
+
+  // ── Search/filter ─────────────────────────────────────────────────
+  var searchTimer;
+  searchInput.addEventListener('input', function() {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(function() {
+      searchQuery = searchInput.value.trim().toLowerCase();
+      renderTable();
+    }, 200);
+  });
+
+  // ── Helpers ───────────────────────────────────────────────────────
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function colIndexToLetter(index) {
+    var letter = '';
+    while (index >= 0) {
+      letter = String.fromCharCode(65 + (index % 26)) + letter;
+      index = Math.floor(index / 26) - 1;
+    }
+    return letter;
+  }
+
+  function setStatus(text, cls) {
+    statusEl.textContent = text;
+    statusEl.className = 'topbar-status' + (cls ? ' ' + cls : '');
+  }
+
+  var toastTimer;
+  function showToast(message, type) {
+    clearTimeout(toastTimer);
+    toastEl.textContent = message;
+    toastEl.className = 'toast visible ' + (type || '');
+    toastTimer = setTimeout(function() {
+      toastEl.className = 'toast';
+    }, 3000);
+  }
+})();
+</script>
+</body>
+</html>
