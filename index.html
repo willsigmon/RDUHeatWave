@@ -3161,5 +3161,19 @@ button { cursor: pointer; background: none; border: none; }
   }
 })();
 </script>
+
+<!-- Nav pill -->
+<style>
+.nav-pill{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:0.25rem;background:rgba(26,20,18,0.92);border:1px solid rgba(232,88,12,0.15);border-radius:9999px;padding:0.35rem 0.5rem;z-index:999;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.nav-pill a{font-family:'Bebas Neue',sans-serif;font-size:0.7rem;letter-spacing:0.08em;color:var(--color-text-faint,#6b5c4e);text-decoration:none;padding:0.3rem 0.75rem;border-radius:9999px;transition:color 0.15s,background 0.15s}
+.nav-pill a:hover{color:var(--color-text,#f0e6dc);background:rgba(232,88,12,0.1)}
+.nav-pill a.dim{opacity:0.5;font-size:0.6rem}
+</style>
+<nav class="nav-pill" aria-label="Site navigation">
+  <a href="/bizchat">BIZCHAT</a>
+  <a href="/about">ABOUT</a>
+  <a href="/remind">REMIND</a>
+  <a href="/crm" class="dim">CRM</a>
+</nav>
 </body>
 </html>

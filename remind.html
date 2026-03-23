@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#E8580C">
+<meta name="robots" content="noindex, nofollow">
+<title>RDU Heatwave — BizChat Reminder</title>
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="icon" type="image/png" href="/icons/heatwave-icon-192.png">
+<link rel="apple-touch-icon" href="/icons/heatwave-icon-180.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --fire:#E8580C; --fire-hover:#FF6A1E; --fire-active:#C44A0A; --bg:#1a1412; --surface:#231c18; --surface-2:#2c2420; --text:#f0e6dc; --text-muted:#a89585; --text-faint:#6b5c4e; --success:#5BA847; --danger:#D94444; --border:rgba(232,88,12,.16); --radius:16px; }
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { -webkit-text-size-adjust:none; text-size-adjust:none; -webkit-font-smoothing:antialiased; }
+body { min-height:100dvh; background:radial-gradient(circle at 50% 0%,rgba(232,88,12,.12),transparent 40%),var(--bg); color:var(--text); font-family:'Plus Jakarta Sans',system-ui,sans-serif; padding:24px 16px 48px; }
+.page { max-width:420px; margin:0 auto; }
+.eyebrow { font-family:'Bebas Neue',sans-serif; letter-spacing:.14em; color:var(--fire); font-size:.875rem; margin-bottom:4px; }
+h1 { font-family:'Bebas Neue',sans-serif; font-size:clamp(2rem,6vw,2.8rem); letter-spacing:.04em; line-height:1; margin-bottom:8px; }
+.subtitle { color:var(--text-muted); font-size:.875rem; margin-bottom:24px; }
+.card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-bottom:16px; }
+.card-label { font-family:'Bebas Neue',sans-serif; letter-spacing:.1em; color:var(--fire); font-size:.8rem; margin-bottom:12px; }
+select { width:100%; padding:12px 16px; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; color:var(--text); font-family:inherit; font-size:1rem; appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a89585' fill='none' stroke-width='1.5'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; cursor:pointer; }
+select:focus { outline:2px solid var(--fire); outline-offset:-1px; }
+.stat-row { display:flex; align-items:baseline; gap:12px; margin-top:16px; }
+.stat-value { font-family:'Bebas Neue',sans-serif; font-size:3rem; line-height:1; color:var(--fire); }
+.stat-label { color:var(--text-muted); font-size:.875rem; }
+.nudge { margin-top:12px; padding:12px 16px; background:var(--surface-2); border-radius:10px; font-size:.9rem; line-height:1.5; }
+.nudge.hot  { border-left:3px solid var(--success); }
+.nudge.warm { border-left:3px solid var(--fire); }
+.nudge.cold { border-left:3px solid var(--danger); }
+.btn { display:block; width:100%; padding:14px 20px; border:none; border-radius:10px; font-family:'Bebas Neue',sans-serif; font-size:1.15rem; letter-spacing:.08em; cursor:pointer; text-align:center; text-decoration:none; transition:background .15s; }
+.btn-primary { background:var(--fire); color:#fff; }
+.btn-primary:hover { background:var(--fire-hover); }
+.btn-primary:active { background:var(--fire-active); }
+.btn-secondary { background:var(--surface-2); color:var(--text); border:1px solid var(--border); margin-top:10px; }
+.btn-secondary:hover { background:var(--surface); }
+.reminder-row { display:flex; gap:10px; align-items:center; margin-top:12px; }
+.reminder-row input[type="time"] { flex:1; padding:10px 14px; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; color:var(--text); font-family:inherit; font-size:1rem; }
+.reminder-row input[type="time"]:focus { outline:2px solid var(--fire); outline-offset:-1px; }
+.reminder-row .btn { flex:1; margin-top:0; }
+.status-msg { margin-top:8px; font-size:.8rem; color:var(--text-muted); min-height:1.2em; }
+.hidden { display:none; }
+noscript .noscript-banner { display:block; background:var(--danger); color:#fff; text-align:center; padding:12px; font-size:.9rem; border-radius:10px; margin-bottom:16px; }
+</style>
+</head>
+<body>
+<noscript><div class="noscript-banner">JavaScript is required for this page to work.</div></noscript>
+<div class="page">
+  <div class="eyebrow">RDU Heatwave</div>
+  <h1>BizChat Reminder</h1>
+  <p class="subtitle">Track your weekly BizChats and set a daily nudge.</p>
+
+  <div class="card">
+    <div class="card-label">Select Your Name</div>
+    <select id="member-select" disabled>
+      <option value="">Loading members...</option>
+    </select>
+    <div id="stats-area" class="hidden">
+      <div class="stat-row">
+        <span class="stat-value" id="bizchat-count">-</span>
+        <span class="stat-label">BizChats this week</span>
+      </div>
+      <div id="nudge-msg" class="nudge hidden"></div>
+    </div>
+  </div>
+
+  <a href="/bizchat" class="btn btn-primary">Log a BizChat Now</a>
+
+  <div class="card" style="margin-top:16px">
+    <div class="card-label">Daily Reminder</div>
+    <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:8px">
+      Pick a time and we'll nudge you each day while this tab is open.
+    </p>
+    <div class="reminder-row">
+      <input type="time" id="reminder-time" value="09:00">
+      <button class="btn btn-secondary" id="reminder-btn">Set Reminder</button>
+    </div>
+    <div class="status-msg" id="reminder-status"></div>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+  var SHEET_ID = '1WWSxfqJ1UdMqJxKLaiIzb06n3rSQj5-AVN3m07wAkSA';
+  var GVIZ = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:json&sheet=';
+  var $sel = document.getElementById('member-select');
+  var $stats = document.getElementById('stats-area');
+  var $count = document.getElementById('bizchat-count');
+  var $nudge = document.getElementById('nudge-msg');
+  var $rBtn = document.getElementById('reminder-btn');
+  var $rTime = document.getElementById('reminder-time');
+  var $rStatus = document.getElementById('reminder-status');
+  var bizData = null, rTimer = null;
+  var savedMember = localStorage.getItem('remind_member') || '';
+  var savedTime = localStorage.getItem('remind_time') || '09:00';
+  $rTime.value = savedTime;
+
+  // ── Fetch members ───────────────────────────────────────────────
+  fetch('/api/members').then(function(r) { return r.json(); }).then(function(d) {
+    var list = (d.members || d || []).map(function(m) { return m.name; }).filter(Boolean).sort();
+    $sel.innerHTML = '<option value="">Choose your name...</option>';
+    list.forEach(function(n) {
+      var o = document.createElement('option');
+      o.value = n; o.textContent = n;
+      if (n === savedMember) o.selected = true;
+      $sel.appendChild(o);
+    });
+    $sel.disabled = false;
+    if (savedMember) onSelect();
+  }).catch(function() {
+    $sel.innerHTML = '<option value="">Failed to load members</option>';
+  });
+
+  // ── Fetch BizChats Report via gviz ──────────────────────────────
+  fetch(GVIZ + encodeURIComponent('BizChats Report')).then(function(r) {
+    return r.text();
+  }).then(function(text) {
+    var m = text.match(/setResponse\(([\s\S]+)\);?\s*$/);
+    if (!m) throw new Error('Bad gviz');
+    var t = JSON.parse(m[1]).table;
+    bizData = {
+      cols: (t.cols || []).map(function(c) { return (c.label || '').trim(); }),
+      rows: (t.rows || []).map(function(r) {
+        return (r.c || []).map(function(cell) {
+          if (!cell) return '';
+          if (typeof cell.v === 'string' && /^Date\(/.test(cell.v))
+            return new Date(cell.v.replace('Date(', '').replace(')', ''));
+          return cell.v != null ? String(cell.v) : '';
+        });
+      })
+    };
+    if ($sel.value) updateStats($sel.value);
+  }).catch(function() { /* stats stay as "-" */ });
+
+  // ── Member change ───────────────────────────────────────────────
+  $sel.addEventListener('change', onSelect);
+  function onSelect() {
+    var name = $sel.value;
+    if (!name) { $stats.classList.add('hidden'); localStorage.removeItem('remind_member'); return; }
+    localStorage.setItem('remind_member', name);
+    $stats.classList.remove('hidden');
+    updateStats(name);
+  }
+
+  function updateStats(name) {
+    if (!bizData) { $count.textContent = '...'; $nudge.classList.add('hidden'); return; }
+    var col = -1, lo = name.toLowerCase();
+    for (var i = 0; i < bizData.cols.length; i++) {
+      if (bizData.cols[i].toLowerCase() === lo) { col = i; break; }
+    }
+    if (col < 0) {
+      $count.textContent = '?';
+      $nudge.textContent = 'Could not find your column in the BizChats Report.';
+      $nudge.className = 'nudge cold'; $nudge.classList.remove('hidden');
+      return;
+    }
+    var now = new Date(), todayMs = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+    var best = null, count = 0;
+    bizData.rows.forEach(function(row) {
+      var dv = row[0]; if (!dv) return;
+      var d = dv instanceof Date ? dv : new Date(dv);
+      if (isNaN(d.getTime())) return;
+      var ms = d.getTime();
+      if (ms <= todayMs + 86400000 && (!best || ms > best)) { best = ms; count = parseInt(row[col], 10) || 0; }
+    });
+    $count.textContent = String(count);
+    var msg, cls;
+    if (count === 0) { msg = 'No BizChats logged this week yet \u2014 schedule one today!'; cls = 'nudge cold'; }
+    else if (count <= 2) { msg = 'Good start! Can you squeeze in one more?'; cls = 'nudge warm'; }
+    else { msg = "You're on fire! Keep the momentum going."; cls = 'nudge hot'; }
+    $nudge.textContent = msg; $nudge.className = cls; $nudge.classList.remove('hidden');
+  }
+
+  // ── Notification reminder ───────────────────────────────────────
+  $rBtn.addEventListener('click', function() {
+    if (rTimer) {
+      clearTimeout(rTimer); rTimer = null;
+      $rBtn.textContent = 'Set Reminder'; $rStatus.textContent = 'Reminder cleared.';
+      localStorage.removeItem('remind_time'); return;
+    }
+    if (!('Notification' in window)) { $rStatus.textContent = 'Notifications not supported.'; return; }
+    Notification.requestPermission().then(function(p) {
+      if (p !== 'granted') { $rStatus.textContent = 'Permission denied. Enable in browser settings.'; return; }
+      startReminder();
+    });
+  });
+
+  function startReminder() {
+    var parts = $rTime.value.split(':'), h = +parts[0], m = +parts[1];
+    localStorage.setItem('remind_time', $rTime.value);
+    function msNext() {
+      var now = new Date(), t = new Date(now);
+      t.setHours(h, m, 0, 0);
+      if (t <= now) t.setDate(t.getDate() + 1);
+      return t.getTime() - now.getTime();
+    }
+    function fire() {
+      new Notification('BizChat Reminder', {
+        body: 'Time to log your BizChats! Keep the streak going.',
+        icon: '/icons/heatwave-icon-192.png', tag: 'bizchat-remind'
+      });
+      rTimer = setTimeout(fire, msNext());
+    }
+    var delay = msNext();
+    rTimer = setTimeout(fire, delay);
+    $rBtn.textContent = 'Cancel Reminder';
+    var next = new Date(Date.now() + delay);
+    $rStatus.textContent = 'Next reminder at ' + next.toLocaleTimeString([], { hour:'numeric', minute:'2-digit' }) + ' (keep this tab open).';
+  }
+
+  if (savedTime && 'Notification' in window && Notification.permission === 'granted') startReminder();
+})();
+</script>
+</body>
+</html>

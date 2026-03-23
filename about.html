@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#E8580C">
+<title>About RDU Heatwave — 212 Referral Network</title>
+<meta name="description" content="Learn about RDU Heatwave, a 212 Referral Network team in Raleigh-Durham, NC. Structured referral networking that grows your business.">
+<link rel="canonical" href="https://rduheatwave.team/about">
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="icon" type="image/png" href="/icons/heatwave-icon-192.png">
+<link rel="apple-touch-icon" href="/icons/heatwave-icon-180.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:title" content="About RDU Heatwave — 212 Referral Network">
+<meta property="og:description" content="Structured referral networking in Raleigh-Durham. One extra degree changes everything.">
+<meta property="og:url" content="https://rduheatwave.team/about">
+<meta property="og:image" content="https://rduheatwave.team/icons/heatwave-icon-512.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* === BASE RESET === */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+/* === DESIGN TOKENS === */
+:root {
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --color-bg: #1a1412;
+  --color-surface: #231c18;
+  --color-surface-2: #2c2420;
+  --color-divider: rgba(232, 88, 12, 0.12);
+  --color-border: rgba(232, 88, 12, 0.2);
+  --color-text: #f0e6dc;
+  --color-text-muted: #a89585;
+  --color-text-faint: #6b5c4e;
+  --color-primary: #E8580C;
+  --color-primary-hover: #FF6A1E;
+  --gradient-fire: linear-gradient(135deg, #E8580C 0%, #FF6A1E 50%, #FF9933 100%);
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --shadow-glow: 0 0 80px rgba(232, 88, 12, 0.12), 0 0 160px rgba(232, 88, 12, 0.06);
+}
+
+body {
+  min-height: 100dvh;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+
+/* === NOSCRIPT === */
+.noscript-banner {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+  padding: 0.75rem 1rem;
+  background: #D94444;
+  color: #fff;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+/* === STICKY NAV === */
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.6rem 1.25rem;
+  background: rgba(26, 20, 18, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-divider);
+}
+.site-nav a {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--radius-sm);
+  transition: color 0.2s, background 0.2s;
+}
+.site-nav a:hover,
+.site-nav a:focus-visible {
+  color: var(--color-text);
+  background: rgba(232, 88, 12, 0.1);
+}
+.nav-brand {
+  color: var(--color-primary) !important;
+  font-size: 1.15rem !important;
+  margin-right: auto;
+}
+
+/* === SECTIONS === */
+section {
+  padding: 5rem 1.5rem;
+  max-width: 72rem;
+  margin: 0 auto;
+}
+section:nth-child(odd) { position: relative; }
+
+.section-label {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 1.2rem + 2.5vw, 3.25rem);
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  color: var(--color-text);
+  margin-bottom: 1.25rem;
+}
+.section-body {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--color-text-muted);
+  max-width: 42rem;
+}
+
+/* === HERO === */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 70vh;
+  padding: 6rem 1.5rem 5rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(232, 88, 12, 0.15), transparent 70%),
+    radial-gradient(ellipse 50% 40% at 50% 80%, rgba(255, 105, 30, 0.08), transparent 60%);
+  pointer-events: none;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 3rem + 5vw, 8rem);
+  letter-spacing: 0.04em;
+  line-height: 0.95;
+  background: var(--gradient-fire);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+}
+.hero-tagline {
+  font-size: clamp(1rem, 0.85rem + 0.75vw, 1.35rem);
+  color: var(--color-text-muted);
+  margin-top: 1rem;
+  max-width: 32rem;
+  position: relative;
+}
+.hero-temp {
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 4rem + 4vw, 9rem);
+  background: var(--gradient-fire);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  opacity: 0.08;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* === PHILOSOPHY === */
+.philosophy { position: relative; }
+.philosophy::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+  opacity: 0.3;
+}
+.temp-callout {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+.temp-callout .deg {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  background: var(--gradient-fire);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.temp-callout .label {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+}
+
+/* === HOW IT WORKS CARDS === */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+.card {
+  padding: 1.75rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  transition: border-color 0.2s, transform 0.2s;
+}
+.card:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+.card-icon {
+  font-size: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+.card h3 {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.5rem;
+}
+.card p {
+  font-size: 0.925rem;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+.card .detail {
+  display: block;
+  margin-top: 0.75rem;
+  font-size: 0.8rem;
+  color: var(--color-text-faint);
+}
+
+/* === TEAM SECTION === */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+.member-card {
+  padding: 1.25rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-lg);
+  transition: border-color 0.2s;
+}
+.member-card:hover {
+  border-color: var(--color-border);
+}
+.member-card.is-leader {
+  border-color: var(--color-primary);
+  background: var(--color-surface-2);
+}
+.member-card.is-leader::before {
+  content: '';
+  display: block;
+  width: 2rem;
+  height: 3px;
+  background: var(--gradient-fire);
+  border-radius: 2px;
+  margin-bottom: 0.75rem;
+}
+.member-name {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  letter-spacing: 0.02em;
+}
+.member-title {
+  font-size: 0.825rem;
+  color: var(--color-primary);
+  margin-top: 0.15rem;
+}
+.member-company {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-top: 0.35rem;
+}
+.member-company a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-divider);
+  transition: color 0.2s, border-color 0.2s;
+}
+.member-company a:hover {
+  color: var(--color-text);
+  border-color: var(--color-primary);
+}
+.team-loading,
+.team-error {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2rem;
+  color: var(--color-text-faint);
+  font-size: 0.9rem;
+}
+
+/* === VENUE === */
+.venue-block {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 2rem;
+  padding: 2rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+}
+.venue-info h3 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  letter-spacing: 0.02em;
+}
+.venue-info p {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  margin-top: 0.25rem;
+}
+.venue-logo {
+  width: 6rem;
+  height: 6rem;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+}
+.venue-schedule {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.6rem 1rem;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  letter-spacing: 0.04em;
+  color: var(--color-primary);
+  background: rgba(232, 88, 12, 0.08);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+/* === CTA === */
+.cta-section {
+  text-align: center;
+  padding: 5rem 1.5rem 6rem;
+}
+.cta-section .section-title {
+  max-width: 28rem;
+  margin: 0 auto 1.5rem;
+}
+.btn-cta {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  letter-spacing: 0.06em;
+  padding: 0.9rem 2.5rem;
+  color: #fff;
+  background: var(--gradient-fire);
+  border: none;
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 24px rgba(232, 88, 12, 0.3);
+}
+.btn-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 32px rgba(232, 88, 12, 0.45);
+}
+
+/* === SHIMMER LINE === */
+.shimmer-line {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(232, 88, 12, 0.25), transparent);
+  margin: 0;
+}
+
+/* === FOOTER === */
+.site-footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  font-size: 0.8rem;
+  color: var(--color-text-faint);
+  border-top: 1px solid var(--color-divider);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 640px) {
+  section { padding: 3.5rem 1rem; }
+  .hero { min-height: 55vh; padding: 5rem 1rem 4rem; }
+  .venue-block { flex-direction: column; align-items: flex-start; }
+  .site-nav { overflow-x: auto; gap: 0; }
+  .site-nav a { white-space: nowrap; font-size: 0.85rem; padding: 0.3rem 0.5rem; }
+}
+</style>
+
+</head>
+<body>
+
+<noscript>
+  <div class="noscript-banner">
+    This page requires JavaScript to load the team roster. Other content is still visible.
+  </div>
+</noscript>
+
+<!-- Sticky Nav -->
+<nav class="site-nav" aria-label="Page sections">
+  <a href="/about" class="nav-brand">RDU HEATWAVE</a>
+  <a href="#philosophy">212</a>
+  <a href="#how-it-works">How It Works</a>
+  <a href="#team">Team</a>
+  <a href="#venue">Venue</a>
+  <a href="#visit">Visit</a>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="top">
+  <div class="hero-temp" aria-hidden="true">212&deg;</div>
+  <h1 class="hero-title">RDU HEATWAVE</h1>
+  <p class="hero-tagline">The Raleigh-Durham team of the Two Twelve Referral Network</p>
+</section>
+
+<div class="shimmer-line" aria-hidden="true"></div>
+
+<!-- What is 212? -->
+<section class="philosophy" id="philosophy">
+  <p class="section-label">The Extra Degree</p>
+  <h2 class="section-title">What Is 212?</h2>
+  <div class="section-body">
+    <p>At 211 degrees, water is hot. At <strong>212 degrees</strong>, it boils&mdash;and boiling water creates steam, and steam can power a locomotive. That one extra degree makes all the difference.</p>
+    <div class="temp-callout">
+      <span class="deg">212&deg;F</span>
+      <span class="label">The boiling point. The extra degree that changes everything.</span>
+    </div>
+    <p>The Two Twelve Referral Network is built on that philosophy. We are business professionals committed to going the extra degree for each other&mdash;generating real, qualified referrals through structured networking, accountability, and genuine relationships. One degree beyond ordinary transforms your pipeline.</p>
+  </div>
+</section>
+
+<div class="shimmer-line" aria-hidden="true"></div>
+
+<!-- How It Works -->
+<section id="how-it-works">
+  <p class="section-label">The System</p>
+  <h2 class="section-title">How It Works</h2>
+  <div class="cards-grid">
+    <div class="card">
+      <div class="card-icon" aria-hidden="true">&#x1F525;</div>
+      <h3>Weekly Meetings</h3>
+      <p>Every Thursday we meet at Clouds Brewing in Raleigh to share referrals, build relationships, and hold each other accountable.</p>
+      <span class="detail">Thursdays &middot; 4:00 PM ET</span>
+    </div>
+    <div class="card">
+      <div class="card-icon" aria-hidden="true">&#x2615;</div>
+      <h3>BizChats</h3>
+      <p>Short one-on-one meetings between members outside the weekly meeting. Get to know each other's businesses deeply so you can refer with confidence.</p>
+      <span class="detail">1-on-1 &middot; 15&ndash;30 minutes</span>
+    </div>
+    <div class="card">
+      <div class="card-icon" aria-hidden="true">&#x1F91D;</div>
+      <h3>Referral Pipeline</h3>
+      <p>Structured referral passing with tracking and accountability. Every referral given and received is logged so you can measure real ROI.</p>
+      <span class="detail">Tracked &middot; Measured &middot; Accountable</span>
+    </div>
+    <div class="card">
+      <div class="card-icon" aria-hidden="true">&#x1F31F;</div>
+      <h3>Guest Incentive</h3>
+      <p>Bring visitors to the meeting and earn Gratitude Incentive (GI) points. The more you invest in the team, the more the team invests in you.</p>
+      <span class="detail">Earn GI points for every guest</span>
+    </div>
+  </div>
+</section>
+
+<div class="shimmer-line" aria-hidden="true"></div>
+
+<!-- The Team -->
+<section id="team">
+  <p class="section-label">Our Members</p>
+  <h2 class="section-title">The Team</h2>
+  <p class="section-body">Each seat represents a unique business category&mdash;no competition within the team, only collaboration.</p>
+  <div class="team-grid" id="team-grid">
+    <div class="team-loading">Loading team roster&hellip;</div>
+  </div>
+</section>
+
+<div class="shimmer-line" aria-hidden="true"></div>
+
+<!-- Venue / Meeting Details -->
+<section id="venue">
+  <p class="section-label">Where &amp; When</p>
+  <h2 class="section-title">Meeting Details</h2>
+  <div class="venue-block">
+    <img src="/clouds-brewing-logo.png" alt="Clouds Brewing logo" class="venue-logo" width="96" height="96">
+    <div class="venue-info">
+      <h3>Clouds Brewing</h3>
+      <p>1233 Front St, Raleigh, NC 27609</p>
+      <div class="venue-schedule">Thursdays at 4:00 PM ET</div>
+    </div>
+  </div>
+</section>
+
+<div class="shimmer-line" aria-hidden="true"></div>
+
+<!-- CTA -->
+<section class="cta-section" id="visit">
+  <h2 class="section-title">Ready to Visit?</h2>
+  <p class="section-body" style="margin: 0 auto 2rem; text-align: center;">Come see what the extra degree can do for your business. Your first visit is free.</p>
+  <a href="/" class="btn-cta">Register to Visit</a>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer">
+  &copy; 2026 RDU Heatwave &middot; A Two Twelve Referral Network Team
+</footer>
+
+<script>
+(function () {
+  var grid = document.getElementById('team-grid');
+  if (!grid) return;
+
+  fetch('/api/members')
+    .then(function (res) {
+      if (!res.ok) throw new Error('Failed to load');
+      return res.json();
+    })
+    .then(function (data) {
+      var members = (data && data.members) || [];
+      if (!members.length) {
+        grid.innerHTML = '<div class="team-error">No members found.</div>';
+        return;
+      }
+
+      /* Leaders first, then alphabetical */
+      members.sort(function (a, b) {
+        if (a.leader && !b.leader) return -1;
+        if (!a.leader && b.leader) return 1;
+        return a.name.localeCompare(b.name);
+      });
+
+      grid.innerHTML = members.map(function (m) {
+        var cls = 'member-card' + (m.leader ? ' is-leader' : '');
+        var companyHtml = m.company;
+        if (m.website) {
+          companyHtml = '<a href="' + m.website + '" target="_blank" rel="noopener noreferrer">' + m.company + '</a>';
+        }
+        return (
+          '<div class="' + cls + '">' +
+            '<div class="member-name">' + m.name + '</div>' +
+            '<div class="member-title">' + m.title + '</div>' +
+            '<div class="member-company">' + companyHtml + '</div>' +
+          '</div>'
+        );
+      }).join('');
+    })
+    .catch(function () {
+      grid.innerHTML = '<div class="team-error">Could not load team roster. Please try again later.</div>';
+    });
+})();
+</script>
+
+</body>
+</html>

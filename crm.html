@@ -410,11 +410,100 @@ td.row-num {
 .toast.success { border-color: var(--color-success); }
 .toast.error { border-color: var(--color-error); }
 
+/* ── Dashboard KPI cards ─────────────────────────────────── */
+.dashboard {
+  padding: var(--space-8) var(--space-6);
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.dashboard h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  color: var(--color-primary);
+  margin-bottom: var(--space-6);
+  text-align: center;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+}
+
+.kpi-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6) var(--space-4);
+  text-align: center;
+  transition: border-color 0.2s;
+}
+
+.kpi-card:hover {
+  border-color: var(--color-border);
+}
+
+.kpi-value {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  color: var(--color-primary);
+  line-height: 1;
+  margin-bottom: var(--space-2);
+}
+
+.kpi-label {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  font-family: var(--font-display);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.kpi-detail {
+  font-size: 0.65rem;
+  color: var(--color-text-faint);
+  margin-top: var(--space-1);
+}
+
+/* ── Hamburger menu ──────────────────────────────────────── */
+.hamburger-btn {
+  display: none;
+  font-size: 1.4rem;
+  color: var(--color-text-muted);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+}
+
+.hamburger-btn:hover { color: var(--color-text); }
+
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 19;
+}
+
+.sidebar-backdrop.open { display: block; }
+
 /* ── Responsive ──────────────────────────────────────────── */
 @media (max-width: 768px) {
-  :root { --sidebar-w: 0px; }
-  .sidebar { display: none; }
+  .hamburger-btn { display: block; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
   .topbar-search { width: 120px; }
+  .sidebar {
+    position: fixed;
+    top: var(--topbar-h);
+    left: 0;
+    bottom: 0;
+    width: 260px;
+    z-index: 20;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+  }
+  .sidebar.open { transform: translateX(0); }
 }
 </style>
 </head>
@@ -438,6 +527,7 @@ td.row-num {
 <!-- Main app (hidden until auth) -->
 <div class="app" id="app">
   <div class="topbar">
+    <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle menu">&#9776;</button>
     <span class="topbar-title">HEATWAVE CRM</span>
     <span class="topbar-tab-name" id="topbar-tab-name"></span>
     <span class="topbar-spacer"></span>
@@ -448,6 +538,7 @@ td.row-num {
 
   <div class="main-layout">
     <nav class="sidebar" id="sidebar"></nav>
+    <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
     <div class="table-area" id="table-area">
       <div class="empty-state">
         <h2>SELECT A TAB</h2>
@@ -518,6 +609,8 @@ td.row-num {
   var statusEl = document.getElementById('topbar-status');
   var userEl = document.getElementById('topbar-user');
   var toastEl = document.getElementById('toast');
+  var hamburgerBtn = document.getElementById('hamburger-btn');
+  var sidebarBackdrop = document.getElementById('sidebar-backdrop');
 
   // ── Login via Apps Script ─────────────────────────────────────────
   loginForm.addEventListener('submit', function(e) {
@@ -558,6 +651,7 @@ td.row-num {
         app.classList.add('active');
         showUserBadge();
         buildSidebar();
+        showDashboard();
       } else {
         loginError.textContent = json.message || 'Invalid PIN';
       }
@@ -578,6 +672,74 @@ td.row-num {
     var roleLabel = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
     userEl.innerHTML = escapeHtml(currentUser.name) +
       ' <span class="role-badge ' + roleClass + '">' + escapeHtml(roleLabel) + '</span>';
+  }
+
+  // ── Hamburger toggle ───────────────────────────────────────────────
+  hamburgerBtn.addEventListener('click', function() {
+    sidebar.classList.toggle('open');
+    sidebarBackdrop.classList.toggle('open');
+  });
+  sidebarBackdrop.addEventListener('click', function() {
+    sidebar.classList.remove('open');
+    sidebarBackdrop.classList.remove('open');
+  });
+  function closeMobileMenu() {
+    sidebar.classList.remove('open');
+    sidebarBackdrop.classList.remove('open');
+  }
+
+  // ── Dashboard ─────────────────────────────────────────────────────
+  function showDashboard() {
+    tableArea.innerHTML =
+      '<div class="dashboard">' +
+        '<h2>TEAM DASHBOARD</h2>' +
+        '<div class="kpi-grid">' +
+          '<div class="kpi-card"><div class="kpi-value" id="kpi-guests">...</div><div class="kpi-label">Guests Hosted</div><div class="kpi-detail">Rolling 12 months</div></div>' +
+          '<div class="kpi-card"><div class="kpi-value" id="kpi-bizchats">...</div><div class="kpi-label">BizChats</div><div class="kpi-detail">Rolling 12 months</div></div>' +
+          '<div class="kpi-card"><div class="kpi-value" id="kpi-referrals">...</div><div class="kpi-label">Referrals</div><div class="kpi-detail">Pipeline total</div></div>' +
+          '<div class="kpi-card"><div class="kpi-value" id="kpi-revenue">...</div><div class="kpi-label">Revenue</div><div class="kpi-detail">Closed business</div></div>' +
+        '</div>' +
+      '</div>';
+
+    // Fetch KPIs in parallel
+    fetchTab('Guest Incentive Report').then(function(data) {
+      var val = extractTotalsValue(data, 'weekly total points');
+      var el = document.getElementById('kpi-guests');
+      if (el) el.textContent = val || '0';
+    }).catch(function() {});
+
+    fetchTab('BizChats Report').then(function(data) {
+      var val = extractTotalsValue(data, 'weekly total');
+      var el = document.getElementById('kpi-bizchats');
+      if (el) el.textContent = val || '0';
+    }).catch(function() {});
+
+    fetchTab('Referral Pipeline').then(function(data) {
+      var count = data.rows.filter(function(row) { return row[0] && row[0].trim(); }).length;
+      var el = document.getElementById('kpi-referrals');
+      if (el) el.textContent = String(count);
+    }).catch(function() {});
+
+    fetchTab('Revenue Report').then(function(data) {
+      var val = extractTotalsValue(data, 'rcvd');
+      var el = document.getElementById('kpi-revenue');
+      if (el) el.textContent = val ? '$' + val : '$0';
+    }).catch(function() {});
+  }
+
+  function extractTotalsValue(data, colLabel) {
+    var colIdx = -1;
+    for (var i = data.cols.length - 1; i >= 0; i--) {
+      if (data.cols[i].toLowerCase().indexOf(colLabel.toLowerCase()) !== -1) { colIdx = i; break; }
+    }
+    if (colIdx < 0) return null;
+    // Find totals row (no value in col A, but has data)
+    for (var r = data.rows.length - 1; r >= 0; r--) {
+      if ((!data.rows[r][0] || !data.rows[r][0].trim()) && data.rows[r][colIdx] && data.rows[r][colIdx].trim()) {
+        return data.rows[r][colIdx];
+      }
+    }
+    return null;
   }
 
   // ── Sidebar (role-filtered) ───────────────────────────────────────
@@ -611,6 +773,7 @@ td.row-num {
     sidebar.addEventListener('click', function(e) {
       var btn = e.target.closest('.sidebar-item');
       if (!btn) return;
+      closeMobileMenu();
       loadTab(btn.dataset.sheet);
     });
   }
