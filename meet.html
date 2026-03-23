@@ -1557,7 +1557,7 @@ body.phase-over .ticker-wrap { display: none !important; }
         <span class="schedule-time">3:45 &ndash; 4:00</span>
         <span class="schedule-desc">Open Networking</span>
       </div>
-      <div class="schedule-item schedule-item--active">
+      <div class="schedule-item">
         <span class="schedule-time">4:00 &ndash; 5:00</span>
         <span class="schedule-desc">Networking Meeting</span>
       </div>
@@ -2187,6 +2187,15 @@ body.phase-over .ticker-wrap { display: none !important; }
     stopTakeoverCycle();
   }
 
+  var scheduleItems = document.querySelectorAll('#meeting-schedule .schedule-item');
+  function highlightSchedule(phase) {
+    var idx = (phase === PHASE.COUNTDOWN) ? 0 :
+              (phase === PHASE.OVER) ? 2 : 1;
+    scheduleItems.forEach(function(el, i) {
+      el.classList.toggle('schedule-item--active', i === idx);
+    });
+  }
+
   function setPhase(phase) {
     if (phase === currentPhase) return;
     currentPhase = phase;
@@ -2199,6 +2208,7 @@ body.phase-over .ticker-wrap { display: none !important; }
     );
     if (phase === PHASE.LIVE) document.body.classList.add('anchor-mode');
 
+    highlightSchedule(phase);
     resetPhaseUI();
 
     switch (phase) {
