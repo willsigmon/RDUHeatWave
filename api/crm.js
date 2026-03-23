@@ -18,9 +18,10 @@ module.exports = async function handler(req, res) {
       return shared.sendJson(res, 403, { status: 'error', message: 'Origin not allowed' });
     }
 
-    if (shared.isRateLimited(shared.getClientIp(req), RATE_LIMITS)) {
-      return shared.sendJson(res, 429, { status: 'error', message: 'Too many requests. Please try again shortly.' });
-    }
+    // Rate limiting relaxed for internal CRM — PIN auth is the access control
+    // if (shared.isRateLimited(shared.getClientIp(req), RATE_LIMITS)) {
+    //   return shared.sendJson(res, 429, { status: 'error', message: 'Too many requests. Please try again shortly.' });
+    // }
 
     var body = await shared.readRequestBody(req);
 
