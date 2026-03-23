@@ -15,6 +15,7 @@
 <meta property="og:title" content="RDU Heatwave — Log a BizChat">
 <meta property="og:url" content="https://rduheatwave.team/bizchat">
 <meta property="og:image" content="https://rduheatwave.team/icons/heatwave-icon-512.png">
+<meta property="og:description" content="Log your 1-on-1 BizChat meetings for RDU Heatwave.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="RDU Heatwave — Log a BizChat">
 <meta name="twitter:description" content="Log your 1-on-1 BizChat meetings for RDU Heatwave.">
@@ -30,9 +31,7 @@ body {
   min-height: 100dvh;
   font-family: var(--font-body);
   color: var(--color-text);
-  background:
-    radial-gradient(circle at 50% 10%, rgba(232, 88, 12, 0.14), transparent 28rem),
-    linear-gradient(180deg, #1a1412 0%, #120d0b 100%);
+  background: var(--color-bg);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -42,6 +41,8 @@ body {
 .form-shell {
   width: 100%;
   max-width: 480px;
+  position: relative;
+  z-index: 1;
 }
 
 .form-header {
@@ -169,6 +170,14 @@ body {
 </head>
 
 <body>
+<div class="heat-bg" aria-hidden="true">
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+</div>
+<div class="heat-orb" aria-hidden="true"></div>
 <noscript><div class="noscript-banner">JavaScript is required to use this page.</div></noscript>
 
 <div class="form-shell">

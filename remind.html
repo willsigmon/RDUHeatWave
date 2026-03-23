@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#E8580C">
 <meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Set a reminder for the next RDU Heatwave meeting.">
 <title>RDU Heatwave — BizChat Reminder</title>
 <link rel="shortcut icon" href="/favicon.ico">
 <link rel="icon" type="image/png" href="/icons/heatwave-icon-192.png">
@@ -17,12 +18,12 @@
 <style>
 body {
   min-height: 100dvh;
-  background: radial-gradient(circle at 50% 0%, rgba(232,88,12,.12), transparent 40%), var(--color-bg);
+  background: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-body);
   padding: 24px 16px 48px;
 }
-.page { max-width: 420px; margin: 0 auto; }
+.page { max-width: 420px; margin: 0 auto; position: relative; z-index: 1; }
 .eyebrow { font-family: var(--font-display); letter-spacing: .14em; color: var(--color-primary); font-size: .875rem; margin-bottom: 4px; }
 h1 { font-family: var(--font-display); font-size: clamp(2rem,6vw,2.8rem); letter-spacing: .04em; line-height: 1; margin-bottom: 8px; }
 .subtitle { color: var(--color-text-muted); font-size: .875rem; margin-bottom: 24px; }
@@ -105,6 +106,14 @@ select:focus, input[type="time"]:focus, input[type="date"]:focus {
 </style>
 </head>
 <body>
+<div class="heat-bg" aria-hidden="true">
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+</div>
+<div class="heat-orb" aria-hidden="true"></div>
 <noscript><div class="noscript-banner">JavaScript is required for this page to work.</div></noscript>
 <div class="page">
   <div class="eyebrow">RDU Heatwave</div>
