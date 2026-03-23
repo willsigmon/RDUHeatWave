@@ -164,6 +164,30 @@ body {
 .topbar-status.saved { color: var(--color-success); }
 .topbar-status.error { color: var(--color-error); }
 
+.topbar-user {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.topbar-user .role-badge {
+  font-size: 0.6rem;
+  font-family: var(--font-display);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-full);
+  background: rgba(232,88,12,0.15);
+  color: var(--color-primary);
+}
+
+.topbar-user .role-badge.regional { background: rgba(232,88,12,0.25); }
+.topbar-user .role-badge.area { background: rgba(91,168,71,0.2); color: var(--color-success); }
+.topbar-user .role-badge.member { background: var(--color-surface-2); color: var(--color-text-faint); }
+
 /* ── Layout ──────────────────────────────────────────────── */
 .main-layout {
   display: flex;
@@ -402,10 +426,10 @@ td.row-num {
 <div class="login-gate" id="login-gate">
   <div class="login-box">
     <h1>TEAM CRM</h1>
-    <p>Enter the admin passcode to access team data.</p>
+    <p>Enter your PIN to access team data.</p>
     <form id="login-form">
-      <input type="password" class="login-input" id="passcode-input" placeholder="Passcode" autocomplete="off" autofocus>
-      <button type="submit" class="login-btn">ENTER</button>
+      <input type="password" class="login-input" id="pin-input" placeholder="PIN" autocomplete="off" inputmode="numeric" maxlength="8" autofocus>
+      <button type="submit" class="login-btn">SIGN IN</button>
       <div class="login-error" id="login-error"></div>
     </form>
   </div>
@@ -419,6 +443,7 @@ td.row-num {
     <span class="topbar-spacer"></span>
     <input type="search" class="topbar-search" id="search-input" placeholder="Filter rows...">
     <span class="topbar-status" id="topbar-status"></span>
+    <span class="topbar-user" id="topbar-user"></span>
   </div>
 
   <div class="main-layout">
@@ -438,59 +463,43 @@ td.row-num {
 (function() {
   'use strict';
 
-  // ── Tab configuration ─────────────────────────────────────────────
-  // Each tab defines its sheet name, display label, editability, and
-  // which columns/rows are read-only (formulas, totals, automated).
-  var TABS = [
-    {
-      section: 'People',
-      tabs: [
-        { sheet: 'Membership Directory', label: 'Members', rw: true },
-        { sheet: 'Applications', label: 'Applications', rw: true,
-          readOnlyCols: [] },
-        { sheet: 'Guest Check In', label: 'Check-ins', rw: false },
-      ]
-    },
-    {
-      section: 'Performance',
-      tabs: [
-        { sheet: 'Guest Incentive Report', label: 'Guest Incentive', rw: true,
-          readOnlyCols: ['weekly total points', 'total'],
-          hasTotalsRow: true },
-        { sheet: 'BizChats Report', label: 'BizChats', rw: true,
-          readOnlyCols: ['weekly total'],
-          hasTotalsRow: true },
-        { sheet: 'Referral Pipeline', label: 'Referrals', rw: true },
-        { sheet: 'Revenue Report', label: 'Revenue', rw: true,
-          readOnlyCols: ['weekly total given', 'rcvd'],
-          hasTotalsRow: true },
-        { sheet: 'Attendance Report', label: 'Attendance', rw: true,
-          hasTotalsRow: true },
-      ]
-    },
-    {
-      section: 'Feedback',
-      tabs: [
-        { sheet: 'Survey Responses', label: 'Surveys', rw: false },
-      ]
-    },
-    {
-      section: 'Archive',
-      tabs: [
-        { sheet: 'Team Stats', label: 'Team Stats (Legacy)', rw: false },
-        { sheet: 'Team Stats 2026', label: 'Team Stats 2026', rw: false },
-        { sheet: 'BKP Member Directory', label: 'Backup Directory', rw: false },
-      ]
-    }
+  // ── Tab registry ──────────────────────────────────────────────────
+  // Full list of all tabs with their display metadata. The server
+  // returns which tabs this user can see and which are writable.
+  var ALL_TABS = [
+    { section: 'People', tabs: [
+      { sheet: 'Membership Directory', label: 'Members' },
+      { sheet: 'Applications', label: 'Applications' },
+      { sheet: 'Guest Check In', label: 'Check-ins' }
+    ]},
+    { section: 'Performance', tabs: [
+      { sheet: 'Guest Incentive Report', label: 'Guest Incentive',
+        readOnlyCols: ['weekly total points', 'total'], hasTotalsRow: true },
+      { sheet: 'BizChats Report', label: 'BizChats',
+        readOnlyCols: ['weekly total'], hasTotalsRow: true },
+      { sheet: 'Referral Pipeline', label: 'Referrals' },
+      { sheet: 'Revenue Report', label: 'Revenue',
+        readOnlyCols: ['weekly total given', 'rcvd'], hasTotalsRow: true },
+      { sheet: 'Attendance Report', label: 'Attendance', hasTotalsRow: true }
+    ]},
+    { section: 'Feedback', tabs: [
+      { sheet: 'Survey Responses', label: 'Surveys' }
+    ]},
+    { section: 'Archive', tabs: [
+      { sheet: 'Team Stats', label: 'Team Stats (Legacy)' },
+      { sheet: 'Team Stats 2026', label: 'Team Stats 2026' },
+      { sheet: 'BKP Member Directory', label: 'Backup Directory' }
+    ]}
   ];
 
   var SHEET_ID = '1WWSxfqJ1UdMqJxKLaiIzb06n3rSQj5-AVN3m07wAkSA';
   var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxkchMEuPQlPe91xWx3QGeSD_yk0q4g-1iBZ0gumknVqBu1s57_A0Dg2pbd64huh21D/exec';
 
   // ── State ─────────────────────────────────────────────────────────
-  var passcode = '';
+  var userPin = '';
+  var currentUser = null;  // { name, role, teams, visibleTabs, writableTabs }
   var activeTab = null;
-  var currentData = null; // { cols: [], rows: [] }
+  var currentData = null;
   var sortCol = -1;
   var sortAsc = true;
   var searchQuery = '';
@@ -499,7 +508,7 @@ td.row-num {
   // ── DOM refs ──────────────────────────────────────────────────────
   var loginGate = document.getElementById('login-gate');
   var loginForm = document.getElementById('login-form');
-  var passcodeInput = document.getElementById('passcode-input');
+  var pinInput = document.getElementById('pin-input');
   var loginError = document.getElementById('login-error');
   var app = document.getElementById('app');
   var sidebar = document.getElementById('sidebar');
@@ -507,50 +516,94 @@ td.row-num {
   var tabNameEl = document.getElementById('topbar-tab-name');
   var searchInput = document.getElementById('search-input');
   var statusEl = document.getElementById('topbar-status');
+  var userEl = document.getElementById('topbar-user');
   var toastEl = document.getElementById('toast');
 
-  // ── Login ─────────────────────────────────────────────────────────
+  // ── Login via Apps Script ─────────────────────────────────────────
   loginForm.addEventListener('submit', function(e) {
     e.preventDefault();
-    passcode = passcodeInput.value.trim();
-    if (!passcode) { loginError.textContent = 'Passcode required'; return; }
+    var pin = pinInput.value.trim();
+    if (!pin) { loginError.textContent = 'PIN is required'; return; }
 
-    // Validate by hitting admin-report (lightweight check)
     loginError.textContent = '';
-    fetch('/api/admin-report', {
+    pinInput.disabled = true;
+
+    var formData = new URLSearchParams();
+    formData.append('source', 'crm-login');
+    formData.append('pin', pin);
+
+    fetch(APPS_SCRIPT_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Admin-Passcode': passcode
-      },
-      body: JSON.stringify({ passcode: passcode })
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8' },
+      body: formData.toString(),
+      redirect: 'follow'
     })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      if (data.status === 'ok') {
+    .then(function(r) { return r.text(); })
+    .then(function(text) {
+      // Apps Script returns JSONP-ish or plain JSON depending on redirect
+      var json;
+      try {
+        json = JSON.parse(text);
+      } catch (_e) {
+        // Try to extract JSON from potential HTML wrapper
+        var match = text.match(/\{[\s\S]*\}/);
+        if (match) json = JSON.parse(match[0]);
+        else throw new Error('Unexpected response');
+      }
+
+      if (json.status === 'ok' && json.user) {
+        userPin = pin;
+        currentUser = json.user;
         loginGate.style.display = 'none';
         app.classList.add('active');
+        showUserBadge();
         buildSidebar();
       } else {
-        loginError.textContent = 'Invalid passcode';
-        passcode = '';
+        loginError.textContent = json.message || 'Invalid PIN';
       }
     })
-    .catch(function() {
-      loginError.textContent = 'Network error';
+    .catch(function(err) {
+      loginError.textContent = 'Login failed: ' + (err.message || 'Network error');
+    })
+    .finally(function() {
+      pinInput.disabled = false;
     });
   });
 
-  // ── Sidebar ───────────────────────────────────────────────────────
+  // ── User badge ────────────────────────────────────────────────────
+  function showUserBadge() {
+    var roleClass = currentUser.role === 'regional' ? 'regional' :
+                    currentUser.role === 'area' ? 'area' :
+                    currentUser.role === 'member' ? 'member' : '';
+    var roleLabel = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
+    userEl.innerHTML = escapeHtml(currentUser.name) +
+      ' <span class="role-badge ' + roleClass + '">' + escapeHtml(roleLabel) + '</span>';
+  }
+
+  // ── Sidebar (role-filtered) ───────────────────────────────────────
+  function isTabVisible(sheetName) {
+    return currentUser.visibleTabs.indexOf(sheetName) !== -1;
+  }
+
+  function isTabWritable(sheetName) {
+    return currentUser.writableTabs.indexOf(sheetName) !== -1;
+  }
+
   function buildSidebar() {
     var html = '';
-    TABS.forEach(function(section) {
+    ALL_TABS.forEach(function(section) {
+      var visibleInSection = section.tabs.filter(function(tab) {
+        return isTabVisible(tab.sheet);
+      });
+      if (!visibleInSection.length) return;
+
       html += '<div class="sidebar-section">' + escapeHtml(section.section) + '</div>';
-      section.tabs.forEach(function(tab) {
+      visibleInSection.forEach(function(tab) {
+        var writable = isTabWritable(tab.sheet);
         html += '<button class="sidebar-item" data-sheet="' + escapeHtml(tab.sheet) + '">' +
           escapeHtml(tab.label) +
-          '<span class="sidebar-badge ' + (tab.rw ? 'rw' : '') + '">' +
-          (tab.rw ? 'R/W' : 'Read') +
+          '<span class="sidebar-badge ' + (writable ? 'rw' : '') + '">' +
+          (writable ? 'R/W' : 'Read') +
           '</span></button>';
       });
     });
@@ -558,23 +611,26 @@ td.row-num {
     sidebar.addEventListener('click', function(e) {
       var btn = e.target.closest('.sidebar-item');
       if (!btn) return;
-      var sheet = btn.dataset.sheet;
-      loadTab(sheet);
+      loadTab(btn.dataset.sheet);
     });
   }
 
   function findTabConfig(sheetName) {
-    for (var i = 0; i < TABS.length; i++) {
-      for (var j = 0; j < TABS[i].tabs.length; j++) {
-        if (TABS[i].tabs[j].sheet === sheetName) return TABS[i].tabs[j];
+    for (var i = 0; i < ALL_TABS.length; i++) {
+      for (var j = 0; j < ALL_TABS[i].tabs.length; j++) {
+        if (ALL_TABS[i].tabs[j].sheet === sheetName) {
+          var config = Object.assign({}, ALL_TABS[i].tabs[j]);
+          // Set rw based on user's permissions
+          config.rw = isTabWritable(sheetName);
+          return config;
+        }
       }
     }
     return null;
   }
 
   function setActiveTab(sheetName) {
-    var items = sidebar.querySelectorAll('.sidebar-item');
-    items.forEach(function(item) {
+    sidebar.querySelectorAll('.sidebar-item').forEach(function(item) {
       item.classList.toggle('active', item.dataset.sheet === sheetName);
     });
   }
@@ -641,7 +697,6 @@ td.row-num {
     if (!activeTab || !activeTab.hasTotalsRow) return false;
     var firstCell = currentData.rows[rowIndex][0];
     if (firstCell && firstCell.trim()) return false;
-    // A row with no date/label in col A but with data elsewhere = totals
     return currentData.rows[rowIndex].some(function(cell, i) {
       return i > 0 && cell && cell.trim();
     });
@@ -653,7 +708,6 @@ td.row-num {
       return;
     }
 
-    // Filter out entirely empty columns
     var visibleCols = [];
     for (var c = 0; c < currentData.cols.length; c++) {
       var hasData = currentData.cols[c] || currentData.rows.some(function(row) {
@@ -662,7 +716,6 @@ td.row-num {
       if (hasData) visibleCols.push(c);
     }
 
-    // Build filtered + sorted rows
     var rowIndices = [];
     for (var r = 0; r < currentData.rows.length; r++) {
       if (searchQuery) {
@@ -676,12 +729,9 @@ td.row-num {
       rowIndices.sort(function(a, b) {
         var va = currentData.rows[a][sortCol] || '';
         var vb = currentData.rows[b][sortCol] || '';
-        // Try numeric comparison
         var na = parseFloat(va.replace(/[$,]/g, ''));
         var nb = parseFloat(vb.replace(/[$,]/g, ''));
-        if (!isNaN(na) && !isNaN(nb)) {
-          return sortAsc ? na - nb : nb - na;
-        }
+        if (!isNaN(na) && !isNaN(nb)) return sortAsc ? na - nb : nb - na;
         return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
       });
     }
@@ -689,8 +739,7 @@ td.row-num {
     var html = '<table class="data-table"><thead><tr><th>#</th>';
     visibleCols.forEach(function(colIdx) {
       var label = currentData.cols[colIdx] || ('Col ' + (colIdx + 1));
-      var arrow = '';
-      if (sortCol === colIdx) arrow = '<span class="sort-arrow">' + (sortAsc ? '▲' : '▼') + '</span>';
+      var arrow = sortCol === colIdx ? '<span class="sort-arrow">' + (sortAsc ? '▲' : '▼') + '</span>' : '';
       var roFlag = isReadOnlyCol(colIdx) ? ' style="opacity:0.6"' : '';
       html += '<th data-col="' + colIdx + '"' + roFlag + '>' + escapeHtml(label) + arrow + '</th>';
     });
@@ -707,8 +756,7 @@ td.row-num {
         var cls = isRO ? 'readonly' : 'editable';
         html += '<td class="' + cls + '"' +
           (isRO ? '' : ' data-row="' + rowIdx + '" data-col="' + colIdx + '"') +
-          ' title="' + escapeHtml(value) + '">' +
-          escapeHtml(value) + '</td>';
+          ' title="' + escapeHtml(value) + '">' + escapeHtml(value) + '</td>';
       });
       html += '</tr>';
     });
@@ -748,7 +796,6 @@ td.row-num {
       if (e.key === 'Tab') {
         e.preventDefault();
         commitEdit(input.value);
-        // Move to next editable cell
         var next = e.shiftKey ? td.previousElementSibling : td.nextElementSibling;
         if (next && next.classList.contains('editable')) {
           setTimeout(function() { startEditing(next); }, 50);
@@ -780,11 +827,9 @@ td.row-num {
     currentData.rows[row][col] = newValue;
     editingCell = null;
 
-    if (newValue === original) return; // No change
+    if (newValue === original) return;
 
-    // Write back to sheet
     var colLetter = colIndexToLetter(col);
-    // gviz rows are 0-indexed data rows; sheet row = row + 2 (header in row 1)
     var sheetRow = row + 2;
 
     setStatus('Saving...', 'saving');
@@ -795,7 +840,6 @@ td.row-num {
         setTimeout(function() { setStatus(currentData.rows.length + ' rows', ''); }, 2000);
       })
       .catch(function(err) {
-        // Revert
         currentData.rows[row][col] = original;
         td.textContent = original;
         td.title = original;
@@ -804,11 +848,11 @@ td.row-num {
       });
   }
 
-  // ── Write to sheet via Apps Script ────────────────────────────────
+  // ── Write to sheet via Apps Script (PIN-authenticated) ────────────
   function writeCell(sheetName, cellRef, value) {
     var formData = new URLSearchParams();
     formData.append('source', 'crm-update');
-    formData.append('passcode', passcode);
+    formData.append('pin', userPin);
     formData.append('sheet', sheetName);
     formData.append('cell', cellRef);
     formData.append('value', value);
@@ -822,7 +866,9 @@ td.row-num {
     .then(function(r) { return r.text(); })
     .then(function(text) {
       if (/"status"\s*:\s*"ok"/.test(text)) return;
-      throw new Error('Sheet write failed');
+      // Try to extract error message
+      var errMatch = text.match(/"message"\s*:\s*"([^"]+)"/);
+      throw new Error(errMatch ? errMatch[1] : 'Sheet write failed');
     });
   }
 
@@ -831,12 +877,8 @@ td.row-num {
     var th = e.target.closest('th[data-col]');
     if (!th) return;
     var col = parseInt(th.dataset.col, 10);
-    if (sortCol === col) {
-      sortAsc = !sortAsc;
-    } else {
-      sortCol = col;
-      sortAsc = true;
-    }
+    if (sortCol === col) { sortAsc = !sortAsc; }
+    else { sortCol = col; sortAsc = true; }
     renderTable();
   });
 
@@ -876,9 +918,7 @@ td.row-num {
     clearTimeout(toastTimer);
     toastEl.textContent = message;
     toastEl.className = 'toast visible ' + (type || '');
-    toastTimer = setTimeout(function() {
-      toastEl.className = 'toast';
-    }, 3000);
+    toastTimer = setTimeout(function() { toastEl.className = 'toast'; }, 3000);
   }
 })();
 </script>

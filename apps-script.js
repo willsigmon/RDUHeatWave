@@ -9,6 +9,7 @@
 
 var SHEET_ID = '1WWSxfqJ1UdMqJxKLaiIzb06n3rSQj5-AVN3m07wAkSA';
 var SHEET_NAME = 'Guest Check In';
+var ACCESS_CONTROL_SHEET = 'Access Control';
 var MEMBERS_SHEET_NAMES = ['Membership Directory', 'BKP Member Directory'];
 var HEADER_ROW = 3;
 var HEADER_COUNT = 10;
@@ -146,6 +147,9 @@ function doPost(e) {
   }
   if (cleanValue_(params.source) === 'crm-update') {
     return doPostCrmUpdate_(params);
+  }
+  if (cleanValue_(params.source) === 'crm-login') {
+    return doPostCrmLogin_(params);
   }
   var spreadsheet = SpreadsheetApp.openById(SHEET_ID);
   var sheet = spreadsheet.getSheetByName(SHEET_NAME) || spreadsheet.getSheets()[0] || spreadsheet.insertSheet(SHEET_NAME);
@@ -308,14 +312,138 @@ function doPostBizChat_(params) {
   }
 }
 
+// ── Access Control ──────────────────────────────────────────────────
+// The "Access Control" tab stores user credentials and role assignments.
+// Columns: Name | Email | PIN | Role | Teams | Active
+// Roles: regional, area, team, member
+//
+// Role permissions:
+//   regional — All tabs, all teams, R/W
+//   area     — All tabs for assigned teams, R/W
+//   team     — All tabs for own team, R/W (governance committee)
+//   member   — Limited tabs, read-only
+
+var ROLE_HIERARCHY = { regional: 4, area: 3, team: 2, member: 1 };
+
+// Tabs visible per role (member sees a subset; team+ sees all)
+var MEMBER_VISIBLE_TABS = [
+  'Membership Directory', 'BizChats Report', 'Referral Pipeline',
+  'Guest Incentive Report', 'Revenue Report'
+];
+
+// Tabs that are always read-only regardless of role
+var ALWAYS_READONLY_TABS = [
+  'Survey Responses', 'Team Stats', 'Team Stats 2026',
+  'BKP Member Directory', 'Guest Check In', 'Access Control'
+];
+
+function lookupUser_(pin) {
+  var spreadsheet = SpreadsheetApp.openById(SHEET_ID);
+  var sheet = spreadsheet.getSheetByName(ACCESS_CONTROL_SHEET);
+  if (!sheet) return null;
+
+  var data = sheet.getDataRange().getDisplayValues();
+  if (data.length < 2) return null; // No data rows
+
+  // Find header indices
+  var headers = data[0].map(function(h) { return cleanValue_(h).toLowerCase(); });
+  var nameIdx = headers.indexOf('name');
+  var emailIdx = headers.indexOf('email');
+  var pinIdx = headers.indexOf('pin');
+  var roleIdx = headers.indexOf('role');
+  var teamsIdx = headers.indexOf('teams');
+  var activeIdx = headers.indexOf('active');
+
+  if (pinIdx < 0) return null;
+
+  var suppliedPin = cleanValue_(pin);
+  for (var i = 1; i < data.length; i++) {
+    var rowPin = cleanValue_(data[i][pinIdx]);
+    if (!rowPin || rowPin !== suppliedPin) continue;
+
+    // Check if active
+    if (activeIdx >= 0) {
+      var active = cleanValue_(data[i][activeIdx]).toLowerCase();
+      if (active === 'false' || active === 'no' || active === '0') continue;
+    }
+
+    var role = (roleIdx >= 0 ? cleanValue_(data[i][roleIdx]).toLowerCase() : 'member');
+    var teams = teamsIdx >= 0 ? cleanValue_(data[i][teamsIdx]) : '';
+    var teamList = teams ? teams.split(',').map(function(t) { return cleanValue_(t); }).filter(Boolean) : [];
+
+    return {
+      name: nameIdx >= 0 ? cleanValue_(data[i][nameIdx]) : '',
+      email: emailIdx >= 0 ? cleanValue_(data[i][emailIdx]) : '',
+      role: ROLE_HIERARCHY[role] ? role : 'member',
+      teams: teamList,
+      canWrite: ROLE_HIERARCHY[role] >= ROLE_HIERARCHY['team']
+    };
+  }
+
+  return null;
+}
+
+function doPostCrmLogin_(params) {
+  var pin = cleanValue_(params.pin);
+  if (!pin) {
+    return jsonOutput_({ status: 'error', message: 'PIN is required' });
+  }
+
+  var user = lookupUser_(pin);
+  if (!user) {
+    return jsonOutput_({ status: 'error', message: 'Invalid PIN' });
+  }
+
+  // Build the list of tabs this user can see
+  var visibleTabs = [];
+  var allTabs = [
+    'Membership Directory', 'Applications', 'Guest Check In',
+    'Guest Incentive Report', 'BizChats Report', 'Referral Pipeline',
+    'Revenue Report', 'Attendance Report', 'Survey Responses',
+    'Team Stats', 'Team Stats 2026', 'BKP Member Directory'
+  ];
+
+  if (user.role === 'member') {
+    visibleTabs = MEMBER_VISIBLE_TABS.slice();
+  } else {
+    visibleTabs = allTabs.slice();
+  }
+
+  // Determine which tabs are writable
+  var writableTabs = [];
+  if (user.canWrite) {
+    writableTabs = visibleTabs.filter(function(tab) {
+      for (var j = 0; j < ALWAYS_READONLY_TABS.length; j++) {
+        if (tab.toLowerCase() === ALWAYS_READONLY_TABS[j].toLowerCase()) return false;
+      }
+      return true;
+    });
+  }
+
+  return jsonOutput_({
+    status: 'ok',
+    user: {
+      name: user.name,
+      role: user.role,
+      teams: user.teams,
+      visibleTabs: visibleTabs,
+      writableTabs: writableTabs
+    }
+  });
+}
+
 // ── CRM cell updates ──────────────────────────────────────────────
-// Writes a single cell value. Requires admin passcode.
-// params: source=crm-update, passcode, sheet (tab name), cell (e.g. "B5"), value
-var CRM_PASSCODE = 'heatwave2026'; // Must match ADMIN_PASSCODE env var
+// Writes a single cell value. Validates user PIN and role permissions.
+// params: source=crm-update, pin, sheet (tab name), cell (e.g. "B5"), value
 function doPostCrmUpdate_(params) {
-  var suppliedPasscode = cleanValue_(params.passcode);
-  if (!suppliedPasscode || suppliedPasscode !== CRM_PASSCODE) {
-    return jsonOutput_({ status: 'error', message: 'Invalid passcode' });
+  var pin = cleanValue_(params.pin);
+  var user = lookupUser_(pin);
+  if (!user) {
+    return jsonOutput_({ status: 'error', message: 'Invalid credentials' });
+  }
+
+  if (!user.canWrite) {
+    return jsonOutput_({ status: 'error', message: 'Your role does not allow editing' });
   }
 
   var sheetName = cleanValue_(params.sheet);
@@ -326,15 +454,13 @@ function doPostCrmUpdate_(params) {
     return jsonOutput_({ status: 'error', message: 'Missing sheet or cell reference' });
   }
 
-  // Validate cell reference format (A1 notation)
   if (!/^[A-Z]{1,3}\d{1,6}$/.test(cellRef)) {
     return jsonOutput_({ status: 'error', message: 'Invalid cell reference: ' + cellRef });
   }
 
-  // Prevent writing to protected tabs
-  var readOnlyTabs = ['Survey Responses', 'Team Stats', 'Team Stats 2026', 'BKP Member Directory', 'Guest Check In'];
-  for (var i = 0; i < readOnlyTabs.length; i++) {
-    if (sheetName.toLowerCase() === readOnlyTabs[i].toLowerCase()) {
+  // Check tab-level write permission
+  for (var i = 0; i < ALWAYS_READONLY_TABS.length; i++) {
+    if (sheetName.toLowerCase() === ALWAYS_READONLY_TABS[i].toLowerCase()) {
       return jsonOutput_({ status: 'error', message: 'This tab is read-only' });
     }
   }
