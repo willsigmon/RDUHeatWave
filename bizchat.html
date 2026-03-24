@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +8,7 @@
 <meta name="description" content="Log your 1-on-1 BizChat meetings for RDU Heatwave.">
 <link rel="canonical" href="https://rduheatwave.team/bizchat">
 <link rel="shortcut icon" href="/favicon.ico">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" href="/icons/heatwave-icon-192.png">
 <link rel="apple-touch-icon" href="/icons/heatwave-icon-180.png">
 <link rel="manifest" href="/site.webmanifest">
@@ -19,6 +20,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="RDU Heatwave — Log a BizChat">
 <meta name="twitter:description" content="Log your 1-on-1 BizChat meetings for RDU Heatwave.">
+<meta name="twitter:image" content="https://rduheatwave.team/icons/heatwave-icon-512.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -170,6 +172,7 @@ body {
 </head>
 
 <body>
+<a href="#main-content" class="skip-link">Skip to main content</a>
 <div class="heat-bg" aria-hidden="true">
   <div class="heat-line"></div>
   <div class="heat-line"></div>
@@ -180,6 +183,7 @@ body {
 <div class="heat-orb" aria-hidden="true"></div>
 <noscript><div class="noscript-banner">JavaScript is required to use this page.</div></noscript>
 
+<main id="main-content">
 <div class="form-shell gradient-border">
   <div class="form-header">
     <h1 class="heat-text">LOG A BIZCHAT</h1>
@@ -212,6 +216,7 @@ body {
 
 
 </div>
+</main>
 
 <script>
 (function() {
@@ -346,5 +351,6 @@ body {
   <a href="/remind">REMIND</a>
   <a href="/crm" class="dim">CRM</a>
 </nav>
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
 </body>
 </html>

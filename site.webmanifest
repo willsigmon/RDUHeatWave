@@ -3,8 +3,10 @@
   "short_name": "Heatwave",
   "description": "RDU Heatwave guest registration, meeting lobby, and printable agenda.",
   "start_url": "/",
+  "id": "/",
   "scope": "/",
   "display": "standalone",
+  "orientation": "any",
   "background_color": "#1a1412",
   "theme_color": "#E8580C",
   "categories": ["business", "networking"],
@@ -35,6 +37,34 @@
       "short_name": "Check In",
       "description": "Register or check in for the meeting",
       "url": "/",
+      "icons": [{ "src": "/icons/heatwave-icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "BizChat",
+      "short_name": "BizChat",
+      "description": "Schedule a one-on-one BizChat with a member",
+      "url": "/bizchat.html",
+      "icons": [{ "src": "/icons/heatwave-icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Survey",
+      "short_name": "Survey",
+      "description": "Submit weekly meeting feedback",
+      "url": "/survey.html",
+      "icons": [{ "src": "/icons/heatwave-icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "About",
+      "short_name": "About",
+      "description": "Learn about RDU Heatwave and 212 Referral Network",
+      "url": "/about.html",
+      "icons": [{ "src": "/icons/heatwave-icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Timer",
+      "short_name": "Timer",
+      "description": "Meeting presentation timer",
+      "url": "/timer.html",
       "icons": [{ "src": "/icons/heatwave-icon-192.png", "sizes": "192x192" }]
     }
   ]

@@ -8,6 +8,7 @@
 <meta name="description" content="Set a reminder for the next RDU Heatwave meeting.">
 <title>RDU Heatwave — BizChat Reminder</title>
 <link rel="shortcut icon" href="/favicon.ico">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" href="/icons/heatwave-icon-192.png">
 <link rel="apple-touch-icon" href="/icons/heatwave-icon-180.png">
 <link rel="manifest" href="/site.webmanifest">
@@ -565,5 +566,6 @@ select:focus, input[type="time"]:focus, input[type="date"]:focus {
 
 })();
 </script>
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
 </body>
 </html>

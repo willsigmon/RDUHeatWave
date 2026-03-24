@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#E8580C">
+<meta name="robots" content="noindex, nofollow">
+<title>404 — RDU Heatwave</title>
+<meta name="description" content="Page not found. Return to RDU Heatwave.">
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" href="/icons/heatwave-icon-192.png">
+<link rel="apple-touch-icon" href="/icons/heatwave-icon-180.png">
+<link rel="manifest" href="/site.webmanifest">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared.css">
+
+<style>
+body {
+  min-height: 100dvh;
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-container {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: var(--space-8);
+  max-width: 480px;
+  width: 100%;
+}
+
+.error-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-12) var(--space-8);
+  box-shadow: var(--shadow-lg);
+}
+
+.error-code {
+  font-family: var(--font-display);
+  font-size: clamp(6rem, 20vw, 12rem);
+  line-height: 0.9;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-2);
+  color: var(--color-primary);
+}
+
+.error-title {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  letter-spacing: 0.08em;
+  margin-bottom: var(--space-4);
+}
+
+.error-message {
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  margin-bottom: var(--space-10);
+}
+
+.home-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-8);
+  background: var(--gradient-fire);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  letter-spacing: 0.12em;
+  border-radius: var(--radius-xl);
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 24px rgba(232, 88, 12, 0.3);
+}
+
+.home-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(232, 88, 12, 0.45);
+}
+
+.home-btn:active {
+  transform: translateY(0);
+}
+
+/* Smoke wisps rising from the 404 */
+.smoke {
+  position: absolute;
+  width: 2px;
+  background: linear-gradient(to top, rgba(168, 149, 133, 0.3), transparent);
+  border-radius: 50%;
+  animation: smoke-rise linear infinite;
+  opacity: 0;
+}
+
+@keyframes smoke-rise {
+  0%   { transform: translateY(0) scaleX(1) rotate(0deg); opacity: 0; }
+  15%  { opacity: 0.4; }
+  50%  { transform: translateY(-60px) scaleX(2.5) rotate(8deg); opacity: 0.2; }
+  100% { transform: translateY(-120px) scaleX(4) rotate(-5deg); opacity: 0; }
+}
+
+.smoke:nth-child(1) { left: 25%; height: 40px; animation-duration: 3.5s; animation-delay: 0s; }
+.smoke:nth-child(2) { left: 45%; height: 50px; animation-duration: 4s; animation-delay: 0.8s; }
+.smoke:nth-child(3) { left: 65%; height: 35px; animation-duration: 3s; animation-delay: 1.6s; }
+.smoke:nth-child(4) { left: 55%; height: 45px; animation-duration: 4.5s; animation-delay: 2.4s; }
+
+.smoke-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  overflow: visible;
+  pointer-events: none;
+}
+</style>
+
+</head>
+<body>
+
+<!-- Heat background -->
+<div class="heat-bg" aria-hidden="true">
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+</div>
+
+<div class="error-container">
+  <div class="error-card gradient-border">
+
+    <div class="error-code thermal-scan" style="position: relative;">
+      404
+      <div class="smoke-wrapper">
+        <div class="smoke"></div>
+        <div class="smoke"></div>
+        <div class="smoke"></div>
+        <div class="smoke"></div>
+      </div>
+    </div>
+
+    <h1 class="error-title heat-text">RDU HEATWAVE</h1>
+
+    <p class="error-message">
+      This page went up in smoke.<br>
+      Nothing here but ashes and warm air.
+    </p>
+
+    <a href="/" class="home-btn fire-btn">
+      BACK TO HOME
+      <span class="ember-wrap" aria-hidden="true">
+        <span class="ember"></span>
+        <span class="ember"></span>
+        <span class="ember"></span>
+        <span class="ember"></span>
+        <span class="ember"></span>
+        <span class="ember"></span>
+      </span>
+    </a>
+
+  </div>
+</div>
+
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
+</body>
+</html>

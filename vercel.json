@@ -61,6 +61,7 @@
     { "src": "/(.*\\.xml)", "dest": "/$1" },
     { "src": "/(.*\\.webmanifest)", "dest": "/$1" },
     { "src": "/shared-form\\.js", "dest": "/shared-form.js" },
+    { "src": "/404", "dest": "/404.html" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 }

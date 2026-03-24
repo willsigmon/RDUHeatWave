@@ -7,6 +7,7 @@
 <title>RDU Heatwave — Kiosk Check-In</title>
 <meta name="description" content="RDU Heatwave kiosk check-in. Thursdays at 4:00 PM ET at Clouds Brewing.">
 <link rel="shortcut icon" href="/favicon.ico">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" href="/icons/heatwave-icon-192.png">
 <link rel="apple-touch-icon" href="/icons/heatwave-icon-180.png">
 
@@ -865,6 +866,7 @@ body {
 </style>
 </head>
 <body>
+<a href="#checkin-form" class="skip-link">Skip to check-in form</a>
 <noscript><div class="noscript-banner">JavaScript is required to use this page.</div></noscript>
 
 <!-- SVG Filters (hidden) -->
@@ -914,6 +916,7 @@ body {
 </div>
 
 <!-- === KIOSK LAYOUT === -->
+<main id="main-content">
 <div class="kiosk-layout">
 
   <!-- LEFT COLUMN: Branding & Info -->
@@ -1053,11 +1056,11 @@ body {
         </div>
 
         <div class="field">
-          <label class="field-label">Guest Of</label>
+          <label class="field-label" for="guestOfSearch">Guest Of</label>
           <div class="guest-picker" id="guestOf-picker">
             <div class="guest-quick-picks" id="guestOf-quick" role="group" aria-label="Quick host picks"></div>
             <input class="field-input guest-search-input" type="text" id="guestOfSearch" style="display:none" maxlength="120" autocomplete="off">
-            <div class="guest-results" id="guestOf-results" role="listbox" style="display:none"></div>
+            <div class="guest-results" id="guestOf-results" role="listbox" aria-label="Guest suggestions" style="display:none"></div>
           </div>
           <input type="hidden" id="guestOf" name="guestOf">
           <div class="field-error" id="guestOf-error">Please let us know who invited you</div>
@@ -1102,6 +1105,7 @@ body {
   </div>
 
 </div>
+</main>
 
 <script>
 (function() {
@@ -1293,5 +1297,6 @@ body {
   });
 })();
 </script>
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
 </body>
 </html>

@@ -8,6 +8,7 @@
 <meta name="description" content="RDU Heatwave meeting lobby. Thursdays at 4:00 PM ET at Clouds Brewing.">
 <link rel="canonical" href="https://rduheatwave.team/meet">
 <link rel="shortcut icon" href="/favicon.ico">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" href="/icons/heatwave-icon-192.png">
 <link rel="apple-touch-icon" href="/icons/heatwave-icon-180.png">
 <link rel="manifest" href="/site.webmanifest">
@@ -1376,8 +1377,41 @@ body.phase-over .ticker-wrap { display: none !important; }
   transform: translateY(0);
 }
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Event",
+  "name": "RDU Heatwave Weekly Meeting",
+  "description": "Weekly networking meeting for RDU Heatwave, a 212 Referral Network team.",
+  "url": "https://rduheatwave.team/meet",
+  "location": {
+    "@type": "Place",
+    "name": "Clouds Brewing",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "1233 Front St",
+      "addressLocality": "Raleigh",
+      "addressRegion": "NC",
+      "postalCode": "27609"
+    }
+  },
+  "organizer": {
+    "@type": "Organization",
+    "name": "RDU Heatwave",
+    "url": "https://rduheatwave.team"
+  },
+  "eventSchedule": {
+    "@type": "Schedule",
+    "repeatFrequency": "P1W",
+    "byDay": "https://schema.org/Wednesday",
+    "startTime": "11:30"
+  },
+  "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode"
+}
+</script>
 </head>
 <body>
+<a href="#main-content" class="skip-link">Skip to main content</a>
 <noscript><div class="noscript-banner">JavaScript is required to use this page.</div></noscript>
 <!-- Kiosk Initialization Overlay (Bypasses Autoplay Policy) -->
 
@@ -1421,7 +1455,8 @@ body.phase-over .ticker-wrap { display: none !important; }
 <div id="embers-container"></div>
 
 <!-- BIG HEADER -->
-<div class="header">
+<main id="main-content">
+<header class="header">
   <div class="header-left" style="gap: 1.25rem;">
     <div class="header-logo" style="display:flex; align-items:center; gap: 1rem;">
       <img src="heatwave-logo.png" alt="RDU Heatwave" style="filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));">
@@ -1440,34 +1475,34 @@ body.phase-over .ticker-wrap { display: none !important; }
     <div class="header-date" id="top-date"></div>
     <div class="header-time" id="top-time"></div>
   </div>
-</div>
+</header>
 
 <!-- Stats Ticker (populated from STATS_ vars in script) -->
 <div class="ticker-wrap">
   <div class="ticker-content" id="ticker-content">
-    <span class="ticker-stat" id="ticker-bizchats-1">&#x1F4AC; 159 BIZCHATS</span>
+    <span class="ticker-stat" id="ticker-bizchats-1"><span class="hw-icon hw-icon--inline hw-icon--chat" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" fill="rgba(232,88,12,0.2)"/></svg></span> 159 BIZCHATS</span>
     <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat" id="ticker-guests-1">&#x1F91D; 114 GUESTS HOSTED</span>
+    <span class="ticker-stat" id="ticker-guests-1"><span class="hw-icon hw-icon--inline hw-icon--handshake" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 17l-3.5-3.5M6.5 12L2 17"/><path d="M2 7l4.5 4.5"/><path d="M22 7l-4.5 4.5"/><path d="M10.5 12.5l-2 2a1.4 1.4 0 0 0 2 2l3.5-3.5"/><path d="M13.5 9.5l2-2a1.4 1.4 0 0 0-2-2L10 9"/><path d="M7 4l3 3"/><path d="M14 4l3 3"/></svg></span> 114 GUESTS HOSTED</span>
     <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat" id="ticker-revenue-1">&#x1F4B0; $106,143 REVENUE GENERATED</span>
+    <span class="ticker-stat" id="ticker-revenue-1"><span class="hw-icon hw-icon--inline hw-icon--money" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" fill="none"/></svg></span> $106,143 REVENUE GENERATED</span>
     <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat" id="ticker-referrals-1">&#x1F4E8; 44 REFERRALS PASSED</span>
+    <span class="ticker-stat" id="ticker-referrals-1"><span class="hw-icon hw-icon--inline hw-icon--envelope" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" fill="rgba(232,88,12,0.2)"/><polyline points="22,6 12,13 2,6"/></svg></span> 44 REFERRALS PASSED</span>
     <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat" id="ticker-incentives-1">&#x1F31F; 27 GRATITUDE INCENTIVES RECEIVED</span>
+    <span class="ticker-stat" id="ticker-incentives-1"><span class="hw-icon hw-icon--inline hw-icon--star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="rgba(232,88,12,0.2)"/></svg></span> 27 GRATITUDE INCENTIVES RECEIVED</span>
     <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat">&#x1F525; ROLLING 12-MONTH STATS &mdash; RDU HEATWAVE</span>
+    <span class="ticker-stat"><span class="hw-icon hw-icon--inline hw-icon--flame" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c.5 3.5-1 6-3 8 2 0 4 1 4.5 3.5C14.5 16 16 18 18 18c-3 2-7 2-9-.5C7 14 8 10 12 2z" fill="rgba(232,88,12,0.2)"/></svg></span> ROLLING 12-MONTH STATS &mdash; RDU HEATWAVE</span>
     <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat" id="ticker-bizchats-2">&#x1F4AC; 159 BIZCHATS</span>
+    <span class="ticker-stat" id="ticker-bizchats-2"><span class="hw-icon hw-icon--inline hw-icon--chat" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" fill="rgba(232,88,12,0.2)"/></svg></span> 159 BIZCHATS</span>
     <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat" id="ticker-guests-2">&#x1F91D; 114 GUESTS HOSTED</span>
+    <span class="ticker-stat" id="ticker-guests-2"><span class="hw-icon hw-icon--inline hw-icon--handshake" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 17l-3.5-3.5M6.5 12L2 17"/><path d="M2 7l4.5 4.5"/><path d="M22 7l-4.5 4.5"/><path d="M10.5 12.5l-2 2a1.4 1.4 0 0 0 2 2l3.5-3.5"/><path d="M13.5 9.5l2-2a1.4 1.4 0 0 0-2-2L10 9"/><path d="M7 4l3 3"/><path d="M14 4l3 3"/></svg></span> 114 GUESTS HOSTED</span>
     <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat" id="ticker-revenue-2">&#x1F4B0; $106,143 REVENUE GENERATED</span>
+    <span class="ticker-stat" id="ticker-revenue-2"><span class="hw-icon hw-icon--inline hw-icon--money" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" fill="none"/></svg></span> $106,143 REVENUE GENERATED</span>
     <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat" id="ticker-referrals-2">&#x1F4E8; 44 REFERRALS PASSED</span>
+    <span class="ticker-stat" id="ticker-referrals-2"><span class="hw-icon hw-icon--inline hw-icon--envelope" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" fill="rgba(232,88,12,0.2)"/><polyline points="22,6 12,13 2,6"/></svg></span> 44 REFERRALS PASSED</span>
     <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat" id="ticker-incentives-2">&#x1F31F; 27 GRATITUDE INCENTIVES RECEIVED</span>
+    <span class="ticker-stat" id="ticker-incentives-2"><span class="hw-icon hw-icon--inline hw-icon--star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="rgba(232,88,12,0.2)"/></svg></span> 27 GRATITUDE INCENTIVES RECEIVED</span>
     <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat">&#x1F525; ROLLING 12-MONTH STATS &mdash; RDU HEATWAVE</span>
+    <span class="ticker-stat"><span class="hw-icon hw-icon--inline hw-icon--flame" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c.5 3.5-1 6-3 8 2 0 4 1 4.5 3.5C14.5 16 16 18 18 18c-3 2-7 2-9-.5C7 14 8 10 12 2z" fill="rgba(232,88,12,0.2)"/></svg></span> ROLLING 12-MONTH STATS &mdash; RDU HEATWAVE</span>
   </div>
 </div>
 
@@ -1599,7 +1634,11 @@ body.phase-over .ticker-wrap { display: none !important; }
 
     <!-- Horn blast display -->
     <div class="horn-display" id="horn-display">
-      <div class="horn-siren" aria-hidden="true">&#x1F4E2;</div>
+      <div class="horn-siren" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" fill="rgba(232,88,12,0.2)"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+      </div>
       <div class="horn-text" id="horn-text">LET&rsquo;S GO!</div>
       <div class="horn-joke" id="horn-joke">We&rsquo;re about to boil over.</div>
     </div>
@@ -1622,6 +1661,7 @@ body.phase-over .ticker-wrap { display: none !important; }
   </div>
 
 </div>
+</main>
 
 <!-- FULL SCREEN TAKEOVER (horn phase) -->
 <div class="takeover" id="takeover" aria-hidden="true">
@@ -2506,11 +2546,22 @@ body.phase-over .ticker-wrap { display: none !important; }
     return '$' + Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 
+  /* SVG icon markup for ticker stats */
+  var TICKER_ICONS = {
+    bizchats: '<span class="hw-icon hw-icon--inline hw-icon--chat" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" fill="rgba(232,88,12,0.2)"/></svg></span>',
+    guests: '<span class="hw-icon hw-icon--inline hw-icon--handshake" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 17l-3.5-3.5M6.5 12L2 17"/><path d="M2 7l4.5 4.5"/><path d="M22 7l-4.5 4.5"/><path d="M10.5 12.5l-2 2a1.4 1.4 0 0 0 2 2l3.5-3.5"/><path d="M13.5 9.5l2-2a1.4 1.4 0 0 0-2-2L10 9"/><path d="M7 4l3 3"/><path d="M14 4l3 3"/></svg></span>',
+    revenue: '<span class="hw-icon hw-icon--inline hw-icon--money" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" fill="none"/></svg></span>',
+    referrals: '<span class="hw-icon hw-icon--inline hw-icon--envelope" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" fill="rgba(232,88,12,0.2)"/><polyline points="22,6 12,13 2,6"/></svg></span>',
+    incentives: '<span class="hw-icon hw-icon--inline hw-icon--star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="rgba(232,88,12,0.2)"/></svg></span>'
+  };
+
   function updateTickerPair(key, text) {
     var el1 = document.getElementById('ticker-' + key + '-1');
     var el2 = document.getElementById('ticker-' + key + '-2');
-    if (el1) el1.textContent = text;
-    if (el2) el2.textContent = text;
+    var icon = TICKER_ICONS[key] || '';
+    var html = icon + ' ' + text;
+    if (el1) el1.innerHTML = html;
+    if (el2) el2.innerHTML = html;
   }
 
   function fetchLiveStats() {
@@ -2519,11 +2570,11 @@ body.phase-over .ticker-wrap { display: none !important; }
       .then(function(data) {
         var s = (data && data.stats) ? data.stats : null;
         if (!s) return;
-        if (s.bizChats       != null) updateTickerPair('bizchats',   '\uD83D\uDCAC ' + s.bizChats + ' BIZCHATS');
-        if (s.guestsHosted   != null) updateTickerPair('guests',     '\uD83E\uDD1D ' + s.guestsHosted + ' GUESTS HOSTED');
-        if (s.revenue        != null) updateTickerPair('revenue',    '\uD83D\uDCB0 ' + formatRevenue(s.revenue) + ' REVENUE GENERATED');
-        if (s.referrals      != null) updateTickerPair('referrals',  '\uD83D\uDCE8 ' + s.referrals + ' REFERRALS PASSED');
-        if (s.guestIncentives != null) updateTickerPair('incentives','\uD83C\uDF1F ' + s.guestIncentives + ' GRATITUDE INCENTIVES RECEIVED');
+        if (s.bizChats       != null) updateTickerPair('bizchats',   s.bizChats + ' BIZCHATS');
+        if (s.guestsHosted   != null) updateTickerPair('guests',     s.guestsHosted + ' GUESTS HOSTED');
+        if (s.revenue        != null) updateTickerPair('revenue',    formatRevenue(s.revenue) + ' REVENUE GENERATED');
+        if (s.referrals      != null) updateTickerPair('referrals',  s.referrals + ' REFERRALS PASSED');
+        if (s.guestIncentives != null) updateTickerPair('incentives', s.guestIncentives + ' GRATITUDE INCENTIVES RECEIVED');
       })
       .catch(function() { /* keep hardcoded fallback values */ });
   }

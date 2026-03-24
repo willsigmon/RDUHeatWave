@@ -8,6 +8,7 @@
 <meta name="description" content="A branded 30-second countdown timer for RDU Heatwave.">
 <link rel="canonical" href="https://rduheatwave.team/timer">
 <link rel="shortcut icon" href="/favicon.ico">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" href="/icons/heatwave-icon-192.png">
 <link rel="apple-touch-icon" href="/icons/heatwave-icon-180.png">
 <link rel="manifest" href="/site.webmanifest">
@@ -27,14 +28,8 @@
 <link rel="stylesheet" href="/shared.css">
 
 <style>
+/* Timer-specific overrides (shared.css provides the rest) */
 :root {
-  --color-surface-2: #2c2420;
-  --color-text: #f0e6dc;
-  --color-text-muted: #a89585;
-  --color-text-faint: #6b5c4e;
-  --color-primary: #E8580C;
-  --color-primary-hover: #FF6A1E;
-  --color-success: #5BA847;
   --color-border: rgba(232, 88, 12, 0.22);
   --gradient-fire: linear-gradient(135deg, #E8580C 0%, #FF6A1E 55%, #FF9B40 100%);
   --shadow-glow: 0 0 80px rgba(232, 88, 12, 0.15), 0 0 160px rgba(232, 88, 12, 0.08);
@@ -398,5 +393,6 @@ h1 {
   startTimer();
 })();
 </script>
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
 </body>
 </html>

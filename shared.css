@@ -90,6 +90,27 @@ button { cursor: pointer; background: none; border: none; }
   border-radius: var(--radius-sm);
 }
 
+/* ── Skip-to-content link ────────────────────────────────────────── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  padding: 0.75rem 1.5rem;
+  background: var(--color-primary);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition: top 0.2s;
+}
+.skip-link:focus {
+  top: 1rem;
+}
+
 /* ── Noscript banner ──────────────────────────────────────────────── */
 .noscript-banner {
   position: fixed;
@@ -308,6 +329,54 @@ button { cursor: pointer; background: none; border: none; }
 
 .hw-icon--bolt svg {
   filter: drop-shadow(0 0 4px rgba(232, 88, 12, 0.5));
+}
+
+.hw-icon--chat svg {
+  transition: transform 0.3s ease;
+}
+
+.hw-icon--chat:hover svg {
+  transform: scale(1.1);
+}
+
+.hw-icon--star svg {
+  animation: star-glow 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 3px rgba(232, 88, 12, 0.4));
+}
+
+.hw-icon--money svg {
+  filter: drop-shadow(0 0 3px rgba(232, 88, 12, 0.4));
+}
+
+.hw-icon--envelope svg {
+  transition: transform 0.3s ease;
+}
+
+.hw-icon--megaphone svg {
+  filter: drop-shadow(0 0 4px rgba(232, 88, 12, 0.5));
+}
+
+/* Inline ticker icon variant — smaller, no ring pulse */
+.hw-icon--inline {
+  width: 1.1em;
+  height: 1.1em;
+  display: inline-flex;
+  vertical-align: middle;
+  margin-right: 0.15em;
+}
+
+.hw-icon--inline::before {
+  display: none;
+}
+
+.hw-icon--inline svg {
+  width: 1em;
+  height: 1em;
+}
+
+@keyframes star-glow {
+  0%, 100% { filter: drop-shadow(0 0 3px rgba(232, 88, 12, 0.4)); }
+  50% { filter: drop-shadow(0 0 8px rgba(232, 88, 12, 0.7)); }
 }
 
 /* ── Gradient Border Wrapper ── */

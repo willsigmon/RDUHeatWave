@@ -1,13 +1,29 @@
-const CACHE_NAME = 'heatwave-v2';
+const CACHE_NAME = 'heatwave-v3';
 
 const PRECACHE_URLS = [
   '/',
+  '/index.html',
+  '/meet.html',
+  '/about.html',
+  '/bizchat.html',
+  '/kiosk.html',
+  '/timer.html',
+  '/survey.html',
+  '/survey-results.html',
+  '/remind.html',
+  '/agenda.html',
+  '/admin.html',
+  '/crm.html',
+  '/report.html',
+  '/404.html',
   '/shared.css',
+  '/shared-form.js',
+  '/favicon.svg',
+  '/favicon.ico',
   '/icons/heatwave-icon-192.png',
   '/icons/heatwave-icon-512.png',
   '/icons/heatwave-icon-180.png',
   '/site.webmanifest',
-  '/favicon.ico',
 ];
 
 const STATIC_EXTENSIONS = /\.(css|js|png|jpg|jpeg|svg|gif|webp|ico|woff|woff2|ttf|otf)(\?.*)?$/i;
