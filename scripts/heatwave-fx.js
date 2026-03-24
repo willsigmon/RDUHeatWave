@@ -30,24 +30,21 @@ var HeatFX = (function() {
   document.addEventListener('click', unlockAudio, { once: true });
 
   /* ── Haptics ── */
+  function vib(pattern) { if (canVibrate) { try { navigator.vibrate(pattern); } catch(e) {} } }
   var haptics = {
-    tap: function()    { if (canVibrate) navigator.vibrate(8); },
-    light: function()  { if (canVibrate) navigator.vibrate(4); },
-    medium: function() { if (canVibrate) navigator.vibrate(18); },
-    heavy: function()  { if (canVibrate) navigator.vibrate(40); },
-    double: function() { if (canVibrate) navigator.vibrate([12, 40, 12]); },
-    success: function(){ if (canVibrate) navigator.vibrate([8, 30, 8, 30, 15]); },
-    swipe: function()  { if (canVibrate) navigator.vibrate(6); },
-    rumble: function(ms) { if (canVibrate) navigator.vibrate(ms || 60); },
-    pattern: function(arr) { if (canVibrate) navigator.vibrate(arr); },
+    tap: function()    { vib(8); },
+    light: function()  { vib(4); },
+    medium: function() { vib(18); },
+    heavy: function()  { vib(40); },
+    double: function() { vib([12, 40, 12]); },
+    success: function(){ vib([8, 30, 8, 30, 15]); },
+    swipe: function()  { vib(6); },
+    rumble: function(ms) { vib(ms || 60); },
+    pattern: function(arr) { vib(arr); },
     /* Steam blast: heavy escalating rumble */
-    steamBlast: function() {
-      if (canVibrate) navigator.vibrate([30, 20, 50, 15, 80, 10, 120, 8, 160]);
-    },
+    steamBlast: function() { vib([30, 20, 50, 15, 80, 10, 120, 8, 160]); },
     /* Pour: continuous gentle throb */
-    pourPulse: function() {
-      if (canVibrate) navigator.vibrate([6, 80, 4, 120, 6, 80, 4, 120, 6, 80]);
-    }
+    pourPulse: function() { vib([6, 80, 4, 120, 6, 80, 4, 120, 6, 80]); }
   };
 
   /* ── Sound synthesis ── */
@@ -111,16 +108,17 @@ var HeatFX = (function() {
     stopPour: function() {
       var ctx = getAudioCtx();
       if (!ctx || !sounds.pourLoop) return;
-      sounds.pourGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.4);
       var src = sounds.pourLoop;
       var lfo = sounds._pourLfo;
+      var gain = sounds.pourGain;
+      sounds.pourLoop = null;
+      sounds.pourGain = null;
+      sounds._pourLfo = null;
+      gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.4);
       setTimeout(function() {
         try { src.stop(); } catch(e) {}
         try { lfo.stop(); } catch(e) {}
       }, 500);
-      sounds.pourLoop = null;
-      sounds.pourGain = null;
-      sounds._pourLfo = null;
     },
 
     /* Steam hiss — white noise burst with high-pass, like a bus kneeling */

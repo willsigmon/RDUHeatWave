@@ -1790,7 +1790,7 @@ button { cursor: pointer; background: none; border: none; }
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 200;
+  z-index: 210;
 }
 
 /* === MOBILE === */
@@ -3671,13 +3671,7 @@ button { cursor: pointer; background: none; border: none; }
     });
   }
 
-  /* Touch swipe haptics (augment existing touchend) */
-  var slider = document.getElementById('slider');
-  if (slider) {
-    slider.addEventListener('touchend', function() {
-      H.swipe();
-    }, { passive: true });
-  }
+  /* Swipe haptic already fires in goToPanel() — no duplicate listener needed */
 })();
 </script>
 

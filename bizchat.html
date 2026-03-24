@@ -311,7 +311,8 @@ body {
     }
 
     submitBtn.disabled = true;
-    submitBtn.textContent = 'LOGGING...';
+    var btnText = submitBtn.firstChild;
+    btnText.textContent = 'LOGGING...';
     setStatus('', '');
 
     fetch(FORM_ENDPOINT, {
@@ -333,7 +334,7 @@ body {
     })
     .finally(function() {
       submitBtn.disabled = false;
-      submitBtn.textContent = 'LOG BIZCHAT';
+      submitBtn.firstChild.textContent = 'LOG BIZCHAT';
     });
   });
 })();

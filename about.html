@@ -576,16 +576,17 @@ section:nth-child(odd) { position: relative; }
         return a.name.localeCompare(b.name);
       });
 
+      function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
       grid.innerHTML = members.map(function (m) {
         var cls = 'member-card' + (m.leader ? ' is-leader' : '');
-        var companyHtml = m.company;
+        var companyHtml = esc(m.company);
         if (m.website) {
-          companyHtml = '<a href="' + m.website + '" target="_blank" rel="noopener noreferrer">' + m.company + '</a>';
+          companyHtml = '<a href="' + esc(m.website) + '" target="_blank" rel="noopener noreferrer">' + esc(m.company) + '</a>';
         }
         return (
           '<div class="' + cls + '">' +
-            '<div class="member-name">' + m.name + '</div>' +
-            '<div class="member-title">' + m.title + '</div>' +
+            '<div class="member-name">' + esc(m.name) + '</div>' +
+            '<div class="member-title">' + esc(m.title) + '</div>' +
             '<div class="member-company">' + companyHtml + '</div>' +
           '</div>'
         );

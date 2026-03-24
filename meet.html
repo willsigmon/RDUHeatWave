@@ -1090,14 +1090,7 @@ body.phase-horn .edge-glow.horn-mode {
   100% { opacity: 1; }
 }
 
-/* Horn text (old, keep for fallback) */
-.horn-text {
-  font-family: var(--font-display);
-  font-size: clamp(4.5rem, 9vw, 7.5rem);
-  letter-spacing: 0.15em;
-  color: #fff;
-  text-shadow: 0 0 80px #E8580C, 0 0 160px #FF3300, 0 0 300px #D94444;
-}
+/* Horn text duplicate removed — primary definition is above (~line 592) */
 
 /* === LIVE PHASE — COOL AMBIENT BACKGROUND === */
 body.phase-live .lobby {
@@ -1403,8 +1396,8 @@ body.phase-over .ticker-wrap { display: none !important; }
   "eventSchedule": {
     "@type": "Schedule",
     "repeatFrequency": "P1W",
-    "byDay": "https://schema.org/Wednesday",
-    "startTime": "11:30"
+    "byDay": "https://schema.org/Thursday",
+    "startTime": "16:00"
   },
   "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode"
 }

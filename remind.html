@@ -403,7 +403,7 @@ select:focus, input[type="time"]:focus, input[type="date"]:focus {
     if (!date)    { setFeedback('Pick a date.', 'err'); return; }
 
     $qlSubmit.disabled = true;
-    $qlSubmit.textContent = 'Logging\u2026';
+    $qlSubmit.firstChild.textContent = 'Logging\u2026';
 
     fetch('/api/bizchat', {
       method: 'POST',
@@ -423,7 +423,7 @@ select:focus, input[type="time"]:focus, input[type="date"]:focus {
       setFeedback('Network error. Try again.', 'err');
     }).finally(function () {
       $qlSubmit.disabled = false;
-      $qlSubmit.textContent = 'Log BizChat';
+      $qlSubmit.firstChild.textContent = 'Log BizChat';
     });
   });
 
