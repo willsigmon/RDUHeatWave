@@ -1,4 +1,4 @@
-const CACHE_NAME = 'heatwave-v3';
+const CACHE_NAME = 'heatwave-v4';
 
 const PRECACHE_URLS = [
   '/',
@@ -24,6 +24,7 @@ const PRECACHE_URLS = [
   '/icons/heatwave-icon-512.png',
   '/icons/heatwave-icon-180.png',
   '/site.webmanifest',
+  '/scripts/heatwave-fx.js',
 ];
 
 const STATIC_EXTENSIONS = /\.(css|js|png|jpg|jpeg|svg|gif|webp|ico|woff|woff2|ttf|otf)(\?.*)?$/i;
