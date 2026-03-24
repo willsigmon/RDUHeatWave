@@ -47,9 +47,11 @@ body {
   width: 300%;
   min-height: 100dvh;
   height: 100dvh;
-  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   transform: translate3d(-33.333333%, 0, 0); /* Start on center panel (form) */
   will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .panel {
@@ -104,7 +106,12 @@ body {
   cursor: pointer;
   box-shadow: 0 14px 36px rgba(0, 0, 0, 0.34);
   transform: translateY(-50%);
-  transition: opacity 0.2s ease, transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.3s ease,
+              background 0.3s ease;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 .panel-arrow:hover:not(:disabled) {
@@ -136,13 +143,17 @@ body.drawer-open .panel-arrow {
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
-  transition: all 0.25s ease;
+  transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .nav-dot.active {
   background: var(--color-primary);
-  box-shadow: 0 0 8px rgba(232, 88, 12, 0.6);
-  transform: scale(1.2);
+  box-shadow: 0 0 10px rgba(232, 88, 12, 0.5), 0 0 20px rgba(232, 88, 12, 0.2);
+  transform: scale(1.25);
 }
 
 .nav-dot:focus-visible {
@@ -439,6 +450,60 @@ body.drawer-open .panel-arrow {
   70% { transform: translateX(0) scale(0.98); }
 }
 
+/* === BEER POUR CANVAS (behind menu card) === */
+.beer-pour-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.beer-pour-bg canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Menu card above pour */
+.menu-card {
+  position: relative;
+  z-index: 1;
+}
+
+/* Steam blast overlay */
+.steam-blast-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  pointer-events: none;
+}
+
+/* === TEAM CARD ANIMATIONS === */
+.team-member {
+  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+.team-member:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(232, 88, 12, 0.15);
+  border-left-color: var(--color-primary) !important;
+}
+
+.team-member.leader:hover {
+  box-shadow: 0 8px 28px rgba(232, 88, 12, 0.25);
+}
+
+/* Staggered entrance */
+@keyframes team-card-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.team-member.animate-in {
+  animation: team-card-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 /* === BEER MENU STYLES === */
 .menu-card {
   width: 100%;
@@ -573,7 +638,7 @@ body.drawer-open .panel-arrow {
   font-size: 0.84rem;
   color: rgba(255,255,255,0.8);
   border-bottom: 1px solid rgba(255,255,255,0.04);
-  transition: transform 0.16s ease, background 0.16s ease;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background 0.25s ease;
 }
 
 .beer-item:hover {
@@ -750,7 +815,7 @@ button { cursor: pointer; background: none; border: none; }
   background: radial-gradient(circle, rgba(232, 88, 12, 0.08) 0%, rgba(232, 88, 12, 0.02) 50%, transparent 70%);
   pointer-events: none;
   z-index: 0;
-  animation: orb-pulse 6s ease-in-out infinite;
+  animation: orb-pulse 10s ease-in-out infinite;
 }
 
 /* === FORM CARD === */
@@ -1078,7 +1143,7 @@ button { cursor: pointer; background: none; border: none; }
   font-family: var(--font-body);
   font-size: 0.95rem;
   text-align: left;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease, background 0.2s ease;
+  transition: border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease, transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background 0.25s ease;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1212,7 +1277,7 @@ button { cursor: pointer; background: none; border: none; }
   font-family: var(--font-body);
   font-size: 0.82rem;
   font-weight: 600;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease, background 0.2s ease;
+  transition: border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease, transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background 0.25s ease;
 }
 
 .guest-chip:hover {
@@ -1258,7 +1323,7 @@ button { cursor: pointer; background: none; border: none; }
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease, background 0.2s ease;
+  transition: border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease, transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background 0.25s ease;
 }
 
 .guest-result:hover {
@@ -1308,7 +1373,7 @@ button { cursor: pointer; background: none; border: none; }
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
   box-shadow: 0 4px 16px rgba(232, 88, 12, 0.4);
 }
 
@@ -1342,20 +1407,14 @@ button { cursor: pointer; background: none; border: none; }
 /* === 212 SLIDE-UP DRAWER === */
 .info-drawer {
   position: fixed;
-  right: 1rem;
-  bottom: calc(1rem + env(safe-area-inset-bottom));
-  left: auto;
-  transform: none;
-  width: min(500px, calc(100vw - 2rem));
-  z-index: 140;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(520px, 96vw);
+  z-index: 200;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
   pointer-events: auto;
-}
-
-@media (max-width: 768px) {
-  .info-drawer { display: none; }
 }
 
 .info-drawer-tab {
@@ -1363,26 +1422,39 @@ button { cursor: pointer; background: none; border: none; }
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
-  width: auto;
-  min-width: 224px;
-  max-width: 100%;
-  padding: 0.7rem 1.1rem;
-  background: linear-gradient(180deg, rgba(232, 88, 12, 0.95) 0%, rgba(196, 74, 10, 0.98) 100%);
+  width: 100%;
+  padding: 0.65rem 1.4rem;
+  background: linear-gradient(180deg, rgba(232, 88, 12, 0.96) 0%, rgba(196, 74, 10, 0.98) 100%);
   border: none;
-  border-radius: 999px;
+  border-radius: 0.85rem 0.85rem 0 0;
   color: #fff;
   font-family: var(--font-display);
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   letter-spacing: 0.14em;
   cursor: pointer;
-  transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
-  box-shadow: 0 14px 30px rgba(232, 88, 12, 0.22);
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 -6px 28px rgba(232, 88, 12, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated shimmer across the tab */
+.info-drawer-tab::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+  animation: drawer-shimmer 4s ease-in-out infinite;
+}
+
+@keyframes drawer-shimmer {
+  0%, 70%, 100% { left: -100%; }
+  35% { left: 200%; }
 }
 
 .info-drawer-tab:hover {
   background: rgba(255, 106, 30, 0.98);
-  box-shadow: 0 18px 36px rgba(232, 88, 12, 0.28);
-  transform: translateY(-1px);
+  box-shadow: 0 -8px 36px rgba(232, 88, 12, 0.45);
 }
 
 .info-drawer-tab .chevron {
@@ -1395,27 +1467,27 @@ button { cursor: pointer; background: none; border: none; }
 
 .info-drawer-body {
   width: 100%;
-  margin-top: 0.7rem;
   max-height: 0;
   overflow: hidden;
-  background: rgba(20, 16, 14, 0.98);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(232, 88, 12, 0.24);
-  border-radius: 1.35rem;
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.44);
-  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  padding: 0 1.35rem;
+  background: rgba(16, 13, 11, 0.98);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border-top: 1px solid rgba(232, 88, 12, 0.35);
+  border-left: 1px solid rgba(232, 88, 12, 0.15);
+  border-right: 1px solid rgba(232, 88, 12, 0.15);
+  box-shadow: 0 -16px 60px rgba(232, 88, 12, 0.12), 0 24px 48px rgba(0, 0, 0, 0.5);
+  transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1), padding 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0 1.5rem;
   text-align: center;
 }
 
 .info-drawer.open .info-drawer-body {
   max-height: min(78vh, 720px);
-  padding: 1.35rem 1.35rem 1.45rem;
+  padding: 1.5rem 1.5rem 1.6rem;
   overflow: auto;
 }
 
-/* Thermometer visual */
+/* Thermometer canvas */
 .thermo-wrap {
   display: flex;
   align-items: center;
@@ -1424,205 +1496,17 @@ button { cursor: pointer; background: none; border: none; }
   margin-bottom: 1.2rem;
 }
 
-.thermo {
+.thermo-canvas-wrap {
   position: relative;
-  width: 28px;
-  height: 120px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 2px solid rgba(232, 88, 12, 0.25);
-  overflow: hidden;
+  width: 80px;
+  height: 220px;
+  flex-shrink: 0;
 }
 
-.thermo-fill {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 0%;
-  background: linear-gradient(180deg, #FF6A1E 0%, #E8580C 50%, #C44A0A 100%);
-  border-radius: 0 0 12px 12px;
-  transition: height 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.info-drawer.open .thermo-fill {
+.thermo-canvas-wrap canvas {
+  width: 100%;
   height: 100%;
-}
-
-/* ── Boiling water animation ──────────────────────────────── */
-.thermo-bubbles {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 100%;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.bubble {
-  position: absolute;
-  bottom: -8px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(255,200,150,0.3));
-  opacity: 0;
-  will-change: transform, opacity;
-}
-
-/* Rolling boil — 12 small + 4 large burst bubbles */
-.info-drawer.open .bubble { animation: boil var(--dur, 1.6s) var(--ease, cubic-bezier(0.2, 0.8, 0.3, 1)) var(--delay, 0s) infinite; }
-
-/* Small bubbles: wobble faster/wider relative to size */
-.bubble:nth-child(1)  { left:  8%; width: 5px; height: 5px; --dur: 1.4s; --delay: 0s;    --ease: cubic-bezier(0.25, 0.8, 0.35, 1); }
-.bubble:nth-child(2)  { left: 22%; width: 3px; height: 3px; --dur: 1.1s; --delay: 0.15s; --ease: cubic-bezier(0.3, 0.9, 0.2, 1); }
-.bubble:nth-child(3)  { left: 38%; width: 6px; height: 6px; --dur: 1.7s; --delay: 0.3s;  --ease: cubic-bezier(0.2, 0.7, 0.4, 1); }
-.bubble:nth-child(4)  { left: 52%; width: 4px; height: 4px; --dur: 1.3s; --delay: 0.1s;  --ease: cubic-bezier(0.3, 0.85, 0.25, 1); }
-.bubble:nth-child(5)  { left: 65%; width: 3px; height: 3px; --dur: 1.0s; --delay: 0.5s;  --ease: cubic-bezier(0.35, 0.9, 0.2, 1); }
-.bubble:nth-child(6)  { left: 80%; width: 5px; height: 5px; --dur: 1.5s; --delay: 0.2s;  --ease: cubic-bezier(0.2, 0.8, 0.3, 1); }
-.bubble:nth-child(7)  { left: 15%; width: 2px; height: 2px; --dur: 0.9s; --delay: 0.6s;  --ease: cubic-bezier(0.4, 0.9, 0.15, 1); }
-.bubble:nth-child(8)  { left: 45%; width: 4px; height: 4px; --dur: 1.2s; --delay: 0.35s; --ease: cubic-bezier(0.3, 0.8, 0.3, 1); }
-.bubble:nth-child(9)  { left: 70%; width: 2px; height: 2px; --dur: 1.0s; --delay: 0.7s;  --ease: cubic-bezier(0.4, 0.85, 0.2, 1); }
-.bubble:nth-child(10) { left: 30%; width: 5px; height: 5px; --dur: 1.6s; --delay: 0.45s; --ease: cubic-bezier(0.2, 0.75, 0.35, 1); }
-.bubble:nth-child(11) { left: 88%; width: 3px; height: 3px; --dur: 1.1s; --delay: 0.55s; --ease: cubic-bezier(0.35, 0.9, 0.25, 1); }
-.bubble:nth-child(12) { left: 55%; width: 2px; height: 2px; --dur: 0.8s; --delay: 0.8s;  --ease: cubic-bezier(0.4, 0.9, 0.15, 1); }
-
-/* Large burst bubbles: rise faster, pop at top */
-.bubble:nth-child(13) { left: 18%; width: 9px;  height: 9px;  --dur: 1.05s; --delay: 0.25s; --ease: cubic-bezier(0.15, 0.85, 0.4, 1); animation-name: boil-burst !important; }
-.bubble:nth-child(14) { left: 48%; width: 10px; height: 10px; --dur: 0.95s; --delay: 0.7s;  --ease: cubic-bezier(0.1, 0.9, 0.35, 1);  animation-name: boil-burst !important; }
-.bubble:nth-child(15) { left: 72%; width: 8px;  height: 8px;  --dur: 1.1s;  --delay: 0.1s;  --ease: cubic-bezier(0.2, 0.8, 0.4, 1);   animation-name: boil-burst !important; }
-.bubble:nth-child(16) { left: 35%; width: 9px;  height: 9px;  --dur: 0.9s;  --delay: 0.9s;  --ease: cubic-bezier(0.15, 0.9, 0.3, 1);  animation-name: boil-burst !important; }
-
-/* Small bubble wobble — varied lateral drift through keyframes */
-@keyframes boil {
-  0%   { transform: translate(0, 0) scale(0.3); opacity: 0; }
-  8%   { transform: translate(0, -8px) scale(1); opacity: 0.9; }
-  20%  { transform: translate(4px, -24px) scale(1.05); }
-  35%  { transform: translate(-5px, -42px) scale(1.0); }
-  50%  { transform: translate(6px, -60px) scale(0.9); opacity: 0.7; }
-  65%  { transform: translate(-4px, -78px) scale(0.75); }
-  80%  { transform: translate(5px, -96px) scale(0.5); opacity: 0.4; }
-  100% { transform: translate(-3px, -118px) scale(0.15); opacity: 0; }
-}
-
-/* Large burst bubble — rises quickly then pops (scale to zero) */
-@keyframes boil-burst {
-  0%   { transform: translate(0, 0) scale(0.4); opacity: 0; }
-  10%  { transform: translate(0, -6px) scale(1); opacity: 0.85; }
-  30%  { transform: translate(-6px, -30px) scale(1.1); }
-  55%  { transform: translate(8px, -65px) scale(0.95); opacity: 0.7; }
-  75%  { transform: translate(-5px, -90px) scale(0.6); opacity: 0.4; }
-  88%  { transform: translate(3px, -108px) scale(1.3); opacity: 0.3; }
-  100% { transform: translate(0, -118px) scale(0); opacity: 0; }
-}
-
-/* Steam wisps rising from the top */
-.thermo-steam {
-  position: absolute;
-  top: -20px;
-  left: 0;
-  right: 0;
-  height: 30px;
-  pointer-events: none;
-  overflow: visible;
-}
-
-.steam-wisp {
-  position: absolute;
-  bottom: 0;
-  width: 13px;
-  height: 14px;
-  background: radial-gradient(ellipse, rgba(255,255,255,0.25), transparent 70%);
-  border-radius: 50%;
-  opacity: 0;
-  filter: blur(3px);
-}
-
-.info-drawer.open .steam-wisp { animation: steam-rise var(--sdur, 2s) ease-out var(--sdelay, 0s) infinite; }
-
-/* 6 wisps: varied widths and timing for organic drift */
-.steam-wisp:nth-child(1) { left: 12%; width: 14px; --sdur: 2.4s; --sdelay: 0.2s; }
-.steam-wisp:nth-child(2) { left: 36%; width: 16px; --sdur: 1.9s; --sdelay: 0.6s; }
-.steam-wisp:nth-child(3) { left: 60%; width: 12px; --sdur: 2.6s; --sdelay: 0.05s; }
-.steam-wisp:nth-child(4) { left: 82%; width: 10px; --sdur: 2.1s; --sdelay: 0.9s; }
-.steam-wisp:nth-child(5) { left: 24%; width: 15px; --sdur: 2.8s; --sdelay: 1.3s; }
-.steam-wisp:nth-child(6) { left: 72%; width: 13px; --sdur: 2.2s; --sdelay: 0.45s; }
-
-/* Steam meanders laterally — not straight up */
-@keyframes steam-rise {
-  0%   { transform: translate(0, 0) scaleX(1); opacity: 0; }
-  12%  { opacity: 0.4; transform: translate(-4px, -6px) scaleX(1.2); }
-  30%  { transform: translate(7px, -16px) scaleX(1.6); opacity: 0.3; }
-  55%  { transform: translate(-8px, -28px) scaleX(2.1); opacity: 0.2; }
-  78%  { transform: translate(10px, -38px) scaleX(2.7); opacity: 0.1; }
-  100% { transform: translate(-5px, -52px) scaleX(3.2); opacity: 0; }
-}
-
-/* Surface turbulence shimmer at the top of the fill */
-.thermo-surface {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg,
-    transparent 0%,
-    rgba(255,255,255,0.5) 20%,
-    rgba(255,200,150,0.4) 40%,
-    rgba(255,255,255,0.6) 60%,
-    rgba(255,200,150,0.35) 80%,
-    transparent 100%
-  );
-  opacity: 0;
-  border-radius: 2px;
-  overflow: visible;
-}
-
-/* Second turbulence layer via pseudo-element, offset timing */
-.thermo-surface::after {
-  content: '';
-  position: absolute;
-  top: 2px;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg,
-    transparent 10%,
-    rgba(255,180,100,0.3) 35%,
-    rgba(255,255,255,0.4) 55%,
-    rgba(255,180,100,0.25) 75%,
-    transparent 90%
-  );
-  border-radius: 2px;
-  opacity: 0;
-}
-
-.info-drawer.open .thermo-surface::after {
-  animation: surface-churn-b 0.65s ease-in-out infinite alternate;
-}
-
-.info-drawer.open .thermo-surface {
-  animation: surface-churn 0.7s ease-in-out infinite alternate;
-}
-
-@keyframes surface-churn {
-  0%   { opacity: 0.5; transform: scaleX(0.88) translateX(-3px); }
-  100% { opacity: 0.9; transform: scaleX(1.12) translateX(3px); }
-}
-
-@keyframes surface-churn-b {
-  0%   { opacity: 0.3; transform: scaleX(1.1) translateX(2px); }
-  100% { opacity: 0.65; transform: scaleX(0.85) translateX(-4px); }
-}
-
-/* Glow pulse on thermo-fill when drawer is open */
-.info-drawer.open .thermo-fill {
-  animation: fill-glow 2.8s ease-in-out infinite alternate;
-}
-
-@keyframes fill-glow {
-  0%   { filter: brightness(1); }
-  50%  { filter: brightness(1.12); }
-  100% { filter: brightness(0.96); }
+  display: block;
 }
 
 .thermo-labels {
@@ -1889,12 +1773,13 @@ button { cursor: pointer; background: none; border: none; }
   border: 1px solid rgba(232, 88, 12, 0.3);
   border-radius: var(--radius-full);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .reset-btn:hover {
   background: rgba(232, 88, 12, 0.2);
   border-color: var(--color-primary);
+  transform: scale(1.02);
 }
 
 /* === CONFETTI CANVAS === */
@@ -1945,9 +1830,7 @@ button { cursor: pointer; background: none; border: none; }
 <noscript><div class="noscript-banner">JavaScript is required to use this page.</div></noscript>
 
 <!-- Heat shimmer background -->
-<div class="heat-bg" aria-hidden="true">
-  <div class="heat-line"></div>
-  <div class="heat-line"></div>
+<div class="heat-bg" aria-hidden="true" style="opacity: 0.35;">
   <div class="heat-line"></div>
   <div class="heat-line"></div>
   <div class="heat-line"></div>
@@ -2044,7 +1927,6 @@ button { cursor: pointer; background: none; border: none; }
 
     <h3 style="font-family: var(--font-display); font-size: 1.5rem; color: var(--color-primary); letter-spacing: 0.05em; margin-bottom: 0.5rem; text-align: center;">Our Team</h3>
     <div class="team-grid" id="team-grid"></div>
-    <div class="swipe-hint">Swipe left to check in &rarr;</div>
   </div>
 </div>
 
@@ -2096,7 +1978,6 @@ button { cursor: pointer; background: none; border: none; }
     </div>
     <div class="meeting-status" id="meeting-status" style="display:none;"></div>
   </div>
-  <div class="swipe-hint swipe-hint-center" id="swipe-hint-center">Swipe &larr; Team &bull; Clouds &rarr;</div>
 
   <!-- Registration Form -->
   <form id="checkin-form" class="form-fields" novalidate>
@@ -2194,8 +2075,11 @@ button { cursor: pointer; background: none; border: none; }
 </div>
 
 <!-- PANEL 2: BEER MENU (swipe left to see) -->
-<div class="panel">
-  <div class="menu-card">
+<div class="panel" style="position:relative;">
+  <div class="beer-pour-bg">
+    <canvas id="beer-pour-canvas"></canvas>
+  </div>
+  <div class="menu-card" style="margin-top: 2.5rem;">
     <div class="menu-header">
       <img src="clouds-brewing-logo.png" alt="Clouds Brewing" loading="lazy">
       <h2>Clouds Brewing</h2>
@@ -2205,8 +2089,6 @@ button { cursor: pointer; background: none; border: none; }
     <div class="clouds-hero" id="clouds-hero-dynamic">
       <div class="clouds-hero-kicker">
         <span>Fresh Tap List</span>
-        <span>&bull;</span>
-        <span>Food + 5&ndash;7 PM</span>
       </div>
       <div class="clouds-hero-copy" id="clouds-hero-copy"></div>
       <div class="clouds-pour-row" id="clouds-pour-row">
@@ -2220,7 +2102,6 @@ button { cursor: pointer; background: none; border: none; }
 
     <p class="clouds-note" id="clouds-note"></p>
 
-    <div class="swipe-hint">&larr; Swipe right to check in</div>
   </div>
 </div>
 
@@ -2361,10 +2242,344 @@ button { cursor: pointer; background: none; border: none; }
 
   renderBeerMenu();
 
+  // ===== FULL-PANEL BEER POUR (gyro + haptics + sound) =====
+  var pourEngine = (function() {
+    var c = document.getElementById('beer-pour-canvas');
+    if (!c) return { start: function(){}, stop: function(){} };
+    var ctx = c.getContext('2d');
+    var animId = null, running = false;
+    var W, H, dpr;
+    var beerLevel = 0, time = 0, pourActive = true;
+    var drops = [], carbonation = [];
+    var pourHapticTimer = null;
+    var lastFrame = 0;
+    var smoothTilt = 0; /* interpolated gyro for buttery motion */
+
+    function resize() {
+      var rect = c.parentElement.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = rect.width; H = rect.height;
+      c.width = W * dpr; c.height = H * dpr;
+      ctx.scale(dpr, dpr);
+    }
+
+    function rng(a, b) { return a + Math.random() * (b - a); }
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function ease(t) { return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; }
+
+    function draw(now) {
+      /* Delta-time for frame-rate independent animation */
+      if (!now) now = performance.now();
+      var dt = lastFrame ? Math.min((now - lastFrame) / 16.667, 3) : 1;
+      lastFrame = now;
+      if (!W || !H) { if (running) animId = requestAnimationFrame(draw); return; }
+
+      ctx.clearRect(0, 0, W, H);
+      time += 0.016 * dt;
+
+      /* Smooth gyro interpolation — no jitter */
+      var rawTilt = 0;
+      if (typeof HeatFX !== 'undefined' && HeatFX.gyro.enabled) {
+        rawTilt = Math.max(-1, Math.min(1, HeatFX.gyro.gamma / 90));
+      }
+      smoothTilt = lerp(smoothTilt, rawTilt, 0.08 * dt);
+
+      var pourX = W * 0.4 + smoothTilt * W * 0.25;
+      var surfaceY = H - (H * beerLevel);
+      var tapY = 0; /* tap sits at top of canvas */
+
+      if (pourActive) beerLevel = Math.min(1, beerLevel + 0.0006 * dt);
+
+      /* ── Background Clouds Brewing clouds (subtle, slow drift) ── */
+      ctx.save();
+      ctx.globalAlpha = 0.022;
+      for (var ci2 = 0; ci2 < 2; ci2++) {
+        var cx = (ci2 * W * 0.6 + time * 2) % (W + 400) - 200;
+        var cy = 50 + ci2 * 100;
+        var cr = 40 + ci2 * 12;
+        /* Solid puffy cloud shape — overlapping white circles */
+        ctx.fillStyle = '#fff';
+        ctx.beginPath(); ctx.arc(cx, cy, cr, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(cx - cr * 0.7, cy + cr * 0.2, cr * 0.8, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(cx + cr * 0.8, cy + cr * 0.15, cr * 0.85, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(cx + cr * 0.2, cy - cr * 0.4, cr * 0.65, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(cx - cr * 0.3, cy - cr * 0.3, cr * 0.55, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      ctx.restore();
+
+      /* ── Beer tap / faucet ── */
+      ctx.save();
+      var tapCx = pourX;
+      var tapW = 20, tapH = 38;
+      var handleW = 10, handleH = 32;
+      var nozzleY = tapY + tapH;
+
+      /* Tap body — dark chrome rectangle */
+      var tapGrad = ctx.createLinearGradient(tapCx - tapW / 2, tapY, tapCx + tapW / 2, tapY);
+      tapGrad.addColorStop(0, 'rgba(60, 50, 40, 0.9)');
+      tapGrad.addColorStop(0.3, 'rgba(100, 85, 65, 0.95)');
+      tapGrad.addColorStop(0.5, 'rgba(120, 100, 75, 0.95)');
+      tapGrad.addColorStop(0.7, 'rgba(100, 85, 65, 0.95)');
+      tapGrad.addColorStop(1, 'rgba(55, 45, 35, 0.9)');
+      ctx.fillStyle = tapGrad;
+      ctx.beginPath();
+      ctx.roundRect(tapCx - tapW / 2, tapY, tapW, tapH, [0, 0, 4, 4]);
+      ctx.fill();
+
+      /* Mounting plate */
+      ctx.fillStyle = 'rgba(80, 65, 50, 0.8)';
+      ctx.beginPath();
+      ctx.roundRect(tapCx - tapW * 0.7, tapY, tapW * 1.4, 8, [0, 0, 3, 3]);
+      ctx.fill();
+
+      /* Handle — angled lever */
+      ctx.save();
+      ctx.translate(tapCx, tapY + 10);
+      ctx.rotate(-0.25 + Math.sin(time * 0.5) * 0.03); /* subtle sway */
+      var hGrad = ctx.createLinearGradient(-handleW / 2, 0, handleW / 2, 0);
+      hGrad.addColorStop(0, 'rgba(50, 40, 30, 0.9)');
+      hGrad.addColorStop(0.4, 'rgba(90, 75, 55, 0.95)');
+      hGrad.addColorStop(1, 'rgba(50, 40, 30, 0.9)');
+      ctx.fillStyle = hGrad;
+      ctx.beginPath();
+      ctx.roundRect(-handleW / 2, -handleH, handleW, handleH, 4);
+      ctx.fill();
+      /* Handle knob */
+      ctx.fillStyle = 'rgba(232, 88, 12, 0.7)';
+      ctx.beginPath();
+      ctx.arc(0, -handleH, handleW * 0.65, 0, Math.PI * 2);
+      ctx.fill();
+      /* Knob highlight */
+      ctx.fillStyle = 'rgba(255, 160, 60, 0.3)';
+      ctx.beginPath();
+      ctx.arc(-2, -handleH - 2, handleW * 0.3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      /* Nozzle tip */
+      ctx.fillStyle = 'rgba(90, 75, 55, 0.9)';
+      ctx.beginPath();
+      ctx.roundRect(tapCx - 7, nozzleY - 2, 14, 8, [0, 0, 4, 4]);
+      ctx.fill();
+      /* Drip ring */
+      ctx.fillStyle = 'rgba(218, 165, 32, 0.2)';
+      ctx.beginPath();
+      ctx.ellipse(tapCx, nozzleY + 6, 8, 2, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+
+      /* ── Amber beer body — fine wave resolution ── */
+      if (beerLevel > 0) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(-1, surfaceY);
+        /* Sub-pixel wave stepping for smooth surface */
+        for (var px = 0; px <= W + 1; px += 1.5) {
+          var wave = Math.sin(px * 0.012 + time * 2.2) * 2.5 +
+                     Math.sin(px * 0.035 + time * 3.2 + smoothTilt * 2) * 1.8 +
+                     Math.sin(px * 0.08 + time * 4.5) * 0.6;
+          ctx.lineTo(px, surfaceY + wave);
+        }
+        ctx.lineTo(W + 1, H + 1); ctx.lineTo(-1, H + 1); ctx.closePath();
+
+        var bg = ctx.createLinearGradient(0, surfaceY, 0, H);
+        bg.addColorStop(0, 'rgba(218, 165, 32, 0.32)');
+        bg.addColorStop(0.25, 'rgba(200, 145, 25, 0.28)');
+        bg.addColorStop(0.6, 'rgba(170, 115, 18, 0.24)');
+        bg.addColorStop(1, 'rgba(140, 90, 10, 0.18)');
+        ctx.fillStyle = bg;
+        ctx.fill();
+        ctx.restore();
+      }
+
+      /* ── Pour stream — from nozzle tip ── */
+      if (pourActive && beerLevel < 0.92) {
+        var sw = 4 + Math.sin(time * 6) * 1.2 + Math.sin(time * 11) * 0.4;
+        var tOff = smoothTilt * 18;
+        var nzY = tapY + tapH + 8; /* nozzle bottom */
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(pourX - 3, nzY);
+        ctx.bezierCurveTo(
+          pourX - sw * 0.5 + tOff * 0.3, lerp(nzY, surfaceY, 0.3),
+          pourX + tOff * 0.7, lerp(nzY, surfaceY, 0.6),
+          pourX - 2.5, surfaceY
+        );
+        ctx.lineTo(pourX + 2.5, surfaceY);
+        ctx.bezierCurveTo(
+          pourX + tOff * 0.7 + sw * 0.2, lerp(nzY, surfaceY, 0.6),
+          pourX + sw * 0.5 + tOff * 0.3, lerp(nzY, surfaceY, 0.3),
+          pourX + 3, nzY
+        );
+        ctx.closePath();
+        var sg = ctx.createLinearGradient(0, 0, 0, surfaceY);
+        sg.addColorStop(0, 'rgba(218, 165, 32, 0.65)');
+        sg.addColorStop(0.7, 'rgba(200, 140, 20, 0.45)');
+        sg.addColorStop(1, 'rgba(200, 140, 20, 0.25)');
+        ctx.fillStyle = sg;
+        ctx.fill();
+        ctx.restore();
+
+        /* Splash — radial gradient drops for softness */
+        if (Math.random() < 0.3 * dt) {
+          drops.push({
+            x: pourX + rng(-16, 16), y: surfaceY,
+            vx: rng(-1.5, 1.5) + smoothTilt * 1.5, vy: rng(-3.5, -0.8),
+            r: rng(1.5, 4), life: 1, decay: rng(0.015, 0.03)
+          });
+        }
+      }
+
+      /* ── Carbonation — radial gradient bubbles ── */
+      if (beerLevel > 0.05 && Math.random() < 0.35 * dt) {
+        carbonation.push({
+          x: rng(0, W), y: H + 4,
+          vy: -rng(0.3, 0.9), r: rng(1, 3.5),
+          wobble: rng(-0.25, 0.25), phase: Math.random() * 6.28,
+          life: 1
+        });
+      }
+      for (var ci = carbonation.length - 1; ci >= 0; ci--) {
+        var cb = carbonation[ci];
+        cb.y += cb.vy * dt;
+        cb.x += Math.sin(cb.phase + time * 1.8) * cb.wobble;
+        if (cb.y < surfaceY - 2) { carbonation.splice(ci, 1); continue; }
+        var cbAlpha = 0.12 * Math.min(1, (H - cb.y) / (H * 0.3));
+        ctx.beginPath();
+        ctx.arc(cb.x, cb.y, cb.r, 0, Math.PI * 2);
+        var cg = ctx.createRadialGradient(cb.x - cb.r * 0.3, cb.y - cb.r * 0.3, 0, cb.x, cb.y, cb.r);
+        cg.addColorStop(0, 'rgba(255, 255, 220, ' + (cbAlpha * 1.5) + ')');
+        cg.addColorStop(1, 'rgba(255, 255, 200, ' + (cbAlpha * 0.3) + ')');
+        ctx.fillStyle = cg;
+        ctx.fill();
+      }
+
+      /* ── Splash drops — soft radial ── */
+      for (var di = drops.length - 1; di >= 0; di--) {
+        var d = drops[di];
+        d.x += d.vx * dt; d.y += d.vy * dt; d.vy += 0.15 * dt;
+        d.life -= d.decay * dt;
+        if (d.life <= 0 || d.y > H + 10) { drops.splice(di, 1); continue; }
+        var dr = d.r * ease(d.life);
+        if (dr < 0.3) continue;
+        ctx.beginPath();
+        ctx.arc(d.x, d.y, dr, 0, Math.PI * 2);
+        var dg = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, dr);
+        dg.addColorStop(0, 'rgba(218, 165, 32, ' + (d.life * 0.5) + ')');
+        dg.addColorStop(1, 'rgba(218, 165, 32, 0)');
+        ctx.fillStyle = dg;
+        ctx.fill();
+      }
+
+      /* ── Beer foam head — thick creamy white ── */
+      if (beerLevel > 0.08) {
+        var fh = 14 + beerLevel * 24;
+        ctx.save();
+
+        var foamTop = surfaceY - fh;
+
+        /* 1) Solid opaque cream base — this IS the foam */
+        ctx.beginPath();
+        for (var fx = -1; fx <= W + 1; fx += 2) {
+          var fy = foamTop +
+                   Math.sin(fx * 0.014 + time * 0.7) * 4 +
+                   Math.sin(fx * 0.04 + time * 1.2) * 2.5 +
+                   Math.cos(fx * 0.07 + time * 0.5) * 1.5;
+          if (fx <= 0) ctx.moveTo(fx, fy); else ctx.lineTo(fx, fy);
+        }
+        ctx.lineTo(W + 1, surfaceY + 4); ctx.lineTo(-1, surfaceY + 4); ctx.closePath();
+
+        var baseGrad = ctx.createLinearGradient(0, foamTop, 0, surfaceY + 4);
+        baseGrad.addColorStop(0, 'rgba(255, 250, 235, 0.85)');
+        baseGrad.addColorStop(0.2, 'rgba(252, 245, 225, 0.9)');
+        baseGrad.addColorStop(0.6, 'rgba(248, 238, 210, 0.8)');
+        baseGrad.addColorStop(0.85, 'rgba(240, 225, 185, 0.6)');
+        baseGrad.addColorStop(1, 'rgba(225, 200, 150, 0.15)');
+        ctx.fillStyle = baseGrad;
+        ctx.fill();
+
+        /* 2) Bubble cell pattern — darker outlines give depth */
+        var seed = 42;
+        for (var row = 0; row < Math.ceil(fh / 5); row++) {
+          var by = foamTop + 4 + row * 5;
+          if (by > surfaceY) break;
+          var rowShift = (row % 2) * 3.5;
+          for (var bx = rowShift; bx < W; bx += 7) {
+            seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+            var br = 2.2 + (seed % 100) / 100 * 1.5;
+            /* Dark ring = cell wall */
+            ctx.beginPath();
+            ctx.arc(bx, by, br, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(200, 180, 140, 0.2)';
+            ctx.lineWidth = 0.6;
+            ctx.stroke();
+            /* Highlight dot = light catching the bubble */
+            ctx.beginPath();
+            ctx.arc(bx - br * 0.25, by - br * 0.3, br * 0.3, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+            ctx.fill();
+          }
+        }
+
+        ctx.restore();
+      }
+
+      /* Loop */
+      if (beerLevel >= 1 && pourActive) {
+        pourActive = false;
+        if (typeof HeatFX !== 'undefined') HeatFX.haptics.success();
+        setTimeout(function() {
+          beerLevel = 0; pourActive = true;
+          drops = []; carbonation = [];
+        }, 5000);
+      }
+
+      if (running) animId = requestAnimationFrame(draw);
+    }
+
+    function startPourHaptics() {
+      if (pourHapticTimer) return;
+      pourHapticTimer = setInterval(function() {
+        if (typeof HeatFX !== 'undefined' && pourActive && beerLevel < 0.92) {
+          HeatFX.haptics.pourPulse();
+        }
+      }, 1200);
+    }
+
+    function stopPourHaptics() {
+      if (pourHapticTimer) { clearInterval(pourHapticTimer); pourHapticTimer = null; }
+    }
+
+    return {
+      start: function() {
+        if (running) return;
+        running = true;
+        resize();
+        if (typeof HeatFX !== 'undefined') {
+          HeatFX.gyro.start();
+          HeatFX.sounds.startPour();
+          HeatFX.haptics.medium();
+        }
+        startPourHaptics();
+        draw();
+      },
+      stop: function() {
+        running = false;
+        if (animId) { cancelAnimationFrame(animId); animId = null; }
+        stopPourHaptics();
+        if (typeof HeatFX !== 'undefined') {
+          HeatFX.sounds.stopPour();
+        }
+      }
+    };
+  })();
+
   // ===== SWIPE SLIDER =====
   var slider = document.getElementById('slider');
   var dots = document.querySelectorAll('.nav-dot');
-  var swipeHintCenter = document.getElementById('swipe-hint-center');
+  var swipeHintCenter = null;
   var swipePeekLeft = document.getElementById('swipe-peek-left');
   var swipePeekRight = document.getElementById('swipe-peek-right');
   var swipePeekLeftLabel = document.getElementById('swipe-peek-left-label');
@@ -2480,8 +2695,12 @@ button { cursor: pointer; background: none; border: none; }
       d.setAttribute('aria-current', isActive ? 'true' : 'false');
     });
 
-    if (swipeHintCenter) {
-      swipeHintCenter.textContent = index === 1 ? 'Swipe ← Team • Clouds →' : (index === 0 ? 'Swipe → Check In' : 'Swipe ← Check In');
+    /* Haptic feedback on panel change */
+    if (typeof HeatFX !== 'undefined') HeatFX.haptics.swipe();
+
+    /* Start/stop beer pour when on Clouds panel (index 2) */
+    if (typeof pourEngine !== 'undefined') {
+      if (index === 2) pourEngine.start(); else pourEngine.stop();
     }
 
     updateSwipePeek();
@@ -2805,6 +3024,13 @@ button { cursor: pointer; background: none; border: none; }
         '<div class="team-grid-label">Members</div>' +
         '<div class="team-grid-cards">' + renderMemberCards(memberRoster) + '</div>' +
       '</div>';
+
+    /* Staggered entrance animation */
+    var cards = teamGrid.querySelectorAll('.team-member');
+    for (var ci = 0; ci < cards.length; ci++) {
+      cards[ci].style.animationDelay = (ci * 0.06) + 's';
+      cards[ci].classList.add('animate-in');
+    }
   }
 
   renderTeamGrid();
@@ -2812,6 +3038,7 @@ button { cursor: pointer; background: none; border: none; }
 })();
 </script>
 
+<script src="/scripts/heatwave-fx.js"></script>
 <script src="/shared-form.js"></script>
 <script>
 (function() {
@@ -2840,22 +3067,8 @@ button { cursor: pointer; background: none; border: none; }
   </button>
   <div class="info-drawer-body">
     <div class="thermo-wrap">
-      <div class="thermo">
-        <div class="thermo-fill">
-          <div class="thermo-surface"></div>
-          <div class="thermo-bubbles">
-            <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
-            <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
-            <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
-            <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
-            <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
-          </div>
-          <div class="thermo-steam">
-            <div class="steam-wisp"></div><div class="steam-wisp"></div>
-            <div class="steam-wisp"></div><div class="steam-wisp"></div>
-            <div class="steam-wisp"></div><div class="steam-wisp"></div>
-          </div>
-        </div>
+      <div class="thermo-canvas-wrap">
+        <canvas id="thermo-canvas" width="160" height="440"></canvas>
       </div>
       <div class="thermo-labels">
         <div class="thermo-label thermo-label-hot">211&deg; HOT</div>
@@ -2912,29 +3125,540 @@ button { cursor: pointer; background: none; border: none; }
 (function() {
   var drawer = document.getElementById('info-drawer');
   var tab = document.getElementById('info-drawer-tab');
+  var canvas = document.getElementById('thermo-canvas');
+  var animId = null;
+
   if (drawer && tab) {
     tab.addEventListener('click', function() {
       var isOpen = drawer.classList.toggle('open');
       document.body.classList.toggle('drawer-open', isOpen);
       tab.setAttribute('aria-expanded', isOpen);
+      if (isOpen) {
+        startThermo();
+        /* Steam blast + sound + haptics */
+        if (typeof HeatFX !== 'undefined') {
+          HeatFX.haptics.steamBlast();
+          HeatFX.sounds.steamHiss();
+        }
+        fireSteamBlast();
+      } else {
+        stopThermo();
+      }
     });
+  }
+
+  /* ── Steam blast animation ── */
+  function fireSteamBlast() {
+    var sc = document.getElementById('steam-blast-canvas');
+    if (!sc) return;
+    sc.style.display = 'block';
+    var sctx = sc.getContext('2d');
+    var sdpr = Math.min(window.devicePixelRatio || 1, 2);
+    var sW = window.innerWidth, sH = window.innerHeight;
+    sc.width = sW * sdpr; sc.height = sH * sdpr;
+    sctx.scale(sdpr, sdpr);
+
+    var particles = [];
+    var lastSteamFrame = performance.now();
+    var duration = 2200;
+    var startTime = lastSteamFrame;
+
+    /* Staggered spawn — not all at once for smoother burst */
+    var spawnQueue = 100;
+    var spawnRate = 8; /* per frame */
+
+    function spawnParticle() {
+      var angle = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 0.9;
+      var speed = 2 + Math.random() * 6;
+      var drift = (Math.random() - 0.5) * 2;
+      particles.push({
+        x: sW / 2 + (Math.random() - 0.5) * sW * 0.35,
+        y: sH + 5 + Math.random() * 20,
+        vx: Math.cos(angle) * speed + drift,
+        vy: Math.sin(angle) * speed * 1.3 - 1,
+        r: 6 + Math.random() * 30,
+        life: 0.7 + Math.random() * 0.3,
+        decay: 0.005 + Math.random() * 0.008,
+        growth: 1.006 + Math.random() * 0.012,
+        drag: 0.985 + Math.random() * 0.01,
+        warmth: Math.random() /* 0=white, 1=orange tinted */
+      });
+    }
+
+    function drawSteam(now) {
+      var elapsed = now - startTime;
+      var dt = Math.min((now - lastSteamFrame) / 16.667, 3);
+      lastSteamFrame = now;
+
+      if (elapsed > duration && particles.length === 0) {
+        sc.style.display = 'none';
+        return;
+      }
+
+      sctx.clearRect(0, 0, sW, sH);
+
+      /* Staggered spawn */
+      if (spawnQueue > 0 && elapsed < 600) {
+        var count = Math.min(spawnQueue, Math.ceil(spawnRate * dt));
+        for (var s = 0; s < count; s++) spawnParticle();
+        spawnQueue -= count;
+      }
+
+      for (var pi = particles.length - 1; pi >= 0; pi--) {
+        var p = particles[pi];
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        p.vy -= 0.04 * dt; /* gentle buoyancy */
+        p.vx *= Math.pow(p.drag, dt);
+        p.vy *= Math.pow(p.drag, dt);
+        p.r *= Math.pow(p.growth, dt);
+        p.life -= p.decay * dt;
+        if (p.life <= 0) { particles.splice(pi, 1); continue; }
+
+        /* Smooth opacity curve — ease out */
+        var alpha = p.life * p.life * 0.14;
+        var r = Math.round(255 - p.warmth * 30);
+        var g = Math.round(255 - p.warmth * 60);
+        var b = Math.round(255 - p.warmth * 80);
+
+        /* Radial gradient for soft edges */
+        var rg = sctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+        rg.addColorStop(0, 'rgba(' + r + ',' + g + ',' + b + ',' + (alpha * 1.2) + ')');
+        rg.addColorStop(0.4, 'rgba(' + r + ',' + g + ',' + b + ',' + (alpha * 0.7) + ')');
+        rg.addColorStop(1, 'rgba(' + r + ',' + g + ',' + b + ',0)');
+
+        sctx.beginPath();
+        sctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        sctx.fillStyle = rg;
+        sctx.fill();
+      }
+
+      requestAnimationFrame(drawSteam);
+    }
+    requestAnimationFrame(drawSteam);
+  }
+
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+  var dpr = window.devicePixelRatio || 1;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  ctx.scale(dpr, dpr);
+
+  /* roundRect polyfill for older browsers */
+  if (!ctx.roundRect) {
+    CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, radii) {
+      if (!Array.isArray(radii)) radii = [radii, radii, radii, radii];
+      while (radii.length < 4) radii.push(radii[radii.length - 1] || 0);
+      var tl = radii[0], tr = radii[1], br = radii[2], bl = radii[3];
+      this.moveTo(x + tl, y);
+      this.lineTo(x + w - tr, y); this.arcTo(x + w, y, x + w, y + tr, tr);
+      this.lineTo(x + w, y + h - br); this.arcTo(x + w, y + h, x + w - br, y + h, br);
+      this.lineTo(x + bl, y + h); this.arcTo(x, y + h, x, y + h - bl, bl);
+      this.lineTo(x, y + tl); this.arcTo(x, y, x + tl, y, tl);
+      this.closePath();
+    };
+  }
+
+  /* ── Physics state ── */
+  var fillLevel = 0;
+  var bubbles = [];
+  var steamParticles = [];
+  var time = 0;
+  var shards = null;
+  var explosionTime = 0;
+  /* W=160, H=440 logical coords (CSS shows at 80x220) */
+
+  function rng(a, b) { return a + Math.random() * (b - a); }
+
+  /* Thermometer geometry — centered in 160px wide canvas */
+  var tubeW = 36, tubeX = (W - tubeW) / 2;
+  var tubeTop = 50, tubeBot = H - 80;
+  var tubeH = tubeBot - tubeTop;
+  var bulbCx = tubeX + tubeW / 2, bulbCy = tubeBot + 28, bulbR = 32;
+
+  function spawnBubble() {
+    var x = tubeX + 6 + Math.random() * (tubeW - 12);
+    var r = rng(1.8, 5);
+    var big = Math.random() < 0.15;
+    if (big) r = rng(5, 8);
+    bubbles.push({
+      x: x, y: tubeBot - 4,
+      r: r, origR: r,
+      vx: rng(-0.5, 0.5),
+      vy: -rng(0.8, 2.2) * (big ? 1.4 : 1),
+      wobblePhase: Math.random() * Math.PI * 2,
+      wobbleAmp: rng(0.4, 1.2),
+      life: 1, decay: rng(0.004, 0.012),
+      big: big
+    });
+  }
+
+  function spawnSteam() {
+    var surfaceY = tubeTop + tubeH * (1 - fillLevel);
+    steamParticles.push({
+      x: tubeX + rng(6, tubeW - 6),
+      y: surfaceY - 4,
+      vx: rng(-0.6, 0.6),
+      vy: -rng(0.5, 1.2),
+      r: rng(4, 10),
+      life: 1, decay: rng(0.008, 0.018),
+      drift: rng(-0.15, 0.15)
+    });
+  }
+
+  function drawThermo() {
+    ctx.clearRect(0, 0, W, H);
+    time += 0.016;
+
+    /* Fill rises — slow down near top for tension buildup */
+    var exploded = fillLevel >= 1.05;
+    if (!exploded) {
+      var rate = fillLevel < 0.85 ? 0.008 : (fillLevel < 0.95 ? 0.004 : 0.002);
+      fillLevel = Math.min(1.06, fillLevel + rate);
+    }
+    var clampedFill = Math.min(1, fillLevel);
+    var surfaceY = tubeTop + tubeH * (1 - clampedFill);
+
+    /* Pressure shake when near full */
+    var shakeX = 0, shakeY = 0;
+    var pressure = Math.max(0, (fillLevel - 0.85) / 0.15); /* 0 to 1+ */
+    if (pressure > 0 && !exploded) {
+      var shakeAmt = pressure * 4;
+      shakeX = Math.sin(time * 40) * shakeAmt * (0.5 + Math.random() * 0.5);
+      shakeY = Math.cos(time * 35) * shakeAmt * 0.5;
+      ctx.save();
+      ctx.translate(shakeX, shakeY);
+    }
+
+    /* ── EXPLOSION STATE ── */
+    if (fillLevel >= 1.05 && !shards) {
+      shards = [];
+      explosionTime = time;
+      /* Generate glass shards */
+      for (var si = 0; si < 30; si++) {
+        var ang = Math.random() * Math.PI * 2;
+        var spd = 2 + Math.random() * 8;
+        shards.push({
+          x: tubeX + tubeW / 2 + rng(-tubeW, tubeW),
+          y: rng(tubeTop, tubeBot),
+          vx: Math.cos(ang) * spd,
+          vy: Math.sin(ang) * spd - 3,
+          r: rng(2, 8),
+          rot: Math.random() * 6.28,
+          rotV: rng(-0.2, 0.2),
+          life: 1,
+          type: Math.random() < 0.4 ? 'glass' : 'liquid'
+        });
+      }
+      /* Spawn lots of steam */
+      for (var ss = 0; ss < 20; ss++) spawnSteam();
+      /* Haptic + sound */
+      if (typeof HeatFX !== 'undefined') {
+        HeatFX.haptics.steamBlast();
+        HeatFX.sounds.steamHiss();
+      }
+    }
+
+    if (shards) {
+      /* Draw explosion shards */
+      for (var shi = shards.length - 1; shi >= 0; shi--) {
+        var sh = shards[shi];
+        sh.x += sh.vx; sh.y += sh.vy;
+        sh.vy += 0.15; sh.rot += sh.rotV;
+        sh.life -= 0.012;
+        if (sh.life <= 0) { shards.splice(shi, 1); continue; }
+
+        ctx.save();
+        ctx.translate(sh.x, sh.y);
+        ctx.rotate(sh.rot);
+        ctx.globalAlpha = sh.life;
+
+        if (sh.type === 'glass') {
+          /* Glass shard — angular triangle */
+          ctx.beginPath();
+          ctx.moveTo(-sh.r, -sh.r * 0.5);
+          ctx.lineTo(sh.r * 0.7, -sh.r);
+          ctx.lineTo(sh.r * 0.3, sh.r * 0.8);
+          ctx.closePath();
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+          ctx.strokeStyle = 'rgba(232, 88, 12, 0.4)';
+          ctx.lineWidth = 0.5;
+          ctx.fill(); ctx.stroke();
+        } else {
+          /* Liquid droplet */
+          ctx.beginPath();
+          ctx.arc(0, 0, sh.r, 0, Math.PI * 2);
+          var lg = ctx.createRadialGradient(0, 0, 0, 0, 0, sh.r);
+          lg.addColorStop(0, 'rgba(255, 120, 30, 0.8)');
+          lg.addColorStop(1, 'rgba(232, 88, 12, 0)');
+          ctx.fillStyle = lg;
+          ctx.fill();
+        }
+
+        ctx.globalAlpha = 1;
+        ctx.restore();
+      }
+
+      /* Steam continues */
+      if (Math.random() < 0.3) spawnSteam();
+
+      /* Draw remaining steam */
+      for (var sj = steamParticles.length - 1; sj >= 0; sj--) {
+        var sp2 = steamParticles[sj];
+        sp2.x += sp2.vx + sp2.drift * Math.sin(time * 2 + sj);
+        sp2.y += sp2.vy; sp2.r *= 1.012; sp2.life -= sp2.decay;
+        if (sp2.life <= 0) { steamParticles.splice(sj, 1); continue; }
+        ctx.beginPath();
+        ctx.arc(sp2.x, sp2.y, sp2.r, 0, Math.PI * 2);
+        var stg = ctx.createRadialGradient(sp2.x, sp2.y, 0, sp2.x, sp2.y, sp2.r);
+        stg.addColorStop(0, 'rgba(255, 255, 255, ' + (sp2.life * 0.2) + ')');
+        stg.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        ctx.fillStyle = stg;
+        ctx.fill();
+      }
+
+      /* Flash */
+      var flashAge = time - explosionTime;
+      if (flashAge < 0.3) {
+        ctx.fillStyle = 'rgba(255, 200, 100, ' + (0.3 * (1 - flashAge / 0.3)) + ')';
+        ctx.fillRect(0, 0, W, H);
+      }
+
+      ctx.restore();
+      animId = requestAnimationFrame(drawThermo);
+      return; /* Skip normal drawing */
+    }
+
+    /* ── Glass tube outline ── */
+    ctx.save();
+    ctx.beginPath();
+    ctx.roundRect(tubeX, tubeTop, tubeW, tubeH, 22);
+    ctx.strokeStyle = 'rgba(232, 88, 12, 0.3)';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    /* ── Glass tube background ── */
+    ctx.beginPath();
+    ctx.roundRect(tubeX + 2, tubeTop + 2, tubeW - 4, tubeH - 4, 20);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
+    ctx.fill();
+
+    /* ── Liquid fill ── */
+    ctx.beginPath();
+    ctx.roundRect(tubeX + 3, surfaceY, tubeW - 6, tubeBot - surfaceY, [0, 0, 18, 18]);
+    var grad = ctx.createLinearGradient(0, surfaceY, 0, tubeBot);
+    grad.addColorStop(0, '#FF6A1E');
+    grad.addColorStop(0.5, '#E8580C');
+    grad.addColorStop(1, '#C44A0A');
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    /* ── Liquid glow ── */
+    var glowIntensity = 0.12 + 0.06 * Math.sin(time * 1.5);
+    ctx.shadowColor = '#E8580C';
+    ctx.shadowBlur = 16 * glowIntensity * 3;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    /* ── Bulb at bottom ── */
+    ctx.beginPath();
+    ctx.arc(bulbCx, bulbCy, bulbR, 0, Math.PI * 2);
+    var bulbGrad = ctx.createRadialGradient(bulbCx - 4, bulbCy - 4, 0, bulbCx, bulbCy, bulbR);
+    bulbGrad.addColorStop(0, '#FF8833');
+    bulbGrad.addColorStop(0.6, '#E8580C');
+    bulbGrad.addColorStop(1, '#A03808');
+    ctx.fillStyle = bulbGrad;
+    ctx.shadowColor = '#E8580C';
+    ctx.shadowBlur = 24 + 8 * Math.sin(time * 2) + pressure * 40;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    /* Bulb glass highlight */
+    ctx.beginPath();
+    ctx.arc(bulbCx - 5, bulbCy - 5, bulbR * 0.35, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.18)';
+    ctx.fill();
+
+    /* ── Surface turbulence ── */
+    if (fillLevel > 0.3) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(tubeX + 3, surfaceY - 5, tubeW - 6, 10);
+      ctx.clip();
+      for (var w = 0; w < 3; w++) {
+        ctx.beginPath();
+        var waveY = surfaceY;
+        ctx.moveTo(tubeX + 3, waveY);
+        for (var px = tubeX + 3; px <= tubeX + tubeW - 3; px++) {
+          var offset = Math.sin((px * 0.2) + time * (3 + w) + w * 2) * (1.8 + fillLevel * 2);
+          ctx.lineTo(px, waveY + offset);
+        }
+        ctx.lineTo(tubeX + tubeW - 3, waveY + 10);
+        ctx.lineTo(tubeX + 3, waveY + 10);
+        ctx.closePath();
+        ctx.fillStyle = 'rgba(255, 200, 150, ' + (0.18 - w * 0.05) + ')';
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    /* ── Bubbles ── */
+    if (fillLevel > 0.4 && Math.random() < 0.3 + fillLevel * 0.5) spawnBubble();
+
+    for (var i = bubbles.length - 1; i >= 0; i--) {
+      var b = bubbles[i];
+      b.wobblePhase += 0.08;
+      b.x += b.vx + Math.sin(b.wobblePhase) * b.wobbleAmp * 0.3;
+      b.y += b.vy;
+      b.life -= b.decay;
+      b.r = b.origR * (0.5 + b.life * 0.5);
+
+      /* Clip to liquid region */
+      if (b.y < surfaceY + 4 || b.life <= 0) {
+        /* Pop effect for big bubbles */
+        if (b.big && b.y < surfaceY + 10) {
+          for (var s = 0; s < 3; s++) spawnSteam();
+        }
+        bubbles.splice(i, 1);
+        continue;
+      }
+
+      /* Clamp x inside tube */
+      if (b.x < tubeX + 6) b.x = tubeX + 6;
+      if (b.x > tubeX + tubeW - 6) b.x = tubeX + tubeW - 6;
+
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+      var bGrad = ctx.createRadialGradient(b.x - b.r * 0.3, b.y - b.r * 0.3, 0, b.x, b.y, b.r);
+      bGrad.addColorStop(0, 'rgba(255, 255, 255, ' + (b.life * 0.85) + ')');
+      bGrad.addColorStop(0.5, 'rgba(255, 220, 180, ' + (b.life * 0.4) + ')');
+      bGrad.addColorStop(1, 'rgba(255, 160, 100, ' + (b.life * 0.1) + ')');
+      ctx.fillStyle = bGrad;
+      ctx.fill();
+    }
+
+    /* ── Steam particles ── */
+    if (fillLevel > 0.7 && Math.random() < 0.15 + (fillLevel - 0.7) * 1.5) spawnSteam();
+
+    for (var j = steamParticles.length - 1; j >= 0; j--) {
+      var sp = steamParticles[j];
+      sp.x += sp.vx + sp.drift * Math.sin(time * 2 + j);
+      sp.y += sp.vy;
+      sp.r *= 1.008;
+      sp.life -= sp.decay;
+
+      if (sp.life <= 0) { steamParticles.splice(j, 1); continue; }
+
+      ctx.beginPath();
+      ctx.arc(sp.x, sp.y, sp.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255, 255, 255, ' + (sp.life * 0.15) + ')';
+      ctx.shadowColor = 'rgba(255, 255, 255, ' + (sp.life * 0.12) + ')';
+      ctx.shadowBlur = 6;
+      ctx.fill();
+      ctx.shadowColor = 'transparent';
+      ctx.shadowBlur = 0;
+    }
+
+    /* ── Glass highlight (specular) ── */
+    ctx.beginPath();
+    ctx.roundRect(tubeX + 6, tubeTop + 8, 8, tubeH * 0.55, 4);
+    var specGrad = ctx.createLinearGradient(tubeX + 6, tubeTop, tubeX + 14, tubeTop);
+    specGrad.addColorStop(0, 'rgba(255, 255, 255, 0.12)');
+    specGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    ctx.fillStyle = specGrad;
+    ctx.fill();
+
+    /* ── Tick marks ── */
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.22)';
+    for (var t = 0; t <= 4; t++) {
+      var ty = tubeTop + (tubeH * t / 4);
+      ctx.fillRect(tubeX + tubeW + 4, ty, 8, 1.5);
+    }
+
+    /* ── Pressure warning glow ── */
+    if (pressure > 0.3) {
+      var warnAlpha = (pressure - 0.3) * 0.3 * (0.5 + 0.5 * Math.sin(time * 8));
+      ctx.fillStyle = 'rgba(255, 80, 20, ' + warnAlpha + ')';
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    /* Close pressure shake transform */
+    if (pressure > 0) ctx.restore();
+
+    ctx.restore();
+    animId = requestAnimationFrame(drawThermo);
+  }
+
+  function startThermo() {
+    fillLevel = 0;
+    bubbles = [];
+    steamParticles = [];
+    shards = null;
+    time = 0;
+    if (animId) cancelAnimationFrame(animId);
+    drawThermo();
+  }
+
+  function stopThermo() {
+    if (animId) { cancelAnimationFrame(animId); animId = null; }
   }
 })();
 </script>
 
-<!-- Nav pill -->
-<style>
-.nav-pill{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:0.25rem;background:rgba(26,20,18,0.92);border:1px solid rgba(232,88,12,0.15);border-radius:9999px;padding:0.35rem 0.5rem;z-index:999;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-.nav-pill a{font-family:'Bebas Neue',sans-serif;font-size:0.7rem;letter-spacing:0.08em;color:var(--color-text-faint,#6b5c4e);text-decoration:none;padding:0.3rem 0.75rem;border-radius:9999px;transition:color 0.15s,background 0.15s}
-.nav-pill a:hover{color:var(--color-text,#f0e6dc);background:rgba(232,88,12,0.1)}
-.nav-pill a.dim{opacity:0.5;font-size:0.6rem}
-</style>
-<nav class="nav-pill" aria-label="Site navigation">
-  <a href="/bizchat">BIZCHAT</a>
-  <a href="/about">ABOUT</a>
-  <a href="/remind">REMIND</a>
-  <a href="/crm" class="dim">CRM</a>
-</nav>
+<canvas id="steam-blast-canvas" class="steam-blast-canvas" style="display:none;"></canvas>
+
+<!-- Site-wide haptics wiring -->
+<script>
+(function() {
+  if (typeof HeatFX === 'undefined') return;
+  var H = HeatFX.haptics;
+
+  /* Nav dots */
+  document.querySelectorAll('.nav-dot').forEach(function(d) {
+    d.addEventListener('click', function() { H.tap(); });
+  });
+
+  /* Panel arrow buttons */
+  document.querySelectorAll('.panel-arrow').forEach(function(a) {
+    a.addEventListener('click', function() { H.tap(); });
+  });
+
+  /* Form field focus */
+  document.querySelectorAll('input, select, textarea').forEach(function(el) {
+    el.addEventListener('focus', function() { H.light(); });
+  });
+
+  /* Button presses */
+  document.querySelectorAll('button, .btn, [type="submit"]').forEach(function(btn) {
+    btn.addEventListener('mousedown', function() { H.tap(); });
+    btn.addEventListener('touchstart', function() { H.tap(); }, { passive: true });
+  });
+
+  /* Guest-of member chips */
+  document.querySelectorAll('.member-chip, .guest-chip').forEach(function(chip) {
+    chip.addEventListener('click', function() { H.double(); });
+  });
+
+  /* Check-in form submit — heavy success vibration */
+  var form = document.getElementById('checkin-form');
+  if (form) {
+    form.addEventListener('submit', function() {
+      H.success();
+    });
+  }
+
+  /* Touch swipe haptics (augment existing touchend) */
+  var slider = document.getElementById('slider');
+  if (slider) {
+    slider.addEventListener('touchend', function() {
+      H.swipe();
+    }, { passive: true });
+  }
+})();
+</script>
+
 <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
 </body>
 </html>

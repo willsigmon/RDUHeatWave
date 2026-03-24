@@ -165,6 +165,9 @@ button { cursor: pointer; background: none; border: none; }
     transparent 100%
   );
   animation: heat-drift linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .heat-line:nth-child(1) { top: 15%; animation-duration: 18s; }
