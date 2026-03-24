@@ -3341,18 +3341,21 @@ button { cursor: pointer; background: none; border: none; }
 
   function spawnFoamBubble(baseY) {
     var cx = tubeX + tubeW / 2;
-    var spreadX = rng(-tubeW * 0.8, tubeW * 0.8);
-    var targetR = rng(3, 9);
+    /* Bubbles start right at the liquid surface, clustered near tube center */
+    var xOff = rng(-tubeW * 0.6, tubeW * 0.6);
+    var r = rng(2, 6);
     foamBubbles.push({
-      x: cx + spreadX * 0.3,
-      targetX: cx + spreadX,
-      y: baseY + rng(0, 8),
-      targetY: baseY - rng(2, foamHeight + 10),
-      r: 0, targetR: targetR,
-      life: 1, decay: rng(0.001, 0.004),
+      x: cx + xOff,
+      y: baseY,
+      vy: -rng(0.08, 0.35), /* slow upward drift */
+      vx: rng(-0.1, 0.1),
+      r: r,
+      opacity: 0,        /* starts invisible, fades in */
+      fadeIn: rng(0.01, 0.03), /* gradual fade-in rate */
+      maxOpacity: rng(0.5, 0.9),
+      life: 1, decay: rng(0.0008, 0.002),
       wobblePhase: Math.random() * Math.PI * 2,
-      progress: 0, speed: rng(0.008, 0.025),
-      layer: Math.random()
+      wobbleAmp: rng(0.2, 0.6)
     });
   }
 
@@ -3389,20 +3392,20 @@ button { cursor: pointer; background: none; border: none; }
       }
     }
 
-    /* Gradually grow foam height */
+    /* Gradually build foam — spawn bubbles one by one */
     if (foamStarted) {
-      var maxFoam = 60;
-      var foamProgress = Math.min(1, (fillLevel - 0.98) / 0.25);
-      /* Ease-out for natural foam rise */
-      foamHeight = maxFoam * (1 - Math.pow(1 - foamProgress, 3));
-
-      /* Spawn foam bubbles gradually — more as foam grows */
-      var spawnRate = 0.15 + foamProgress * 0.6;
-      if (Math.random() < spawnRate) {
+      var foamAge = fillLevel - 0.98;
+      /* Start slow, ramp up: 1 bubble/few frames → many bubbles/frame */
+      var spawnChance = Math.min(0.8, foamAge * 2);
+      if (Math.random() < spawnChance) {
         spawnFoamBubble(surfaceY);
       }
-      /* Extra steam wisps from foam */
-      if (Math.random() < 0.1 + foamProgress * 0.25) {
+      /* Occasional second bubble once foam is established */
+      if (foamAge > 0.08 && Math.random() < spawnChance * 0.5) {
+        spawnFoamBubble(surfaceY);
+      }
+      /* Gentle steam wisps */
+      if (foamAge > 0.05 && Math.random() < 0.08 + foamAge * 0.3) {
         spawnSteam();
       }
     }
@@ -3537,80 +3540,42 @@ button { cursor: pointer; background: none; border: none; }
       ctx.shadowBlur = 0;
     }
 
-    /* ── Foam bubbles (gradual overflow) ── */
-    if (foamStarted) {
-      /* Draw foam mass — creamy layered bubbles above the surface */
-      var foamBaseY = surfaceY;
-      var foamTopY = foamBaseY - foamHeight;
-      var cx = tubeX + tubeW / 2;
+    /* ── Foam bubbles — individual packed bubbles, no blob ── */
+    for (var fi = foamBubbles.length - 1; fi >= 0; fi--) {
+      var fb = foamBubbles[fi];
+      /* Gradual fade-in — each bubble appears smoothly */
+      fb.opacity = Math.min(fb.maxOpacity, fb.opacity + fb.fadeIn);
+      /* Slow upward drift with gentle wobble */
+      fb.wobblePhase += 0.04;
+      fb.x += fb.vx + Math.sin(fb.wobblePhase) * fb.wobbleAmp * 0.15;
+      fb.y += fb.vy;
+      fb.life -= fb.decay;
 
-      /* Solid foam base — creamy gradient sitting on top of liquid */
-      if (foamHeight > 2) {
-        ctx.save();
+      /* Fade out as life drains */
+      if (fb.life < 0.3) fb.opacity *= 0.97;
+      if (fb.life <= 0) { foamBubbles.splice(fi, 1); continue; }
+
+      var alpha = fb.opacity * fb.life;
+      if (alpha < 0.02) continue;
+
+      /* Each bubble: soft circle with highlight */
+      ctx.beginPath();
+      ctx.arc(fb.x, fb.y, fb.r, 0, Math.PI * 2);
+      var fbg = ctx.createRadialGradient(
+        fb.x - fb.r * 0.25, fb.y - fb.r * 0.25, 0,
+        fb.x, fb.y, fb.r
+      );
+      fbg.addColorStop(0, 'rgba(255, 248, 235, ' + alpha + ')');
+      fbg.addColorStop(0.6, 'rgba(255, 225, 190, ' + (alpha * 0.6) + ')');
+      fbg.addColorStop(1, 'rgba(255, 190, 140, ' + (alpha * 0.15) + ')');
+      ctx.fillStyle = fbg;
+      ctx.fill();
+
+      /* Tiny specular highlight */
+      if (fb.r > 2.5 && alpha > 0.2) {
         ctx.beginPath();
-        /* Foam shape: wider than tube, organic edges */
-        var foamW = tubeW + foamHeight * 0.8;
-        var foamX = cx - foamW / 2;
-        ctx.ellipse(cx, foamTopY + foamHeight * 0.4, foamW / 2, foamHeight * 0.6, 0, 0, Math.PI * 2);
-        var foamGrad = ctx.createLinearGradient(0, foamTopY, 0, foamBaseY);
-        foamGrad.addColorStop(0, 'rgba(255, 240, 220, 0.7)');
-        foamGrad.addColorStop(0.3, 'rgba(255, 230, 200, 0.6)');
-        foamGrad.addColorStop(0.7, 'rgba(255, 200, 160, 0.5)');
-        foamGrad.addColorStop(1, 'rgba(255, 160, 100, 0.3)');
-        ctx.fillStyle = foamGrad;
-        ctx.fill();
-        ctx.restore();
-      }
-
-      /* Individual foam bubbles — animate each with eased entry */
-      for (var fi = foamBubbles.length - 1; fi >= 0; fi--) {
-        var fb = foamBubbles[fi];
-        fb.progress = Math.min(1, fb.progress + fb.speed);
-        fb.wobblePhase += 0.03;
-        fb.life -= fb.decay;
-
-        if (fb.life <= 0) { foamBubbles.splice(fi, 1); continue; }
-
-        /* Ease-out interpolation for natural foam rise */
-        var ease = 1 - Math.pow(1 - fb.progress, 3);
-        var bx = fb.x + (fb.targetX - fb.x) * ease + Math.sin(fb.wobblePhase) * 1.5;
-        var by = fb.y + (fb.targetY - fb.y) * ease;
-        var br = fb.targetR * ease;
-
-        if (br < 0.5) continue;
-
-        /* Layered foam: back bubbles are dimmer, front are brighter */
-        var alpha = fb.life * (0.4 + fb.layer * 0.4);
-        ctx.beginPath();
-        ctx.arc(bx, by, br, 0, Math.PI * 2);
-        var fbGrad = ctx.createRadialGradient(bx - br * 0.2, by - br * 0.2, 0, bx, by, br);
-        fbGrad.addColorStop(0, 'rgba(255, 245, 230, ' + alpha + ')');
-        fbGrad.addColorStop(0.5, 'rgba(255, 220, 180, ' + (alpha * 0.7) + ')');
-        fbGrad.addColorStop(1, 'rgba(255, 180, 130, ' + (alpha * 0.2) + ')');
-        ctx.fillStyle = fbGrad;
-        ctx.fill();
-
-        /* Subtle highlight on each bubble */
-        if (br > 3) {
-          ctx.beginPath();
-          ctx.arc(bx - br * 0.25, by - br * 0.25, br * 0.3, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(255, 255, 255, ' + (alpha * 0.35) + ')';
-          ctx.fill();
-        }
-      }
-
-      /* Drips running down the sides (overflow effect) */
-      if (foamHeight > 20) {
-        var dripAlpha = Math.min(0.5, (foamHeight - 20) / 60);
-        /* Left drip */
-        ctx.beginPath();
-        ctx.ellipse(tubeX - 2, foamTopY + foamHeight * 0.6, 3, 8 + foamHeight * 0.3, 0.1, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(255, 200, 150, ' + dripAlpha + ')';
-        ctx.fill();
-        /* Right drip */
-        ctx.beginPath();
-        ctx.ellipse(tubeX + tubeW + 2, foamTopY + foamHeight * 0.5, 2.5, 6 + foamHeight * 0.25, -0.15, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(255, 200, 150, ' + (dripAlpha * 0.7) + ')';
+        ctx.arc(fb.x - fb.r * 0.3, fb.y - fb.r * 0.3, fb.r * 0.25, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 255, 255, ' + (alpha * 0.4) + ')';
         ctx.fill();
       }
     }
