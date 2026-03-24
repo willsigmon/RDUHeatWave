@@ -71,10 +71,10 @@ async function addMember(body) {
   }
 
   var newRow = [
-    name,
-    shared.normalizeText(body.title || body.profession) || 'Member',
-    shared.normalizeText(body.company),
-    shared.normalizeText(body.website)
+    shared.sanitizeForSheet(name),
+    shared.sanitizeForSheet(shared.normalizeText(body.title || body.profession) || 'Member'),
+    shared.sanitizeForSheet(shared.normalizeText(body.company)),
+    shared.sanitizeForSheet(shared.normalizeText(body.website))
   ];
 
   await sheets.appendRows(SHEET_ID, RANGE, [newRow]);

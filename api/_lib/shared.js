@@ -294,6 +294,16 @@ function mapErrorToResponse(error, fallbackMessage) {
   return { status: 500, message: fallbackMessage || 'Internal server error' };
 }
 
+// ── Google Sheets formula injection prevention ──────────────────
+// Cells starting with =, +, -, or @ can be interpreted as formulas.
+// Prefix with a single quote to force text interpretation.
+
+function sanitizeForSheet(value) {
+  if (typeof value !== 'string') return value;
+  if (/^[=+\-@]/.test(value)) return "'" + value;
+  return value;
+}
+
 // ── Exports ─────────────────────────────────────────────────────────
 
 module.exports = {
@@ -313,5 +323,6 @@ module.exports = {
   parseGvizResponse: parseGvizResponse,
   fetchSheet: fetchSheet,
   forwardToAppsScript: forwardToAppsScript,
-  mapErrorToResponse: mapErrorToResponse
+  mapErrorToResponse: mapErrorToResponse,
+  sanitizeForSheet: sanitizeForSheet
 };

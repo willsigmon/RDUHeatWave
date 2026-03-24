@@ -2016,12 +2016,12 @@ button { cursor: pointer; background: none; border: none; }
       <div class="field">
         <label class="field-label" for="firstName">First Name</label>
         <input class="field-input" type="text" id="firstName" name="firstName" placeholder="John" autocomplete="given-name" maxlength="80" required>
-        <div class="field-error" id="firstName-error">Please enter your first name</div>
+        <div class="field-error" id="firstName-error" role="alert">Please enter your first name</div>
       </div>
       <div class="field">
         <label class="field-label" for="lastName">Last Name</label>
         <input class="field-input" type="text" id="lastName" name="lastName" placeholder="Doe" autocomplete="family-name" maxlength="80" required>
-        <div class="field-error" id="lastName-error">Please enter your last name</div>
+        <div class="field-error" id="lastName-error" role="alert">Please enter your last name</div>
       </div>
     </div>
 
@@ -2112,7 +2112,7 @@ button { cursor: pointer; background: none; border: none; }
   </div>
   <div class="menu-card" style="margin-top: 2.5rem;">
     <div class="menu-header">
-      <img src="clouds-brewing-logo.png" alt="Clouds Brewing" loading="lazy">
+      <img src="clouds-brewing-logo.png" alt="Clouds Brewing" loading="lazy" decoding="async">
       <h2>Clouds Brewing</h2>
       <p>1233 Front St &bull; Raleigh, NC</p>
     </div>

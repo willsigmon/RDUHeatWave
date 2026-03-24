@@ -42,7 +42,7 @@ module.exports = async function handler(req, res) {
       return shared.sendJson(res, 403, { status: 'error', message: 'Origin not allowed' });
     }
 
-    if (shared.isRateLimited(shared.getClientIp(req), RATE_LIMITS)) {
+    if (await shared.isRateLimited(shared.getClientIp(req), RATE_LIMITS)) {
       return shared.sendJson(res, 429, { status: 'error', message: 'Too many submissions. Please try again shortly.' });
     }
 
@@ -54,8 +54,8 @@ module.exports = async function handler(req, res) {
 
     var entry = {
       source: 'bizchat',
-      member: shared.normalizeText(body.member),
-      metWith: shared.normalizeText(body.metWith),
+      member: shared.sanitizeForSheet(shared.normalizeText(body.member)),
+      metWith: shared.sanitizeForSheet(shared.normalizeText(body.metWith)),
       date: formatDate(shared.normalizeText(body.date))
     };
 

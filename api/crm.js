@@ -25,8 +25,16 @@ module.exports = async function handler(req, res) {
 
     var body = await shared.readRequestBody(req);
 
-    // Forward the request body as form-urlencoded to Apps Script
-    var result = await shared.forwardToAppsScript(APPS_SCRIPT_URL, body, 15000);
+    // Sanitize all string values to prevent Google Sheets formula injection
+    var sanitizedBody = {};
+    Object.keys(body).forEach(function (key) {
+      sanitizedBody[key] = typeof body[key] === 'string'
+        ? shared.sanitizeForSheet(body[key])
+        : body[key];
+    });
+
+    // Forward the sanitized body as form-urlencoded to Apps Script
+    var result = await shared.forwardToAppsScript(APPS_SCRIPT_URL, sanitizedBody, 15000);
 
     // Return the raw Apps Script response so the CRM client can parse it
     res.statusCode = result.ok ? 200 : 502;

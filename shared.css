@@ -501,3 +501,44 @@ button { cursor: pointer; background: none; border: none; }
 .ember:nth-child(4) { top: 60%; left: 70%; --ex: 20px; --ey: -35px; animation-delay: 0.07s; }
 .ember:nth-child(5) { top: 40%; left: 85%; --ex: 25px; --ey: -30px; animation-delay: 0.12s; }
 .ember:nth-child(6) { top: 70%; left: 40%; --ex: -8px; --ey: -50px; animation-delay: 0.03s; }
+
+/* ── Mobile UX: Touch targets (WCAG 2.5.8) ────────────────────────── */
+
+@media (pointer: coarse) {
+  button, [role="button"], a.btn, .fire-btn, input[type="submit"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* ── Horizontal scroll prevention ──────────────────────────────────── */
+
+html, body {
+  overflow-x: hidden;
+}
+
+/* ── Print: hide decorative elements ───────────────────────────────── */
+
+@media print {
+  .heat-bg, .embers, .heat-waves, .ember-wrap, .heat-orb,
+  .gradient-border::before, .skip-link {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}
+
+/* ── Accessibility: Reduced Motion ─────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .heat-bg, .embers, .heat-waves, .ember-wrap {
+    display: none !important;
+  }
+}

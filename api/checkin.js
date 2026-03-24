@@ -20,7 +20,7 @@ var RATE_LIMITS = { burst: 12, burstWindowMs: 60 * 1000, hourly: 60 };
 
 function normalizeEntry(body) {
   return REQUIRED_FIELDS.concat(OPTIONAL_FIELDS).reduce(function (entry, field) {
-    entry[field] = shared.normalizeText(body[field]);
+    entry[field] = shared.sanitizeForSheet(shared.normalizeText(body[field]));
     return entry;
   }, {});
 }
@@ -60,7 +60,7 @@ module.exports = async function handler(req, res) {
       return shared.sendJson(res, 403, { status: 'error', message: 'Origin not allowed' });
     }
 
-    if (shared.isRateLimited(shared.getClientIp(req), RATE_LIMITS)) {
+    if (await shared.isRateLimited(shared.getClientIp(req), RATE_LIMITS)) {
       return shared.sendJson(res, 429, { status: 'error', message: 'Too many submissions. Please try again shortly.' });
     }
 
