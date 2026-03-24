@@ -505,7 +505,7 @@ button { cursor: pointer; background: none; border: none; }
 /* ── Mobile UX: Touch targets (WCAG 2.5.8) ────────────────────────── */
 
 @media (pointer: coarse) {
-  button, [role="button"], a.btn, .fire-btn, input[type="submit"] {
+  button:not(.nav-dot):not(.chip):not(.tag), [role="button"], a.btn, .fire-btn, input[type="submit"] {
     min-height: 44px;
     min-width: 44px;
   }

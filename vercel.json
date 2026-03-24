@@ -12,7 +12,8 @@
     { "src": "*.xml", "use": "@vercel/static" },
     { "src": "*.webmanifest", "use": "@vercel/static" },
     { "src": "sw.js", "use": "@vercel/static" },
-    { "src": "shared-form.js", "use": "@vercel/static" }
+    { "src": "shared-form.js", "use": "@vercel/static" },
+    { "src": "scripts/*.js", "use": "@vercel/static" }
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1.js" },
@@ -61,6 +62,7 @@
     { "src": "/(.*\\.xml)", "dest": "/$1" },
     { "src": "/(.*\\.webmanifest)", "dest": "/$1" },
     { "src": "/shared-form\\.js", "dest": "/shared-form.js" },
+    { "src": "/scripts/(.*\\.js)", "dest": "/scripts/$1" },
     { "src": "/404", "dest": "/404.html" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
