@@ -359,6 +359,21 @@ body.anchor-mode .heat-line {
   border-radius: var(--radius-xl);
   padding: 0.55rem 0.1rem 0.35rem;
   transition: color 0.4s, border-color 0.4s, box-shadow 0.4s;
+  position: relative;
+  overflow: hidden;
+}
+
+.countdown-value::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(232, 88, 12, 0.5), rgba(255, 153, 51, 0.7), rgba(232, 88, 12, 0.5), transparent);
+  filter: blur(1.5px);
+  animation: thermal-scan 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 3;
 }
 .countdown-label {
   font-size: clamp(0.95rem, 1.2vw, 1.2rem); font-weight: 600;
@@ -1483,14 +1498,14 @@ body.phase-over .ticker-wrap { display: none !important; }
 
       <!-- Card 2: What is TwoTwelve -->
       <div class="carousel-card" data-card="1">
-        <div class="card-icon">&#x1F321;&#xFE0F;</div>
+        <div class="card-icon"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#E8580C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 8px rgba(232,88,12,0.4))"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" fill="rgba(232,88,12,0.15)"/><line x1="11.5" y1="8" x2="11.5" y2="14"/></svg></div>
         <div class="card-heading">WHAT 212&deg;<br>MEANS</div>
         <div class="card-body">212 comes from the boiling point of water: 211&deg; is hot, 212&deg; makes steam. Founder Andy Fulghum built the network around that extra degree.</div>
       </div>
 
       <!-- Card 3: How it works -->
       <div class="carousel-card" data-card="2">
-        <div class="card-icon">&#x1F91D;</div>
+        <div class="card-icon"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#E8580C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 8px rgba(232,88,12,0.4))"><path d="M20 17l-3.5-3.5M6.5 12L2 17"/><path d="M2 7l4.5 4.5"/><path d="M22 7l-4.5 4.5"/><path d="M10.5 12.5l-2 2a1.4 1.4 0 0 0 2 2l3.5-3.5"/><path d="M13.5 9.5l2-2a1.4 1.4 0 0 0-2-2L10 9"/><path d="M7 4l3 3"/><path d="M14 4l3 3"/></svg></div>
         <div class="card-heading">HOW 212<br>WORKS</div>
         <div class="card-body">Members meet weekly, learn each other&rsquo;s businesses through BizChats, and pass permission-based referrals they can confidently stand behind.</div>
         <div class="card-stat">
@@ -1507,7 +1522,7 @@ body.phase-over .ticker-wrap { display: none !important; }
 
       <!-- Card 4: Why it feels different -->
       <div class="carousel-card" data-card="3">
-        <div class="card-icon">&#x2728;</div>
+        <div class="card-icon"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#E8580C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 8px rgba(232,88,12,0.4))"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="rgba(232,88,12,0.2)"/></svg></div>
         <div class="card-heading">WHY IT FEELS<br>DIFFERENT</div>
         <div class="card-body">Like BNI, there&rsquo;s structure. But 212 leans harder into gratitude, 24-hour follow-up, and performance-based accountability.</div>
         <div class="card-stat">

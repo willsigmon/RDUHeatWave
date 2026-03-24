@@ -200,3 +200,232 @@ button { cursor: pointer; background: none; border: none; }
   filter: blur(2px);
   mix-blend-mode: screen;
 }
+
+/* ── Animated Gradient Border ── */
+
+@keyframes border-rotate {
+  to { --border-angle: 360deg; }
+}
+
+@property --border-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* ── Fire Sweep (button hover) ── */
+
+@keyframes fire-sweep {
+  0% { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(200%) skewX(-15deg); }
+}
+
+/* ── Thermal Scan Line ── */
+
+@keyframes thermal-scan {
+  0% { top: 100%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: -2px; opacity: 0; }
+}
+
+/* ── Icon Flame Flicker ── */
+
+@keyframes flame-flicker {
+  0%, 100% { transform: scaleY(1) scaleX(1); }
+  25% { transform: scaleY(1.06) scaleX(0.97); }
+  50% { transform: scaleY(0.95) scaleX(1.04); }
+  75% { transform: scaleY(1.03) scaleX(0.98); }
+}
+
+/* ── Icon Pulse Ring ── */
+
+@keyframes icon-ring-pulse {
+  0% { transform: scale(0.8); opacity: 0.6; }
+  50% { transform: scale(1.1); opacity: 0; }
+  100% { transform: scale(0.8); opacity: 0; }
+}
+
+/* ── Ember Scatter ── */
+
+@keyframes ember-scatter {
+  0% { transform: translate(0, 0) scale(1); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: translate(var(--ex, 30px), var(--ey, -40px)) scale(0); opacity: 0; }
+}
+
+/* ── Heat Distortion Text ── */
+
+@keyframes heat-text-shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ── SVG Icon Definitions (inline via CSS pseudo-elements) ── */
+
+.hw-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.hw-icon svg {
+  width: 1.4rem;
+  height: 1.4rem;
+  position: relative;
+  z-index: 1;
+}
+
+.hw-icon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(232, 88, 12, 0.15);
+  animation: icon-ring-pulse 2.5s ease-in-out infinite;
+}
+
+.hw-icon--flame svg {
+  animation: flame-flicker 1.5s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+.hw-icon--handshake svg {
+  transition: transform 0.3s ease;
+}
+
+.hw-icon--handshake:hover svg {
+  transform: rotate(-8deg) scale(1.1);
+}
+
+.hw-icon--bolt svg {
+  filter: drop-shadow(0 0 4px rgba(232, 88, 12, 0.5));
+}
+
+/* ── Gradient Border Wrapper ── */
+
+.gradient-border {
+  position: relative;
+  background: clip-content;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    transparent 0%,
+    rgba(232, 88, 12, 0.6) 10%,
+    rgba(255, 106, 30, 0.8) 15%,
+    transparent 25%,
+    transparent 75%,
+    rgba(255, 153, 51, 0.5) 85%,
+    rgba(232, 88, 12, 0.6) 90%,
+    transparent 100%
+  );
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  animation: border-rotate 4s linear infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ── Thermal Scan on Countdown ── */
+
+.thermal-scan {
+  position: relative;
+  overflow: hidden;
+}
+
+.thermal-scan::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(232, 88, 12, 0.7), rgba(255, 153, 51, 0.9), rgba(232, 88, 12, 0.7), transparent);
+  filter: blur(1px);
+  animation: thermal-scan 3s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* ── Fire Sweep Button ── */
+
+.fire-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.fire-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  transform: translateX(-100%) skewX(-15deg);
+  pointer-events: none;
+}
+
+.fire-btn:hover::after {
+  animation: fire-sweep 0.8s ease-out;
+}
+
+/* ── Heat Shimmer Text ── */
+
+.heat-text {
+  background: linear-gradient(
+    90deg,
+    var(--color-primary) 0%,
+    #FF9933 25%,
+    var(--color-primary) 50%,
+    #FF6A1E 75%,
+    var(--color-primary) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: heat-text-shimmer 4s linear infinite;
+}
+
+/* ── Ember Particles (button hover) ── */
+
+.ember-wrap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.ember {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #FF9933, #E8580C);
+  opacity: 0;
+}
+
+.fire-btn:hover .ember {
+  animation: ember-scatter 0.8s ease-out forwards;
+}
+
+.ember:nth-child(1) { top: 20%; left: 10%; --ex: -20px; --ey: -30px; animation-delay: 0s; }
+.ember:nth-child(2) { top: 50%; left: 25%; --ex: -15px; --ey: -45px; animation-delay: 0.05s; }
+.ember:nth-child(3) { top: 30%; left: 50%; --ex: 5px; --ey: -40px; animation-delay: 0.1s; }
+.ember:nth-child(4) { top: 60%; left: 70%; --ex: 20px; --ey: -35px; animation-delay: 0.07s; }
+.ember:nth-child(5) { top: 40%; left: 85%; --ex: 25px; --ey: -30px; animation-delay: 0.12s; }
+.ember:nth-child(6) { top: 70%; left: 40%; --ex: -8px; --ey: -50px; animation-delay: 0.03s; }

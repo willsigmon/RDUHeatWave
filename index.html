@@ -189,6 +189,13 @@ body.drawer-open .panel-arrow {
   text-align: center;
 }
 
+.principle-thermo {
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: center;
+  filter: drop-shadow(0 0 12px rgba(232, 88, 12, 0.3));
+}
+
 .principle-box h3 {
   font-family: var(--font-display);
   font-size: clamp(1.5rem, 3vw, 2rem);
@@ -230,11 +237,20 @@ body.drawer-open .panel-arrow {
 .visitor-brief-card {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 0.4rem;
   padding: 0.85rem;
   border-radius: 0.85rem;
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.08);
+  text-align: center;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.visitor-brief-card:hover {
+  border-color: rgba(232, 88, 12, 0.25);
+  box-shadow: 0 0 20px rgba(232, 88, 12, 0.08);
+  transform: translateY(-2px);
 }
 
 .visitor-brief-card strong {
@@ -909,7 +925,27 @@ button { cursor: pointer; background: none; border: none; }
   border: 1px solid var(--color-divider);
   border-radius: var(--radius-md);
   padding: var(--space-1);
+  position: relative;
+  overflow: hidden;
 }
+
+.countdown-value::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(232, 88, 12, 0.6), rgba(255, 153, 51, 0.8), rgba(232, 88, 12, 0.6), transparent);
+  filter: blur(1px);
+  animation: thermal-scan 3s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.countdown-value:nth-child(1)::after { animation-delay: 0s; }
+.countdown-value:nth-child(2)::after { animation-delay: 0.5s; }
+.countdown-value:nth-child(3)::after { animation-delay: 1s; }
+.countdown-value:nth-child(4)::after { animation-delay: 1.5s; }
 
 .countdown-label {
   font-size: 0.65rem;
@@ -1786,8 +1822,41 @@ button { cursor: pointer; background: none; border: none; }
 
 .success-screen.show { display: flex; }
 
-.success-icon { width: 72px; height: 72px; }
-.success-icon svg { width: 100%; height: 100%; fill: none; stroke: var(--color-success); stroke-width: 2; }
+.success-icon {
+  width: 72px;
+  height: 72px;
+  position: relative;
+}
+
+.success-icon::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 2px solid rgba(91, 168, 71, 0.3);
+  animation: success-ring-expand 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+.success-icon::after {
+  content: '';
+  position: absolute;
+  inset: -16px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(91, 168, 71, 0.15) 0%, transparent 70%);
+  animation: success-glow 2s ease-in-out 0.5s infinite alternate;
+}
+
+@keyframes success-ring-expand {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes success-glow {
+  0% { opacity: 0.5; transform: scale(1); }
+  100% { opacity: 1; transform: scale(1.15); }
+}
+
+.success-icon svg { width: 100%; height: 100%; fill: none; stroke: var(--color-success); stroke-width: 2; position: relative; z-index: 1; }
 
 .success-check {
   stroke-dasharray: 30;
@@ -1912,11 +1981,27 @@ button { cursor: pointer; background: none; border: none; }
 
 <!-- PANEL 0: ABOUT (swipe right to see) -->
 <div class="panel">
-  <div class="info-card">
-    <h2>RDU HEATWAVE</h2>
+  <div class="info-card gradient-border">
+    <h2 class="heat-text">RDU HEATWAVE</h2>
     <p>The Raleigh-Durham team of the <strong style="color: var(--color-primary);">Two Twelve Referral Network</strong>. A structured, category-exclusive business networking group built on the "extra degree" philosophy.</p>
 
-    <div class="principle-box">
+    <div class="principle-box gradient-border">
+      <div class="principle-thermo" aria-hidden="true">
+        <svg viewBox="0 0 40 80" width="32" height="64" fill="none">
+          <rect x="14" y="8" width="12" height="48" rx="6" stroke="#E8580C" stroke-width="2"/>
+          <circle cx="20" cy="64" r="10" stroke="#E8580C" stroke-width="2" fill="rgba(232,88,12,0.3)"/>
+          <rect class="principle-mercury" x="17" y="20" width="6" height="36" rx="3" fill="#E8580C">
+            <animate attributeName="height" values="12;36;12" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1;0.4 0 0.2 1"/>
+            <animate attributeName="y" values="44;20;44" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1;0.4 0 0.2 1"/>
+          </rect>
+          <circle cx="20" cy="64" r="7" fill="#E8580C">
+            <animate attributeName="r" values="6;8;6" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1;0.4 0 0.2 1"/>
+          </circle>
+          <line x1="28" y1="20" x2="32" y2="20" stroke="rgba(232,88,12,0.4)" stroke-width="1.5"/>
+          <line x1="28" y1="30" x2="32" y2="30" stroke="rgba(232,88,12,0.4)" stroke-width="1.5"/>
+          <line x1="28" y1="40" x2="32" y2="40" stroke="rgba(232,88,12,0.4)" stroke-width="1.5"/>
+        </svg>
+      </div>
       <h3>The 212&deg; Principle</h3>
       <p>At 211 degrees, water is hot. At 212 degrees, it boils. With boiling water comes steam, and with steam, you can power a train. That one extra degree makes all the difference.</p>
     </div>
@@ -1925,14 +2010,31 @@ button { cursor: pointer; background: none; border: none; }
       <div class="visitor-brief-heading">New to 212?</div>
       <div class="visitor-brief-grid">
         <div class="visitor-brief-card">
+          <div class="hw-icon hw-icon--flame" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2c.5 3.5-1 6-3 8 2 0 4 1 4.5 3.5C14.5 16 16 18 18 18c-3 2-7 2-9-.5C7 14 8 10 12 2z" fill="rgba(232,88,12,0.2)"/>
+            </svg>
+          </div>
           <strong>Where it came from</strong>
           <span>Founder Andy Fulghum built 212 around a simple idea: one extra degree turns hot water into steam, and small added effort creates outsized momentum.</span>
         </div>
         <div class="visitor-brief-card">
+          <div class="hw-icon hw-icon--handshake" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 17l-3.5-3.5M6.5 12L2 17"/><path d="M2 7l4.5 4.5"/><path d="M22 7l-4.5 4.5"/>
+              <path d="M10.5 12.5l-2 2a1.4 1.4 0 0 0 2 2l3.5-3.5"/><path d="M13.5 9.5l2-2a1.4 1.4 0 0 0-2-2L10 9"/>
+              <path d="M7 4l3 3"/><path d="M14 4l3 3"/>
+            </svg>
+          </div>
           <strong>How it works</strong>
           <span>Members meet weekly, learn each other&rsquo;s businesses through BizChats, and pass permission-based referrals they can confidently stand behind.</span>
         </div>
         <div class="visitor-brief-card">
+          <div class="hw-icon hw-icon--bolt" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="rgba(232,88,12,0.2)"/>
+            </svg>
+          </div>
           <strong>Why it feels different</strong>
           <span>If you know BNI, the structure will feel familiar. 212 adds gratitude incentives, faster follow-up, and clearer accountability.</span>
         </div>
@@ -1948,7 +2050,7 @@ button { cursor: pointer; background: none; border: none; }
 
 <!-- PANEL 1: FORM (default landing) -->
 <div class="panel">
-<main class="form-card" role="main">
+<main class="form-card gradient-border" role="main">
 
   <!-- Logo -->
   <div class="logo-wrap">
@@ -1966,7 +2068,7 @@ button { cursor: pointer; background: none; border: none; }
     </div>
   </div>
 
-  <h1 class="form-title">RDU HEATWAVE</h1>
+  <h1 class="form-title heat-text">RDU HEATWAVE</h1>
   <p class="form-subtitle">The Raleigh-Durham team of the Two Twelve Referral Network</p>
 
   <!-- Countdown -->
@@ -2062,8 +2164,12 @@ button { cursor: pointer; background: none; border: none; }
     </div>
 
     <div class="submit-wrap">
-      <button type="button" class="submit-btn" id="submit-btn">
+      <button type="button" class="submit-btn fire-btn" id="submit-btn">
         <span class="btn-text">CHECK IN</span>
+        <div class="ember-wrap" aria-hidden="true">
+          <div class="ember"></div><div class="ember"></div><div class="ember"></div>
+          <div class="ember"></div><div class="ember"></div><div class="ember"></div>
+        </div>
         <div class="spinner" role="status" aria-label="Submitting"></div>
       </button>
     </div>
