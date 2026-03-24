@@ -10,6 +10,7 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" href="/icons/heatwave-icon-192.png">
 <link rel="apple-touch-icon" href="/icons/heatwave-icon-180.png">
+<link rel="manifest" href="/site.webmanifest">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -961,7 +962,7 @@ body {
           <div class="kiosk-cd-label">Secs</div>
         </div>
       </div>
-      <div class="kiosk-meeting-status" id="meeting-status" style="display:none;"></div>
+      <div class="kiosk-meeting-status" id="meeting-status" role="status" aria-live="polite" style="display:none;"></div>
     </div>
 
     <!-- Schedule -->
@@ -1037,7 +1038,7 @@ body {
           </div>
           <div class="field">
             <label class="field-label" for="companyName">Company <span class="field-optional">(optional)</span></label>
-            <input class="field-input" type="text" id="companyName" name="companyName" placeholder="e.g. Advantage Lending" maxlength="120">
+            <input class="field-input" type="text" id="companyName" name="companyName" placeholder="e.g. Advantage Lending" autocomplete="organization" maxlength="120">
             <div class="field-error" id="companyName-error">Please enter your company name</div>
           </div>
         </div>
@@ -1087,7 +1088,7 @@ body {
       </form>
 
       <!-- Success Screen -->
-      <div class="success-screen" id="success-screen">
+      <div class="success-screen" id="success-screen" role="status" aria-live="polite">
         <div class="success-icon">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path class="success-check" d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
