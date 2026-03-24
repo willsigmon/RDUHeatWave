@@ -3295,9 +3295,10 @@ button { cursor: pointer; background: none; border: none; }
   var fillLevel = 0;
   var bubbles = [];
   var steamParticles = [];
+  var foamBubbles = [];
   var time = 0;
-  var shards = null;
-  var explosionTime = 0;
+  var foamStarted = false;
+  var foamHeight = 0;
   /* W=160, H=440 logical coords (CSS shows at 80x220) */
 
   function rng(a, b) { return a + Math.random() * (b - a); }
@@ -3326,10 +3327,10 @@ button { cursor: pointer; background: none; border: none; }
   }
 
   function spawnSteam() {
-    var surfaceY = tubeTop + tubeH * (1 - fillLevel);
+    var surfaceY = tubeTop + tubeH * (1 - Math.min(1, fillLevel));
     steamParticles.push({
       x: tubeX + rng(6, tubeW - 6),
-      y: surfaceY - 4,
+      y: surfaceY - foamHeight - 4,
       vx: rng(-0.6, 0.6),
       vy: -rng(0.5, 1.2),
       r: rng(4, 10),
@@ -3338,127 +3339,72 @@ button { cursor: pointer; background: none; border: none; }
     });
   }
 
+  function spawnFoamBubble(baseY) {
+    var cx = tubeX + tubeW / 2;
+    var spreadX = rng(-tubeW * 0.8, tubeW * 0.8);
+    var targetR = rng(3, 9);
+    foamBubbles.push({
+      x: cx + spreadX * 0.3,
+      targetX: cx + spreadX,
+      y: baseY + rng(0, 8),
+      targetY: baseY - rng(2, foamHeight + 10),
+      r: 0, targetR: targetR,
+      life: 1, decay: rng(0.001, 0.004),
+      wobblePhase: Math.random() * Math.PI * 2,
+      progress: 0, speed: rng(0.008, 0.025),
+      layer: Math.random()
+    });
+  }
+
   function drawThermo() {
     ctx.clearRect(0, 0, W, H);
     time += 0.016;
 
     /* Fill rises — slow down near top for tension buildup */
-    var exploded = fillLevel >= 1.05;
-    if (!exploded) {
-      var rate = fillLevel < 0.85 ? 0.008 : (fillLevel < 0.95 ? 0.004 : 0.002);
-      fillLevel = Math.min(1.06, fillLevel + rate);
+    var overflowing = fillLevel >= 1.0;
+    if (fillLevel < 1.3) {
+      var rate = fillLevel < 0.85 ? 0.008 : (fillLevel < 0.95 ? 0.004 : 0.0015);
+      fillLevel = Math.min(1.3, fillLevel + rate);
     }
     var clampedFill = Math.min(1, fillLevel);
     var surfaceY = tubeTop + tubeH * (1 - clampedFill);
 
-    /* Pressure shake when near full */
-    var shakeX = 0, shakeY = 0;
-    var pressure = Math.max(0, (fillLevel - 0.85) / 0.15); /* 0 to 1+ */
-    if (pressure > 0 && !exploded) {
-      var shakeAmt = pressure * 4;
-      shakeX = Math.sin(time * 40) * shakeAmt * (0.5 + Math.random() * 0.5);
-      shakeY = Math.cos(time * 35) * shakeAmt * 0.5;
+    /* Gentle pressure wobble when near full (no violent shake) */
+    var pressure = Math.max(0, (fillLevel - 0.85) / 0.15);
+    if (pressure > 0 && !overflowing) {
+      var wobbleAmt = pressure * 1.5;
       ctx.save();
-      ctx.translate(shakeX, shakeY);
+      ctx.translate(
+        Math.sin(time * 12) * wobbleAmt * 0.4,
+        Math.cos(time * 10) * wobbleAmt * 0.2
+      );
     }
 
-    /* ── EXPLOSION STATE ── */
-    if (fillLevel >= 1.05 && !shards) {
-      shards = [];
-      explosionTime = time;
-      /* Generate glass shards */
-      for (var si = 0; si < 30; si++) {
-        var ang = Math.random() * Math.PI * 2;
-        var spd = 2 + Math.random() * 8;
-        shards.push({
-          x: tubeX + tubeW / 2 + rng(-tubeW, tubeW),
-          y: rng(tubeTop, tubeBot),
-          vx: Math.cos(ang) * spd,
-          vy: Math.sin(ang) * spd - 3,
-          r: rng(2, 8),
-          rot: Math.random() * 6.28,
-          rotV: rng(-0.2, 0.2),
-          life: 1,
-          type: Math.random() < 0.4 ? 'glass' : 'liquid'
-        });
-      }
-      /* Spawn lots of steam */
-      for (var ss = 0; ss < 20; ss++) spawnSteam();
-      /* Haptic + sound */
+    /* ── FOAM OVERFLOW STATE ── */
+    if (fillLevel >= 0.98 && !foamStarted) {
+      foamStarted = true;
       if (typeof HeatFX !== 'undefined') {
         HeatFX.haptics.steamBlast();
         HeatFX.sounds.steamHiss();
       }
     }
 
-    if (shards) {
-      /* Draw explosion shards */
-      for (var shi = shards.length - 1; shi >= 0; shi--) {
-        var sh = shards[shi];
-        sh.x += sh.vx; sh.y += sh.vy;
-        sh.vy += 0.15; sh.rot += sh.rotV;
-        sh.life -= 0.012;
-        if (sh.life <= 0) { shards.splice(shi, 1); continue; }
+    /* Gradually grow foam height */
+    if (foamStarted) {
+      var maxFoam = 60;
+      var foamProgress = Math.min(1, (fillLevel - 0.98) / 0.25);
+      /* Ease-out for natural foam rise */
+      foamHeight = maxFoam * (1 - Math.pow(1 - foamProgress, 3));
 
-        ctx.save();
-        ctx.translate(sh.x, sh.y);
-        ctx.rotate(sh.rot);
-        ctx.globalAlpha = sh.life;
-
-        if (sh.type === 'glass') {
-          /* Glass shard — angular triangle */
-          ctx.beginPath();
-          ctx.moveTo(-sh.r, -sh.r * 0.5);
-          ctx.lineTo(sh.r * 0.7, -sh.r);
-          ctx.lineTo(sh.r * 0.3, sh.r * 0.8);
-          ctx.closePath();
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
-          ctx.strokeStyle = 'rgba(232, 88, 12, 0.4)';
-          ctx.lineWidth = 0.5;
-          ctx.fill(); ctx.stroke();
-        } else {
-          /* Liquid droplet */
-          ctx.beginPath();
-          ctx.arc(0, 0, sh.r, 0, Math.PI * 2);
-          var lg = ctx.createRadialGradient(0, 0, 0, 0, 0, sh.r);
-          lg.addColorStop(0, 'rgba(255, 120, 30, 0.8)');
-          lg.addColorStop(1, 'rgba(232, 88, 12, 0)');
-          ctx.fillStyle = lg;
-          ctx.fill();
-        }
-
-        ctx.globalAlpha = 1;
-        ctx.restore();
+      /* Spawn foam bubbles gradually — more as foam grows */
+      var spawnRate = 0.15 + foamProgress * 0.6;
+      if (Math.random() < spawnRate) {
+        spawnFoamBubble(surfaceY);
       }
-
-      /* Steam continues */
-      if (Math.random() < 0.3) spawnSteam();
-
-      /* Draw remaining steam */
-      for (var sj = steamParticles.length - 1; sj >= 0; sj--) {
-        var sp2 = steamParticles[sj];
-        sp2.x += sp2.vx + sp2.drift * Math.sin(time * 2 + sj);
-        sp2.y += sp2.vy; sp2.r *= 1.012; sp2.life -= sp2.decay;
-        if (sp2.life <= 0) { steamParticles.splice(sj, 1); continue; }
-        ctx.beginPath();
-        ctx.arc(sp2.x, sp2.y, sp2.r, 0, Math.PI * 2);
-        var stg = ctx.createRadialGradient(sp2.x, sp2.y, 0, sp2.x, sp2.y, sp2.r);
-        stg.addColorStop(0, 'rgba(255, 255, 255, ' + (sp2.life * 0.2) + ')');
-        stg.addColorStop(1, 'rgba(255, 255, 255, 0)');
-        ctx.fillStyle = stg;
-        ctx.fill();
+      /* Extra steam wisps from foam */
+      if (Math.random() < 0.1 + foamProgress * 0.25) {
+        spawnSteam();
       }
-
-      /* Flash */
-      var flashAge = time - explosionTime;
-      if (flashAge < 0.3) {
-        ctx.fillStyle = 'rgba(255, 200, 100, ' + (0.3 * (1 - flashAge / 0.3)) + ')';
-        ctx.fillRect(0, 0, W, H);
-      }
-
-      ctx.restore();
-      animId = requestAnimationFrame(drawThermo);
-      return; /* Skip normal drawing */
     }
 
     /* ── Glass tube outline ── */
@@ -3591,6 +3537,84 @@ button { cursor: pointer; background: none; border: none; }
       ctx.shadowBlur = 0;
     }
 
+    /* ── Foam bubbles (gradual overflow) ── */
+    if (foamStarted) {
+      /* Draw foam mass — creamy layered bubbles above the surface */
+      var foamBaseY = surfaceY;
+      var foamTopY = foamBaseY - foamHeight;
+      var cx = tubeX + tubeW / 2;
+
+      /* Solid foam base — creamy gradient sitting on top of liquid */
+      if (foamHeight > 2) {
+        ctx.save();
+        ctx.beginPath();
+        /* Foam shape: wider than tube, organic edges */
+        var foamW = tubeW + foamHeight * 0.8;
+        var foamX = cx - foamW / 2;
+        ctx.ellipse(cx, foamTopY + foamHeight * 0.4, foamW / 2, foamHeight * 0.6, 0, 0, Math.PI * 2);
+        var foamGrad = ctx.createLinearGradient(0, foamTopY, 0, foamBaseY);
+        foamGrad.addColorStop(0, 'rgba(255, 240, 220, 0.7)');
+        foamGrad.addColorStop(0.3, 'rgba(255, 230, 200, 0.6)');
+        foamGrad.addColorStop(0.7, 'rgba(255, 200, 160, 0.5)');
+        foamGrad.addColorStop(1, 'rgba(255, 160, 100, 0.3)');
+        ctx.fillStyle = foamGrad;
+        ctx.fill();
+        ctx.restore();
+      }
+
+      /* Individual foam bubbles — animate each with eased entry */
+      for (var fi = foamBubbles.length - 1; fi >= 0; fi--) {
+        var fb = foamBubbles[fi];
+        fb.progress = Math.min(1, fb.progress + fb.speed);
+        fb.wobblePhase += 0.03;
+        fb.life -= fb.decay;
+
+        if (fb.life <= 0) { foamBubbles.splice(fi, 1); continue; }
+
+        /* Ease-out interpolation for natural foam rise */
+        var ease = 1 - Math.pow(1 - fb.progress, 3);
+        var bx = fb.x + (fb.targetX - fb.x) * ease + Math.sin(fb.wobblePhase) * 1.5;
+        var by = fb.y + (fb.targetY - fb.y) * ease;
+        var br = fb.targetR * ease;
+
+        if (br < 0.5) continue;
+
+        /* Layered foam: back bubbles are dimmer, front are brighter */
+        var alpha = fb.life * (0.4 + fb.layer * 0.4);
+        ctx.beginPath();
+        ctx.arc(bx, by, br, 0, Math.PI * 2);
+        var fbGrad = ctx.createRadialGradient(bx - br * 0.2, by - br * 0.2, 0, bx, by, br);
+        fbGrad.addColorStop(0, 'rgba(255, 245, 230, ' + alpha + ')');
+        fbGrad.addColorStop(0.5, 'rgba(255, 220, 180, ' + (alpha * 0.7) + ')');
+        fbGrad.addColorStop(1, 'rgba(255, 180, 130, ' + (alpha * 0.2) + ')');
+        ctx.fillStyle = fbGrad;
+        ctx.fill();
+
+        /* Subtle highlight on each bubble */
+        if (br > 3) {
+          ctx.beginPath();
+          ctx.arc(bx - br * 0.25, by - br * 0.25, br * 0.3, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(255, 255, 255, ' + (alpha * 0.35) + ')';
+          ctx.fill();
+        }
+      }
+
+      /* Drips running down the sides (overflow effect) */
+      if (foamHeight > 20) {
+        var dripAlpha = Math.min(0.5, (foamHeight - 20) / 60);
+        /* Left drip */
+        ctx.beginPath();
+        ctx.ellipse(tubeX - 2, foamTopY + foamHeight * 0.6, 3, 8 + foamHeight * 0.3, 0.1, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 200, 150, ' + dripAlpha + ')';
+        ctx.fill();
+        /* Right drip */
+        ctx.beginPath();
+        ctx.ellipse(tubeX + tubeW + 2, foamTopY + foamHeight * 0.5, 2.5, 6 + foamHeight * 0.25, -0.15, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 200, 150, ' + (dripAlpha * 0.7) + ')';
+        ctx.fill();
+      }
+    }
+
     /* ── Glass highlight (specular) ── */
     ctx.beginPath();
     ctx.roundRect(tubeX + 6, tubeTop + 8, 8, tubeH * 0.55, 4);
@@ -3607,15 +3631,15 @@ button { cursor: pointer; background: none; border: none; }
       ctx.fillRect(tubeX + tubeW + 4, ty, 8, 1.5);
     }
 
-    /* ── Pressure warning glow ── */
-    if (pressure > 0.3) {
-      var warnAlpha = (pressure - 0.3) * 0.3 * (0.5 + 0.5 * Math.sin(time * 8));
-      ctx.fillStyle = 'rgba(255, 80, 20, ' + warnAlpha + ')';
+    /* ── Subtle warmth glow near full ── */
+    if (pressure > 0.5) {
+      var warnAlpha = (pressure - 0.5) * 0.15 * (0.5 + 0.5 * Math.sin(time * 3));
+      ctx.fillStyle = 'rgba(255, 120, 40, ' + warnAlpha + ')';
       ctx.fillRect(0, 0, W, H);
     }
 
-    /* Close pressure shake transform */
-    if (pressure > 0) ctx.restore();
+    /* Close pressure wobble transform */
+    if (pressure > 0 && !overflowing) ctx.restore();
 
     ctx.restore();
     animId = requestAnimationFrame(drawThermo);
@@ -3625,7 +3649,9 @@ button { cursor: pointer; background: none; border: none; }
     fillLevel = 0;
     bubbles = [];
     steamParticles = [];
-    shards = null;
+    foamBubbles = [];
+    foamStarted = false;
+    foamHeight = 0;
     time = 0;
     if (animId) cancelAnimationFrame(animId);
     drawThermo();
