@@ -117,18 +117,18 @@ select:focus, input[type="time"]:focus, input[type="date"]:focus {
 <noscript><div class="noscript-banner">JavaScript is required for this page to work.</div></noscript>
 <div class="page">
   <div class="eyebrow">RDU Heatwave</div>
-  <h1>BizChat Reminder</h1>
+  <h1 class="heat-text">BizChat Reminder</h1>
   <p class="subtitle">Track your weekly BizChats and set daily nudges.</p>
 
   <!-- ── Member + Stats ─────────────────────────────────────────── -->
-  <div class="card">
+  <div class="card gradient-border">
     <div class="card-label">Your Name</div>
     <select id="member-select" disabled>
       <option value="">Loading members...</option>
     </select>
     <div id="stats-area" class="hidden">
       <div class="stat-row">
-        <span class="stat-value" id="bizchat-count">-</span>
+        <span class="stat-value thermal-scan" id="bizchat-count">-</span>
         <span class="stat-label">BizChats this week</span>
       </div>
       <div id="nudge-msg" class="nudge hidden"></div>
@@ -145,7 +145,7 @@ select:focus, input[type="time"]:focus, input[type="date"]:focus {
   </div>
 
   <!-- ── Quick Log ──────────────────────────────────────────────── -->
-  <div class="card">
+  <div class="card gradient-border">
     <div class="card-label">Quick Log</div>
     <div class="quick-log-form">
       <div>
@@ -158,13 +158,13 @@ select:focus, input[type="time"]:focus, input[type="date"]:focus {
         <label class="field-label" for="ql-date">Date</label>
         <input type="date" id="ql-date">
       </div>
-      <button class="btn btn-primary" id="ql-submit" style="margin-top:4px">Log BizChat</button>
+      <button class="btn btn-primary fire-btn" id="ql-submit" style="margin-top:4px">Log BizChat<div class="ember-wrap" aria-hidden="true"><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div></div></button>
       <div class="feedback" id="ql-feedback"></div>
     </div>
   </div>
 
   <!-- ── Reminders ─────────────────────────────────────────────── -->
-  <div class="card">
+  <div class="card gradient-border">
     <div class="card-label">Daily Reminders</div>
     <p style="color:var(--color-text-muted);font-size:.82rem;margin-bottom:10px">
       Browser notifications at your chosen times each day. The interval checker runs every minute while this tab is open.
@@ -180,7 +180,7 @@ select:focus, input[type="time"]:focus, input[type="date"]:focus {
     </div>
 
     <div class="btn-row">
-      <button class="btn btn-primary btn-sm" id="remind-enable">Enable Reminders</button>
+      <button class="btn btn-primary btn-sm fire-btn" id="remind-enable">Enable Reminders<div class="ember-wrap" aria-hidden="true"><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div></div></button>
       <button class="btn btn-secondary btn-sm" id="remind-disable" disabled>Disable</button>
     </div>
 

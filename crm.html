@@ -509,16 +509,17 @@ td.row-num {
 </head>
 
 <body>
+<div class="heat-bg" aria-hidden="true"><div class="heat-line"></div><div class="heat-line"></div><div class="heat-line"></div><div class="heat-line"></div><div class="heat-line"></div></div>
 <noscript><div class="noscript-banner">JavaScript is required to use the CRM.</div></noscript>
 
 <!-- Login gate -->
 <div class="login-gate" id="login-gate">
-  <div class="login-box">
-    <h1>TEAM CRM</h1>
+  <div class="login-box gradient-border">
+    <h1 class="heat-text">TEAM CRM</h1>
     <p>Enter your PIN to access team data.</p>
     <form id="login-form">
       <input type="password" class="login-input" id="pin-input" placeholder="PIN" autocomplete="off" inputmode="numeric" maxlength="8" autofocus>
-      <button type="submit" class="login-btn">SIGN IN</button>
+      <button type="submit" class="login-btn fire-btn">SIGN IN<div class="ember-wrap" aria-hidden="true"><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div></div></button>
       <div class="login-error" id="login-error"></div>
     </form>
   </div>

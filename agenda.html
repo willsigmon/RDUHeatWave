@@ -731,6 +731,15 @@
     .no-print { display: none !important; }
     /* Ensure page content isn't clipped on print */
     .page { overflow: visible; }
+    /* Hide screen-only animation elements */
+    .heat-bg { display: none !important; }
+    .gradient-border::before { display: none !important; }
+    /* heat-text uses -webkit-text-fill-color: transparent which kills print */
+    .heat-text {
+      -webkit-text-fill-color: var(--fire) !important;
+      background: none !important;
+      animation: none !important;
+    }
   }
 
   /* ===== SCREEN PREVIEW ===== */
@@ -745,10 +754,38 @@
       border-radius: 3px;
       overflow: hidden;
     }
+    /* Animated gradient border on screen preview */
+    .page { position: relative; }
+    .page::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: conic-gradient(
+        from var(--border-angle, 0deg),
+        transparent 0%,
+        rgba(232, 88, 12, 0.6) 10%,
+        rgba(255, 106, 30, 0.8) 15%,
+        transparent 25%,
+        transparent 75%,
+        rgba(255, 153, 51, 0.5) 85%,
+        rgba(232, 88, 12, 0.6) 90%,
+        transparent 100%
+      );
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      -webkit-mask-composite: xor;
+      animation: border-rotate 4s linear infinite;
+      pointer-events: none;
+      z-index: 2;
+    }
   }
 </style>
 </head>
 <body>
+<div class="heat-bg no-print" aria-hidden="true"><div class="heat-line"></div><div class="heat-line"></div><div class="heat-line"></div><div class="heat-line"></div><div class="heat-line"></div></div>
 <noscript><div class="noscript-banner">JavaScript is required to use this page.</div></noscript>
 
 <!-- ==================== PAGE 1: AGENDA ==================== -->
@@ -759,7 +796,7 @@
     <div class="header-top">
       <img class="logo-heatwave" src="heatwave-logo.png" alt="RDU Heatwave">
       <div class="header-text">
-        <div class="team-name">RDU <span>Heatwave</span></div>
+        <div class="team-name">RDU <span class="heat-text">Heatwave</span></div>
         <div class="team-subtitle">Two Twelve Referral Network</div>
         <div class="team-meta" id="meeting-date-meta">&mdash;</div>
         <div class="meeting-badge" id="meeting-number-badge">Meeting #<span id="meeting-number">—</span></div><div class="speaker-badge" id="speaker-badge">&#9733; <span id="speaker-badge-name"></span></div>

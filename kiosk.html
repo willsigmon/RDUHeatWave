@@ -928,7 +928,7 @@ body {
     <div class="kiosk-brand">
       <img src="heatwave-logo.png" alt="RDU Heatwave logo" class="kiosk-logo">
       <div class="kiosk-brand-text">
-        <div class="kiosk-title">RDU HEATWAVE</div>
+        <div class="kiosk-title heat-text">RDU HEATWAVE</div>
         <div class="kiosk-tt-badge">
           <img src="twotwelve-logo.png" alt="Two Twelve">
           <span>Two Twelve Referral Network</span>
@@ -942,19 +942,19 @@ body {
       <div class="kiosk-meeting-datetime" id="meeting-datetime">Loading...</div>
       <div class="kiosk-countdown-grid" id="countdown-grid">
         <div class="kiosk-cd-unit">
-          <div class="kiosk-cd-value" id="cd-days">--</div>
+          <div class="kiosk-cd-value thermal-scan" id="cd-days">--</div>
           <div class="kiosk-cd-label">Days</div>
         </div>
         <div class="kiosk-cd-unit">
-          <div class="kiosk-cd-value" id="cd-hours">--</div>
+          <div class="kiosk-cd-value thermal-scan" id="cd-hours">--</div>
           <div class="kiosk-cd-label">Hrs</div>
         </div>
         <div class="kiosk-cd-unit">
-          <div class="kiosk-cd-value" id="cd-mins">--</div>
+          <div class="kiosk-cd-value thermal-scan" id="cd-mins">--</div>
           <div class="kiosk-cd-label">Mins</div>
         </div>
         <div class="kiosk-cd-unit">
-          <div class="kiosk-cd-value" id="cd-secs">--</div>
+          <div class="kiosk-cd-value thermal-scan" id="cd-secs">--</div>
           <div class="kiosk-cd-label">Secs</div>
         </div>
       </div>
@@ -999,7 +999,7 @@ body {
 
   <!-- RIGHT COLUMN: Check-in Form -->
   <div class="kiosk-right">
-    <div class="kiosk-form-card" id="form-card">
+    <div class="kiosk-form-card gradient-border" id="form-card">
 
       <div class="kiosk-form-header">
         <div class="kiosk-form-title-row">
@@ -1075,9 +1075,10 @@ body {
         </div>
 
         <div class="submit-wrap">
-          <button type="button" class="submit-btn" id="submit-btn">
+          <button type="button" class="submit-btn fire-btn" id="submit-btn">
             <span class="btn-text">CHECK IN</span>
             <div class="spinner" role="status" aria-label="Submitting"></div>
+            <div class="ember-wrap" aria-hidden="true"><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div></div>
           </button>
         </div>
       </form>

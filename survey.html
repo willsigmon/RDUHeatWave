@@ -406,6 +406,7 @@
   </style>
 </head>
 <body>
+<div class="heat-bg" aria-hidden="true"><div class="heat-line"></div><div class="heat-line"></div><div class="heat-line"></div><div class="heat-line"></div><div class="heat-line"></div></div>
 <noscript><div class="noscript-banner">JavaScript is required to use this page.</div></noscript>
 
 <div class="page-wrapper">
@@ -433,7 +434,7 @@
       <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#f47b4a"/></svg>
       Member Feedback · 2026
     </div>
-    <h1>How's the <em>heat</em> treating you?</h1>
+    <h1 class="heat-text">How's the <em>heat</em> treating you?</h1>
     <p>A quick, anonymous pulse check from your RDU Heatwave team. Five minutes, ten questions — your honest feedback helps us fire on all cylinders.</p>
     <div class="hero-meta">
       <span class="hero-pill">
@@ -453,7 +454,7 @@
 
   <!-- MAIN -->
   <main>
-    <div class="survey-container">
+    <div class="survey-container gradient-border">
 
       <!-- Progress -->
       <div class="progress-wrap" aria-live="polite">
@@ -618,9 +619,10 @@
             Your response is completely anonymous
           </div>
           <br>
-          <button type="submit" class="btn-submit" id="submit-btn">
+          <button type="submit" class="btn-submit fire-btn" id="submit-btn">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
             Submit My Feedback
+            <span class="ember" aria-hidden="true"></span><span class="ember" aria-hidden="true"></span><span class="ember" aria-hidden="true"></span>
           </button>
         </div>
 

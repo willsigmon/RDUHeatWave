@@ -109,12 +109,13 @@
 </style>
 </head>
 <body>
+<div class="heat-bg" aria-hidden="true"><div class="heat-line"></div><div class="heat-line"></div><div class="heat-line"></div><div class="heat-line"></div><div class="heat-line"></div></div>
 <noscript><div style="padding:16px;text-align:center;">JavaScript is required to use this page.</div></noscript>
 
 <div class="login-shell" id="login-shell">
-  <div class="login-card">
+  <div class="login-card gradient-border">
     <div class="eyebrow">RDU Heatwave</div>
-    <h1>Survey Results</h1>
+    <h1 class="heat-text">Survey Results</h1>
     <p>Aggregated member survey data. Admin passcode required.</p>
     <form id="login-form" style="display:grid;gap:14px;">
       <div class="field">
@@ -132,7 +133,7 @@
     <div class="hero">
       <div>
         <div class="eyebrow">RDU Heatwave</div>
-        <h1>Survey Results</h1>
+        <h1 class="heat-text">Survey Results</h1>
         <p class="muted" style="margin:6px 0 0;font-size:0.95rem;">Aggregated member feedback.</p>
       </div>
       <div class="actions">
@@ -285,7 +286,7 @@
     var fill = el('div', 'bar-fill');
     fill.style.width = pct + '%';
     track.appendChild(fill);
-    var countEl = el('div', 'bar-count');
+    var countEl = el('div', 'bar-count thermal-scan');
     countEl.textContent = count;
     row.appendChild(labelEl);
     row.appendChild(track);
@@ -296,17 +297,17 @@
   function renderResults(results) {
     var container = el('div');
 
-    var kpiCard = el('div', 'kpi-card');
+    var kpiCard = el('div', 'kpi-card gradient-border');
     var kpiLabel = el('div', 'kpi-label');
     kpiLabel.textContent = 'Total Responses';
-    var kpiValue = el('div', 'kpi-value');
+    var kpiValue = el('div', 'kpi-value thermal-scan');
     kpiValue.textContent = results.totalResponses || 0;
     kpiCard.appendChild(kpiLabel);
     kpiCard.appendChild(kpiValue);
     container.appendChild(kpiCard);
 
     QUESTIONS.forEach(function (q, i) {
-      var card = el('div', 'q-card');
+      var card = el('div', 'q-card gradient-border');
       var qLabel = el('div', 'q-label');
       qLabel.textContent = 'Q' + (i + 1);
       var qTitle = el('div', 'q-title');
