@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#E8580C">
+<title>RDU Heatwave — Year in Review 2026</title>
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="icon" type="image/png" href="/icons/heatwave-icon-192.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="stylesheet" href="/shared.css">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --color-primary: #E8580C;
+    --color-bg: #1a1412;
+    --color-surface: #231c18;
+    --color-surface-2: #2c2420;
+    --color-text: #f0e6dc;
+    --color-text-muted: #a89585;
+    --color-text-faint: #6b5c4e;
+    --color-success: #5BA847;
+    --color-gold: #FFD700;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--font-body);
+    background: var(--color-bg);
+    color: var(--color-text);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* ── Slide container ── */
+  .deck { position: relative; width: 100vw; height: 100vh; }
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 4vh 6vw;
+    opacity: 0; transform: scale(0.95);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .slide.active {
+    opacity: 1; transform: scale(1);
+    pointer-events: auto; z-index: 1;
+  }
+
+  /* ── Progress bar ── */
+  .progress-bar {
+    position: fixed; top: 0; left: 0; height: 4px;
+    background: var(--color-primary);
+    transition: width 0.4s ease;
+    z-index: 100;
+  }
+
+  /* ── Slide nav dots ── */
+  .nav-dots {
+    position: fixed; bottom: 2vh; left: 50%;
+    transform: translateX(-50%);
+    display: flex; gap: 10px; z-index: 100;
+  }
+  .nav-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--color-text-faint);
+    cursor: pointer; transition: all 0.3s;
+    border: none;
+  }
+  .nav-dot.active { background: var(--color-primary); transform: scale(1.3); }
+
+  /* ── Typography ── */
+  .slide-badge {
+    font-family: var(--font-display);
+    font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+    letter-spacing: 0.25em;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    margin-bottom: 1.5vh;
+  }
+  .slide-title {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    letter-spacing: 0.06em;
+    line-height: 1;
+    text-align: center;
+    margin-bottom: 2vh;
+  }
+  .slide-subtitle {
+    font-size: clamp(1rem, 1.8vw, 1.4rem);
+    color: var(--color-text-muted);
+    text-align: center;
+    max-width: 50ch;
+    line-height: 1.5;
+  }
+
+  /* ── Big stat ── */
+  .big-stat {
+    font-family: var(--font-display);
+    font-size: clamp(6rem, 14vw, 12rem);
+    line-height: 1;
+    color: var(--color-primary);
+    text-shadow: 0 0 60px rgba(232, 88, 12, 0.3);
+  }
+  .big-stat-label {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    letter-spacing: 0.15em;
+    color: var(--color-text-muted);
+    margin-top: 1vh;
+  }
+
+  /* ── Stats grid ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3vw;
+    width: 80%;
+    max-width: 1200px;
+  }
+  .stat-card {
+    background: var(--color-surface);
+    border: 1px solid rgba(232, 88, 12, 0.15);
+    border-radius: 16px;
+    padding: 3vh 2vw;
+    text-align: center;
+  }
+  .stat-card-value {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    color: var(--color-primary);
+    line-height: 1;
+  }
+  .stat-card-label {
+    font-family: var(--font-display);
+    font-size: clamp(0.9rem, 1.4vw, 1.2rem);
+    letter-spacing: 0.12em;
+    color: var(--color-text-muted);
+    margin-top: 0.8vh;
+  }
+
+  /* ── Weekly chart ── */
+  .chart-wrap {
+    width: 85%;
+    max-width: 1100px;
+  }
+  .chart-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 30vh;
+    padding-bottom: 3vh;
+    border-bottom: 2px solid var(--color-surface-2);
+  }
+  .chart-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .chart-bar {
+    width: 100%;
+    background: linear-gradient(to top, var(--color-primary), #FF6A1E);
+    border-radius: 4px 4px 0 0;
+    min-height: 4px;
+    transition: height 0.8s ease;
+  }
+  .chart-val {
+    font-family: var(--font-display);
+    font-size: clamp(0.7rem, 1vw, 0.9rem);
+    color: var(--color-text-muted);
+  }
+  .chart-label {
+    font-size: clamp(0.55rem, 0.8vw, 0.75rem);
+    color: var(--color-text-faint);
+    margin-top: 4px;
+  }
+
+  /* ── Member highlights ── */
+  .member-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2vw;
+    width: 85%;
+    max-width: 1200px;
+  }
+  .member-card {
+    background: var(--color-surface);
+    border: 1px solid rgba(232, 88, 12, 0.12);
+    border-radius: 12px;
+    padding: 2.5vh 1.5vw;
+    text-align: center;
+  }
+  .member-card-name {
+    font-family: var(--font-display);
+    font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5vh;
+  }
+  .member-card-role {
+    font-size: clamp(0.7rem, 0.9vw, 0.85rem);
+    color: var(--color-text-faint);
+    margin-bottom: 1.5vh;
+  }
+  .member-card-stat {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    color: var(--color-primary);
+  }
+  .member-card-stat-label {
+    font-size: clamp(0.65rem, 0.85vw, 0.8rem);
+    color: var(--color-text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── Highlight row ── */
+  .highlight-row {
+    display: flex; gap: 3vw;
+    align-items: center;
+    margin-top: 3vh;
+  }
+  .highlight-item {
+    text-align: center;
+  }
+  .highlight-value {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    color: var(--color-gold);
+  }
+  .highlight-label {
+    font-size: clamp(0.8rem, 1.1vw, 1rem);
+    color: var(--color-text-muted);
+    letter-spacing: 0.08em;
+  }
+
+  /* ── Closing slide ── */
+  .closing-tagline {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    letter-spacing: 0.08em;
+    color: var(--color-primary);
+    margin-top: 3vh;
+    text-align: center;
+  }
+
+  .fire-emoji { font-size: clamp(3rem, 5vw, 4rem); margin-bottom: 1vh; }
+
+  /* ── Controls hint ── */
+  .controls-hint {
+    position: fixed; bottom: 2vh; right: 2vw;
+    font-size: 0.7rem;
+    color: var(--color-text-faint);
+    z-index: 100;
+  }
+
+  @media (max-width: 768px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .member-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="heat-bg" aria-hidden="true">
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+</div>
+<div class="heat-orb" aria-hidden="true"></div>
+
+<div class="progress-bar" id="progress-bar"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: Title -->
+  <div class="slide active" data-slide="0">
+    <div class="fire-emoji">🔥</div>
+    <div class="slide-badge">RDU Heatwave &bull; 212 Referral Network</div>
+    <div class="slide-title">2026 YEAR IN REVIEW</div>
+    <div class="slide-subtitle">11 meetings &bull; January 8 &ndash; March 19, 2026</div>
+  </div>
+
+  <!-- SLIDE 2: Revenue hero -->
+  <div class="slide" data-slide="1">
+    <div class="slide-badge">Closed Revenue</div>
+    <div class="big-stat">$115,111</div>
+    <div class="big-stat-label">GENERATED BY THE TEAM</div>
+    <div class="slide-subtitle" style="margin-top:3vh;">That&rsquo;s the extra degree. 211&deg; is hot water &mdash; 212&deg; is steam.</div>
+  </div>
+
+  <!-- SLIDE 3: All stats -->
+  <div class="slide" data-slide="2">
+    <div class="slide-badge">By The Numbers</div>
+    <div class="slide-title" style="font-size:clamp(2rem,4vw,3.5rem); margin-bottom:3vh;">11 WEEKS OF HEAT</div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-card-value">172</div>
+        <div class="stat-card-label">BIZCHATS</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-value">127</div>
+        <div class="stat-card-label">GUESTS HOSTED</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-value">47</div>
+        <div class="stat-card-label">REFERRALS PASSED</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-value">27</div>
+        <div class="stat-card-label">GRATITUDE INCENTIVES</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-value">$115K</div>
+        <div class="stat-card-label">CLOSED REVENUE</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-value">11</div>
+        <div class="stat-card-label">MEETINGS HELD</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: Weekly BizChats chart -->
+  <div class="slide" data-slide="3">
+    <div class="slide-badge">Weekly BizChats</div>
+    <div class="slide-title" style="font-size:clamp(1.8rem,3.5vw,3rem); margin-bottom:2vh;">172 TOTAL &mdash; 15.6 PER WEEK</div>
+    <div class="chart-wrap">
+      <div class="chart-bars" id="bizchat-chart">
+        <!-- filled by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: Weekly Guests chart -->
+  <div class="slide" data-slide="4">
+    <div class="slide-badge">Guests Hosted Each Week</div>
+    <div class="slide-title" style="font-size:clamp(1.8rem,3.5vw,3rem); margin-bottom:2vh;">127 GUESTS &mdash; 11.5 PER WEEK</div>
+    <div class="chart-wrap">
+      <div class="chart-bars" id="guest-chart">
+        <!-- filled by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: Revenue breakdown -->
+  <div class="slide" data-slide="5">
+    <div class="slide-badge">Weekly Revenue</div>
+    <div class="slide-title" style="font-size:clamp(1.8rem,3.5vw,3rem); margin-bottom:2vh;">$115,111 CLOSED</div>
+    <div class="chart-wrap">
+      <div class="chart-bars" id="revenue-chart">
+        <!-- filled by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: Per-meeting averages -->
+  <div class="slide" data-slide="6">
+    <div class="slide-badge">Per Meeting Average</div>
+    <div class="slide-title" style="font-size:clamp(2rem,4vw,3.5rem); margin-bottom:3vh;">EVERY THURSDAY WE BRING</div>
+    <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr);">
+      <div class="stat-card">
+        <div class="stat-card-value">15.6</div>
+        <div class="stat-card-label">BIZCHATS</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-value">11.5</div>
+        <div class="stat-card-label">GUESTS</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-value">4.3</div>
+        <div class="stat-card-label">REFERRALS</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-value">$10.5K</div>
+        <div class="stat-card-label">REVENUE</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: Closing -->
+  <div class="slide" data-slide="7">
+    <div class="fire-emoji">🔥</div>
+    <div class="slide-title">THE EXTRA DEGREE</div>
+    <div class="slide-subtitle">211&deg; is hot water. 212&deg; is steam.<br>That one extra degree makes all the difference.</div>
+    <div class="closing-tagline">RDU HEATWAVE &mdash; WE&rsquo;RE JUST GETTING STARTED</div>
+    <div class="highlight-row">
+      <div class="highlight-item">
+        <div class="highlight-value">11</div>
+        <div class="highlight-label">Members</div>
+      </div>
+      <div class="highlight-item">
+        <div class="highlight-value">11</div>
+        <div class="highlight-label">Weeks</div>
+      </div>
+      <div class="highlight-item">
+        <div class="highlight-value">$115K</div>
+        <div class="highlight-label">Revenue</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="nav-dots" id="nav-dots"></div>
+<div class="controls-hint">← → arrows &bull; space to advance &bull; auto-advances every 35s</div>
+
+<script>
+(function() {
+  var slides = document.querySelectorAll('.slide');
+  var total = slides.length;
+  var current = 0;
+  var autoTimer = null;
+  var AUTO_INTERVAL = 35000;
+  var progressBar = document.getElementById('progress-bar');
+  var dotsContainer = document.getElementById('nav-dots');
+
+  // Build nav dots
+  for (var i = 0; i < total; i++) {
+    var dot = document.createElement('button');
+    dot.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    dot.dataset.idx = i;
+    dot.addEventListener('click', function() { goTo(parseInt(this.dataset.idx)); });
+    dotsContainer.appendChild(dot);
+  }
+
+  function goTo(idx) {
+    if (idx < 0) idx = total - 1;
+    if (idx >= total) idx = 0;
+    slides[current].classList.remove('active');
+    dotsContainer.children[current].classList.remove('active');
+    current = idx;
+    slides[current].classList.add('active');
+    dotsContainer.children[current].classList.add('active');
+    progressBar.style.width = ((current + 1) / total * 100) + '%';
+    resetAuto();
+  }
+
+  function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
+
+  function resetAuto() {
+    if (autoTimer) clearInterval(autoTimer);
+    autoTimer = setInterval(next, AUTO_INTERVAL);
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+  });
+
+  // Touch swipe
+  var touchStartX = 0;
+  document.addEventListener('touchstart', function(e) { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', function(e) {
+    var diff = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(diff) > 50) { diff < 0 ? next() : prev(); }
+  });
+
+  // Click to advance
+  document.querySelector('.deck').addEventListener('click', function(e) {
+    if (e.target.closest('.nav-dots')) return;
+    next();
+  });
+
+  // Init progress
+  progressBar.style.width = (1 / total * 100) + '%';
+  resetAuto();
+
+  // ── Build charts ──
+  var weeklyData = [
+    { label: 'Jan 8', bizchats: 1, guests: 15, revenue: 0 },
+    { label: 'Jan 15', bizchats: 12, guests: 19, revenue: 603 },
+    { label: 'Jan 22', bizchats: 20, guests: 11, revenue: 0 },
+    { label: 'Jan 29', bizchats: 10, guests: 9, revenue: 0 },
+    { label: 'Feb 5', bizchats: 20, guests: 10, revenue: 1127 },
+    { label: 'Feb 12', bizchats: 16, guests: 12, revenue: 0 },
+    { label: 'Feb 19', bizchats: 14, guests: 9, revenue: 1553 },
+    { label: 'Feb 26', bizchats: 14, guests: 8, revenue: 495 },
+    { label: 'Mar 5', bizchats: 19, guests: 9, revenue: 101850 },
+    { label: 'Mar 12', bizchats: 18, guests: 12, revenue: 515 },
+    { label: 'Mar 19', bizchats: 28, guests: 13, revenue: 8968 }
+  ];
+
+  function buildChart(containerId, key, format) {
+    var container = document.getElementById(containerId);
+    var maxVal = Math.max.apply(null, weeklyData.map(function(d) { return d[key]; }));
+    if (maxVal === 0) maxVal = 1;
+    container.innerHTML = '';
+    weeklyData.forEach(function(d) {
+      var col = document.createElement('div');
+      col.className = 'chart-col';
+      var heightPct = (d[key] / maxVal) * 100;
+      var valText = format === 'currency'
+        ? (d[key] >= 1000 ? '$' + Math.round(d[key] / 1000) + 'K' : '$' + d[key])
+        : String(d[key]);
+      col.innerHTML =
+        '<div class="chart-val">' + valText + '</div>' +
+        '<div class="chart-bar" style="height:' + Math.max(heightPct, 2) + '%;"></div>' +
+        '<div class="chart-label">' + d.label + '</div>';
+      container.appendChild(col);
+    });
+  }
+
+  buildChart('bizchat-chart', 'bizchats', 'number');
+  buildChart('guest-chart', 'guests', 'number');
+  buildChart('revenue-chart', 'revenue', 'currency');
+})();
+</script>
+</body>
+</html>

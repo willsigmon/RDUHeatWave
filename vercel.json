@@ -49,6 +49,8 @@
     { "src": "/about.html", "dest": "/about.html" },
     { "src": "/remind", "dest": "/remind.html" },
     { "src": "/remind.html", "dest": "/remind.html" },
+    { "src": "/report", "dest": "/report.html" },
+    { "src": "/report.html", "dest": "/report.html" },
     { "src": "/survey-results", "dest": "/survey-results.html" },
     { "src": "/survey-results.html", "dest": "/survey-results.html" },
     { "src": "/(.*\\.css)", "dest": "/$1" },
