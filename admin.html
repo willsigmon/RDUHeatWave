@@ -737,24 +737,23 @@
     reportContent.className = '';
     reportContent.innerHTML =
       '<div class="report-view" data-view="dashboard">' +
-        '<div class="two-col" style="margin-bottom:16px;">' +
-          '<div class="card" style="border-top:3px solid var(--color-primary)">' +
-            '<div class="section-label">Last Week — ' + escapeHtml(report.lastWeek.label) + '</div>' +
-            '<div class="snapshot-grid" style="margin-top:8px">' +
-              '<div class="snapshot-item"><div class="mini-label">Guests</div><div class="snapshot-value">' + escapeHtml(report.lastWeek.guests) + '</div></div>' +
-              '<div class="snapshot-item"><div class="mini-label">BizChats</div><div class="snapshot-value">' + escapeHtml(report.lastWeek.bizChats) + '</div></div>' +
-              '<div class="snapshot-item"><div class="mini-label">Referrals</div><div class="snapshot-value">' + escapeHtml(report.lastWeek.referrals) + '</div></div>' +
-              '<div class="snapshot-item"><div class="mini-label">Revenue</div><div class="snapshot-value">' + escapeHtml(report.lastWeek.closedRevenue) + '</div></div>' +
-            '</div>' +
+        '<div class="card hero-stat-card" style="margin-bottom:16px; background: linear-gradient(135deg, rgba(232,88,12,0.12) 0%, rgba(232,88,12,0.04) 100%); border-left:3px solid var(--color-primary);">' +
+          '<div class="section-label" style="color:var(--color-primary);font-weight:700;">Last Week — ' + escapeHtml(report.lastWeek.label) + '</div>' +
+          '<div class="snapshot-grid" style="margin-top:8px">' +
+            '<div class="snapshot-item"><div class="mini-label">Guests</div><div class="snapshot-value">' + escapeHtml(report.lastWeek.guests) + '</div></div>' +
+            '<div class="snapshot-item"><div class="mini-label">BizChats</div><div class="snapshot-value">' + escapeHtml(report.lastWeek.bizChats) + '</div></div>' +
+            '<div class="snapshot-item"><div class="mini-label">Referrals</div><div class="snapshot-value">' + escapeHtml(report.lastWeek.referrals) + '</div></div>' +
+            '<div class="snapshot-item"><div class="mini-label">Revenue</div><div class="snapshot-value">' + escapeHtml(report.lastWeek.closedRevenue) + '</div></div>' +
           '</div>' +
-          '<div class="card" style="border-top:3px solid rgba(255,215,0,0.6)">' +
-            '<div class="section-label">Rolling 12 Months</div>' +
-            '<div class="snapshot-grid" style="margin-top:8px">' +
-              '<div class="snapshot-item"><div class="mini-label">Guests</div><div class="snapshot-value">' + escapeHtml(report.kpis.guestsHosted) + '</div></div>' +
-              '<div class="snapshot-item"><div class="mini-label">BizChats</div><div class="snapshot-value">' + escapeHtml(report.kpis.bizChats) + '</div></div>' +
-              '<div class="snapshot-item"><div class="mini-label">Referrals</div><div class="snapshot-value">' + escapeHtml(report.kpis.referrals) + '</div></div>' +
-              '<div class="snapshot-item"><div class="mini-label">Revenue</div><div class="snapshot-value">' + escapeHtml(report.kpis.closedRevenue) + '</div></div>' +
-            '</div>' +
+        '</div>' +
+
+        '<div class="card hero-stat-card" style="margin-bottom:16px; background: linear-gradient(135deg, rgba(255,215,0,0.10) 0%, rgba(255,215,0,0.03) 100%); border-left:3px solid rgba(255,215,0,0.7);">' +
+          '<div class="section-label" style="color:rgba(255,215,0,0.85);font-weight:700;">Rolling 12 Months</div>' +
+          '<div class="snapshot-grid" style="margin-top:8px">' +
+            '<div class="snapshot-item"><div class="mini-label">Guests</div><div class="snapshot-value">' + escapeHtml(report.kpis.guestsHosted) + '</div></div>' +
+            '<div class="snapshot-item"><div class="mini-label">BizChats</div><div class="snapshot-value">' + escapeHtml(report.kpis.bizChats) + '</div></div>' +
+            '<div class="snapshot-item"><div class="mini-label">Referrals</div><div class="snapshot-value">' + escapeHtml(report.kpis.referrals) + '</div></div>' +
+            '<div class="snapshot-item"><div class="mini-label">Revenue</div><div class="snapshot-value">' + escapeHtml(report.kpis.closedRevenue) + '</div></div>' +
           '</div>' +
         '</div>' +
 
