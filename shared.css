@@ -379,6 +379,24 @@ button { cursor: pointer; background: none; border: none; }
   50% { filter: drop-shadow(0 0 8px rgba(232, 88, 12, 0.7)); }
 }
 
+/* ── Page Title Icon (from IconScout SVGs) ── */
+
+.page-icon {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  vertical-align: -0.25em;
+  margin-right: 0.3em;
+  filter: brightness(0) saturate(100%) invert(38%) sepia(95%) saturate(1500%) hue-rotate(10deg) brightness(95%);
+  /* produces ~#E8580C from black source SVGs */
+}
+
+.page-icon--lg {
+  width: 2em;
+  height: 2em;
+  vertical-align: -0.35em;
+}
+
 /* ── Gradient Border Wrapper ── */
 
 .gradient-border {
