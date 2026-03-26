@@ -741,19 +741,19 @@
 
         '<div class="card" style="margin-bottom:16px;">' +
           '<div class="section-label">Latest completed week</div>' +
-          '<h2>' + escapeHtml(report.currentWeek.label) + '</h2>' +
+          '<h2>' + escapeHtml(report.lastWeek.label) + '</h2>' +
           (function() {
             var cur = report.recentWeeks && report.recentWeeks[0];
             var prev = report.recentWeeks && report.recentWeeks[1];
-            var curGuests = cur ? cur.guests : report.currentWeek.guests;
-            var curBizChats = cur ? cur.bizChats : report.currentWeek.bizChats;
-            var curReferrals = cur ? cur.referrals : report.currentWeek.referrals;
-            var curRevenue = cur ? cur.revenue : report.currentWeek.closedRevenue;
+            var curGuests = cur ? cur.guests : report.lastWeek.guests;
+            var curBizChats = cur ? cur.bizChats : report.lastWeek.bizChats;
+            var curReferrals = cur ? cur.referrals : report.lastWeek.referrals;
+            var curRevenue = cur ? cur.revenue : report.lastWeek.closedRevenue;
             return '<div class="snapshot-grid">' +
-              '<div class="snapshot-item"><div class="mini-label">Guests</div><div class="snapshot-value">' + escapeHtml(report.currentWeek.guests) + '</div>' + (prev ? renderDelta(curGuests, prev.guests) : '') + '</div>' +
-              '<div class="snapshot-item"><div class="mini-label">BizChats</div><div class="snapshot-value">' + escapeHtml(report.currentWeek.bizChats) + '</div>' + (prev ? renderDelta(curBizChats, prev.bizChats) : '') + '</div>' +
-              '<div class="snapshot-item"><div class="mini-label">Referrals</div><div class="snapshot-value">' + escapeHtml(report.currentWeek.referrals) + '</div>' + (prev ? renderDelta(curReferrals, prev.referrals) : '') + '</div>' +
-              '<div class="snapshot-item"><div class="mini-label">Closed Revenue</div><div class="snapshot-value">' + escapeHtml(report.currentWeek.closedRevenue) + '</div>' + (prev ? renderDelta(curRevenue, prev.revenue) : '') + '</div>' +
+              '<div class="snapshot-item"><div class="mini-label">Guests</div><div class="snapshot-value">' + escapeHtml(report.lastWeek.guests) + '</div>' + (prev ? renderDelta(curGuests, prev.guests) : '') + '</div>' +
+              '<div class="snapshot-item"><div class="mini-label">BizChats</div><div class="snapshot-value">' + escapeHtml(report.lastWeek.bizChats) + '</div>' + (prev ? renderDelta(curBizChats, prev.bizChats) : '') + '</div>' +
+              '<div class="snapshot-item"><div class="mini-label">Referrals</div><div class="snapshot-value">' + escapeHtml(report.lastWeek.referrals) + '</div>' + (prev ? renderDelta(curReferrals, prev.referrals) : '') + '</div>' +
+              '<div class="snapshot-item"><div class="mini-label">Closed Revenue</div><div class="snapshot-value">' + escapeHtml(report.lastWeek.closedRevenue) + '</div>' + (prev ? renderDelta(curRevenue, prev.revenue) : '') + '</div>' +
             '</div>';
           })() +
         '</div>' +
@@ -845,7 +845,7 @@
 
         '<div class="teleprompter-card">' +
           '<div class="section-label">Last week</div>' +
-          '<h2>' + escapeHtml(report.currentWeek.label) + '</h2>' +
+          '<h2>' + escapeHtml(report.lastWeek.label) + '</h2>' +
           renderPresenterStatGrid(report.presenter.lastWeekStats) +
         '</div>' +
 
