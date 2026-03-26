@@ -732,13 +732,6 @@
     reportContent.className = '';
     reportContent.innerHTML =
       '<div class="report-view" data-view="dashboard">' +
-        '<div class="kpi-grid">' +
-          '<div class="card"><div class="kpi-label">Guests Hosted</div><div class="kpi-value">' + escapeHtml(report.kpis.guestsHosted) + '</div></div>' +
-          '<div class="card"><div class="kpi-label">BizChats</div><div class="kpi-value">' + escapeHtml(report.kpis.bizChats) + '</div></div>' +
-          '<div class="card"><div class="kpi-label">Referrals</div><div class="kpi-value">' + escapeHtml(report.kpis.referrals) + '</div></div>' +
-          '<div class="card"><div class="kpi-label">Closed Revenue</div><div class="kpi-value">' + escapeHtml(report.kpis.closedRevenue) + '</div></div>' +
-        '</div>' +
-
         '<div class="two-col" style="margin-bottom:16px;">' +
           '<div class="card" style="border-top:3px solid var(--color-primary)">' +
             '<div class="section-label">Last Week — ' + escapeHtml(report.lastWeek.label) + '</div>' +
@@ -758,25 +751,6 @@
               '<div class="snapshot-item"><div class="mini-label">Revenue</div><div class="snapshot-value">' + escapeHtml(report.kpis.closedRevenue) + '</div></div>' +
             '</div>' +
           '</div>' +
-        '</div>' +
-
-        '<div class="card" style="margin-bottom:16px;">' +
-          '<div class="section-label">Latest completed week</div>' +
-          '<h2>' + escapeHtml(report.lastWeek.label) + '</h2>' +
-          (function() {
-            var cur = report.recentWeeks && report.recentWeeks[0];
-            var prev = report.recentWeeks && report.recentWeeks[1];
-            var curGuests = cur ? cur.guests : report.lastWeek.guests;
-            var curBizChats = cur ? cur.bizChats : report.lastWeek.bizChats;
-            var curReferrals = cur ? cur.referrals : report.lastWeek.referrals;
-            var curRevenue = cur ? cur.revenue : report.lastWeek.closedRevenue;
-            return '<div class="snapshot-grid">' +
-              '<div class="snapshot-item"><div class="mini-label">Guests</div><div class="snapshot-value">' + escapeHtml(report.lastWeek.guests) + '</div>' + (prev ? renderDelta(curGuests, prev.guests) : '') + '</div>' +
-              '<div class="snapshot-item"><div class="mini-label">BizChats</div><div class="snapshot-value">' + escapeHtml(report.lastWeek.bizChats) + '</div>' + (prev ? renderDelta(curBizChats, prev.bizChats) : '') + '</div>' +
-              '<div class="snapshot-item"><div class="mini-label">Referrals</div><div class="snapshot-value">' + escapeHtml(report.lastWeek.referrals) + '</div>' + (prev ? renderDelta(curReferrals, prev.referrals) : '') + '</div>' +
-              '<div class="snapshot-item"><div class="mini-label">Closed Revenue</div><div class="snapshot-value">' + escapeHtml(report.lastWeek.closedRevenue) + '</div>' + (prev ? renderDelta(curRevenue, prev.revenue) : '') + '</div>' +
-            '</div>';
-          })() +
         '</div>' +
 
         '<div class="card" style="margin-bottom:16px;">' +
