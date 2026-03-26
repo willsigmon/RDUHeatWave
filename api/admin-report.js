@@ -182,6 +182,39 @@ function parseAttendanceReport(report) {
   };
 }
 
+function parseRevenueReport(report) {
+  // Revenue Report has per-member Given/Rcvd columns, with
+  // 'Weekly Total Given' and final 'Rcvd' as the last two columns.
+  var givenIdx = report.cols.findIndex(function (label) {
+    return /weekly total given/i.test(label);
+  });
+  var rcvdIdx = report.cols.length - 1;
+  // Walk backwards to find the last 'Rcvd' column
+  for (var i = report.cols.length - 1; i >= 0; i--) {
+    if (/^rcvd$/i.test(report.cols[i].trim())) { rcvdIdx = i; break; }
+  }
+
+  var weeklyRows = report.rows
+    .map(function (row) {
+      var date = shared.parseDate(row[0]);
+      var given = givenIdx >= 0 ? shared.parseNumber(row[givenIdx]) : 0;
+      var rcvd = shared.parseNumber(row[rcvdIdx]);
+      return { date: date, dateLabel: date ? formatShortDate(date) : '', revenue: given + rcvd };
+    })
+    .filter(function (row) { return !!row.date; })
+    .sort(compareRowsByDateAsc);
+
+  var totalRevenue = getCompletedRows(weeklyRows).reduce(function (sum, row) {
+    return sum + row.revenue;
+  }, 0);
+
+  return {
+    lastWeek: getPreviousWeekRow(weeklyRows),
+    recentWeeks: getCompletedRows(weeklyRows).slice(-6),
+    totalRevenue: totalRevenue
+  };
+}
+
 function parsePipelineReport(report) {
   var weekly = new Map();
   var closedDeals = [];
@@ -243,10 +276,10 @@ function parsePipelineReport(report) {
   };
 }
 
-function buildRecentWeeks(guests, bizChats, pipeline) {
+function buildRecentWeeks(guests, bizChats, pipeline, revenue) {
   var buckets = new Map();
 
-  [guests.recentWeeks, bizChats.recentWeeks, pipeline.recentWeeks].forEach(function (collection) {
+  [guests.recentWeeks, bizChats.recentWeeks, pipeline.recentWeeks, revenue.recentWeeks].forEach(function (collection) {
     collection.forEach(function (entry) {
       var key = entry.date.toISOString().slice(0, 10);
       if (!buckets.has(key)) {
@@ -267,7 +300,12 @@ function buildRecentWeeks(guests, bizChats, pipeline) {
   pipeline.recentWeeks.forEach(function (entry) {
     var bucket = buckets.get(entry.date.toISOString().slice(0, 10));
     bucket.referrals = entry.referrals;
-    bucket.revenue = entry.revenue;
+  });
+  revenue.recentWeeks.forEach(function (entry) {
+    var key = entry.date.toISOString().slice(0, 10);
+    if (buckets.has(key)) {
+      buckets.get(key).revenue = entry.revenue;
+    }
   });
 
   return Array.from(buckets.values())
@@ -325,13 +363,15 @@ async function buildAdminReport() {
     fetchReportSheet('Guest Incentive Report'),
     fetchReportSheet('Attendance Report'),
     fetchReportSheet('BizChats Report'),
-    fetchReportSheet('Referral Pipeline')
+    fetchReportSheet('Referral Pipeline'),
+    fetchReportSheet('Revenue Report')
   ]);
 
   var guests = parseGuestReport(sheets[0]);
   var attendance = parseAttendanceReport(sheets[1]);
   var bizChats = parseBizChatsReport(sheets[2]);
   var pipeline = parsePipelineReport(sheets[3]);
+  var revenue = parseRevenueReport(sheets[4]);
 
   var report = {
     generatedAt: new Date().toISOString(),
@@ -339,16 +379,16 @@ async function buildAdminReport() {
       guestsHosted: guests.totalGuests,
       bizChats: bizChats.totalBizChats,
       referrals: pipeline.totalReferrals,
-      closedRevenue: formatCurrency(pipeline.totalRevenue)
+      closedRevenue: formatCurrency(revenue.totalRevenue)
     },
     lastWeek: {
       label: (guests.lastWeek && guests.lastWeek.dateLabel) || (bizChats.lastWeek && bizChats.lastWeek.dateLabel) || (pipeline.lastWeek && pipeline.lastWeek.dateLabel) || 'Previous',
       guests: guests.lastWeek ? guests.lastWeek.guests : 0,
       bizChats: bizChats.lastWeek ? bizChats.lastWeek.total : 0,
       referrals: pipeline.lastWeek ? pipeline.lastWeek.referrals : 0,
-      closedRevenue: formatCurrency(pipeline.lastWeek ? pipeline.lastWeek.revenue : 0)
+      closedRevenue: formatCurrency(revenue.lastWeek ? revenue.lastWeek.revenue : 0)
     },
-    recentWeeks: buildRecentWeeks(guests, bizChats, pipeline),
+    recentWeeks: buildRecentWeeks(guests, bizChats, pipeline, revenue),
     leaders: {
       guestHosts: guests.leaderboard.slice(0, 6),
       bizChats: bizChats.leaderboard.slice(0, 6)
