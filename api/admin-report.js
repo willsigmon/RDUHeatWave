@@ -197,9 +197,8 @@ function parseRevenueReport(report) {
   var weeklyRows = report.rows
     .map(function (row) {
       var date = shared.parseDate(row[0]);
-      var given = givenIdx >= 0 ? shared.parseNumber(row[givenIdx]) : 0;
       var rcvd = shared.parseNumber(row[rcvdIdx]);
-      return { date: date, dateLabel: date ? formatShortDate(date) : '', revenue: given + rcvd };
+      return { date: date, dateLabel: date ? formatShortDate(date) : '', revenue: rcvd };
     })
     .filter(function (row) { return !!row.date; })
     .sort(compareRowsByDateAsc);
