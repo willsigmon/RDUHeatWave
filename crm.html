@@ -749,7 +749,9 @@ td.row-num {
     // Find totals row (no value in col A, but has data)
     for (var r = data.rows.length - 1; r >= 0; r--) {
       if ((!data.rows[r][0] || !data.rows[r][0].trim()) && data.rows[r][colIdx] && data.rows[r][colIdx].trim()) {
-        return data.rows[r][colIdx];
+        var cellVal = data.rows[r][colIdx].trim();
+        if (/^#(REF|N\/A|VALUE|DIV\/0|NAME\?|NULL)!?$/i.test(cellVal)) return null;
+        return cellVal;
       }
     }
     return null;
@@ -927,7 +929,8 @@ td.row-num {
       html += '<td class="row-num">' + (rowIdx + 1) + '</td>';
 
       visibleCols.forEach(function(colIdx) {
-        var value = currentData.rows[rowIdx][colIdx] || '';
+        var raw = currentData.rows[rowIdx][colIdx] || '';
+        var value = /^#(REF|N\/A|VALUE|DIV\/0|NAME\?|NULL)!?$/i.test(raw.trim()) ? '' : raw;
         var isRO = !activeTab.rw || isReadOnlyCol(colIdx) || isTotals;
         var cls = isRO ? 'readonly' : 'editable';
         html += '<td class="' + cls + '"' +
