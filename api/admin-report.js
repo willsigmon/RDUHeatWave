@@ -257,6 +257,14 @@ function parsePipelineReport(report) {
 
   var recentWeeks = Array.from(weekly.values()).sort(compareRowsByDateAsc);
 
+  // Pick 3 random "Closed Business" referrals for the weekly spotlight
+  var spotlightPool = closedDeals.slice();
+  var spotlight = [];
+  while (spotlight.length < 3 && spotlightPool.length > 0) {
+    var idx = Math.floor(Math.random() * spotlightPool.length);
+    spotlight.push(spotlightPool.splice(idx, 1)[0]);
+  }
+
   return {
     lastWeek: getPreviousWeekRow(recentWeeks),
     recentWeeks: recentWeeks.slice(-6),
@@ -272,7 +280,14 @@ function parsePipelineReport(report) {
           to: entry.to, prospect: entry.prospect,
           revenue: formatCurrency(entry.revenue)
         };
-      })
+      }),
+    spotlight: spotlight.map(function (entry) {
+      return {
+        dateLabel: entry.dateLabel, from: entry.from,
+        to: entry.to, prospect: entry.prospect,
+        revenue: formatCurrency(entry.revenue)
+      };
+    })
   };
 }
 
@@ -394,7 +409,8 @@ async function buildAdminReport() {
       bizChats: bizChats.leaderboard.slice(0, 6)
     },
     attendanceWatchlist: attendance.watchlist,
-    recentClosedDeals: pipeline.recentClosedDeals
+    recentClosedDeals: pipeline.recentClosedDeals,
+    referralSpotlight: pipeline.spotlight
   };
 
   report.presenter = buildPresenterPayload(report);

@@ -739,6 +739,27 @@
           '<div class="card"><div class="kpi-label">Closed Revenue</div><div class="kpi-value">' + escapeHtml(report.kpis.closedRevenue) + '</div></div>' +
         '</div>' +
 
+        '<div class="two-col" style="margin-bottom:16px;">' +
+          '<div class="card" style="border-top:3px solid var(--color-primary)">' +
+            '<div class="section-label">Last Week — ' + escapeHtml(report.lastWeek.label) + '</div>' +
+            '<div class="snapshot-grid" style="margin-top:8px">' +
+              '<div class="snapshot-item"><div class="mini-label">Guests</div><div class="snapshot-value">' + escapeHtml(report.lastWeek.guests) + '</div></div>' +
+              '<div class="snapshot-item"><div class="mini-label">BizChats</div><div class="snapshot-value">' + escapeHtml(report.lastWeek.bizChats) + '</div></div>' +
+              '<div class="snapshot-item"><div class="mini-label">Referrals</div><div class="snapshot-value">' + escapeHtml(report.lastWeek.referrals) + '</div></div>' +
+              '<div class="snapshot-item"><div class="mini-label">Revenue</div><div class="snapshot-value">' + escapeHtml(report.lastWeek.closedRevenue) + '</div></div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="card" style="border-top:3px solid rgba(255,215,0,0.6)">' +
+            '<div class="section-label">Rolling 12 Months</div>' +
+            '<div class="snapshot-grid" style="margin-top:8px">' +
+              '<div class="snapshot-item"><div class="mini-label">Guests</div><div class="snapshot-value">' + escapeHtml(report.kpis.guestsHosted) + '</div></div>' +
+              '<div class="snapshot-item"><div class="mini-label">BizChats</div><div class="snapshot-value">' + escapeHtml(report.kpis.bizChats) + '</div></div>' +
+              '<div class="snapshot-item"><div class="mini-label">Referrals</div><div class="snapshot-value">' + escapeHtml(report.kpis.referrals) + '</div></div>' +
+              '<div class="snapshot-item"><div class="mini-label">Revenue</div><div class="snapshot-value">' + escapeHtml(report.kpis.closedRevenue) + '</div></div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+
         '<div class="card" style="margin-bottom:16px;">' +
           '<div class="section-label">Latest completed week</div>' +
           '<h2>' + escapeHtml(report.lastWeek.label) + '</h2>' +
@@ -832,6 +853,22 @@
             }) +
           '</div>' +
         '</div>' +
+
+        (report.referralSpotlight && report.referralSpotlight.length ?
+          '<div class="card" style="margin-top:16px; border-left: 3px solid var(--color-primary);">' +
+            '<div class="section-label">Referral Spotlight</div>' +
+            '<h2>This week\'s highlights</h2>' +
+            '<p class="muted" style="margin:-4px 0 12px;font-size:0.85rem;">3 random closed referrals — refreshes each load. Great for shout-outs.</p>' +
+            renderList(report.referralSpotlight, function(item) {
+              return '<div class="list-item">' +
+                '<div class="list-text"><strong>' + escapeHtml(item.from) + ' → ' + escapeHtml(item.to) + '</strong><span>' +
+                escapeHtml(item.dateLabel) + ' • ' + escapeHtml(item.prospect) +
+                '</span></div>' +
+                '<div class="list-value">' + escapeHtml(item.revenue) + '</div>' +
+              '</div>';
+            }) +
+          '</div>'
+        : '') +
 
         '<div class="footer-note">Generated from the live published reports and referral pipeline. Good for quick reads; still not a replacement for deep spreadsheet surgery.</div>' +
       '</div>' +
