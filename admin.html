@@ -232,12 +232,17 @@
     border-radius: 14px;
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.06);
+    overflow: hidden;
+    min-width: 0;
   }
 
   .snapshot-value {
     margin-top: 6px;
-    font-size: 1.35rem;
+    font-size: clamp(1rem, 2.5vw, 1.35rem);
     font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .table-wrap {
