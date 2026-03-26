@@ -809,30 +809,30 @@
         </a>
       </div>
     </div>
-    <!-- TEAM STATS — update these when numbers change -->
+    <!-- TEAM STATS — pulled live from /api/stats -->
     <div class="header-stats">
       <div class="stat">
         <div class="stat-value">11</div>
         <div class="stat-label">Members</div>
       </div>
       <div class="stat">
-        <div class="stat-value">114</div>         <!-- GUESTS -->
+        <div class="stat-value" id="stat-guests">127</div>
         <div class="stat-label">Guests</div>
       </div>
       <div class="stat">
-        <div class="stat-value">159</div>          <!-- BIZCHATS -->
+        <div class="stat-value" id="stat-bizchats">172</div>
         <div class="stat-label">BizChats</div>
       </div>
       <div class="stat">
-        <div class="stat-value">44</div>           <!-- REFERRALS -->
+        <div class="stat-value" id="stat-referrals">24</div>
         <div class="stat-label">Referrals</div>
       </div>
       <div class="stat">
-        <div class="stat-value">27</div>           <!-- GIs -->
+        <div class="stat-value" id="stat-gis">27</div>
         <div class="stat-label">Total GIs</div>
       </div>
       <div class="stat">
-        <div class="stat-value">$106,143</div>     <!-- REVENUE -->
+        <div class="stat-value" id="stat-revenue">$115,331</div>
         <div class="stat-label">Closed Revenue</div>
       </div>
     </div>
@@ -1253,6 +1253,18 @@
     if (heroName) heroName.textContent = speaker;
   }
 })();
+
+// Fetch live stats
+fetch('/api/stats').then(function(r) { return r.json(); }).then(function(data) {
+  if (data.status !== 'ok' || !data.stats) return;
+  var s = data.stats;
+  var el = function(id) { return document.getElementById(id); };
+  if (el('stat-guests'))    el('stat-guests').textContent = s.guestsHosted || '—';
+  if (el('stat-bizchats'))  el('stat-bizchats').textContent = s.bizChats || '—';
+  if (el('stat-referrals')) el('stat-referrals').textContent = s.referrals || '—';
+  if (el('stat-gis'))       el('stat-gis').textContent = s.guestIncentives || '—';
+  if (el('stat-revenue'))   el('stat-revenue').textContent = '$' + Number(s.revenue || 0).toLocaleString('en-US');
+}).catch(function() {});
 </script>
 
 </body>

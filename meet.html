@@ -1717,16 +1717,19 @@ body.phase-over .ticker-wrap { display: none !important; }
   var CARD_SETTLE_DELAY = 1200;
 
   /* ──────────────────────────────────────────────
-   *  TEAM STATS — update these when numbers change
+   *  TEAM STATS — fetched live from /api/stats
    * ────────────────────────────────────────────── */
-  var STATS_BIZCHAT    = 159;
-  var STATS_GUESTS     = 114;
-  var STATS_REVENUE    = '$106,143';
-  var STATS_REFERRALS  = 44;
+  var STATS_BIZCHAT    = 172;
+  var STATS_GUESTS     = 127;
+  var STATS_REVENUE    = '$115,331';
+  var STATS_REFERRALS  = 24;
   var STATS_GIS        = 27;
 
-  // Build ticker from stats (runs immediately)
-  (function() {
+  function formatCurrency(n) {
+    return '$' + Number(n).toLocaleString('en-US');
+  }
+
+  function buildTicker() {
     var items = [
       '\uD83D\uDCAC ' + STATS_BIZCHAT + ' BIZCHATS',
       '\uD83E\uDD1D ' + STATS_GUESTS + ' GUESTS HOSTED',
@@ -1738,7 +1741,21 @@ body.phase-over .ticker-wrap { display: none !important; }
     var sep = '<span class="ticker-sep">\u2022</span>';
     var html = items.map(function(t) { return '<span class="ticker-stat">' + t + '</span>'; }).join(sep);
     document.getElementById('ticker-content').innerHTML = html + sep + html;
-  })();
+  }
+
+  // Render immediately with defaults, then update with live data
+  buildTicker();
+
+  fetch('/api/stats').then(function(r) { return r.json(); }).then(function(data) {
+    if (data.status === 'ok' && data.stats) {
+      STATS_BIZCHAT  = data.stats.bizChats || STATS_BIZCHAT;
+      STATS_GUESTS   = data.stats.guestsHosted || STATS_GUESTS;
+      STATS_REVENUE  = formatCurrency(data.stats.revenue || 0);
+      STATS_REFERRALS = data.stats.referrals || STATS_REFERRALS;
+      STATS_GIS      = data.stats.guestIncentives || STATS_GIS;
+      buildTicker();
+    }
+  }).catch(function() {});
 
   var PHASE = { COUNTDOWN: 0, WARMUP: 1, HORN: 2, LIVE: 3, OVER: 4 };
 
