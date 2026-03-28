@@ -1,2 +1,6 @@
 .vercel
 .env*.local
+.claude/launch.json
+.claude/settings.local.json
+.claude/worktrees/
+.playwright-mcp/
