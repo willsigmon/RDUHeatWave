@@ -1,6 +1,9 @@
 .claude
 .playwright-mcp
 test-results
+tests
+node_modules
+vitest.config.js
 icon-preview.html
 preview-*.png
 qa-*.png
