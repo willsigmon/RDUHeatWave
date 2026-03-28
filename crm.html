@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#E8580C">
+<meta name="theme-color" content="#1a1412">
 <title>RDU Heatwave — Team CRM</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="description" content="Team CRM for RDU Heatwave member management.">
@@ -22,1084 +22,120 @@
 <meta name="twitter:title" content="RDU Heatwave — Team CRM">
 <meta name="twitter:description" content="Team CRM for RDU Heatwave member management.">
 <meta name="twitter:image" content="https://rduheatwave.team/icons/heatwave-icon-512.png">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/shared.css">
-
-<style>
-/* ── CRM-specific tokens ────────────────────────────────── */
-:root {
-  --sidebar-w: 220px;
-  --topbar-h: 56px;
-  --cell-edit-bg: #2a2218;
-  --cell-readonly-bg: rgba(255,255,255,0.03);
-  --row-hover: rgba(232, 88, 12, 0.06);
-  --row-totals: rgba(232, 88, 12, 0.10);
-}
-
-html, body { height: 100%; overflow: hidden; }
-body {
-  font-family: var(--font-body);
-  color: var(--color-text);
-  background: var(--color-bg);
-  display: flex;
-  flex-direction: column;
-}
-
-/* ── Login gate ──────────────────────────────────────────── */
-.login-gate {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background:
-    radial-gradient(circle at 50% 30%, rgba(232,88,12,0.12), transparent 28rem),
-    var(--color-bg);
-}
-
-.login-box {
-  text-align: center;
-  max-width: 360px;
-  width: 100%;
-  padding: 0 var(--space-4);
-}
-
-.login-box h1 {
-  font-family: var(--font-display);
-  font-size: var(--text-2xl);
-  color: var(--color-primary);
-  margin-bottom: var(--space-2);
-}
-
-.login-box p {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-  margin-bottom: var(--space-6);
-}
-
-.login-input {
-  width: 100%;
-  padding: 0.875rem 1rem;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  color: var(--color-text);
-  font-size: var(--text-base);
-  text-align: center;
-  letter-spacing: 0.15em;
-  margin-bottom: var(--space-4);
-}
-
-.login-input:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(232,88,12,0.15);
-}
-
-.login-btn {
-  width: 100%;
-  padding: 0.875rem;
-  background: var(--gradient-fire);
-  color: #fff;
-  font-family: var(--font-display);
-  font-size: 1.2rem;
-  letter-spacing: 0.08em;
-  border: none;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-}
-
-.login-btn:hover { opacity: 0.9; }
-.login-error {
-  color: var(--color-error);
-  font-size: var(--text-sm);
-  margin-top: var(--space-3);
-}
-
-/* ── App shell ───────────────────────────────────────────── */
-.app { display: none; height: 100vh; flex-direction: column; }
-.app.active { display: flex; }
-
-/* Topbar */
-.topbar {
-  height: var(--topbar-h);
-  background: var(--color-surface);
-  border-bottom: 1px solid var(--color-divider);
-  display: flex;
-  align-items: center;
-  padding: 0 var(--space-4);
-  gap: var(--space-4);
-  flex-shrink: 0;
-  z-index: 10;
-}
-
-.topbar-title {
-  font-family: var(--font-display);
-  font-size: 1.4rem;
-  color: var(--color-primary);
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-}
-
-.topbar-tab-name {
-  color: var(--color-text);
-  font-size: var(--text-sm);
-  font-weight: 600;
-}
-
-.topbar-spacer { flex: 1; }
-
-.topbar-search {
-  padding: 0.4rem 0.75rem;
-  background: var(--color-surface-2);
-  border: 1px solid var(--color-divider);
-  border-radius: var(--radius-full);
-  color: var(--color-text);
-  font-size: var(--text-xs);
-  width: 200px;
-}
-
-.topbar-search:focus {
-  outline: none;
-  border-color: var(--color-primary);
-}
-
-.topbar-status {
-  font-size: var(--text-xs);
-  color: var(--color-text-faint);
-  white-space: nowrap;
-}
-
-.topbar-status.saving { color: var(--color-primary); }
-.topbar-status.saved { color: var(--color-success); }
-.topbar-status.error { color: var(--color-error); }
-
-.topbar-user {
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-.topbar-user .role-badge {
-  font-size: 0.6rem;
-  font-family: var(--font-display);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 0.15rem 0.5rem;
-  border-radius: var(--radius-full);
-  background: rgba(232,88,12,0.15);
-  color: var(--color-primary);
-}
-
-.topbar-user .role-badge.regional { background: rgba(232,88,12,0.25); }
-.topbar-user .role-badge.area { background: rgba(91,168,71,0.2); color: var(--color-success); }
-.topbar-user .role-badge.member { background: var(--color-surface-2); color: var(--color-text-faint); }
-
-/* ── Layout ──────────────────────────────────────────────── */
-.main-layout {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-}
-
-/* Sidebar */
-.sidebar {
-  width: var(--sidebar-w);
-  background: var(--color-surface);
-  border-right: 1px solid var(--color-divider);
-  overflow-y: auto;
-  flex-shrink: 0;
-  padding: var(--space-3) 0;
-}
-
-.sidebar-section {
-  padding: var(--space-2) var(--space-4) var(--space-1);
-  font-family: var(--font-display);
-  font-size: 0.65rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--color-text-faint);
-}
-
-.sidebar-item {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: 0.45rem var(--space-4);
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s;
-  border: none;
-  background: none;
-  width: 100%;
-  text-align: left;
-  font-family: inherit;
-}
-
-.sidebar-item:hover {
-  background: rgba(232,88,12,0.08);
-  color: var(--color-text);
-}
-
-.sidebar-item.active {
-  background: rgba(232,88,12,0.14);
-  color: var(--color-primary);
-  font-weight: 600;
-}
-
-.sidebar-badge {
-  margin-left: auto;
-  font-size: 0.65rem;
-  background: var(--color-surface-2);
-  color: var(--color-text-faint);
-  padding: 0.1rem 0.4rem;
-  border-radius: var(--radius-full);
-}
-
-.sidebar-badge.rw {
-  background: rgba(232,88,12,0.15);
-  color: var(--color-primary);
-}
-
-/* ── Table area ──────────────────────────────────────────── */
-.table-area {
-  flex: 1;
-  overflow: auto;
-  padding: 0;
-}
-
-.table-loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 200px;
-  color: var(--color-text-faint);
-  font-size: var(--text-sm);
-}
-
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: var(--text-xs);
-  table-layout: auto;
-}
-
-.data-table thead {
-  position: sticky;
-  top: 0;
-  z-index: 5;
-}
-
-.data-table th {
-  background: var(--color-surface-2);
-  color: var(--color-text-muted);
-  font-family: var(--font-display);
-  font-size: 0.65rem;
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 0.5rem 0.6rem;
-  text-align: left;
-  white-space: nowrap;
-  border-bottom: 1px solid var(--color-divider);
-  cursor: pointer;
-  user-select: none;
-}
-
-.data-table th:hover {
-  color: var(--color-text);
-  background: rgba(232,88,12,0.08);
-}
-
-.data-table th .sort-arrow {
-  font-size: 0.5rem;
-  margin-left: 0.3rem;
-  opacity: 0.5;
-}
-
-.data-table td {
-  padding: 0.4rem 0.6rem;
-  border-bottom: 1px solid var(--color-divider);
-  white-space: nowrap;
-  max-width: 260px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.data-table tr:hover td {
-  background: var(--row-hover);
-}
-
-.data-table tr.totals-row td {
-  background: var(--row-totals);
-  font-weight: 600;
-  color: var(--color-primary);
-}
-
-/* Editable cells */
-td.editable {
-  cursor: text;
-  position: relative;
-}
-
-td.editable:hover {
-  background: var(--cell-edit-bg);
-  outline: 1px solid var(--color-border);
-  outline-offset: -1px;
-}
-
-td.readonly {
-  color: var(--color-text-faint);
-  cursor: default;
-}
-
-/* Inline edit input */
-.cell-editor {
-  position: absolute;
-  inset: 0;
-  padding: 0.4rem 0.6rem;
-  background: var(--color-surface);
-  border: 2px solid var(--color-primary);
-  color: var(--color-text);
-  font: inherit;
-  font-size: inherit;
-  z-index: 8;
-  outline: none;
-}
-
-/* Row numbers */
-td.row-num {
-  color: var(--color-text-faint);
-  font-size: 0.6rem;
-  text-align: right;
-  padding-right: 0.4rem;
-  width: 2rem;
-  user-select: none;
-}
-
-/* ── Empty state ─────────────────────────────────────────── */
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  color: var(--color-text-faint);
-  gap: var(--space-2);
-}
-
-.empty-state h2 {
-  font-family: var(--font-display);
-  font-size: var(--text-xl);
-  color: var(--color-text-muted);
-}
-
-/* ── Toast ───────────────────────────────────────────────── */
-.toast {
-  position: fixed;
-  bottom: var(--space-4);
-  right: var(--space-4);
-  background: var(--color-surface);
-  border: 1px solid var(--color-divider);
-  border-radius: var(--radius-md);
-  padding: 0.6rem 1rem;
-  font-size: var(--text-xs);
-  color: var(--color-text);
-  box-shadow: var(--shadow-lg);
-  transform: translateY(120%);
-  opacity: 0;
-  transition: transform 0.25s ease, opacity 0.25s ease;
-  z-index: 100;
-}
-
-.toast.visible { transform: translateY(0); opacity: 1; }
-.toast.success { border-color: var(--color-success); }
-.toast.error { border-color: var(--color-error); }
-
-/* ── Dashboard KPI cards ─────────────────────────────────── */
-.dashboard {
-  padding: var(--space-8) var(--space-6);
-  max-width: 960px;
-  margin: 0 auto;
-}
-
-.dashboard h2 {
-  font-family: var(--font-display);
-  font-size: var(--text-xl);
-  color: var(--color-primary);
-  margin-bottom: var(--space-6);
-  text-align: center;
-}
-
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-4);
-  margin-bottom: var(--space-8);
-}
-
-.kpi-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-divider);
-  border-radius: var(--radius-lg);
-  padding: var(--space-6) var(--space-4);
-  text-align: center;
-  transition: border-color 0.2s;
-}
-
-.kpi-card:hover {
-  border-color: var(--color-border);
-}
-
-.kpi-value {
-  font-family: var(--font-display);
-  font-size: 2.5rem;
-  color: var(--color-primary);
-  line-height: 1;
-  margin-bottom: var(--space-2);
-}
-
-.kpi-label {
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
-  font-family: var(--font-display);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.kpi-detail {
-  font-size: 0.65rem;
-  color: var(--color-text-faint);
-  margin-top: var(--space-1);
-}
-
-/* ── Hamburger menu ──────────────────────────────────────── */
-.hamburger-btn {
-  display: none;
-  font-size: 1.4rem;
-  color: var(--color-text-muted);
-  padding: 0.25rem 0.5rem;
-  border-radius: var(--radius-sm);
-}
-
-.hamburger-btn:hover { color: var(--color-text); }
-
-.sidebar-backdrop {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  z-index: 19;
-}
-
-.sidebar-backdrop.open { display: block; }
-
-/* ── Responsive ──────────────────────────────────────────── */
-@media (max-width: 768px) {
-  .hamburger-btn { display: block; }
-  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-  .topbar-search { width: 120px; }
-  .sidebar {
-    position: fixed;
-    top: var(--topbar-h);
-    left: 0;
-    bottom: 0;
-    width: 260px;
-    z-index: 20;
-    transform: translateX(-100%);
-    transition: transform 0.25s ease;
-  }
-  .sidebar.open { transform: translateX(0); }
-}
-</style>
+<link rel="stylesheet" href="/crm.css">
 </head>
-
 <body>
+<a class="skip-link" href="#crm-main">Skip to CRM workspace</a>
 <div class="heat-bg" aria-hidden="true"><div class="heat-line"></div><div class="heat-line"></div><div class="heat-line"></div><div class="heat-line"></div><div class="heat-line"></div></div>
 <noscript><div class="noscript-banner">JavaScript is required to use the CRM.</div></noscript>
 
-<!-- Login gate -->
-<div class="login-gate" id="login-gate">
-  <div class="login-box gradient-border">
-    <h1 class="heat-text"><img src="/icons/iconscout/crm.svg" alt="" class="page-icon">TEAM CRM</h1>
-    <p>Enter your PIN to access team data.</p>
-    <form id="login-form">
-      <input type="password" class="login-input" id="pin-input" placeholder="PIN" autocomplete="off" inputmode="numeric" maxlength="8" autofocus>
-      <button type="submit" class="login-btn fire-btn">SIGN IN<div class="ember-wrap" aria-hidden="true"><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div></div></button>
-      <div class="login-error" id="login-error"></div>
-    </form>
-  </div>
-</div>
+<section class="login-gate" id="login-gate" aria-labelledby="crm-login-title">
+  <div class="login-shell">
+    <div class="login-brand-panel">
+      <p class="login-eyebrow">212 Referral Network • Internal Ops</p>
+      <h1 class="login-title heat-text" id="crm-login-title">
+        <img src="/icons/iconscout/crm.svg" alt="" class="page-icon page-icon--lg" width="48" height="48">
+        HeatWave CRM
+      </h1>
+      <p class="login-copy">One cockpit for member records, referral momentum, revenue tracking, and meeting follow-through — all synced to the team’s live Google Sheets.</p>
+      <div class="login-signal-grid" aria-label="CRM features">
+        <article class="login-signal">
+          <span class="login-signal-kicker">Live Source</span>
+          <strong>Google Sheets stays the source of truth.</strong>
+          <p>Review performance tabs, legacy stats, and pipeline data without juggling browser tabs.</p>
+        </article>
+        <article class="login-signal">
+          <span class="login-signal-kicker">Role-Aware Access</span>
+          <strong>Every PIN reveals the right level of control.</strong>
+          <p>Regional, area, and member views stay scoped so the data stays clean.</p>
+        </article>
+        <article class="login-signal">
+          <span class="login-signal-kicker">Fast Updates</span>
+          <strong>Double-click to edit writable cells inline.</strong>
+          <p>Clean table focus, strong row filtering, and quick save feedback keep the workflow moving.</p>
+        </article>
+      </div>
+    </div>
 
-<!-- Main app (hidden until auth) -->
-<div class="app" id="app">
-  <div class="topbar">
-    <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle menu">&#9776;</button>
-    <span class="topbar-title">HEATWAVE CRM</span>
-    <span class="topbar-tab-name" id="topbar-tab-name"></span>
-    <span class="topbar-spacer"></span>
-    <input type="search" class="topbar-search" id="search-input" placeholder="Filter rows...">
-    <span class="topbar-status" id="topbar-status"></span>
-    <span class="topbar-user" id="topbar-user"></span>
-  </div>
-
-  <div class="main-layout">
-    <nav class="sidebar" id="sidebar"></nav>
-    <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
-    <div class="table-area" id="table-area">
-      <div class="empty-state">
-        <h2>SELECT A TAB</h2>
-        <p>Choose a data source from the sidebar.</p>
+    <div class="login-card gradient-border">
+      <div class="login-card-inner">
+        <p class="login-card-kicker">Secure Team Access</p>
+        <h2 class="login-card-title">Unlock the CRM</h2>
+        <p class="login-card-copy">Use your assigned PIN to open the workspace. Member-level access is read-first, with edit rights only where your role allows.</p>
+        <form id="login-form" class="login-form">
+          <label class="field-label" for="pin-input">PIN</label>
+          <input
+            type="password"
+            class="login-input"
+            id="pin-input"
+            name="pin"
+            placeholder="4–8 digit PIN…"
+            autocomplete="off"
+            inputmode="numeric"
+            maxlength="8"
+            spellcheck="false"
+            aria-describedby="login-help login-error"
+          >
+          <p class="login-help" id="login-help">Use your member, area, or regional PIN. Need access adjusted? Contact team leadership.</p>
+          <button type="submit" class="login-btn fire-btn">Unlock CRM<div class="ember-wrap" aria-hidden="true"><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div></div></button>
+          <div class="login-error" id="login-error" aria-live="polite"></div>
+        </form>
+        <div class="login-footnote">
+          <span class="login-footnote-label">What you’re entering:</span>
+          <span>Internal access only — this area is not indexed and does not accept public traffic.</span>
+        </div>
       </div>
     </div>
   </div>
+</section>
+
+<div class="app" id="app">
+  <header class="topbar">
+    <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle CRM navigation">&#9776;</button>
+
+    <div class="topbar-brand">
+      <span class="topbar-kicker">RDU HeatWave</span>
+      <span class="topbar-title">CRM</span>
+    </div>
+
+    <div class="topbar-context">
+      <span class="topbar-tab-name" id="topbar-tab-name">Overview</span>
+      <span class="topbar-chip" id="topbar-mode-chip">Ops Cockpit</span>
+    </div>
+
+    <span class="topbar-spacer"></span>
+
+    <div class="topbar-search-shell">
+      <label class="sr-only" for="search-input">Search the current tab</label>
+      <input type="search" class="topbar-search" id="search-input" name="crm-search" placeholder="Filter members, notes, or totals…" autocomplete="off">
+    </div>
+
+    <span class="topbar-status" id="topbar-status" aria-live="polite"></span>
+    <span class="topbar-user" id="topbar-user"></span>
+  </header>
+
+  <div class="main-layout">
+    <nav class="sidebar" id="sidebar" aria-label="CRM tabs"></nav>
+    <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+    <main class="workspace" id="crm-main" tabindex="-1">
+      <div class="table-area" id="table-area">
+        <div class="empty-state">
+          <p class="empty-state-kicker">Ready to work</p>
+          <h2>Select a Workspace</h2>
+          <p>Choose a data source from the sidebar to open a live sheet view.</p>
+        </div>
+      </div>
+    </main>
+  </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" aria-live="polite" aria-atomic="true"></div>
 
-<script>
-(function() {
-  'use strict';
-
-  // ── Tab registry ──────────────────────────────────────────────────
-  // Full list of all tabs with their display metadata. The server
-  // returns which tabs this user can see and which are writable.
-  var ALL_TABS = [
-    { section: 'People', tabs: [
-      { sheet: 'Membership Directory', label: 'Members' },
-      { sheet: 'Applications', label: 'Applications' },
-      { sheet: 'Guest Check In', label: 'Check-ins' }
-    ]},
-    { section: 'Performance', tabs: [
-      { sheet: 'Guest Incentive Report', label: 'Guest Incentive',
-        readOnlyCols: ['weekly total points', 'total'], hasTotalsRow: true },
-      { sheet: 'BizChats Report', label: 'BizChats',
-        readOnlyCols: ['weekly total'], hasTotalsRow: true },
-      { sheet: 'Referral Pipeline', label: 'Referrals' },
-      { sheet: 'Revenue Report', label: 'Revenue',
-        readOnlyCols: ['weekly total given', 'rcvd'], hasTotalsRow: true },
-      { sheet: 'Attendance Report', label: 'Attendance', hasTotalsRow: true }
-    ]},
-    { section: 'Feedback', tabs: [
-      { sheet: 'Survey Responses', label: 'Surveys' }
-    ]},
-    { section: 'Archive', tabs: [
-      { sheet: 'Team Stats', label: 'Team Stats (Legacy)' },
-      { sheet: 'Team Stats 2026', label: 'Team Stats 2026' },
-      { sheet: 'BKP Member Directory', label: 'Backup Directory' }
-    ]}
-  ];
-
-  var SHEET_ID = '1WWSxfqJ1UdMqJxKLaiIzb06n3rSQj5-AVN3m07wAkSA';
-  var APPS_SCRIPT_URL = '/api/crm';
-
-  // ── State ─────────────────────────────────────────────────────────
-  var userPin = '';
-  var currentUser = null;  // { name, role, teams, visibleTabs, writableTabs }
-  var activeTab = null;
-  var currentData = null;
-  var sortCol = -1;
-  var sortAsc = true;
-  var searchQuery = '';
-  var editingCell = null;
-
-  // ── DOM refs ──────────────────────────────────────────────────────
-  var loginGate = document.getElementById('login-gate');
-  var loginForm = document.getElementById('login-form');
-  var pinInput = document.getElementById('pin-input');
-  var loginError = document.getElementById('login-error');
-  var app = document.getElementById('app');
-  var sidebar = document.getElementById('sidebar');
-  var tableArea = document.getElementById('table-area');
-  var tabNameEl = document.getElementById('topbar-tab-name');
-  var searchInput = document.getElementById('search-input');
-  var statusEl = document.getElementById('topbar-status');
-  var userEl = document.getElementById('topbar-user');
-  var toastEl = document.getElementById('toast');
-  var hamburgerBtn = document.getElementById('hamburger-btn');
-  var sidebarBackdrop = document.getElementById('sidebar-backdrop');
-
-  // ── Login via Apps Script ─────────────────────────────────────────
-  loginForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    var pin = pinInput.value.trim();
-    if (!pin) { loginError.textContent = 'PIN is required'; return; }
-
-    loginError.textContent = '';
-    pinInput.disabled = true;
-
-    var formData = new URLSearchParams();
-    formData.append('source', 'crm-login');
-    formData.append('pin', pin);
-
-    fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8' },
-      body: formData.toString(),
-      redirect: 'follow'
-    })
-    .then(function(r) { return r.text(); })
-    .then(function(text) {
-      // Apps Script returns JSONP-ish or plain JSON depending on redirect
-      var json;
-      try {
-        json = JSON.parse(text);
-      } catch (_e) {
-        // Try to extract JSON from potential HTML wrapper
-        var match = text.match(/\{[\s\S]*\}/);
-        if (match) json = JSON.parse(match[0]);
-        else throw new Error('Unexpected response');
-      }
-
-      if (json.status === 'ok' && json.user) {
-        userPin = pin;
-        currentUser = json.user;
-        loginGate.style.display = 'none';
-        app.classList.add('active');
-        showUserBadge();
-        buildSidebar();
-        showDashboard();
-      } else {
-        loginError.textContent = json.message || 'Invalid PIN';
-      }
-    })
-    .catch(function(err) {
-      loginError.textContent = 'Login failed: ' + (err.message || 'Network error');
-    })
-    .finally(function() {
-      pinInput.disabled = false;
-    });
-  });
-
-  // ── User badge ────────────────────────────────────────────────────
-  function showUserBadge() {
-    var roleClass = currentUser.role === 'regional' ? 'regional' :
-                    currentUser.role === 'area' ? 'area' :
-                    currentUser.role === 'member' ? 'member' : '';
-    var roleLabel = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
-    userEl.innerHTML = escapeHtml(currentUser.name) +
-      ' <span class="role-badge ' + roleClass + '">' + escapeHtml(roleLabel) + '</span>';
-  }
-
-  // ── Hamburger toggle ───────────────────────────────────────────────
-  hamburgerBtn.addEventListener('click', function() {
-    sidebar.classList.toggle('open');
-    sidebarBackdrop.classList.toggle('open');
-  });
-  sidebarBackdrop.addEventListener('click', function() {
-    sidebar.classList.remove('open');
-    sidebarBackdrop.classList.remove('open');
-  });
-  function closeMobileMenu() {
-    sidebar.classList.remove('open');
-    sidebarBackdrop.classList.remove('open');
-  }
-
-  // ── Dashboard ─────────────────────────────────────────────────────
-  function showDashboard() {
-    tableArea.innerHTML =
-      '<div class="dashboard">' +
-        '<h2>TEAM DASHBOARD</h2>' +
-        '<div class="kpi-grid">' +
-          '<div class="kpi-card"><div class="kpi-value" id="kpi-guests">...</div><div class="kpi-label">Guests Hosted</div><div class="kpi-detail">Rolling 12 months</div></div>' +
-          '<div class="kpi-card"><div class="kpi-value" id="kpi-bizchats">...</div><div class="kpi-label">BizChats</div><div class="kpi-detail">Rolling 12 months</div></div>' +
-          '<div class="kpi-card"><div class="kpi-value" id="kpi-referrals">...</div><div class="kpi-label">Referrals</div><div class="kpi-detail">Pipeline total</div></div>' +
-          '<div class="kpi-card"><div class="kpi-value" id="kpi-revenue">...</div><div class="kpi-label">Revenue</div><div class="kpi-detail">Closed business</div></div>' +
-        '</div>' +
-      '</div>';
-
-    // Fetch KPIs in parallel
-    fetchTab('Guest Incentive Report').then(function(data) {
-      var val = extractTotalsValue(data, 'weekly total points');
-      var el = document.getElementById('kpi-guests');
-      if (el) el.textContent = val || '0';
-    }).catch(function() {});
-
-    fetchTab('BizChats Report').then(function(data) {
-      var val = extractTotalsValue(data, 'weekly total');
-      var el = document.getElementById('kpi-bizchats');
-      if (el) el.textContent = val || '0';
-    }).catch(function() {});
-
-    fetchTab('Referral Pipeline').then(function(data) {
-      var count = data.rows.filter(function(row) { return row[0] && row[0].trim(); }).length;
-      var el = document.getElementById('kpi-referrals');
-      if (el) el.textContent = String(count);
-    }).catch(function() {});
-
-    fetchTab('Revenue Report').then(function(data) {
-      var val = extractTotalsValue(data, 'rcvd');
-      var el = document.getElementById('kpi-revenue');
-      if (el) el.textContent = val ? '$' + val : '$0';
-    }).catch(function() {});
-  }
-
-  function extractTotalsValue(data, colLabel) {
-    var colIdx = -1;
-    for (var i = data.cols.length - 1; i >= 0; i--) {
-      if (data.cols[i].toLowerCase().indexOf(colLabel.toLowerCase()) !== -1) { colIdx = i; break; }
-    }
-    if (colIdx < 0) return null;
-    // Find totals row (no value in col A, but has data)
-    for (var r = data.rows.length - 1; r >= 0; r--) {
-      if ((!data.rows[r][0] || !data.rows[r][0].trim()) && data.rows[r][colIdx] && data.rows[r][colIdx].trim()) {
-        var cellVal = data.rows[r][colIdx].trim();
-        if (/^#(REF|N\/A|VALUE|DIV\/0|NAME\?|NULL)!?$/i.test(cellVal)) return null;
-        return cellVal;
-      }
-    }
-    return null;
-  }
-
-  // ── Sidebar (role-filtered) ───────────────────────────────────────
-  function isTabVisible(sheetName) {
-    return currentUser.visibleTabs.indexOf(sheetName) !== -1;
-  }
-
-  function isTabWritable(sheetName) {
-    return currentUser.writableTabs.indexOf(sheetName) !== -1;
-  }
-
-  function buildSidebar() {
-    var html = '';
-    ALL_TABS.forEach(function(section) {
-      var visibleInSection = section.tabs.filter(function(tab) {
-        return isTabVisible(tab.sheet);
-      });
-      if (!visibleInSection.length) return;
-
-      html += '<div class="sidebar-section">' + escapeHtml(section.section) + '</div>';
-      visibleInSection.forEach(function(tab) {
-        var writable = isTabWritable(tab.sheet);
-        html += '<button class="sidebar-item" data-sheet="' + escapeHtml(tab.sheet) + '">' +
-          escapeHtml(tab.label) +
-          '<span class="sidebar-badge ' + (writable ? 'rw' : '') + '">' +
-          (writable ? 'R/W' : 'Read') +
-          '</span></button>';
-      });
-    });
-    sidebar.innerHTML = html;
-    sidebar.addEventListener('click', function(e) {
-      var btn = e.target.closest('.sidebar-item');
-      if (!btn) return;
-      closeMobileMenu();
-      loadTab(btn.dataset.sheet);
-    });
-  }
-
-  function findTabConfig(sheetName) {
-    for (var i = 0; i < ALL_TABS.length; i++) {
-      for (var j = 0; j < ALL_TABS[i].tabs.length; j++) {
-        if (ALL_TABS[i].tabs[j].sheet === sheetName) {
-          var config = Object.assign({}, ALL_TABS[i].tabs[j]);
-          // Set rw based on user's permissions
-          config.rw = isTabWritable(sheetName);
-          return config;
-        }
-      }
-    }
-    return null;
-  }
-
-  function setActiveTab(sheetName) {
-    sidebar.querySelectorAll('.sidebar-item').forEach(function(item) {
-      item.classList.toggle('active', item.dataset.sheet === sheetName);
-    });
-  }
-
-  // ── Data fetching (gviz) ──────────────────────────────────────────
-  function fetchTab(sheetName) {
-    var url = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID +
-      '/gviz/tq?tqx=out:json&sheet=' + encodeURIComponent(sheetName);
-
-    return fetch(url)
-      .then(function(r) { return r.text(); })
-      .then(function(text) {
-        var match = text.match(/setResponse\(([\s\S]+)\);?\s*$/);
-        if (!match) throw new Error('Invalid gviz response');
-        var payload = JSON.parse(match[1]);
-        var cols = (payload.table.cols || []).map(function(c) {
-          return (c.label || '').replace(/\s+/g, ' ').trim();
-        });
-        var rows = (payload.table.rows || []).map(function(row) {
-          return (row.c || []).map(function(cell) {
-            if (!cell) return '';
-            return cell.f != null ? String(cell.f) : (cell.v != null ? String(cell.v) : '');
-          });
-        });
-        return { cols: cols, rows: rows };
-      });
-  }
-
-  // ── Load a tab ────────────────────────────────────────────────────
-  function loadTab(sheetName) {
-    activeTab = findTabConfig(sheetName);
-    if (!activeTab) return;
-
-    setActiveTab(sheetName);
-    tabNameEl.textContent = activeTab.label;
-    searchInput.value = '';
-    searchQuery = '';
-    sortCol = -1;
-    sortAsc = true;
-
-    tableArea.innerHTML = '<div class="table-loading">Loading ' + escapeHtml(activeTab.label) + '...</div>';
-
-    fetchTab(sheetName)
-      .then(function(data) {
-        currentData = data;
-        renderTable();
-      })
-      .catch(function(err) {
-        tableArea.innerHTML = '<div class="table-loading" style="color:var(--color-error)">Failed to load: ' + escapeHtml(err.message) + '</div>';
-      });
-  }
-
-  // ── Render table ──────────────────────────────────────────────────
-  function isReadOnlyCol(colIndex) {
-    if (!activeTab || !activeTab.rw) return true;
-    if (!activeTab.readOnlyCols) return false;
-    var colLabel = currentData.cols[colIndex].toLowerCase();
-    return activeTab.readOnlyCols.some(function(ro) {
-      return colLabel === ro || colLabel.indexOf(ro) !== -1;
-    });
-  }
-
-  function isTotalsRow(rowIndex) {
-    if (!activeTab || !activeTab.hasTotalsRow) return false;
-    var firstCell = currentData.rows[rowIndex][0];
-    if (firstCell && firstCell.trim()) return false;
-    return currentData.rows[rowIndex].some(function(cell, i) {
-      return i > 0 && cell && cell.trim();
-    });
-  }
-
-  function renderTable() {
-    if (!currentData || !currentData.cols.length) {
-      tableArea.innerHTML = '<div class="table-loading">No data in this tab.</div>';
-      return;
-    }
-
-    var visibleCols = [];
-    for (var c = 0; c < currentData.cols.length; c++) {
-      var hasData = currentData.cols[c] || currentData.rows.some(function(row) {
-        return row[c] && row[c].trim();
-      });
-      if (hasData) visibleCols.push(c);
-    }
-
-    var rowIndices = [];
-    for (var r = 0; r < currentData.rows.length; r++) {
-      if (searchQuery) {
-        var rowText = currentData.rows[r].join(' ').toLowerCase();
-        if (rowText.indexOf(searchQuery) === -1) continue;
-      }
-      rowIndices.push(r);
-    }
-
-    if (sortCol >= 0) {
-      rowIndices.sort(function(a, b) {
-        var va = currentData.rows[a][sortCol] || '';
-        var vb = currentData.rows[b][sortCol] || '';
-        var na = parseFloat(va.replace(/[$,]/g, ''));
-        var nb = parseFloat(vb.replace(/[$,]/g, ''));
-        if (!isNaN(na) && !isNaN(nb)) return sortAsc ? na - nb : nb - na;
-        return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
-      });
-    }
-
-    var html = '<table class="data-table"><thead><tr><th>#</th>';
-    visibleCols.forEach(function(colIdx) {
-      var label = currentData.cols[colIdx] || ('Col ' + (colIdx + 1));
-      var arrow = sortCol === colIdx ? '<span class="sort-arrow">' + (sortAsc ? '▲' : '▼') + '</span>' : '';
-      var roFlag = isReadOnlyCol(colIdx) ? ' style="opacity:0.6"' : '';
-      html += '<th data-col="' + colIdx + '"' + roFlag + '>' + escapeHtml(label) + arrow + '</th>';
-    });
-    html += '</tr></thead><tbody>';
-
-    rowIndices.forEach(function(rowIdx) {
-      var isTotals = isTotalsRow(rowIdx);
-      html += '<tr' + (isTotals ? ' class="totals-row"' : '') + '>';
-      html += '<td class="row-num">' + (rowIdx + 1) + '</td>';
-
-      visibleCols.forEach(function(colIdx) {
-        var raw = currentData.rows[rowIdx][colIdx] || '';
-        var value = /^#(REF|N\/A|VALUE|DIV\/0|NAME\?|NULL)!?$/i.test(raw.trim()) ? '' : raw;
-        var isRO = !activeTab.rw || isReadOnlyCol(colIdx) || isTotals;
-        var cls = isRO ? 'readonly' : 'editable';
-        html += '<td class="' + cls + '"' +
-          (isRO ? '' : ' data-row="' + rowIdx + '" data-col="' + colIdx + '"') +
-          ' title="' + escapeHtml(value) + '">' + escapeHtml(value) + '</td>';
-      });
-      html += '</tr>';
-    });
-
-    html += '</tbody></table>';
-    tableArea.innerHTML = html;
-    setStatus(rowIndices.length + ' rows', '');
-  }
-
-  // ── Inline editing ────────────────────────────────────────────────
-  tableArea.addEventListener('dblclick', function(e) {
-    var td = e.target.closest('td.editable');
-    if (!td || editingCell) return;
-    startEditing(td);
-  });
-
-  function startEditing(td) {
-    var row = parseInt(td.dataset.row, 10);
-    var col = parseInt(td.dataset.col, 10);
-    var value = currentData.rows[row][col] || '';
-
-    editingCell = { td: td, row: row, col: col, original: value };
-
-    var input = document.createElement('input');
-    input.type = 'text';
-    input.className = 'cell-editor';
-    input.value = value;
-    td.style.position = 'relative';
-    td.textContent = '';
-    td.appendChild(input);
-    input.focus();
-    input.select();
-
-    input.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') { commitEdit(input.value); }
-      if (e.key === 'Escape') { cancelEdit(); }
-      if (e.key === 'Tab') {
-        e.preventDefault();
-        commitEdit(input.value);
-        var next = e.shiftKey ? td.previousElementSibling : td.nextElementSibling;
-        if (next && next.classList.contains('editable')) {
-          setTimeout(function() { startEditing(next); }, 50);
-        }
-      }
-    });
-
-    input.addEventListener('blur', function() {
-      if (editingCell) commitEdit(input.value);
-    });
-  }
-
-  function cancelEdit() {
-    if (!editingCell) return;
-    editingCell.td.textContent = editingCell.original;
-    editingCell.td.title = editingCell.original;
-    editingCell = null;
-  }
-
-  function commitEdit(newValue) {
-    if (!editingCell) return;
-    var row = editingCell.row;
-    var col = editingCell.col;
-    var original = editingCell.original;
-    var td = editingCell.td;
-
-    td.textContent = newValue;
-    td.title = newValue;
-    currentData.rows[row][col] = newValue;
-    editingCell = null;
-
-    if (newValue === original) return;
-
-    var colLetter = colIndexToLetter(col);
-    var sheetRow = row + 2;
-
-    setStatus('Saving...', 'saving');
-    writeCell(activeTab.sheet, colLetter + sheetRow, newValue)
-      .then(function() {
-        setStatus('Saved', 'saved');
-        showToast('Cell updated', 'success');
-        setTimeout(function() { setStatus(currentData.rows.length + ' rows', ''); }, 2000);
-      })
-      .catch(function(err) {
-        currentData.rows[row][col] = original;
-        td.textContent = original;
-        td.title = original;
-        setStatus('Save failed', 'error');
-        showToast('Failed: ' + (err.message || 'Unknown error'), 'error');
-      });
-  }
-
-  // ── Write to sheet via Apps Script (PIN-authenticated) ────────────
-  function writeCell(sheetName, cellRef, value) {
-    var formData = new URLSearchParams();
-    formData.append('source', 'crm-update');
-    formData.append('pin', userPin);
-    formData.append('sheet', sheetName);
-    formData.append('cell', cellRef);
-    formData.append('value', value);
-
-    return fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8' },
-      body: formData.toString(),
-      redirect: 'follow'
-    })
-    .then(function(r) { return r.text(); })
-    .then(function(text) {
-      if (/"status"\s*:\s*"ok"/.test(text)) return;
-      // Try to extract error message
-      var errMatch = text.match(/"message"\s*:\s*"([^"]+)"/);
-      throw new Error(errMatch ? errMatch[1] : 'Sheet write failed');
-    });
-  }
-
-  // ── Sorting ───────────────────────────────────────────────────────
-  tableArea.addEventListener('click', function(e) {
-    var th = e.target.closest('th[data-col]');
-    if (!th) return;
-    var col = parseInt(th.dataset.col, 10);
-    if (sortCol === col) { sortAsc = !sortAsc; }
-    else { sortCol = col; sortAsc = true; }
-    renderTable();
-  });
-
-  // ── Search/filter ─────────────────────────────────────────────────
-  var searchTimer;
-  searchInput.addEventListener('input', function() {
-    clearTimeout(searchTimer);
-    searchTimer = setTimeout(function() {
-      searchQuery = searchInput.value.trim().toLowerCase();
-      renderTable();
-    }, 200);
-  });
-
-  // ── Helpers ───────────────────────────────────────────────────────
-  function escapeHtml(str) {
-    var div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-  }
-
-  function colIndexToLetter(index) {
-    var letter = '';
-    while (index >= 0) {
-      letter = String.fromCharCode(65 + (index % 26)) + letter;
-      index = Math.floor(index / 26) - 1;
-    }
-    return letter;
-  }
-
-  function setStatus(text, cls) {
-    statusEl.textContent = text;
-    statusEl.className = 'topbar-status' + (cls ? ' ' + cls : '');
-  }
-
-  var toastTimer;
-  function showToast(message, type) {
-    clearTimeout(toastTimer);
-    toastEl.textContent = message;
-    toastEl.className = 'toast visible ' + (type || '');
-    toastTimer = setTimeout(function() { toastEl.className = 'toast'; }, 3000);
-  }
-})();
-</script>
+<script src="/crm.js" defer></script>
 </body>
 </html>

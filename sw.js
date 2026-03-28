@@ -1,4 +1,4 @@
-const CACHE_NAME = 'heatwave-v5';
+const CACHE_NAME = 'heatwave-v6';
 
 const PRECACHE_URLS = [
   '/',
@@ -14,6 +14,8 @@ const PRECACHE_URLS = [
   '/agenda.html',
   '/admin.html',
   '/crm.html',
+  '/crm.css',
+  '/crm.js',
   '/report.html',
   '/404.html',
   '/shared.css',
@@ -24,6 +26,7 @@ const PRECACHE_URLS = [
   '/icons/heatwave-icon-512.png',
   '/icons/heatwave-icon-180.png',
   '/site.webmanifest',
+  '/icons/iconscout/crm.svg',
   '/scripts/heatwave-fx.js',
 ];
 

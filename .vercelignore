@@ -1,0 +1,7 @@
+.claude
+.playwright-mcp
+test-results
+icon-preview.html
+preview-*.png
+qa-*.png
+verify-*.png

@@ -2,7 +2,7 @@
 
 var shared = require('./_lib/shared');
 
-var APPS_SCRIPT_URL = process.env.APPS_SCRIPT_URL || 'https://script.google.com/macros/s/AKfycbxkchMEuPQlPe91xWx3QGeSD_yk0q4g-1iBZ0gumknVqBu1s57_A0Dg2pbd64huh21D/exec';
+var APPS_SCRIPT_URL = process.env.APPS_SCRIPT_URL || shared.DEFAULT_APPS_SCRIPT_URL;
 var RATE_LIMITS = { burst: 10, burstWindowMs: 60 * 1000, hourly: 40 };
 
 function validateBody(body) {

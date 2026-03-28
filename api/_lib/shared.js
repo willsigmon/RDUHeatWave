@@ -83,6 +83,7 @@ var ALLOWED_ORIGINS = [
   'https://www.rduheatwave.team'
 ];
 var PREVIEW_ORIGIN_RE = /^https:\/\/rduheat-[a-z0-9-]+-wsmco\.vercel\.app$/i;
+var DEFAULT_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwvYv_BYJznuumdC51jP-P6RuYRRgK5MEONjUywvl322MbR1W1_nA1hZHcsSj5oLfzvoQ/exec';
 
 function isAllowedOriginValue(value) {
   if (!value) return true;
@@ -318,6 +319,7 @@ module.exports = {
   getClientIp: getClientIp,
   isAllowedOriginValue: isAllowedOriginValue,
   hasAllowedOrigin: hasAllowedOrigin,
+  DEFAULT_APPS_SCRIPT_URL: DEFAULT_APPS_SCRIPT_URL,
   isRateLimited: isRateLimited,
   readRequestBody: readRequestBody,
   parseGvizResponse: parseGvizResponse,
