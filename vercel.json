@@ -26,7 +26,7 @@
         "X-Frame-Options": "DENY",
         "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
         "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
-        "Content-Security-Policy": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; script-src 'self' 'unsafe-inline'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+        "Content-Security-Policy": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; script-src 'self' 'unsafe-inline'; connect-src 'self' https://docs.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
       },
       "continue": true
     },

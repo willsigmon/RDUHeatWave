@@ -130,6 +130,23 @@
       startEditing(cell);
     });
 
+    var lastTapCell = null;
+    var lastTapTime = 0;
+    refs.tableArea.addEventListener('touchend', function (event) {
+      const cell = event.target.closest('td.editable');
+      if (!cell || state.editingCell) return;
+      var now = Date.now();
+      if (lastTapCell === cell && (now - lastTapTime) < 400) {
+        event.preventDefault();
+        startEditing(cell);
+        lastTapCell = null;
+        lastTapTime = 0;
+      } else {
+        lastTapCell = cell;
+        lastTapTime = now;
+      }
+    });
+
     refs.tableArea.addEventListener('keydown', function (event) {
       const cell = event.target.closest('td.editable');
       if (!cell || state.editingCell) return;

@@ -321,6 +321,7 @@ h3,
   position: relative;
   z-index: 1;
   height: 100vh;
+  height: 100dvh;
   flex-direction: column;
 }
 
@@ -961,7 +962,9 @@ h3,
 
 .table-wrap {
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
   max-height: calc(100vh - var(--topbar-h) - 18rem);
+  max-height: calc(100dvh - var(--topbar-h) - 18rem);
 }
 
 .data-table {
@@ -1037,6 +1040,7 @@ h3,
 .data-table td.editable {
   cursor: text;
   position: relative;
+  touch-action: manipulation;
 }
 
 .data-table td.editable:hover,
@@ -1135,6 +1139,7 @@ h3,
 
   .table-wrap {
     max-height: calc(100vh - var(--topbar-h) - 22rem);
+    max-height: calc(100dvh - var(--topbar-h) - 22rem);
   }
 }
 
@@ -1241,10 +1246,16 @@ h3,
 
   .table-wrap {
     max-height: calc(100vh - var(--topbar-h) - 24rem);
+    max-height: calc(100dvh - var(--topbar-h) - 24rem);
   }
 
   .data-table {
     min-width: 36rem;
+  }
+
+  .topbar-search,
+  .cell-editor {
+    font-size: 1rem;
   }
 }
 
