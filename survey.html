@@ -474,7 +474,7 @@
         <p class="section-group-label">Member Experience</p>
 
         <!-- Q1 -->
-        <div class="q-card" data-q="1">
+        <div class="q-card" data-reveal data-q="1">
           <p class="q-number">Question 1 of 10</p>
           <p class="q-label">Overall, how satisfied are you with your experience as a member of RDU Heatwave so far?</p>
           <ul class="options-list" role="radiogroup" aria-label="Overall satisfaction">
@@ -487,7 +487,7 @@
         </div>
 
         <!-- Q2 -->
-        <div class="q-card" data-q="2">
+        <div class="q-card" data-reveal data-q="2">
           <p class="q-number">Question 2 of 10</p>
           <p class="q-label">How clearly do you understand what makes Two Twelve different — permission-based referrals, the covenant, and the Gratitude Incentive?</p>
           <ul class="options-list" role="radiogroup" aria-label="Understanding of Two Twelve">
@@ -499,7 +499,7 @@
         </div>
 
         <!-- Q3 -->
-        <div class="q-card" data-q="3">
+        <div class="q-card" data-reveal data-q="3">
           <p class="q-number">Question 3 of 10</p>
           <p class="q-label">How likely are you to invite a trusted business contact to visit an RDU Heatwave meeting?</p>
           <p class="q-hint">On a scale of 1 (not at all) to 5 (absolutely).</p>
@@ -518,7 +518,7 @@
         <p class="section-group-label">Meeting Format &amp; Value</p>
 
         <!-- Q4 -->
-        <div class="q-card" data-q="4">
+        <div class="q-card" data-reveal data-q="4">
           <p class="q-number">Question 4 of 10</p>
           <p class="q-label">Which parts of the weekly meeting do you find most valuable? <em style="font-weight:400;color:var(--color-text-muted)">(Pick up to two.)</em></p>
           <ul class="options-list two-col" role="group" aria-label="Most valuable meeting segments">
@@ -532,7 +532,7 @@
         </div>
 
         <!-- Q5 -->
-        <div class="q-card" data-q="5">
+        <div class="q-card" data-reveal data-q="5">
           <p class="q-number">Question 5 of 10</p>
           <p class="q-label">How well does our current meeting structure help you build real relationships and generate referrals?</p>
           <ul class="options-list" role="radiogroup" aria-label="Meeting effectiveness">
@@ -545,7 +545,7 @@
         </div>
 
         <!-- Q6 -->
-        <div class="q-card" data-q="6">
+        <div class="q-card" data-reveal data-q="6">
           <p class="q-number">Question 6 of 10</p>
           <p class="q-label">In the last 60 days, how many BizChats (one-on-one meetings) have you had as a result of RDU Heatwave?</p>
           <p class="q-hint">A BizChat is any one-on-one scheduled from a meeting — in person, phone, or video. No one should leave without at least one scheduled.</p>
@@ -563,7 +563,7 @@
         <p class="section-group-label">Referrals &amp; Results</p>
 
         <!-- Q7 -->
-        <div class="q-card" data-q="7">
+        <div class="q-card" data-reveal data-q="7">
           <p class="q-number">Question 7 of 10</p>
           <p class="q-label">How would you rate the quality of referrals you've received from the team in the last 90 days?</p>
           <ul class="options-list" role="radiogroup" aria-label="Referral quality">
@@ -576,7 +576,7 @@
         </div>
 
         <!-- Q8 -->
-        <div class="q-card" data-q="8">
+        <div class="q-card" data-reveal data-q="8">
           <p class="q-number">Question 8 of 10</p>
           <p class="q-label">What's your main focus with RDU Heatwave right now?</p>
           <ul class="options-list" role="radiogroup" aria-label="Current focus">
@@ -593,7 +593,7 @@
         <p class="section-group-label">Communication &amp; Improvements</p>
 
         <!-- Q9 -->
-        <div class="q-card" data-q="9">
+        <div class="q-card" data-reveal data-q="9">
           <p class="q-number">Question 9 of 10</p>
           <p class="q-label">How satisfied are you with team communication and leadership (Chair, Vice Chair, Admin, expectations, reminders)?</p>
           <ul class="options-list" role="radiogroup" aria-label="Leadership satisfaction">
@@ -606,7 +606,7 @@
         </div>
 
         <!-- Q10 -->
-        <div class="q-card" data-q="10">
+        <div class="q-card" data-reveal data-q="10">
           <p class="q-number">Question 10 of 10</p>
           <p class="q-label">What's one thing we could change or improve in the next 30 days to make RDU Heatwave more valuable for you?</p>
           <p class="q-hint">Be as specific or as brief as you like — no wrong answers.</p>
@@ -745,5 +745,6 @@
 </script>
 
 <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
+<script src="/scripts/scroll-reveal.js"></script>
 </body>
 </html>

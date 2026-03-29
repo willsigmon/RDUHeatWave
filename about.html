@@ -443,7 +443,7 @@ section:nth-child(odd) { position: relative; }
 <div class="shimmer-line" aria-hidden="true"></div>
 
 <!-- What is 212? -->
-<section class="philosophy" id="philosophy">
+<section class="philosophy" id="philosophy" data-reveal>
   <p class="section-label">The Extra Degree</p>
   <h2 class="section-title">What Is 212?</h2>
   <div class="section-body">
@@ -511,7 +511,7 @@ section:nth-child(odd) { position: relative; }
 <div class="shimmer-line" aria-hidden="true"></div>
 
 <!-- The Team -->
-<section id="team">
+<section id="team" data-reveal>
   <p class="section-label">Our Members</p>
   <h2 class="section-title">The Team</h2>
   <p class="section-body">Each seat represents a unique business category&mdash;no competition within the team, only collaboration.</p>
@@ -523,7 +523,7 @@ section:nth-child(odd) { position: relative; }
 <div class="shimmer-line" aria-hidden="true"></div>
 
 <!-- Venue / Meeting Details -->
-<section id="venue">
+<section id="venue" data-reveal>
   <p class="section-label">Where &amp; When</p>
   <h2 class="section-title">Meeting Details</h2>
   <div class="venue-block">
@@ -539,7 +539,7 @@ section:nth-child(odd) { position: relative; }
 <div class="shimmer-line" aria-hidden="true"></div>
 
 <!-- CTA -->
-<section class="cta-section" id="visit">
+<section class="cta-section" id="visit" data-reveal="scale">
   <h2 class="section-title">Ready to Visit?</h2>
   <p class="section-body" style="margin: 0 auto 2rem; text-align: center;">Come see what the extra degree can do for your business. Your first visit is free.</p>
   <a href="/" class="btn-cta fire-btn">Register to Visit<span class="ember" aria-hidden="true"></span><span class="ember" aria-hidden="true"></span><span class="ember" aria-hidden="true"></span></a>
@@ -598,6 +598,7 @@ section:nth-child(odd) { position: relative; }
 })();
 </script>
 
+<script src="/scripts/scroll-reveal.js"></script>
 <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
 </body>
 </html>
