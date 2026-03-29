@@ -1895,7 +1895,7 @@ button { cursor: pointer; background: none; border: none; }
 
 <!-- PANEL 0: ABOUT (swipe right to see) -->
 <div class="panel">
-  <div class="info-card gradient-border">
+  <div class="info-card gradient-border" data-reveal>
     <h2 class="heat-text">RDU HEATWAVE</h2>
     <p>The Raleigh-Durham team of the <strong style="color: var(--color-primary);">Two Twelve Referral Network</strong>. A structured, category-exclusive business networking group built on the "extra degree" philosophy.</p>
 
@@ -1920,10 +1920,10 @@ button { cursor: pointer; background: none; border: none; }
       <p>At 211 degrees, water is hot. At 212 degrees, it boils. With boiling water comes steam, and with steam, you can power a train. That one extra degree makes all the difference.</p>
     </div>
 
-    <div class="visitor-brief">
+    <div class="visitor-brief" data-reveal>
       <div class="visitor-brief-heading">New to 212?</div>
       <div class="visitor-brief-grid">
-        <div class="visitor-brief-card">
+        <div class="visitor-brief-card" data-reveal>
           <div class="hw-icon hw-icon--flame" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 2c.5 3.5-1 6-3 8 2 0 4 1 4.5 3.5C14.5 16 16 18 18 18c-3 2-7 2-9-.5C7 14 8 10 12 2z" fill="rgba(232,88,12,0.2)"/>
@@ -1932,7 +1932,7 @@ button { cursor: pointer; background: none; border: none; }
           <strong>Where it came from</strong>
           <span>Founder Andy Fulghum built 212 around a simple idea: one extra degree turns hot water into steam, and small added effort creates outsized momentum.</span>
         </div>
-        <div class="visitor-brief-card">
+        <div class="visitor-brief-card" data-reveal>
           <div class="hw-icon hw-icon--handshake" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M20 17l-3.5-3.5M6.5 12L2 17"/><path d="M2 7l4.5 4.5"/><path d="M22 7l-4.5 4.5"/>
@@ -1943,7 +1943,7 @@ button { cursor: pointer; background: none; border: none; }
           <strong>How it works</strong>
           <span>Members meet weekly, learn each other&rsquo;s businesses through BizChats, and pass permission-based referrals they can confidently stand behind.</span>
         </div>
-        <div class="visitor-brief-card">
+        <div class="visitor-brief-card" data-reveal>
           <div class="hw-icon hw-icon--bolt" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="rgba(232,88,12,0.2)"/>
@@ -1985,7 +1985,7 @@ button { cursor: pointer; background: none; border: none; }
   <p class="form-subtitle">The Raleigh-Durham team of the Two Twelve Referral Network</p>
 
   <!-- Countdown -->
-  <div class="countdown-section" id="countdown-section">
+  <div class="countdown-section" data-reveal id="countdown-section">
     <div class="meeting-label">Next Meeting</div>
     <div class="meeting-datetime" id="meeting-datetime">Loading...</div>
     <div class="meeting-location">Clouds Brewing &bull; 1233 Front St, Raleigh NC</div>
@@ -2110,7 +2110,7 @@ button { cursor: pointer; background: none; border: none; }
   <div class="beer-pour-bg">
     <canvas id="beer-pour-canvas"></canvas>
   </div>
-  <div class="menu-card" style="margin-top: 2.5rem;">
+  <div class="menu-card" data-reveal="scale" style="margin-top: 2.5rem;">
     <div class="menu-header">
       <img src="clouds-brewing-logo.png" alt="Clouds Brewing" loading="lazy" decoding="async">
       <h2>Clouds Brewing</h2>
@@ -3675,6 +3675,7 @@ button { cursor: pointer; background: none; border: none; }
 })();
 </script>
 
+<script src="/scripts/scroll-reveal.js"></script>
 <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
 </body>
 </html>
