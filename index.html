@@ -1872,10 +1872,10 @@ button { cursor: pointer; background: none; border: none; }
 <canvas id="confetti-canvas" aria-hidden="true"></canvas>
 
 <!-- Nav dots -->
-<div class="nav-dots">
-  <button class="nav-dot" type="button" data-index="0" aria-label="Go to about panel" aria-current="false"></button>
-  <button class="nav-dot active" type="button" data-index="1" aria-label="Go to check-in panel" aria-current="true"></button>
-  <button class="nav-dot" type="button" data-index="2" aria-label="Go to venue panel" aria-current="false"></button>
+<div class="nav-dot" data-haptic="lights">
+  <button class="nav-dot" data-haptic="light" type="button" data-index="0" aria-label="Go to about panel" aria-current="false"></button>
+  <button class="nav-dot" data-haptic="light active" type="button" data-index="1" aria-label="Go to check-in panel" aria-current="true"></button>
+  <button class="nav-dot" data-haptic="light" type="button" data-index="2" aria-label="Go to venue panel" aria-current="false"></button>
 </div>
 
 <button class="panel-arrow panel-arrow-left" type="button" id="panel-arrow-left" aria-label="Go to the previous panel">&larr; Team</button>
@@ -2076,7 +2076,7 @@ button { cursor: pointer; background: none; border: none; }
     </div>
 
     <div class="submit-wrap">
-      <button type="button" class="submit-btn fire-btn" id="submit-btn">
+      <button type="button" class="submit-btn fire-btn" data-haptic="success" id="submit-btn">
         <span class="btn-text">CHECK IN</span>
         <div class="ember-wrap" aria-hidden="true">
           <div class="ember"></div><div class="ember"></div><div class="ember"></div>
@@ -2096,7 +2096,7 @@ button { cursor: pointer; background: none; border: none; }
     </div>
     <h2 class="success-title" id="success-title">Welcome to the Heatwave!</h2>
     <p class="success-subtitle" id="success-subtitle">Your registration has been submitted. We look forward to connecting with you.</p>
-    <button class="reset-btn" id="reset-btn" type="button">
+    <button class="reset-btn" data-haptic="light" id="reset-btn" type="button">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
       Submit Another Response
     </button>
