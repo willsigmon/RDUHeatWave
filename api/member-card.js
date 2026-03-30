@@ -48,16 +48,21 @@ module.exports = async function handler(req, res) {
 };
 
 function buildCard(m) {
+  var esc = shared.escapeHtml;
+  var name = esc(m.name);
+  var title = esc(m.title);
+  var company = esc(m.company);
   var initials = m.name.split(' ').map(function (w) { return w[0]; }).join('').toUpperCase();
-  var websiteDisplay = m.website ? m.website.replace(/^https?:\/\//, '').replace(/\/$/, '') : '';
+  var safeUrl = shared.sanitizeUrl(m.website);
+  var websiteDisplay = safeUrl ? esc(m.website.replace(/^https?:\/\//, '').replace(/\/$/, '')) : '';
 
   return '<!DOCTYPE html>\n' +
     '<html lang="en"><head>\n' +
     '<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
-    '<title>' + m.name + ' — RDU Heatwave</title>\n' +
-    '<meta name="description" content="' + m.name + ', ' + m.title + ' at ' + m.company + '. RDU Heatwave member.">\n' +
-    '<meta property="og:title" content="' + m.name + ' — RDU Heatwave">\n' +
-    '<meta property="og:description" content="' + m.title + ' at ' + m.company + '">\n' +
+    '<title>' + name + ' — RDU Heatwave</title>\n' +
+    '<meta name="description" content="' + name + ', ' + title + ' at ' + company + '. RDU Heatwave member.">\n' +
+    '<meta property="og:title" content="' + name + ' — RDU Heatwave">\n' +
+    '<meta property="og:description" content="' + title + ' at ' + company + '">\n' +
     '<link rel="stylesheet" href="/shared.css">\n' +
     '<style>\n' +
     'body { min-height: 100dvh; display: flex; align-items: center; justify-content: center; font-family: var(--font-body); background: var(--color-bg); color: var(--color-text); padding: 2rem; }\n' +
@@ -80,13 +85,13 @@ function buildCard(m) {
     '<div class="card" data-haptic="light">\n' +
     '  <div class="card-accent"></div>\n' +
     '  <div class="card-body">\n' +
-    '    <div class="avatar">' + initials + '</div>\n' +
-    '    <div class="name">' + m.name + '</div>\n' +
-    '    <div class="role">' + m.title + '</div>\n' +
-    '    <div class="company">' + m.company + '</div>\n' +
+    '    <div class="avatar">' + esc(initials) + '</div>\n' +
+    '    <div class="name">' + name + '</div>\n' +
+    '    <div class="role">' + title + '</div>\n' +
+    '    <div class="company">' + company + '</div>\n' +
     '    <div class="divider"></div>\n' +
     '    <div class="badge">🔥 RDU Heatwave &middot; 212 Referral Network</div>\n' +
-    (m.website ? '    <a href="' + m.website + '" target="_blank" rel="noopener noreferrer" class="link">' + websiteDisplay + ' &rarr;</a>\n' : '') +
+    (safeUrl ? '    <a href="' + safeUrl + '" target="_blank" rel="noopener noreferrer" class="link">' + websiteDisplay + ' &rarr;</a>\n' : '') +
     '  </div>\n' +
     '</div>\n' +
     '<a href="/" class="back">&larr; rduheatwave.team</a>\n' +

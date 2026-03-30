@@ -305,6 +305,26 @@ function sanitizeForSheet(value) {
   return value;
 }
 
+// ── HTML output escaping ────────────────────────────────────────
+// Prevent XSS when interpolating user data into HTML responses.
+
+function escapeHtml(value) {
+  if (typeof value !== 'string') return '';
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function sanitizeUrl(url) {
+  if (typeof url !== 'string') return '';
+  var trimmed = url.trim();
+  if (/^https?:\/\//i.test(trimmed)) return escapeHtml(trimmed);
+  return '';
+}
+
 // ── Exports ─────────────────────────────────────────────────────────
 
 module.exports = {
@@ -326,5 +346,7 @@ module.exports = {
   fetchSheet: fetchSheet,
   forwardToAppsScript: forwardToAppsScript,
   mapErrorToResponse: mapErrorToResponse,
-  sanitizeForSheet: sanitizeForSheet
+  sanitizeForSheet: sanitizeForSheet,
+  escapeHtml: escapeHtml,
+  sanitizeUrl: sanitizeUrl
 };
