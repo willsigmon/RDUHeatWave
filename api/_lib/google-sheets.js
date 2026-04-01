@@ -107,6 +107,23 @@ async function sheetsRequest(method, path, body) {
   return response.json();
 }
 
+async function getSpreadsheetMetadata(spreadsheetId) {
+  return sheetsRequest(
+    'GET',
+    '/' + spreadsheetId + '?fields=' + encodeURIComponent('sheets.properties')
+  );
+}
+
+async function getSheetMetadata(spreadsheetId, sheetName) {
+  var data = await getSpreadsheetMetadata(spreadsheetId);
+  var sheets = (data && data.sheets) || [];
+  for (var i = 0; i < sheets.length; i++) {
+    var props = sheets[i] && sheets[i].properties;
+    if (props && props.title === sheetName) return props;
+  }
+  throw new Error('Sheet not found: ' + sheetName);
+}
+
 /**
  * Read a range from a spreadsheet.
  * @param {string} spreadsheetId
@@ -166,6 +183,32 @@ async function clearRange(spreadsheetId, range) {
   );
 }
 
+async function deleteSheetRow(spreadsheetId, sheetName, rowNumber) {
+  if (!rowNumber || rowNumber < 1) {
+    throw new Error('rowNumber must be >= 1');
+  }
+
+  var sheet = await getSheetMetadata(spreadsheetId, sheetName);
+  return sheetsRequest(
+    'POST',
+    '/' + spreadsheetId + ':batchUpdate',
+    {
+      requests: [
+        {
+          deleteDimension: {
+            range: {
+              sheetId: sheet.sheetId,
+              dimension: 'ROWS',
+              startIndex: rowNumber - 1,
+              endIndex: rowNumber
+            }
+          }
+        }
+      ]
+    }
+  );
+}
+
 /**
  * Check if the service account credentials are configured.
  */
@@ -179,5 +222,8 @@ module.exports = {
   writeRange: writeRange,
   appendRows: appendRows,
   clearRange: clearRange,
+  getSpreadsheetMetadata: getSpreadsheetMetadata,
+  getSheetMetadata: getSheetMetadata,
+  deleteSheetRow: deleteSheetRow,
   isConfigured: isConfigured
 };

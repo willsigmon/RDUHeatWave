@@ -800,7 +800,7 @@
         <div class="team-name">RDU <span class="heat-text">Heatwave</span></div>
         <div class="team-subtitle">Two Twelve Referral Network</div>
         <div class="team-meta" id="meeting-date-meta">&mdash;</div>
-        <div class="meeting-badge" id="meeting-number-badge">Meeting #<span id="meeting-number">—</span></div><div class="speaker-badge" id="speaker-badge">&#9733; <span id="speaker-badge-name"></span></div>
+        <div class="meeting-badge" id="meeting-number-badge">Meeting #<span id="meeting-number">—</span></div><div class="speaker-badge" id="speaker-badge">&#9733; <span id="speaker-badge-name">Will Sigmon</span></div>
       </div>
       <div class="header-qr">
         <a class="header-qr-link" href="https://rduheatwave.team" aria-label="Visit rduheatwave.team">
@@ -812,7 +812,7 @@
     <!-- TEAM STATS — pulled live from /api/stats -->
     <div class="header-stats">
       <div class="stat">
-        <div class="stat-value">11</div>
+        <div class="stat-value" id="stat-members">11</div>
         <div class="stat-label">Members</div>
       </div>
       <div class="stat">
@@ -884,7 +884,7 @@
         </li>
         <li class="agenda-item">
           <span class="agenda-glyph">&#9733;</span>
-          <span class="agenda-text" id="spotlight-agenda-item">Member Spotlight</span>
+          <span class="agenda-text" id="spotlight-agenda-item">Member Spotlight &mdash; Will Sigmon</span>
         </li>
         <li class="agenda-item">
           <span class="agenda-glyph">&#10070;</span>
@@ -924,17 +924,17 @@
       <div class="spotlight-card">
         <div class="spotlight-hero">
           <div class="spotlight-hero-label">This Week</div>
-          <div class="spotlight-hero-name">Closed Meeting</div>
-          <div class="spotlight-hero-prof">Internal Business</div>
+          <div class="spotlight-hero-name">Will Sigmon</div>
+          <div class="spotlight-hero-prof">Will Sigmon Media</div>
         </div>
         <div class="spotlight-upcoming">
           <div class="spotlight-upcoming-item">
             <div class="spotlight-upcoming-label">Next</div>
-            <div class="spotlight-upcoming-name">Will Sigmon</div>
+            <div class="spotlight-upcoming-name">Carter Helms</div>
           </div>
           <div class="spotlight-upcoming-item">
             <div class="spotlight-upcoming-label">2 Wks</div>
-            <div class="spotlight-upcoming-name">Carter Helms</div>
+            <div class="spotlight-upcoming-name">TBD</div>
           </div>
           <div class="spotlight-upcoming-item">
             <div class="spotlight-upcoming-label">3 Wks</div>
@@ -1160,13 +1160,19 @@
 
 </div>
 
+<script src="/scripts/site-config.js"></script>
 <script>
 (function () {
   // ── Config ────────────────────────────────────────────────
   // First meeting: Thursday, January 9, 2025 (adjust if needed)
+  var SITE_CONFIG = window.HEATWAVE_SITE_CONFIG || {};
+  var MEETING_CONFIG = SITE_CONFIG.meeting || {};
+  var CURRENT_SPEAKER_CONFIG = SITE_CONFIG.currentSpeaker || {};
   var FIRST_MEETING = new Date('2025-01-09T00:00:00');
-  var MEETING_TIME  = '4:00 PM';
-  var MEETING_VENUE = 'Clouds Brewing';
+  var MEETING_TIME  = MEETING_CONFIG.publicTimeShort || '4:00 PM';
+  var MEETING_VENUE = MEETING_CONFIG.venueName || 'Clouds Brewing';
+  var DEFAULT_SPEAKER_NAME = CURRENT_SPEAKER_CONFIG.name || 'Will Sigmon';
+  var DEFAULT_SPEAKER_COMPANY = CURRENT_SPEAKER_CONFIG.company || 'Will Sigmon Media';
 
   // ── Next-Thursday calculation (ET-aware) ──────────────────
   // Get today's date in America/New_York so we don't shift on
@@ -1232,7 +1238,16 @@
 
   // ── Speaker URL param ─────────────────────────────────────
   var params = new URLSearchParams(window.location.search);
-  var speaker = (params.get('speaker') || '').trim();
+  var speaker = (params.get('speaker') || DEFAULT_SPEAKER_NAME).trim();
+  var speakerCompany = (params.get('company') || DEFAULT_SPEAKER_COMPANY).trim();
+  var venueBar = document.querySelector('.venue-bar');
+  if (venueBar) {
+    venueBar.innerHTML = '<strong>' + (MEETING_CONFIG.venueName || 'Clouds Brewing') + '</strong>' +
+      '<span class="venue-dot">&#9670;</span>' +
+      (MEETING_CONFIG.venueAddressShort || '1233 Front St, Raleigh NC') +
+      '<span class="venue-dot">&#9670;</span>' +
+      (MEETING_CONFIG.supportMessage || 'Please stay for a drink after the meeting to support the brewery &mdash; they provide our space at no cost.');
+  }
   if (speaker) {
     // Header pill badge
     var badge = document.getElementById('speaker-badge');
@@ -1251,6 +1266,9 @@
     // Spotlight card hero name (right column)
     var heroName = document.querySelector('.spotlight-hero-name');
     if (heroName) heroName.textContent = speaker;
+
+    var heroCompany = document.querySelector('.spotlight-hero-prof');
+    if (heroCompany && speakerCompany) heroCompany.textContent = speakerCompany;
   }
 })();
 
@@ -1264,6 +1282,12 @@ fetch('/api/stats').then(function(r) { return r.json(); }).then(function(data) {
   if (el('stat-referrals')) el('stat-referrals').textContent = s.referrals || '—';
   if (el('stat-gis'))       el('stat-gis').textContent = s.guestIncentives || '—';
   if (el('stat-revenue'))   el('stat-revenue').textContent = '$' + Number(s.revenue || 0).toLocaleString('en-US');
+}).catch(function() {});
+
+fetch('/api/members').then(function(r) { return r.json(); }).then(function(data) {
+  if (data.status !== 'ok' || !Array.isArray(data.members)) return;
+  var membersEl = document.getElementById('stat-members');
+  if (membersEl) membersEl.textContent = data.members.length;
 }).catch(function() {});
 </script>
 

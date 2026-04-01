@@ -470,8 +470,8 @@ section:nth-child(odd) { position: relative; }
         </svg>
       </div>
       <h3>Weekly Meetings</h3>
-      <p>Every Thursday we meet at Clouds Brewing in Raleigh to share referrals, build relationships, and hold each other accountable.</p>
-      <span class="detail">Thursdays &middot; 4:00 PM ET</span>
+      <p id="weekly-meeting-copy">Every Thursday we meet at Clouds Brewing in Raleigh to share referrals, build relationships, and hold each other accountable.</p>
+      <span class="detail" id="weekly-meeting-detail">Thursdays &middot; 4:00 PM ET</span>
     </div>
     <div class="card gradient-border">
       <div class="hw-icon hw-icon--chat" aria-hidden="true">
@@ -529,9 +529,9 @@ section:nth-child(odd) { position: relative; }
   <div class="venue-block">
     <img src="/clouds-brewing-logo.png" alt="Clouds Brewing logo" class="venue-logo" width="96" height="96" loading="lazy" decoding="async">
     <div class="venue-info">
-      <h3>Clouds Brewing</h3>
-      <p>1233 Front St, Raleigh, NC 27609</p>
-      <div class="venue-schedule">Thursdays at 4:00 PM ET</div>
+      <h3 id="venue-name">Clouds Brewing</h3>
+      <p id="venue-address">1233 Front St, Raleigh, NC 27609</p>
+      <div class="venue-schedule" id="venue-schedule">Thursdays at 4:00 PM ET</div>
     </div>
   </div>
 </section>
@@ -552,9 +552,30 @@ section:nth-child(odd) { position: relative; }
   &copy; 2026 RDU Heatwave &middot; A Two Twelve Referral Network Team
 </footer>
 
+<script src="/scripts/site-config.js"></script>
 <script>
 (function () {
+  var SITE_CONFIG = window.HEATWAVE_SITE_CONFIG || {};
+  var MEETING_CONFIG = SITE_CONFIG.meeting || {};
   var grid = document.getElementById('team-grid');
+  var weeklyMeetingCopy = document.getElementById('weekly-meeting-copy');
+  var weeklyMeetingDetail = document.getElementById('weekly-meeting-detail');
+  var venueName = document.getElementById('venue-name');
+  var venueAddress = document.getElementById('venue-address');
+  var venueSchedule = document.getElementById('venue-schedule');
+
+  if (weeklyMeetingCopy && MEETING_CONFIG.venueName) {
+    weeklyMeetingCopy.textContent = 'Every ' + (MEETING_CONFIG.dayName || 'Thursday') + ' we meet at ' + MEETING_CONFIG.venueName + ' in Raleigh to share referrals, build relationships, and hold each other accountable.';
+  }
+  if (weeklyMeetingDetail) {
+    weeklyMeetingDetail.textContent = (MEETING_CONFIG.dayNamePlural || 'Thursdays') + ' · ' + (MEETING_CONFIG.publicTimeLabel || '4:00 PM ET');
+  }
+  if (venueName && MEETING_CONFIG.venueName) venueName.textContent = MEETING_CONFIG.venueName;
+  if (venueAddress && MEETING_CONFIG.venueAddress) venueAddress.textContent = MEETING_CONFIG.venueAddress;
+  if (venueSchedule) {
+    venueSchedule.textContent = (MEETING_CONFIG.dayNamePlural || 'Thursdays') + ' at ' + (MEETING_CONFIG.publicTimeLabel || '4:00 PM ET');
+  }
+
   if (!grid) return;
 
   fetch('/api/members')

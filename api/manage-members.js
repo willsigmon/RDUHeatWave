@@ -51,6 +51,34 @@ async function readCurrentMembers() {
   });
 }
 
+async function readCurrentMembersWithRowNumbers() {
+  var rows = await sheets.readRange(SHEET_ID, RANGE);
+  if (!rows.length) return [];
+
+  var startIndex = 0;
+  var firstRow = (rows[0] || []).map(function (cell) {
+    return shared.normalizeText(cell).toLowerCase();
+  });
+  if (firstRow.indexOf('name') !== -1 || firstRow.indexOf('profession') !== -1) {
+    startIndex = 1;
+  }
+
+  var members = [];
+  for (var i = startIndex; i < rows.length; i++) {
+    var row = rows[i] || [];
+    if (!shared.normalizeText(row[0])) continue;
+    members.push({
+      rowNumber: i + 1,
+      name: shared.normalizeText(row[0]),
+      title: shared.normalizeText(row[1]) || 'Member',
+      company: shared.normalizeText(row[2]),
+      website: shared.normalizeText(row[3])
+    });
+  }
+
+  return members;
+}
+
 // ── Actions ─────────────────────────────────────────────────────────
 
 async function listMembers() {
@@ -85,31 +113,17 @@ async function removeMember(body) {
   var name = shared.normalizeText(body.name);
   if (!name) return { status: 'error', message: 'name is required' };
 
-  var rows = await sheets.readRange(SHEET_ID, RANGE);
-  if (!rows.length) return { status: 'error', message: 'Sheet is empty' };
+  var members = await readCurrentMembersWithRowNumbers();
+  if (!members.length) return { status: 'error', message: 'Sheet is empty' };
 
-  // Detect header row
-  var hasHeaders = false;
-  var firstRow = (rows[0] || []).map(function (cell) {
-    return shared.normalizeText(cell).toLowerCase();
+  var target = members.find(function (member) {
+    return member.name.toLowerCase() === name.toLowerCase();
   });
-  if (firstRow.indexOf('name') !== -1) hasHeaders = true;
-
-  var filtered = rows.filter(function (row, index) {
-    if (hasHeaders && index === 0) return true;
-    return shared.normalizeText(row[0]).toLowerCase() !== name.toLowerCase();
-  });
-
-  if (filtered.length === rows.length) {
+  if (!target) {
     return { status: 'error', message: name + ' not found on roster' };
   }
 
-  // Rewrite the entire range
-  var fullRange = SHEET_NAME + '!A1:D' + rows.length;
-  await sheets.clearRange(SHEET_ID, fullRange);
-  if (filtered.length) {
-    await sheets.writeRange(SHEET_ID, SHEET_NAME + '!A1:D' + filtered.length, filtered);
-  }
+  await sheets.deleteSheetRow(SHEET_ID, SHEET_NAME, target.rowNumber);
 
   return { status: 'ok', message: name + ' removed' };
 }
@@ -118,31 +132,22 @@ async function updateMember(body) {
   var name = shared.normalizeText(body.name);
   if (!name) return { status: 'error', message: 'name is required' };
 
-  var rows = await sheets.readRange(SHEET_ID, RANGE);
-  if (!rows.length) return { status: 'error', message: 'Sheet is empty' };
+  var members = await readCurrentMembersWithRowNumbers();
+  if (!members.length) return { status: 'error', message: 'Sheet is empty' };
 
-  var hasHeaders = false;
-  var firstRow = (rows[0] || []).map(function (cell) {
-    return shared.normalizeText(cell).toLowerCase();
+  var target = members.find(function (member) {
+    return member.name.toLowerCase() === name.toLowerCase();
   });
-  if (firstRow.indexOf('name') !== -1) hasHeaders = true;
+  if (!target) return { status: 'error', message: name + ' not found on roster' };
 
-  var found = false;
-  var updated = rows.map(function (row, index) {
-    if (hasHeaders && index === 0) return row;
-    if (shared.normalizeText(row[0]).toLowerCase() !== name.toLowerCase()) return row;
-    found = true;
-    return [
-      body.newName ? shared.normalizeText(body.newName) : shared.normalizeText(row[0]),
-      body.title || body.profession ? shared.normalizeText(body.title || body.profession) : shared.normalizeText(row[1]),
-      body.company != null ? shared.normalizeText(body.company) : shared.normalizeText(row[2]),
-      body.website != null ? shared.normalizeText(body.website) : shared.normalizeText(row[3])
-    ];
-  });
+  var nextRow = [
+    shared.sanitizeForSheet(body.newName ? shared.normalizeText(body.newName) : target.name),
+    shared.sanitizeForSheet(body.title || body.profession ? shared.normalizeText(body.title || body.profession) : target.title),
+    shared.sanitizeForSheet(body.company != null ? shared.normalizeText(body.company) : target.company),
+    shared.sanitizeForSheet(body.website != null ? shared.normalizeText(body.website) : target.website)
+  ];
 
-  if (!found) return { status: 'error', message: name + ' not found on roster' };
-
-  await sheets.writeRange(SHEET_ID, SHEET_NAME + '!A1:D' + updated.length, updated);
+  await sheets.writeRange(SHEET_ID, SHEET_NAME + '!A' + target.rowNumber + ':D' + target.rowNumber, [nextRow]);
   return { status: 'ok', message: name + ' updated' };
 }
 

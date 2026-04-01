@@ -60,6 +60,10 @@ var GUEST_INCENTIVE_HOST_ALIASES = {
   sue: ['sue kerata'],
   will: ['will sigmon']
 };
+var CALENDAR_KEYWORDS = ['heatwave', 'rdu', '212'];
+var UPCOMING_EVENTS_LOOKAHEAD_DAYS = 120;
+var UPCOMING_EVENTS_DEFAULT_LIMIT = 4;
+var UPCOMING_EVENTS_MAX_LIMIT = 6;
 
 function acquireLock_(timeoutMs) {
   var lock = LockService.getDocumentLock() || LockService.getScriptLock();
@@ -804,6 +808,9 @@ function doGet(e) {
   if (requestType === 'members' || requestType === 'memberdirectory' || requestType === 'directory') {
     return jsonOutput_(buildMembersResponse_());
   }
+  if (requestType === 'upcomingevents' || requestType === 'events' || requestType === 'calendar') {
+    return jsonOutput_(buildUpcomingEventsResponse_((e && e.parameter) || {}));
+  }
   if (requestType === 'syncguestincentive' || requestType === 'guestincentive') {
     syncGuestIncentiveReport();
     return jsonOutput_({ status: 'ok', report: GUEST_INCENTIVE_SHEET_NAME, mode: 'points-only' });
@@ -843,6 +850,120 @@ function buildMembersResponse_() {
   } catch (error) {
     return { status: 'ok', source: 'fallback', members: buildFallbackMembers_() };
   }
+}
+
+function buildUpcomingEventsResponse_(params) {
+  var limit = Math.max(1, Math.min(UPCOMING_EVENTS_MAX_LIMIT, asNumber_(params.limit) || UPCOMING_EVENTS_DEFAULT_LIMIT));
+  var now = new Date();
+  var end = new Date(now.getTime() + (UPCOMING_EVENTS_LOOKAHEAD_DAYS * 24 * 60 * 60 * 1000));
+  var events = findUpcomingEvents_(now, end).slice(0, limit);
+
+  return {
+    status: 'ok',
+    source: 'calendar',
+    events: events,
+    generatedAt: now.toISOString()
+  };
+}
+
+function findUpcomingEvents_(start, end) {
+  var calendars = getCandidateCalendars_();
+  var seenCalendars = {};
+  var collected = [];
+  var seenEvents = {};
+
+  calendars.forEach(function(calendar) {
+    if (!calendar) return;
+
+    var calendarKey = '';
+    try {
+      calendarKey = cleanValue_(calendar.getId());
+    } catch (_error) {
+      calendarKey = cleanValue_(calendar.getName());
+    }
+    if (calendarKey && seenCalendars[calendarKey]) return;
+    if (calendarKey) seenCalendars[calendarKey] = true;
+
+    var calendarName = cleanValue_(calendar.getName());
+    var calendarMatches = matchesCalendarKeyword_(calendarName);
+    var events = [];
+
+    try {
+      events = calendar.getEvents(start, end) || [];
+    } catch (_eventError) {
+      events = [];
+    }
+
+    events.forEach(function(event) {
+      var title = cleanValue_(event.getTitle());
+      var description = cleanValue_(event.getDescription());
+      var location = cleanValue_(event.getLocation());
+      var combined = [title, description, location, calendarName].join(' ');
+
+      if (!(calendarMatches || matchesCalendarKeyword_(combined))) return;
+
+      var startTime = event.getStartTime();
+      var endTime = event.getEndTime();
+      var key = [
+        cleanValue_(event.getId()),
+        startTime ? startTime.getTime() : '',
+        title
+      ].join('|');
+
+      if (seenEvents[key]) return;
+      seenEvents[key] = true;
+
+      collected.push({
+        title: title || 'Upcoming Event',
+        start: startTime ? startTime.toISOString() : '',
+        end: endTime ? endTime.toISOString() : '',
+        location: location,
+        description: description,
+        calendarName: calendarName,
+        allDay: !!event.isAllDayEvent()
+      });
+    });
+  });
+
+  return collected.filter(function(event) {
+    return !!event.start;
+  }).sort(function(a, b) {
+    return new Date(a.start).getTime() - new Date(b.start).getTime();
+  });
+}
+
+function getCandidateCalendars_() {
+  var calendars = [];
+
+  try {
+    calendars.push(CalendarApp.getDefaultCalendar());
+  } catch (_defaultError) {}
+
+  try {
+    (CalendarApp.getAllCalendars() || []).forEach(function(calendar) {
+      if (!calendar) return;
+      var name = cleanValue_(calendar.getName());
+      if (matchesCalendarKeyword_(name)) {
+        calendars.push(calendar);
+      }
+    });
+  } catch (_allError) {}
+
+  if (calendars.length) return calendars;
+
+  try {
+    return CalendarApp.getAllCalendars() || [];
+  } catch (_fallbackError) {
+    return [];
+  }
+}
+
+function matchesCalendarKeyword_(value) {
+  var normalized = cleanValue_(value).toLowerCase();
+  if (!normalized) return false;
+  return CALENDAR_KEYWORDS.some(function(keyword) {
+    return normalized.indexOf(keyword) !== -1;
+  });
 }
 
 function getMembersSheet_(spreadsheet) {

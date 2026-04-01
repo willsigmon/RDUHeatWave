@@ -6,6 +6,7 @@ const handler = (await import('../api/stats.js')).default;
 
 afterEach(() => {
   globalThis.fetch = originalFetch;
+  if (handler._resetForTests) handler._resetForTests();
 });
 
 function stubAllSheets() {
@@ -80,6 +81,7 @@ describe('stats handler — response shape', () => {
     expect(stats).toHaveProperty('referrals');
     expect(stats).toHaveProperty('revenue');
     expect(stats).toHaveProperty('guestIncentives');
+    expect(result.body.stale).toBe(false);
   });
 
   it('calculates correct values', async () => {
@@ -117,6 +119,71 @@ describe('stats handler — caching', () => {
 // ── Error handling ─────────────────────────────────────────────────
 
 describe('stats handler — errors', () => {
+  it('returns partial stats with stale=true when one sheet fails', async () => {
+    const now = new Date();
+    const recentDate = `${now.getMonth() + 1}/1/${now.getFullYear()}`;
+
+    mockGlobalFetch(async (url) => {
+      const urlStr = String(url);
+      if (urlStr.includes('Guest%20Incentive%20Report')) {
+        return mockFetchResponse(gvizResponse(
+          ['Member', 'Weekly Total Points', 'Total'],
+          [['Alice', '10', '5'], ['', '10', '5']],
+        ));
+      }
+      if (urlStr.includes('BizChats%20Report')) {
+        throw new Error('bizchat tab unavailable');
+      }
+      if (urlStr.includes('Referral%20Pipeline')) {
+        return mockFetchResponse(gvizResponse(
+          ['From', 'To', 'Date'],
+          [['Alice', 'Bob', recentDate]],
+        ));
+      }
+      if (urlStr.includes('Revenue%20Report')) {
+        return mockFetchResponse(gvizResponse(
+          ['Member', 'Weekly Total Given', 'Rcvd'],
+          [['Alice', '$100', '$200'], ['', '$100', '$200']],
+        ));
+      }
+      throw new Error(`Unmocked sheet URL: ${urlStr}`);
+    });
+
+    const { res, getResult } = mockRes();
+    await handler(mockReq({ method: 'GET' }), res);
+    const result = getResult();
+    expect(result.statusCode).toBe(200);
+    expect(result.body.status).toBe('ok');
+    expect(result.body.stale).toBe(true);
+    expect(result.body.stats.guestsHosted).toBe(10);
+    expect(result.body.stats.revenue).toBe(200);
+    expect(result.body.stats.referrals).toBe(1);
+    expect(result.body.stats.bizChats).toBeUndefined();
+    expect(result.body.warnings.some((warning) => /BizChats Report/.test(warning))).toBe(true);
+  });
+
+  it('serves last known good stats when all sheet fetches fail after a successful fetch', async () => {
+    stubAllSheets();
+    {
+      const { res, getResult } = mockRes();
+      await handler(mockReq({ method: 'GET' }), res);
+      expect(getResult().statusCode).toBe(200);
+      expect(getResult().body.stats.bizChats).toBe(8);
+    }
+
+    mockGlobalFetch(async () => { throw new Error('network down'); });
+    {
+      const { res, getResult } = mockRes();
+      await handler(mockReq({ method: 'GET' }), res);
+      const result = getResult();
+      expect(result.statusCode).toBe(200);
+      expect(result.body.status).toBe('ok');
+      expect(result.body.stale).toBe(true);
+      expect(result.body.stats.bizChats).toBe(8);
+      expect(result.body.warnings).toContain('Serving last known good stats');
+    }
+  });
+
   it('returns 500 with error message when sheet fetch fails', async () => {
     mockGlobalFetch(async () => { throw new Error('network down'); });
     const { res, getResult } = mockRes();

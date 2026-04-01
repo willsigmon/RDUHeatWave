@@ -50,9 +50,23 @@ function stubSheetsApi(rows) {
       return mockFetchResponse(sheetData);
     }
 
+    // Spreadsheet metadata lookup
+    if (urlStr.includes('/v4/spreadsheets/1WWS') && (!opts || opts.method === 'GET' || !opts.method) && !urlStr.includes('/values/')) {
+      return mockFetchResponse({
+        sheets: [
+          { properties: { sheetId: 123456, title: 'Membership Directory' } },
+        ],
+      });
+    }
+
     // Sheets API: append rows
     if (urlStr.includes(':append')) {
       return mockFetchResponse({ updates: { updatedRows: 1 } });
+    }
+
+    // Sheets API: batch update (delete row)
+    if (urlStr.includes(':batchUpdate')) {
+      return mockFetchResponse({ replies: [{}] });
     }
 
     // Sheets API: clear range
@@ -238,9 +252,8 @@ describe('manage-members handler — remove', () => {
     );
     expect(getResult().statusCode).toBe(200);
     expect(getResult().body.message).toContain('Alice Smith removed');
-    // Should call clear then write
-    const clearCalls = fetchMock.mock.calls.filter(([url]) => String(url).includes(':clear'));
-    expect(clearCalls.length).toBe(1);
+    const deleteCalls = fetchMock.mock.calls.filter(([url]) => String(url).includes(':batchUpdate'));
+    expect(deleteCalls.length).toBe(1);
   });
 
   it('returns error for non-existent member', async () => {
@@ -273,9 +286,10 @@ describe('manage-members handler — update', () => {
     );
     expect(getResult().statusCode).toBe(200);
     expect(getResult().body.message).toContain('Alice Smith updated');
-    // Should call writeRange (PUT)
+    // Should call writeRange (PUT) for a single row, not rewrite the full roster
     const putCalls = fetchMock.mock.calls.filter(([, opts]) => opts && opts.method === 'PUT');
     expect(putCalls.length).toBe(1);
+    expect(String(putCalls[0][0])).toContain('Membership%20Directory!A2%3AD2');
   });
 
   it('returns error for non-existent member', async () => {

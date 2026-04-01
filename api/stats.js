@@ -4,6 +4,36 @@ var shared = require('./_lib/shared');
 
 var SHEET_ID = '1WWSxfqJ1UdMqJxKLaiIzb06n3rSQj5-AVN3m07wAkSA';
 var CACHE_HEADER = 'public, max-age=0, s-maxage=300, stale-while-revalidate=600';
+var lastKnownGoodStats = null;
+var lastKnownGoodAt = null;
+
+var STAT_DEFINITIONS = [
+  {
+    key: 'guestsHosted',
+    sheetName: 'Guest Incentive Report',
+    compute: function (report) { return getTotalFromColumn(report, 'weekly total points'); }
+  },
+  {
+    key: 'bizChats',
+    sheetName: 'BizChats Report',
+    compute: function (report) { return getTotalFromColumn(report, 'weekly total'); }
+  },
+  {
+    key: 'referrals',
+    sheetName: 'Referral Pipeline',
+    compute: function (report) { return getPipelineReferrals(report); }
+  },
+  {
+    key: 'revenue',
+    sheetName: 'Revenue Report',
+    compute: function (report) { return getRevenueFromReport(report); }
+  },
+  {
+    key: 'guestIncentives',
+    sheetName: 'Guest Incentive Report',
+    compute: function (report) { return getTotalFromColumn(report, 'total'); }
+  }
+];
 
 function getTotalFromColumn(report, columnLabel) {
   var colIndex = report.cols.findIndex(function (label) {
@@ -23,11 +53,14 @@ function getTotalFromColumn(report, columnLabel) {
 function getPipelineReferrals(report) {
   var totalReferrals = 0;
   var now = new Date();
+  var nowMs = now.getTime();
   var twelveMonthsAgo = Date.UTC(now.getUTCFullYear() - 1, now.getUTCMonth(), now.getUTCDate());
 
   report.rows.forEach(function (row) {
     var date = shared.parseDate(row[2]);
-    if (!date || date.getTime() < twelveMonthsAgo) return;
+    if (!date) return;
+    var time = date.getTime();
+    if (time < twelveMonthsAgo || time > nowMs) return;
     totalReferrals += 1;
   });
 
@@ -71,19 +104,68 @@ function getRevenueFromReport(report) {
 }
 
 async function buildStats() {
-  var sheets = await Promise.all([
-    shared.fetchSheet(SHEET_ID, 'Guest Incentive Report'),
-    shared.fetchSheet(SHEET_ID, 'BizChats Report'),
-    shared.fetchSheet(SHEET_ID, 'Referral Pipeline'),
-    shared.fetchSheet(SHEET_ID, 'Revenue Report')
-  ]);
+  var uniqueSheetNames = Array.from(new Set(STAT_DEFINITIONS.map(function (item) { return item.sheetName; })));
+  var sheetResults = await Promise.allSettled(uniqueSheetNames.map(function (sheetName) {
+    return shared.fetchSheet(SHEET_ID, sheetName);
+  }));
+
+  var reportsBySheet = {};
+  var warnings = [];
+  var stats = {};
+  var fulfilledSheetCount = 0;
+
+  sheetResults.forEach(function (result, index) {
+    var sheetName = uniqueSheetNames[index];
+    if (result.status === 'fulfilled') {
+      reportsBySheet[sheetName] = result.value;
+      fulfilledSheetCount += 1;
+      return;
+    }
+
+    warnings.push(sheetName + ': ' + ((result.reason && result.reason.message) || 'Unavailable'));
+  });
+
+  STAT_DEFINITIONS.forEach(function (definition) {
+    var report = reportsBySheet[definition.sheetName];
+    if (!report) return;
+
+    try {
+      stats[definition.key] = definition.compute(report);
+    } catch (error) {
+      warnings.push(definition.key + ': ' + ((error && error.message) || 'Unavailable'));
+    }
+  });
+
+  if (lastKnownGoodStats) {
+    STAT_DEFINITIONS.forEach(function (definition) {
+      if (stats[definition.key] == null && lastKnownGoodStats[definition.key] != null) {
+        stats[definition.key] = lastKnownGoodStats[definition.key];
+      }
+    });
+    if (fulfilledSheetCount === 0) {
+      warnings.unshift('Serving last known good stats');
+    }
+  }
+
+  var hasAnyStats = STAT_DEFINITIONS.some(function (definition) {
+    return stats[definition.key] != null;
+  });
+
+  if (!hasAnyStats) {
+    throw new Error('Stats unavailable');
+  }
+
+  var isFresh = warnings.length === 0;
+  if (isFresh) {
+    lastKnownGoodStats = Object.assign({}, stats);
+    lastKnownGoodAt = new Date().toISOString();
+  }
 
   return {
-    guestsHosted: getTotalFromColumn(sheets[0], 'weekly total points'),
-    bizChats: getTotalFromColumn(sheets[1], 'weekly total'),
-    referrals: getPipelineReferrals(sheets[2]),
-    revenue: getRevenueFromReport(sheets[3]),
-    guestIncentives: getTotalFromColumn(sheets[0], 'total')
+    stats: stats,
+    stale: !isFresh,
+    updatedAt: isFresh ? lastKnownGoodAt : (lastKnownGoodAt || null),
+    warnings: warnings
   };
 }
 
@@ -93,10 +175,24 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'GET') return shared.handleMethodNotAllowed(req, res, ['GET', 'HEAD', 'OPTIONS']);
 
   try {
-    var stats = await buildStats();
-    return shared.sendCachedJson(res, 200, { status: 'ok', stats: stats });
+    var payload = await buildStats();
+    return shared.sendCachedJson(res, 200, Object.assign({ status: 'ok' }, payload));
   } catch (error) {
     console.error('[api/stats]', error);
+    if (lastKnownGoodStats) {
+      return shared.sendCachedJson(res, 200, {
+        status: 'ok',
+        stats: Object.assign({}, lastKnownGoodStats),
+        stale: true,
+        updatedAt: lastKnownGoodAt,
+        warnings: ['Serving last known good stats']
+      });
+    }
     return shared.sendCachedJson(res, 500, { status: 'error', message: 'Stats unavailable' });
   }
+};
+
+module.exports._resetForTests = function resetStatsCache() {
+  lastKnownGoodStats = null;
+  lastKnownGoodAt = null;
 };

@@ -1988,7 +1988,7 @@ button { cursor: pointer; background: none; border: none; }
   <div class="countdown-section" data-reveal id="countdown-section">
     <div class="meeting-label">Next Meeting</div>
     <div class="meeting-datetime" id="meeting-datetime">Loading...</div>
-    <div class="meeting-location">Clouds Brewing &bull; 1233 Front St, Raleigh NC</div>
+    <div class="meeting-location" id="meeting-location">Clouds Brewing &bull; 1233 Front St, Raleigh NC</div>
     <div class="countdown-grid" id="countdown-grid">
       <div class="countdown-unit">
         <div class="countdown-value" id="cd-days">--</div>
@@ -2138,8 +2138,11 @@ button { cursor: pointer; background: none; border: none; }
 
 </div><!-- end slider -->
 
+<script src="/scripts/site-config.js"></script>
 <script>
 (function() {
+  var SITE_CONFIG = window.HEATWAVE_SITE_CONFIG || {};
+  var MEETING_CONFIG = SITE_CONFIG.meeting || {};
 
   // ===== BEER MENU DATA =====
   var BEER_MENU = {
@@ -2876,11 +2879,11 @@ button { cursor: pointer; background: none; border: none; }
   schedulePeek(900);
 
   // ===== COUNTDOWN TIMER =====
-  var MEETING_DAY = 4; // Thursday
-  var MEETING_HOUR = 16; // 4:00 PM ET
-  var MEETING_MIN = 0;
-  var MEETING_TIME_LABEL = '4:00 PM ET';
-  var MEETING_TIME_ZONE = 'America/New_York';
+  var MEETING_DAY = Number.isFinite(MEETING_CONFIG.day) ? MEETING_CONFIG.day : 4;
+  var MEETING_HOUR = Number.isFinite(MEETING_CONFIG.hour) ? MEETING_CONFIG.hour : 16;
+  var MEETING_MIN = Number.isFinite(MEETING_CONFIG.minute) ? MEETING_CONFIG.minute : 0;
+  var MEETING_TIME_LABEL = MEETING_CONFIG.publicTimeLabel || '4:00 PM ET';
+  var MEETING_TIME_ZONE = MEETING_CONFIG.timezone || 'America/New_York';
   var MEETING_DURATION = 2 * 60 * 60 * 1000;
   var meetingDateFormatter = new Intl.DateTimeFormat('en-US', {
     timeZone: MEETING_TIME_ZONE,
@@ -2963,6 +2966,11 @@ button { cursor: pointer; background: none; border: none; }
   var datetimeEl = document.getElementById('meeting-datetime');
   var countdownGrid = document.getElementById('countdown-grid');
   var statusEl = document.getElementById('meeting-status');
+  var meetingLocationEl = document.getElementById('meeting-location');
+
+  if (meetingLocationEl && MEETING_CONFIG.venueLineShort) {
+    meetingLocationEl.textContent = MEETING_CONFIG.venueLineShort;
+  }
 
   datetimeEl.textContent = meeting.dateStr + ' \u2022 ' + MEETING_TIME_LABEL;
 
