@@ -2,6 +2,7 @@
 
 var shared = require('./_lib/shared');
 
+var RATE_LIMITS = { burst: 10, burstWindowMs: 60 * 1000, hourly: 120 };
 var ADMIN_PASSCODE = process.env.ADMIN_PASSCODE;
 var SHEET_ID = '1WWSxfqJ1UdMqJxKLaiIzb06n3rSQj5-AVN3m07wAkSA';
 var REQUEST_TIMEOUT_MS = 12 * 1000;
@@ -223,7 +224,7 @@ function parsePipelineReport(report) {
 
   report.rows.forEach(function (row) {
     var date = shared.parseDate(row[2]);
-    if (!date || date.getUTCFullYear() !== 2026) return;
+    if (!date || date.getUTCFullYear() !== new Date().getUTCFullYear()) return;
 
     var key = date.toISOString().slice(0, 10);
     if (!weekly.has(key)) {
@@ -422,6 +423,10 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return shared.handleMethodNotAllowed(req, res, ['POST', 'HEAD', 'OPTIONS']);
 
   try {
+    if (await shared.isRateLimited(shared.getClientIp(req), RATE_LIMITS)) {
+      return shared.sendJson(res, 429, { status: 'error', message: 'Too many requests. Please try again shortly.' });
+    }
+
     var body = await shared.readRequestBody(req, 4 * 1024);
     var passcode = getPasscode(req, body);
 

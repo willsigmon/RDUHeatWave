@@ -73,7 +73,10 @@ function handleOptions(res, allowedMethods, cache) {
 function getClientIp(req) {
   var forwardedFor = normalizeText(req.headers['x-forwarded-for']);
   if (forwardedFor) {
-    return normalizeText(forwardedFor.split(',')[0]);
+    // Vercel appends the real client IP as the LAST entry in the chain.
+    // Using the first entry would trust a client-spoofed value.
+    var parts = forwardedFor.split(',');
+    return normalizeText(parts[parts.length - 1]);
   }
   return normalizeText(req.headers['x-real-ip']);
 }
@@ -83,7 +86,16 @@ var ALLOWED_ORIGINS = [
   'https://www.rduheatwave.team'
 ];
 var PREVIEW_ORIGIN_RE = /^https:\/\/rduheat-[a-z0-9-]+-wsmco\.vercel\.app$/i;
-var DEFAULT_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwvYv_BYJznuumdC51jP-P6RuYRRgK5MEONjUywvl322MbR1W1_nA1hZHcsSj5oLfzvoQ/exec';
+// Apps Script URL — MUST be set via APPS_SCRIPT_URL env var (no hardcoded fallback)
+// var DEFAULT_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/.../exec';
+
+function getAppsScriptUrl() {
+  var url = process.env.APPS_SCRIPT_URL;
+  if (!url) {
+    throw new Error('APPS_SCRIPT_URL env var is required but not set');
+  }
+  return url;
+}
 
 function isAllowedOriginValue(value) {
   if (!value) return true;
@@ -339,7 +351,7 @@ module.exports = {
   getClientIp: getClientIp,
   isAllowedOriginValue: isAllowedOriginValue,
   hasAllowedOrigin: hasAllowedOrigin,
-  DEFAULT_APPS_SCRIPT_URL: DEFAULT_APPS_SCRIPT_URL,
+  getAppsScriptUrl: getAppsScriptUrl,
   isRateLimited: isRateLimited,
   readRequestBody: readRequestBody,
   parseGvizResponse: parseGvizResponse,

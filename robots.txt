@@ -2,9 +2,12 @@ User-agent: *
 Allow: /
 Disallow: /agenda
 Disallow: /admin
+Disallow: /api/
 Disallow: /crm
 Disallow: /remind
 Disallow: /kiosk
 Disallow: /timer
+Disallow: /survey-results
+Disallow: /report
 
 Sitemap: https://rduheatwave.team/sitemap.xml

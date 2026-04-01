@@ -2,7 +2,7 @@
 
 var shared = require('./_lib/shared');
 
-var APPS_SCRIPT_URL = process.env.APPS_SCRIPT_URL || shared.DEFAULT_APPS_SCRIPT_URL;
+var APPS_SCRIPT_URL = shared.getAppsScriptUrl();
 var RATE_LIMITS = { burst: 60, burstWindowMs: 60 * 1000, hourly: 600 };
 
 module.exports = async function handler(req, res) {
@@ -18,10 +18,10 @@ module.exports = async function handler(req, res) {
       return shared.sendJson(res, 403, { status: 'error', message: 'Origin not allowed' });
     }
 
-    // Rate limiting relaxed for internal CRM — PIN auth is the access control
-    // if (shared.isRateLimited(shared.getClientIp(req), RATE_LIMITS)) {
-    //   return shared.sendJson(res, 429, { status: 'error', message: 'Too many requests. Please try again shortly.' });
-    // }
+    // Rate limiting prevents brute-force PIN guessing even though PIN auth is the access control
+    if (await shared.isRateLimited(shared.getClientIp(req), RATE_LIMITS)) {
+      return shared.sendJson(res, 429, { status: 'error', message: 'Too many requests. Please try again shortly.' });
+    }
 
     var body = await shared.readRequestBody(req);
 

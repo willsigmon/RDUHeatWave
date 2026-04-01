@@ -3,6 +3,7 @@
 var shared = require('./_lib/shared');
 var sheets = require('./_lib/google-sheets');
 
+var RATE_LIMITS = { burst: 10, burstWindowMs: 60 * 1000, hourly: 120 };
 var ADMIN_PASSCODE = process.env.ADMIN_PASSCODE;
 var SHEET_ID = '1WWSxfqJ1UdMqJxKLaiIzb06n3rSQj5-AVN3m07wAkSA';
 var SHEET_NAME = 'Membership Directory';
@@ -177,6 +178,10 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return shared.handleMethodNotAllowed(req, res, ['POST', 'HEAD', 'OPTIONS']);
 
   try {
+    if (await shared.isRateLimited(shared.getClientIp(req), RATE_LIMITS)) {
+      return shared.sendJson(res, 429, { status: 'error', message: 'Too many requests. Please try again shortly.' });
+    }
+
     if (!sheets.isConfigured()) {
       return shared.sendJson(res, 503, {
         status: 'error',

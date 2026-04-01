@@ -43,28 +43,28 @@
       "name": "BizChat",
       "short_name": "BizChat",
       "description": "Schedule a one-on-one BizChat with a member",
-      "url": "/bizchat.html",
+      "url": "/bizchat",
       "icons": [{ "src": "/icons/heatwave-icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Survey",
       "short_name": "Survey",
       "description": "Submit weekly meeting feedback",
-      "url": "/survey.html",
+      "url": "/survey",
       "icons": [{ "src": "/icons/heatwave-icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "About",
       "short_name": "About",
       "description": "Learn about RDU Heatwave and 212 Referral Network",
-      "url": "/about.html",
+      "url": "/about",
       "icons": [{ "src": "/icons/heatwave-icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Timer",
       "short_name": "Timer",
       "description": "Meeting presentation timer",
-      "url": "/timer.html",
+      "url": "/timer",
       "icons": [{ "src": "/icons/heatwave-icon-192.png", "sizes": "192x192" }]
     }
   ]

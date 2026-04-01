@@ -2,7 +2,7 @@
 
 var shared = require('./_lib/shared');
 
-var APPS_SCRIPT_URL = process.env.APPS_SCRIPT_URL || shared.DEFAULT_APPS_SCRIPT_URL;
+var APPS_SCRIPT_URL = shared.getAppsScriptUrl();
 var REQUIRED_FIELDS = ['firstName', 'lastName', 'profession', 'phone', 'email', 'guestOf'];
 var OPTIONAL_FIELDS = ['companyName', 'idealReferral'];
 var HONEYPOT_FIELD = 'companyWebsite';

@@ -164,10 +164,10 @@ describe('handleOptions', () => {
 // ── getClientIp ────────────────────────────────────────────────────
 
 describe('getClientIp', () => {
-  it('extracts first IP from x-forwarded-for', () => {
+  it('extracts last IP from x-forwarded-for (Vercel appends real IP last)', () => {
     expect(shared.getClientIp({
       headers: { 'x-forwarded-for': '10.0.0.1, 10.0.0.2' },
-    })).toBe('10.0.0.1');
+    })).toBe('10.0.0.2');
   });
 
   it('falls back to x-real-ip', () => {

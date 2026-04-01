@@ -1,4 +1,4 @@
-const CACHE_NAME = 'heatwave-v7';
+const CACHE_NAME = 'heatwave-v8';
 
 const PRECACHE_URLS = [
   '/',
@@ -17,6 +17,7 @@ const PRECACHE_URLS = [
   '/crm.css',
   '/crm.js',
   '/report.html',
+  '/privacy.html',
   '/404.html',
   '/shared.css',
   '/shared-form.js',
@@ -28,8 +29,11 @@ const PRECACHE_URLS = [
   '/site.webmanifest',
   '/icons/iconscout/crm.svg',
   '/scripts/heatwave-fx.js',
+  '/scripts/scroll-reveal.js',
+  '/scripts/site-config.js',
 ];
 
+// API responses excluded — must always be fresh
 const STATIC_EXTENSIONS = /\.(css|js|png|jpg|jpeg|svg|gif|webp|ico|woff|woff2|ttf|otf)(\?.*)?$/i;
 
 self.addEventListener('install', (event) => {
@@ -56,6 +60,9 @@ self.addEventListener('fetch', (event) => {
 
   // Only handle same-origin GET requests
   if (url.origin !== location.origin || request.method !== 'GET') return;
+
+  // Skip caching for API routes — always fetch fresh
+  if (url.pathname.includes('/api/')) return;
 
   if (STATIC_EXTENSIONS.test(url.pathname)) {
     // Cache-first for static assets

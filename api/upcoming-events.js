@@ -132,7 +132,7 @@ function normalizeEvents(payload, limit) {
 }
 
 async function fetchAppsScriptEvents(limit) {
-  var url = new URL(process.env.APPS_SCRIPT_URL || shared.DEFAULT_APPS_SCRIPT_URL);
+  var url = new URL(shared.getAppsScriptUrl());
   url.searchParams.set('resource', 'upcomingevents');
   url.searchParams.set('limit', String(limit));
 

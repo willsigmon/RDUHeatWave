@@ -27,6 +27,7 @@ module.exports = async function handler(req, res) {
   try {
     members = await memberDirectory.fetchMembersFromSheet(SHEET_ID, SHEET_NAME, 8000);
   } catch (e) {
+    console.error('[api/member-card] Sheet fetch failed:', e.message || e);
     members = memberDirectory.DEFAULT_MEMBERS;
   }
 

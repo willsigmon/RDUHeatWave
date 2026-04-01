@@ -2,7 +2,7 @@
 
 var shared = require('./_lib/shared');
 
-var APPS_SCRIPT_URL = process.env.APPS_SCRIPT_URL || shared.DEFAULT_APPS_SCRIPT_URL;
+var APPS_SCRIPT_URL = shared.getAppsScriptUrl();
 var RATE_LIMITS = { burst: 10, burstWindowMs: 60 * 1000, hourly: 40 };
 
 function validateBody(body) {

@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#E8580C">
+  <meta name="robots" content="noindex, nofollow">
   <title>RDU Heatwave Member Survey</title>
   <meta name="description" content="Quick anonymous feedback survey for RDU Heatwave members. Help us make the team better.">
   <link rel="canonical" href="https://rduheatwave.team/survey">
@@ -30,7 +31,7 @@
       --color-surface-offset: #1e1714;
       --color-primary-highlight: rgba(232, 88, 12, 0.12);
       --color-accent: #E8580C;
-      --color-accent-hover: #C44A0A;
+      --color-accent-hover: #FF6A1E;
       --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
       --content-narrow: 640px;
     }
@@ -56,10 +57,6 @@
       pointer-events: none;
       z-index: -1;
     }
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
-    }
-
     /* ─── Layout ────────────────────────────────────── */
     .page-wrapper {
       min-height: 100dvh;

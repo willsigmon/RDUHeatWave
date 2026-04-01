@@ -2,7 +2,7 @@
 
 var shared = require('./_lib/shared');
 
-var APPS_SCRIPT_URL = process.env.APPS_SCRIPT_URL || shared.DEFAULT_APPS_SCRIPT_URL;
+var APPS_SCRIPT_URL = shared.getAppsScriptUrl();
 var RADIO_FIELDS = ['q1', 'q2', 'q3', 'q5', 'q6', 'q7', 'q8', 'q9'];
 var CHECKBOX_FIELDS = ['q4'];
 var TEXT_FIELDS = ['q10'];
