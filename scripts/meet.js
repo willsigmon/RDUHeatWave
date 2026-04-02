@@ -21,11 +21,11 @@
   /* ──────────────────────────────────────────────
    *  TEAM STATS — fetched live from /api/stats
    * ────────────────────────────────────────────── */
-  var STATS_BIZCHAT    = 172;
-  var STATS_GUESTS     = 127;
+  var STATS_BIZCHAT    = 207;
+  var STATS_GUESTS     = 113;
   var STATS_REVENUE    = '$115,331';
-  var STATS_REFERRALS  = 24;
-  var STATS_GIS        = 27;
+  var STATS_REFERRALS  = 49;
+  var STATS_GIS        = 158;
 
   function formatCurrency(n) {
     return '$' + Number(n).toLocaleString('en-US');
