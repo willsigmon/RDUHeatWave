@@ -4,11 +4,10 @@
   var SITE_CONFIG = window.HEATWAVE_SITE_CONFIG || {};
   var MEETING_CONFIG = SITE_CONFIG.meeting || {};
   var CURRENT_SPEAKER_CONFIG = SITE_CONFIG.currentSpeaker || {};
+  var ROTATION = SITE_CONFIG.speakerRotation || {};
   var FIRST_MEETING = new Date('2025-01-09T00:00:00');
   var MEETING_TIME  = MEETING_CONFIG.publicTimeShort || '4:00 PM';
   var MEETING_VENUE = MEETING_CONFIG.venueName || 'Clouds Brewing';
-  var DEFAULT_SPEAKER_NAME = CURRENT_SPEAKER_CONFIG.name || 'Will Sigmon';
-  var DEFAULT_SPEAKER_COMPANY = CURRENT_SPEAKER_CONFIG.company || 'Will Sigmon Media';
 
   // ── Next-Thursday calculation (ET-aware) ──────────────────
   // Get today's date in America/New_York so we don't shift on
@@ -72,10 +71,15 @@
     footerMeta.textContent = 'Prepared for ' + short + ' \u25c6 Revised ' + revised;
   }
 
-  // ── Speaker URL param ─────────────────────────────────────
+  // ── Speaker rotation ──────────────────────────────────────
+  var getSpeaker = ROTATION.getSpeakerForMeeting;
+  var rotationSpeaker = getSpeaker ? getSpeaker(meeting) : null;
+  var defaultName = rotationSpeaker ? rotationSpeaker.name : (CURRENT_SPEAKER_CONFIG.name || 'Will Sigmon');
+  var defaultCompany = rotationSpeaker ? rotationSpeaker.company : (CURRENT_SPEAKER_CONFIG.company || 'Will Sigmon Media');
+
   var params = new URLSearchParams(window.location.search);
-  var speaker = (params.get('speaker') || DEFAULT_SPEAKER_NAME).trim();
-  var speakerCompany = (params.get('company') || DEFAULT_SPEAKER_COMPANY).trim();
+  var speaker = (params.get('speaker') || defaultName).trim();
+  var speakerCompany = (params.get('company') || defaultCompany).trim();
   var venueBar = document.querySelector('.venue-bar');
   if (venueBar) {
     venueBar.innerHTML = '<strong>' + (MEETING_CONFIG.venueName || 'Clouds Brewing') + '</strong>' +
@@ -105,6 +109,35 @@
 
     var heroCompany = document.querySelector('.spotlight-hero-prof');
     if (heroCompany && speakerCompany) heroCompany.textContent = speakerCompany;
+  }
+
+  // ── Tip of the week ───────────────────────────────────────
+  var TIPS = [
+    '\u201CDon\u2019t ask for \u2018anyone.\u2019 Ask for one specific introduction. Specific asks are easier to remember, repeat, and actually send.\u201D',
+    '\u201CThe best referral isn\u2019t a name\u2014it\u2019s context. Tell them why you\u2019re connecting them and what they have in common.\u201D',
+    '\u201CFollow up within 24 hours. Speed signals that you value the relationship, not just the referral.\u201D',
+    '\u201CBefore asking for a referral, give one. Generosity creates momentum.\u201D',
+    '\u201CYour 30-second intro should make people curious, not confused. One clear problem you solve, one memorable line.\u201D',
+    '\u201CA BizChat isn\u2019t a sales pitch\u2014it\u2019s a chance to learn someone\u2019s business well enough to spot opportunities for them.\u201D',
+    '\u201CWhen you pass a referral, follow up with both sides. Closing the loop builds trust faster than anything.\u201D',
+    '\u201CDon\u2019t wait for the perfect referral. A warm introduction to the right person is worth more than a cold lead to the perfect one.\u201D',
+    '\u201CKeep a running list of who your teammates serve best. The easiest referral is the one you already know fits.\u201D',
+    '\u201CShow up consistently. Trust compounds\u2014people refer the person they see every week, not the one who drops in once a month.\u201D',
+    '\u201CAfter every meeting you attend outside this room, ask yourself: who here would benefit from knowing someone on my team?\u201D'
+  ];
+  var tipIndex = ((num - 1) % TIPS.length + TIPS.length) % TIPS.length;
+  var tipEl = document.getElementById('tip-of-week');
+  if (tipEl) tipEl.textContent = TIPS[tipIndex];
+
+  // ── Upcoming speakers ────────────────────────────────────
+  if (getSpeaker) {
+    for (var i = 1; i <= 3; i++) {
+      var futureDate = new Date(meeting);
+      futureDate.setDate(futureDate.getDate() + (i * 7));
+      var futureSpeaker = getSpeaker(futureDate);
+      var el = document.getElementById('upcoming-' + i);
+      if (el && futureSpeaker) el.textContent = futureSpeaker.name;
+    }
   }
 })();
 
