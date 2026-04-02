@@ -32,10 +32,7 @@
       "continue": true
     },
     { "src": "/sw\\.js", "dest": "/sw.js", "headers": { "Cache-Control": "no-cache", "Service-Worker-Allowed": "/" } },
-    { "src": "/torch/api/(.*)", "dest": "https://torch-crm-seven.vercel.app/api/$1" },
-    { "src": "/torch/(.*)", "dest": "https://torch-crm-seven.vercel.app/$1" },
-    { "src": "/torch", "dest": "https://torch-crm-seven.vercel.app/" },
-    { "src": "/meet", "dest": "/meet.html" },
+{ "src": "/meet", "dest": "/meet.html" },
     { "src": "/meet.html", "dest": "/meet.html" },
     { "src": "/timer", "dest": "/timer.html" },
     { "src": "/timer.html", "dest": "/timer.html" },

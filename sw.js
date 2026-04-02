@@ -1,18 +1,23 @@
-const CACHE_NAME = 'heatwave-v8';
+const CACHE_NAME = 'heatwave-v9';
 
 const PRECACHE_URLS = [
   '/',
   '/index.html',
+  '/index.css',
   '/meet.html',
+  '/meet.css',
   '/about.html',
   '/bizchat.html',
   '/kiosk.html',
+  '/kiosk.css',
   '/timer.html',
   '/survey.html',
   '/survey-results.html',
   '/remind.html',
   '/agenda.html',
+  '/agenda.css',
   '/admin.html',
+  '/admin.css',
   '/crm.html',
   '/crm.css',
   '/crm.js',
@@ -31,6 +36,12 @@ const PRECACHE_URLS = [
   '/scripts/heatwave-fx.js',
   '/scripts/scroll-reveal.js',
   '/scripts/site-config.js',
+  '/scripts/index.js',
+  '/scripts/index-drawer.js',
+  '/scripts/meet.js',
+  '/scripts/kiosk.js',
+  '/scripts/agenda.js',
+  '/scripts/admin.js',
 ];
 
 // API responses excluded — must always be fresh
