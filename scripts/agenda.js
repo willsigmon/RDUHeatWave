@@ -59,9 +59,6 @@
     dateMeta.textContent = formatLong(meeting) + ' \u2022 ' + MEETING_TIME + ' \u2022 ' + MEETING_VENUE;
   }
 
-  var numSpan = document.getElementById('meeting-number');
-  if (numSpan) numSpan.textContent = num;
-
   var footerMeta = document.getElementById('footer-date-meta');
   if (footerMeta) {
     var short = formatShort(meeting);
@@ -89,14 +86,6 @@
       (MEETING_CONFIG.supportMessage || 'Please stay for a drink after the meeting to support the brewery &mdash; they provide our space at no cost.');
   }
   if (speaker) {
-    // Header pill badge
-    var badge = document.getElementById('speaker-badge');
-    var badgeName = document.getElementById('speaker-badge-name');
-    if (badge && badgeName) {
-      badgeName.textContent = speaker;
-      badge.classList.add('visible');
-    }
-
     // Agenda list item
     var spotlightItem = document.getElementById('spotlight-agenda-item');
     if (spotlightItem) {
@@ -151,10 +140,4 @@ fetch('/api/stats').then(function(r) { return r.json(); }).then(function(data) {
   if (el('stat-referrals')) el('stat-referrals').textContent = s.referrals || '—';
   if (el('stat-gis'))       el('stat-gis').textContent = s.guestIncentives || '—';
   if (el('stat-revenue'))   el('stat-revenue').textContent = '$' + Number(s.revenue || 0).toLocaleString('en-US');
-}).catch(function() {});
-
-fetch('/api/members').then(function(r) { return r.json(); }).then(function(data) {
-  if (data.status !== 'ok' || !Array.isArray(data.members)) return;
-  var membersEl = document.getElementById('stat-members');
-  if (membersEl) membersEl.textContent = data.members.length;
 }).catch(function() {});
