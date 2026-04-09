@@ -4,16 +4,16 @@
 
 | # | Referral Giver | Referral Recipient | Referral Is | Member? | Special Notes |
 |---|---|---|---|---|---|
-| 1 | Robert Cools | Sue Kopla | Kevin Miller | Member | First time buyer — Sterling family |
+| 1 | Robert Courts | Sue Kerata | Kevin Miller | Member | First time buyer — Sterling family |
 | 2 | Dana Walsh | Chandler | Capital City Grimes, Raleigh Rescue Mission, Meals on Wheels, Welfare | — | I will make intros |
 | 3 | Rusty Sutton | Roni Payne | Acctg Svc (W2s) | Member | He is phenomenal stepping in when another acctg dropped the ball |
-| 4 | Carter Helms | Craig Morrison | Anne Paredes — 850-955-0926 — Anna.Paredes@celebrate.life | Non-Member | We are in discussions about life insurance; she's looking at IVF. Think next welcome would be best for her |
+| 4 | Carter Helms | Craig Morrill | Anne Paredes — 850-955-0926 — Anna.Paredes@celebrate.life | Non-Member | We are in discussions about life insurance; she's looking at IVF. Think next welcome would be best for her |
 | 5 | Erika Beckett | Dana Walsh | John Langley with J.Mak Hospitality — 919-384-5663 | Non-Member | Works with high end clientele all over but is based in the Raleigh area |
 
 ## GI & BizChat Tracking
 
 | Member | GIs Presented to Members | GIs Received from Members | GIs Received from Corporate | BizChats |
 |---|---|---|---|---|
-| Robert Cools | — | — | — | 2 |
+| Robert Courts | — | — | — | 2 |
 | Dana Walsh | — | — | — | 4 |
 | Rusty Sutton | 1 | 1 | — | 1 |
