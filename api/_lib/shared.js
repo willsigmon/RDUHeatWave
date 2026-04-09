@@ -231,7 +231,8 @@ function parseGvizResponse(text) {
 
 async function fetchSheet(sheetId, sheetName, timeoutMs) {
   var url = 'https://docs.google.com/spreadsheets/d/' + sheetId +
-    '/gviz/tq?tqx=out:json&sheet=' + encodeURIComponent(sheetName);
+    '/gviz/tq?tqx=out:json&sheet=' + encodeURIComponent(sheetName) +
+    '&_=' + Date.now();
   var controller = new AbortController();
   var timeoutId = setTimeout(function () { controller.abort(); }, timeoutMs || 10000);
   try {
