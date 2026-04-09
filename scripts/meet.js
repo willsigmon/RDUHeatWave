@@ -198,6 +198,70 @@
   var currentPhase = null;
   var hornPlayed = false;
   var hornJokeIndex = 0;
+
+  /* ── Countdown milestone alerts ────────────────────────────────── */
+  var milestoneToastEl = document.getElementById('milestone-toast');
+  var milestoneIconEl = document.getElementById('milestone-icon');
+  var milestoneTextEl = document.getElementById('milestone-text');
+  var milestoneTimerHandle = null;
+  var firedMilestones = {};
+  var lastSecsDigit = null;
+
+  var MILESTONES = [
+    { mins: 60, icon: '\uD83D\uDD25', text: '1 HOUR OUT', tier: '' },
+    { mins: 30, icon: '\u26A1', text: '30 MINUTES', tier: '' },
+    { mins: 15, icon: '\uD83D\uDEAA', text: 'DOORS OPEN\nIN 15 MIN', tier: 'milestone-hot' },
+    { mins: 10, icon: '\uD83C\uDF21\uFE0F', text: 'HEATING UP\n10 MINUTES', tier: 'milestone-hot' },
+    { mins: 5,  icon: '\uD83D\uDD25', text: '5 MINUTES\nALMOST TIME', tier: 'milestone-fire' },
+    { mins: 2,  icon: '\uD83D\uDE80', text: '2 MINUTES!', tier: 'milestone-fire' },
+    { mins: 1,  icon: '\uD83D\uDCA5', text: '60 SECONDS!', tier: 'milestone-fire' }
+  ];
+
+  function showMilestoneToast(milestone) {
+    if (!milestoneToastEl) return;
+    clearTimeout(milestoneTimerHandle);
+    milestoneToastEl.classList.remove('visible', 'milestone-hot', 'milestone-fire');
+    milestoneIconEl.textContent = milestone.icon;
+    milestoneTextEl.textContent = milestone.text;
+    if (milestone.tier) milestoneToastEl.classList.add(milestone.tier);
+    /* Force reflow before adding visible class for animation restart */
+    void milestoneToastEl.offsetWidth;
+    milestoneToastEl.classList.add('visible');
+    /* Play a quick chime for milestone */
+    ensureAudioReady().then(function(ready) {
+      if (!ready) return;
+      var isFire = milestone.tier === 'milestone-fire';
+      playTone({ frequency: isFire ? 880 : 660, type: 'triangle', volume: 0.15, duration: 0.15, attack: 0.01, release: 0.12 });
+      playTone({ frequency: isFire ? 1320 : 880, type: 'triangle', volume: 0.1, duration: 0.12, delay: 0.12, attack: 0.01, release: 0.1 });
+      if (isFire) {
+        playTone({ frequency: 1760, type: 'sine', volume: 0.08, duration: 0.1, delay: 0.22, attack: 0.01, release: 0.08 });
+      }
+    });
+    milestoneTimerHandle = setTimeout(function() {
+      milestoneToastEl.classList.remove('visible', 'milestone-hot', 'milestone-fire');
+    }, 4200);
+  }
+
+  function checkMilestones(totalMins) {
+    for (var i = 0; i < MILESTONES.length; i++) {
+      var m = MILESTONES[i];
+      /* Fire when we cross into the minute (e.g., 60:59 -> 60:00) */
+      if (totalMins <= m.mins && totalMins > m.mins - 1 && !firedMilestones[m.mins]) {
+        firedMilestones[m.mins] = true;
+        showMilestoneToast(m);
+        break;
+      }
+    }
+  }
+
+  function triggerDigitBounce() {
+    var values = document.querySelectorAll('.countdown-value');
+    values.forEach(function(el) {
+      el.classList.remove('digit-tick');
+      void el.offsetWidth;
+      el.classList.add('digit-tick');
+    });
+  }
   var hornJokeTimer = null;
 
   var AudioContextCtor = window.AudioContext || window.webkitAudioContext;
@@ -701,6 +765,8 @@
         meeting = getNextMeeting();
         datetimeEl.textContent = meeting.dateStr + ' • ' + MEETING_TIME_LABEL;
         hornPlayed = false;
+        firedMilestones = {};
+        lastSecsDigit = null;
         /* Populate afterglow next-date */
         var afterglowDate = document.getElementById('afterglow-next-date');
         if (afterglowDate) afterglowDate.textContent = meeting.dateStr + ' \u2022 ' + MEETING_PUBLIC_TIME_SHORT;
@@ -858,6 +924,31 @@
         else if (mins < 30) valueEl.classList.add('tier-hot');
         else if (mins < 60) valueEl.classList.add('tier-warm');
       });
+
+      /* Milestone alerts at key countdown thresholds */
+      var totalMinsLeft = diff / 60000;
+      checkMilestones(totalMinsLeft);
+
+      /* Digit bounce animation in last 10 minutes */
+      if (mins < 10 && secs !== lastSecsDigit) {
+        lastSecsDigit = secs;
+        triggerDigitBounce();
+      }
+
+      /* Escalate heat distortion during preheat */
+      if (days === 0 && hours === 0 && mins < 15) {
+        var distProgress = 1 - (diff / (15 * 60000));
+        var distScale = Math.round(18 + distProgress * 24);
+        var filterEl = document.querySelector('#heat-distort feDisplacementMap');
+        if (filterEl) filterEl.setAttribute('scale', distScale);
+        /* Preheat edge glow escalation */
+        var warmupEdge = document.querySelector('.warmup-edge-glow');
+        if (warmupEdge) {
+          var glowIntensity = Math.round(distProgress * 100);
+          warmupEdge.style.opacity = (distProgress * 0.6).toFixed(2);
+          warmupEdge.style.boxShadow = 'inset 0 0 ' + (60 + glowIntensity) + 'px rgba(232,88,12,' + (0.1 + distProgress * 0.15).toFixed(2) + ')';
+        }
+      }
 
       if (preheatMode) {
         document.body.classList.add('preheat-mode');
