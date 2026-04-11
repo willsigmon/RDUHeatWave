@@ -4,6 +4,10 @@
   "private": true,
   "description": "RDU HeatWave — 212 Referral Network chapter site",
   "scripts": {
+    "check:json": "node scripts/check-json.mjs",
+    "check:syntax": "node scripts/check-syntax.mjs",
+    "check": "npm run check:syntax && npm run check:json && npm run test",
+    "ci": "npm run check",
     "test": "vitest run",
     "test:watch": "vitest"
   },
