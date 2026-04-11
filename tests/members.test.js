@@ -31,6 +31,22 @@ function stubMemberSheetWithBrokenCarterRow() {
   return mockGlobalFetch(async () => mockFetchResponse(body));
 }
 
+// Sheet that explicitly has a Leader column with FALSE for governance names,
+// to verify LEADER_OVERRIDES still promotes them. Also places Craig before
+// Carter to verify the chair sort.
+function stubMemberSheetWithExplicitLeaderFalse() {
+  const body = gvizResponse(
+    ['Name', 'Profession', 'Company', 'Website', 'Leader'],
+    [
+      ['Craig Morrill', 'Financial Advisor', 'Summit Global', 'https://sgiam.com', 'FALSE'],
+      ['Will Sigmon', 'Software & Creative', 'Will Sigmon Media', 'https://willsigmon.media', 'FALSE'],
+      ['Carter Helms', 'Insurance', 'Highstreet', 'https://carterhelms.com', 'FALSE'],
+      ['Alice Smith', 'Engineer', 'Acme Inc', 'acme.com', 'FALSE'],
+    ],
+  );
+  return mockGlobalFetch(async () => mockFetchResponse(body));
+}
+
 // ── HTTP methods ───────────────────────────────────────────────────
 
 describe('members handler — HTTP methods', () => {
@@ -95,6 +111,41 @@ describe('members handler — sheet data', () => {
     expect(alice.photo).toBeUndefined();
   });
 
+  it('promotes governance names to leader even when sheet leader column is FALSE', async () => {
+    stubMemberSheetWithExplicitLeaderFalse();
+    const { res, getResult } = mockRes();
+    await handler(mockReq({ method: 'GET' }), res);
+    const members = getResult().body.members;
+    const carter = members.find((m) => m.name === 'Carter Helms');
+    const craig = members.find((m) => m.name === 'Craig Morrill');
+    const will = members.find((m) => m.name === 'Will Sigmon');
+    const alice = members.find((m) => m.name === 'Alice Smith');
+
+    // Known governance override names promoted to leader despite FALSE.
+    expect(carter.leader).toBe(true);
+    expect(craig.leader).toBe(true);
+    expect(will.leader).toBe(true);
+    // Non-override row stays as-is.
+    expect(alice.leader).toBe(false);
+  });
+
+  it('flags only the Team Chair with chair: true and zero-sets chair on everyone else', async () => {
+    stubMemberSheetWithExplicitLeaderFalse();
+    const { res, getResult } = mockRes();
+    await handler(mockReq({ method: 'GET' }), res);
+    const members = getResult().body.members;
+
+    const carter = members.find((m) => m.name === 'Carter Helms');
+    expect(carter.chair).toBe(true);
+
+    // Every other member must have chair: false (not undefined) so the
+    // frontend sort is stable.
+    for (const m of members) {
+      if (m.name === 'Carter Helms') continue;
+      expect(m.chair).toBe(false);
+    }
+  });
+
   it('repairs the broken Carter row from the live directory export', async () => {
     stubMemberSheetWithBrokenCarterRow();
     const { res, getResult } = mockRes();
@@ -104,6 +155,10 @@ describe('members handler — sheet data', () => {
 
     expect(carter).toBeTruthy();
     expect(carter.photo).toBe('/member-photos/carter-helms.jpg');
+    // Anomaly repair runs before override lookup, so the chair flag still
+    // latches on the repaired name.
+    expect(carter.leader).toBe(true);
+    expect(carter.chair).toBe(true);
   });
 });
 

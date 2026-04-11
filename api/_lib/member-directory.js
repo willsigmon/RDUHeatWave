@@ -3,17 +3,26 @@
 var shared = require('./shared');
 var memberPhotoOverrides = require('./member-photo-overrides');
 
-// Governance committee members (leader: true shows under "Governance" heading)
+// Governance committee members (leader: true shows under "Governance" heading).
+// These names are always treated as leaders regardless of what the sheet says,
+// because the live sheet occasionally has the leader column blank/FALSE for
+// governance rows.
 var LEADER_OVERRIDES = {
   'carter helms': true,
   'craig morrill': true,
   'will sigmon': true
 };
 
+// The single Team Chair gets the full-width "chair" card treatment at the top
+// of the Governance Committee section on the About panel.
+var CHAIR_OVERRIDES = {
+  'carter helms': true
+};
+
 var DEFAULT_MEMBERS = [
-  { name: 'Carter Helms', title: 'Team Chair', company: 'Highstreet Ins & Financial Svcs', leader: true, website: 'https://carterhelms.com' },
-  { name: 'Craig Morrill', title: 'Vice Chair', company: 'Summit Global Investments', leader: true, website: 'https://sgiam.com' },
-  { name: 'Will Sigmon', title: 'Team Admin', company: 'Will Sigmon Media Co.', leader: true, website: 'https://willsigmon.media' },
+  { name: 'Carter Helms', title: 'Team Chair', company: 'Highstreet Ins & Financial Svcs', leader: true, chair: true, website: 'https://carterhelms.com' },
+  { name: 'Craig Morrill', title: 'Vice Chair', company: 'Summit Global Investments', leader: true, chair: false, website: 'https://sgiam.com' },
+  { name: 'Will Sigmon', title: 'Team Admin', company: 'Will Sigmon Media Co.', leader: true, chair: false, website: 'https://willsigmon.media' },
   { name: 'Rusty Sutton', title: 'Team Marketing Specialist', company: 'MonkeyFans Creative', leader: false, specialTitle: true, website: 'https://monkeyfansraleigh.com/about' },
   { name: 'Robert Courts', title: 'Mortgage Lending', company: 'Advantage Lending', leader: false, website: 'https://advantagelending.com/mortgage-loan-services' },
   { name: 'Dana Walsh', title: 'Magazine Publisher', company: 'Stroll Magazine', leader: false, website: 'https://strollmag.com/locations/hayes-barton-nc' },
@@ -103,17 +112,24 @@ function parseMembersFromSheet(report) {
     var rawName = shared.normalizeText(row[nameIdx]);
     if (!rawName) return null;
 
-    var isLeader = leaderIdx >= 0
-      ? normalizeBoolean(row[leaderIdx])
-      : (LEADER_OVERRIDES[rawName.toLowerCase()] || false);
+    var sheetLeader = leaderIdx >= 0 ? normalizeBoolean(row[leaderIdx]) : false;
 
-    return memberPhotoOverrides.applyMemberPhotoOverride(repairKnownDirectoryAnomalies({
+    var repaired = repairKnownDirectoryAnomalies({
       name: rawName,
       title: titleIdx >= 0 ? shared.normalizeText(row[titleIdx]) || 'Member' : 'Member',
       company: companyIdx >= 0 ? shared.normalizeText(row[companyIdx]) : '',
       website: websiteIdx >= 0 ? normalizeWebsite(row[websiteIdx]) : '',
-      leader: isLeader
-    }));
+      leader: sheetLeader
+    });
+
+    // Apply governance + chair overrides AFTER the anomaly repair so lookups
+    // use the corrected name (the live sheet occasionally stores Carter's row
+    // with name="Name", which the repair rewrites before we key the override).
+    var nameKey = repaired.name.toLowerCase();
+    repaired.leader = repaired.leader || LEADER_OVERRIDES[nameKey] || false;
+    repaired.chair = CHAIR_OVERRIDES[nameKey] || false;
+
+    return memberPhotoOverrides.applyMemberPhotoOverride(repaired);
   }).filter(Boolean);
 }
 
