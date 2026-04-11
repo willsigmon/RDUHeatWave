@@ -867,9 +867,9 @@
   // ===== TEAM GRID (index-specific) =====
   // TEAM_MEMBERS is kept here for renderTeamGrid; shared-form.js manages its own copy.
   var TEAM_MEMBERS = [
-    { name: 'Carter Helms', title: 'Team Chair', profession: 'Community Insurance Agent', company: 'Highstreet Ins & Financial Svcs', website: 'https://carterhelms.com', leader: true },
-    { name: 'Craig Morrill', title: 'Vice Chair', profession: 'Financial Advisor', company: 'Summit Global Investments', website: 'https://sgiam.com', leader: true },
-    { name: 'Will Sigmon', title: 'Team Admin', profession: 'Software & Creative', company: 'Will Sigmon Media Co.', website: 'https://willsigmon.media', leader: true },
+    { name: 'Carter Helms', title: 'Team Chair', profession: 'Community Insurance Agent', company: 'Highstreet Ins & Financial Svcs', website: 'https://carterhelms.com', leader: true, chair: true },
+    { name: 'Craig Morrill', title: 'Vice Chair', profession: 'Financial Advisor', company: 'Summit Global Investments', website: 'https://sgiam.com', leader: true, chair: false },
+    { name: 'Will Sigmon', title: 'Team Admin', profession: 'Software & Creative', company: 'Will Sigmon Media Co.', website: 'https://willsigmon.media', leader: true, chair: false },
     { name: 'Rusty Sutton', title: 'Team Marketing Specialist', profession: 'Digital Marketing', company: 'MonkeyFans Creative', website: 'https://monkeyfansraleigh.com/about', leader: false, specialTitle: true },
     { name: 'Robert Courts', title: 'Mortgage Lending', company: 'Advantage Lending', website: 'https://advantagelending.com/mortgage-loan-services', leader: false },
     { name: 'Dana Walsh', title: 'Magazine Publisher', company: 'Stroll Magazine', website: 'https://strollmag.com/locations/hayes-barton-nc', leader: false },
@@ -895,10 +895,17 @@
     var governanceMembers = TEAM_MEMBERS.filter(function(member) { return member.leader; });
     var memberRoster = TEAM_MEMBERS.filter(function(member) { return !member.leader; });
 
+    // Place the Team Chair first in the governance list so the full-width
+    // chair card renders at the top regardless of sheet row order. Stable for
+    // the rest of the governance members.
+    governanceMembers.sort(function(a, b) {
+      return (b.chair === true) - (a.chair === true);
+    });
+
     function renderMemberCards(members, options) {
       var isGovernance = options && options.governance;
-      return members.map(function(member, index) {
-        var isChair = isGovernance && index === 0;
+      return members.map(function(member) {
+        var isChair = isGovernance && member.chair === true;
         var topLine = member.leader ? (member.profession || member.title) : member.title;
         var subtitle = member.leader ? (member.company || '') : (member.profession || member.company || '');
         var roleBadge = member.leader ? '<div class="team-member-role">' + escapeHtml(member.title) + '</div>' : '';
