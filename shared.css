@@ -385,16 +385,26 @@ button { cursor: pointer; background: none; border: none; }
    Replaces the old .hw-icon wrapper + inline SVG pattern. */
 .hw-icon-img {
   display: block;
-  width: 2rem;
-  height: 2rem;
+  width: 32px !important;
+  height: 32px !important;
+  max-width: 32px;
+  max-height: 32px;
+  min-width: 32px;
+  min-height: 32px;
   margin: 0 auto 0.5rem;
+  flex-shrink: 0;
+  object-fit: contain;
   filter: brightness(0) saturate(100%) invert(38%) sepia(95%) saturate(1500%) hue-rotate(10deg) brightness(95%);
   /* produces ~#E8580C from black source SVGs */
 }
 
 .hw-icon-img--lg {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 40px !important;
+  height: 40px !important;
+  max-width: 40px;
+  max-height: 40px;
+  min-width: 40px;
+  min-height: 40px;
   margin-bottom: 0.75rem;
 }
 
