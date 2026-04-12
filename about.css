@@ -215,6 +215,34 @@ section:nth-child(odd) { position: relative; }
   border: 1px solid var(--color-divider);
   border-radius: var(--radius-lg);
   transition: border-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.member-photo {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid rgba(232, 88, 12, 0.3);
+}
+
+.member-initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(232, 88, 12, 0.15);
+  color: rgba(232, 88, 12, 0.7);
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  letter-spacing: 0.05em;
+}
+
+.member-info {
+  min-width: 0;
+  flex: 1;
 }
 .member-card:hover {
   border-color: var(--color-border);

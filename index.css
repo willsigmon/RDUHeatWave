@@ -288,6 +288,44 @@ body.drawer-open .panel-arrow {
   padding: 0.875rem;
   border-radius: 0.75rem;
   border-left: 3px solid rgba(232, 88, 12, 0.4);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 0.75rem;
+}
+
+.team-member-photo {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid rgba(232, 88, 12, 0.3);
+  grid-row: span 3;
+}
+
+.team-member-initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(232, 88, 12, 0.15);
+  color: rgba(232, 88, 12, 0.7);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+}
+
+.team-member strong,
+.team-member span,
+.team-member .team-member-company,
+.team-member .team-member-role {
+  flex-basis: calc(100% - 60px);
+  min-width: 0;
+}
+
+.team-member.chair .team-member-photo {
+  width: 56px;
+  height: 56px;
 }
 
 .team-member.leader {

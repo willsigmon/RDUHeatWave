@@ -39,6 +39,11 @@ var PHOTO_OVERRIDES = {
     photo: '/member-photos/sue-kerata.jpg',
     photoObjectPosition: 'center 20%',
     sourceUrl: 'https://suekhomes.com'
+  },
+  'rusty sutton': {
+    photo: '/member-photos/rusty-sutton.jpg',
+    photoObjectPosition: 'center 20%',
+    sourceUrl: 'https://monkeyfansraleigh.com'
   }
 };
 

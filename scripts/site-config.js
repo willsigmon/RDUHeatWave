@@ -11,7 +11,7 @@
     { name: 'Nathan Senn', company: 'Franco Restorations', photo: '/member-photos/nathan-senn.jpg', photoObjectPosition: 'center 18%' },
     { name: 'Robert Courts', company: 'Advantage Lending', photo: '/member-photos/robert-courts.png', photoObjectPosition: 'center 20%' },
     { name: 'Roni Payne', company: 'R. Payne LLC' },
-    { name: 'Rusty Sutton', company: 'MonkeyFans Creative' },
+    { name: 'Rusty Sutton', company: 'MonkeyFans Creative', photo: '/member-photos/rusty-sutton.jpg', photoObjectPosition: 'center 20%' },
     { name: 'Shannida Ramsey', company: 'Ram-Z Services LLC' },
     { name: 'Sue Kerata', company: 'Century 21 Triangle Group', photo: '/member-photos/sue-kerata.jpg', photoObjectPosition: 'center 20%' },
     { name: 'Will Sigmon', company: 'Will Sigmon Media Co.', photo: '/member-photos/will-sigmon.jpg', photoObjectPosition: 'center 18%' }

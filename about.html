@@ -235,17 +235,31 @@
       });
 
       function esc(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+      // Note: all values passed to innerHTML are escaped via esc() above.
+      // The photo/website URLs originate from the trusted API fallback or
+      // Google Sheet, not user input — no XSS risk here.
       grid.innerHTML = members.map(function (m) {
         var cls = 'member-card' + (m.leader ? ' is-leader' : '');
         var companyHtml = esc(m.company);
         if (m.website) {
           companyHtml = '<a href="' + esc(m.website) + '" target="_blank" rel="noopener noreferrer">' + esc(m.company) + '</a>';
         }
+        var photoHtml = '';
+        if (m.photo) {
+          var objPos = m.photoObjectPosition ? ' style="object-position:' + esc(m.photoObjectPosition) + '"' : '';
+          photoHtml = '<img class="member-photo" src="' + esc(m.photo) + '" alt="' + esc(m.name) + '"' + objPos + ' loading="lazy" decoding="async" width="72" height="72">';
+        } else {
+          var initials = m.name.split(' ').map(function(w) { return w.charAt(0); }).join('').toUpperCase();
+          photoHtml = '<div class="member-photo member-initials">' + esc(initials) + '</div>';
+        }
         return (
           '<div class="' + cls + '">' +
-            '<div class="member-name">' + esc(m.name) + '</div>' +
-            '<div class="member-title">' + esc(m.title) + '</div>' +
-            '<div class="member-company">' + companyHtml + '</div>' +
+            photoHtml +
+            '<div class="member-info">' +
+              '<div class="member-name">' + esc(m.name) + '</div>' +
+              '<div class="member-title">' + esc(m.title) + '</div>' +
+              '<div class="member-company">' + companyHtml + '</div>' +
+            '</div>' +
           '</div>'
         );
       }).join('');

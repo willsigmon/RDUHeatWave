@@ -867,17 +867,17 @@
   // ===== TEAM GRID (index-specific) =====
   // TEAM_MEMBERS is kept here for renderTeamGrid; shared-form.js manages its own copy.
   var TEAM_MEMBERS = [
-    { name: 'Carter Helms', title: 'Team Chair', profession: 'Community Insurance Agent', company: 'Highstreet Ins & Financial Svcs', website: 'https://carterhelms.com', leader: true, chair: true },
-    { name: 'Craig Morrill', title: 'Vice Chair', profession: 'Financial Advisor', company: 'Summit Global Investments', website: 'https://sgiam.com', leader: true, chair: false },
-    { name: 'Will Sigmon', title: 'Team Admin', profession: 'Software & Creative', company: 'Will Sigmon Media Co.', website: 'https://willsigmon.media', leader: true, chair: false },
-    { name: 'Rusty Sutton', title: 'Team Marketing Specialist', profession: 'Digital Marketing', company: 'MonkeyFans Creative', website: 'https://monkeyfansraleigh.com/about', leader: false, specialTitle: true },
-    { name: 'Robert Courts', title: 'Mortgage Lending', company: 'Advantage Lending', website: 'https://advantagelending.com/mortgage-loan-services', leader: false },
-    { name: 'Dana Walsh', title: 'Magazine Publisher', company: 'Stroll Magazine', website: 'https://strollmag.com/locations/hayes-barton-nc', leader: false },
-    { name: 'Nathan Senn', title: 'Property Restoration', company: 'Franco Restorations', website: 'https://francorestorations.com', leader: false },
+    { name: 'Carter Helms', title: 'Team Chair', profession: 'Community Insurance Agent', company: 'Highstreet Ins & Financial Svcs', website: 'https://carterhelms.com', leader: true, chair: true, photo: '/member-photos/carter-helms.jpg', photoObjectPosition: 'center 18%' },
+    { name: 'Craig Morrill', title: 'Vice Chair', profession: 'Financial Advisor', company: 'Summit Global Investments', website: 'https://sgiam.com', leader: true, chair: false, photo: '/member-photos/craig-morrill.jpg', photoObjectPosition: 'center 18%' },
+    { name: 'Will Sigmon', title: 'Team Admin', profession: 'Software & Creative', company: 'Will Sigmon Media Co.', website: 'https://willsigmon.media', leader: true, chair: false, photo: '/member-photos/will-sigmon.jpg', photoObjectPosition: 'center 18%' },
+    { name: 'Rusty Sutton', title: 'Team Marketing Specialist', profession: 'Digital Marketing', company: 'MonkeyFans Creative', website: 'https://monkeyfansraleigh.com/about', leader: false, specialTitle: true, photo: '/member-photos/rusty-sutton.jpg', photoObjectPosition: 'center 20%' },
+    { name: 'Robert Courts', title: 'Mortgage Lending', company: 'Advantage Lending', website: 'https://advantagelending.com/mortgage-loan-services', leader: false, photo: '/member-photos/robert-courts.png', photoObjectPosition: 'center 20%' },
+    { name: 'Dana Walsh', title: 'Magazine Publisher', company: 'Stroll Magazine', website: 'https://strollmag.com/locations/hayes-barton-nc', leader: false, photo: '/member-photos/dana-walsh.jpg', photoObjectPosition: 'center 25%' },
+    { name: 'Nathan Senn', title: 'Property Restoration', company: 'Franco Restorations', website: 'https://francorestorations.com', leader: false, photo: '/member-photos/nathan-senn.jpg', photoObjectPosition: 'center 18%' },
     { name: 'Roni Payne', title: 'Accounting / Tax', company: 'R. Payne LLC', website: 'https://rpayne.org/about', leader: false },
     { name: 'Shannida Ramsey', title: 'Property Maintenance', company: 'Ram-Z Services LLC', website: 'https://ramzservices.com', leader: false },
     { name: 'David Mercado', title: 'HOA Management', company: 'William Douglas Management', website: 'https://wmdouglas.com/raleigh-hoa-management', leader: false },
-    { name: 'Sue Kerata', title: 'Realtor', company: 'Century 21 Triangle Group', website: 'https://suekhomes.com', leader: false }
+    { name: 'Sue Kerata', title: 'Realtor', company: 'Century 21 Triangle Group', website: 'https://suekhomes.com', leader: false, photo: '/member-photos/sue-kerata.jpg', photoObjectPosition: 'center 20%' }
   ];
 
   function escapeHtml(value) {
@@ -910,7 +910,16 @@
         var subtitle = member.leader ? (member.company || '') : (member.profession || member.company || '');
         var roleBadge = member.leader ? '<div class="team-member-role">' + escapeHtml(member.title) + '</div>' : '';
         var classes = 'team-member' + (member.leader ? ' leader' : '') + (isChair ? ' chair' : '');
+        var photoHtml = '';
+        if (member.photo) {
+          var objPos = member.photoObjectPosition ? ' style="object-position:' + escapeHtml(member.photoObjectPosition) + '"' : '';
+          photoHtml = '<img class="team-member-photo" src="' + escapeHtml(member.photo) + '" alt="' + escapeHtml(member.name) + '"' + objPos + ' loading="lazy" decoding="async" width="64" height="64">';
+        } else {
+          var initials = member.name.split(' ').map(function(w) { return w.charAt(0); }).join('').toUpperCase();
+          photoHtml = '<div class="team-member-photo team-member-initials">' + escapeHtml(initials) + '</div>';
+        }
         return '<div class="' + classes + '">' +
+          photoHtml +
           '<strong class="' + (member.specialTitle ? 'team-member-title-special' : '') + '">' + escapeHtml(topLine) + '</strong>' +
           '<span>' + escapeHtml(member.name) + '</span>' +
           '<div class="team-member-company">' + escapeHtml(subtitle) + '</div>' +
