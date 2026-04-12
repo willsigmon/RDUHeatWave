@@ -963,7 +963,20 @@
         if (countdown) countdown.style.display = 'none';
       },
       onMembersLoaded: function(members) {
-        TEAM_MEMBERS = members;
+        // Merge API members with hardcoded list so rich fields
+        // (profession, specialTitle, photo) aren't lost and members
+        // missing from the sheet still appear.
+        var byName = {};
+        TEAM_MEMBERS.forEach(function(m) { byName[m.name.toLowerCase()] = Object.assign({}, m); });
+        members.forEach(function(m) {
+          var key = m.name.toLowerCase();
+          if (byName[key]) {
+            byName[key] = Object.assign(byName[key], m);
+          } else {
+            byName[key] = m;
+          }
+        });
+        TEAM_MEMBERS = Object.keys(byName).map(function(k) { return byName[k]; });
         renderTeamGrid();
       }
     });

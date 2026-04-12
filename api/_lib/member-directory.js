@@ -133,11 +133,33 @@ function parseMembersFromSheet(report) {
   }).filter(Boolean);
 }
 
+// Merge sheet members with the hardcoded DEFAULT_MEMBERS so members
+// missing from the sheet still appear.  Sheet data wins for shared
+// fields; DEFAULT_MEMBERS supplies any extras (website, specialTitle).
+function mergeWithDefaults(sheetMembers) {
+  var byName = {};
+  DEFAULT_MEMBERS.forEach(function (m) {
+    byName[m.name.toLowerCase()] = Object.assign({}, m);
+  });
+
+  sheetMembers.forEach(function (m) {
+    var key = m.name.toLowerCase();
+    if (byName[key]) {
+      // Overlay sheet values onto the default, keeping default-only fields
+      byName[key] = Object.assign(byName[key], m);
+    } else {
+      byName[key] = m;
+    }
+  });
+
+  return Object.keys(byName).map(function (k) { return byName[k]; });
+}
+
 async function fetchMembersFromSheet(sheetId, sheetName, timeoutMs) {
   var report = await shared.fetchSheet(sheetId, sheetName, timeoutMs || 8000);
   var members = parseMembersFromSheet(report);
   if (!members.length) throw new Error('No members found in sheet');
-  return members;
+  return mergeWithDefaults(members);
 }
 
 function slugifyMemberName(name) {
