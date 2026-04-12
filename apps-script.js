@@ -176,14 +176,20 @@ function doPost(e) {
   var timezone = spreadsheet.getSpreadsheetTimeZone() || Session.getScriptTimeZone() || 'America/New_York';
   var headerRow = getLiveHeaders_(sheet);
 
+  var guestEmail = cleanValue_(params.email).toLowerCase();
+  var guestFirstName = cleanValue_(params.firstName);
+  var guestLastName = cleanValue_(params.lastName);
+  var guestOf = cleanValue_(params.guestOf);
+  var isFirstVisit = !hasGuestCheckedInBefore_(sheet, guestEmail);
+
   var row = headerRow.map(function(headerCell) {
     switch (normalizeHeader_(headerCell)) {
       case 'meeting':
         return Utilities.formatDate(now, timezone, 'M/d/yyyy');
       case 'firstname':
-        return cleanValue_(params.firstName);
+        return guestFirstName;
       case 'lastname':
-        return cleanValue_(params.lastName);
+        return guestLastName;
       case 'profession':
         return cleanValue_(params.profession);
       case 'company':
@@ -193,9 +199,9 @@ function doPost(e) {
       case 'phone':
         return cleanValue_(params.phone);
       case 'guestof':
-        return cleanValue_(params.guestOf);
+        return guestOf;
       case 'firstvisit':
-        return '';
+        return isFirstVisit ? 'Yes' : 'No';
       case 'idealintro':
         return cleanValue_(params.idealReferral);
       default:
@@ -210,6 +216,14 @@ function doPost(e) {
     syncGuestIncentiveReport_(spreadsheet);
   } catch (error) {
     Logger.log('Guest incentive sync failed after form submit: ' + error);
+  }
+
+  if (isFirstVisit && guestEmail) {
+    try {
+      sendGuestWelcomeEmail_(guestFirstName, guestLastName, guestEmail, guestOf);
+    } catch (error) {
+      Logger.log('Welcome email failed for ' + guestEmail + ': ' + error);
+    }
   }
 
   return jsonOutput_({ status: 'ok' });
@@ -1046,8 +1060,8 @@ function hasAnyHeader_(headers, aliases) {
 function buildFallbackMembers_() {
   return [
     { name: 'Carter Helms', title: 'Team Chair', company: 'Highstreet Ins & Financial Svcs', website: 'https://carterhelms.com', leader: true, specialTitle: false },
-    { name: 'Craig Morrill', title: 'Vice Chair', company: 'Summit Global', website: '', leader: true, specialTitle: false },
-    { name: 'Will Sigmon', title: 'Team Admin', company: 'Will Sigmon Media', website: 'https://willsigmon.media', leader: true, specialTitle: false },
+    { name: 'Craig Morrill', title: 'Vice Chair', company: 'Summit Global Investments', website: 'https://sgiam.com', leader: true, specialTitle: false },
+    { name: 'Will Sigmon', title: 'Team Admin', company: 'Will Sigmon Media Co.', website: 'https://willsigmon.media', leader: true, specialTitle: false },
     { name: 'Rusty Sutton', title: 'Team Marketing Specialist', company: 'MonkeyFans Creative', website: 'https://monkeyfansraleigh.com/about', leader: false, specialTitle: true },
     { name: 'Robert Courts', title: 'Mortgage Lending', company: 'Advantage Lending', website: 'https://advantagelending.com/mortgage-loan-services', leader: false, specialTitle: false },
     { name: 'Dana Walsh', title: 'Magazine Publisher', company: 'Stroll Magazine', website: 'https://strollmag.com/locations/hayes-barton-nc', leader: false, specialTitle: false },
@@ -1273,6 +1287,91 @@ function normalizeWebsite_(value) {
   if (/^(mailto:|tel:)/i.test(cleaned)) return cleaned;
   if (/^[a-z][a-z0-9+.-]*:\/\//i.test(cleaned)) return cleaned;
   return 'https://' + cleaned.replace(/^\/+/, '');
+}
+
+// ── First-visit detection ───────────────────────────────────────────
+// Scans the Guest Check In sheet for any prior row with the same email.
+// Returns true if the email has appeared before (meaning this is NOT a first visit).
+function hasGuestCheckedInBefore_(sheet, email) {
+  if (!email) return false;
+  var lastRow = sheet.getLastRow();
+  if (lastRow <= HEADER_ROW) return false;
+
+  var headerRow = getLiveHeaders_(sheet);
+  var emailCol = -1;
+  for (var i = 0; i < headerRow.length; i++) {
+    if (normalizeHeader_(headerRow[i]) === 'email') { emailCol = i; break; }
+  }
+  if (emailCol < 0) return false;
+
+  var dataRows = sheet.getRange(HEADER_ROW + 1, 1, lastRow - HEADER_ROW, headerRow.length).getValues();
+  var target = email.toLowerCase().trim();
+  for (var r = 0; r < dataRows.length; r++) {
+    if (String(dataRows[r][emailCol] || '').toLowerCase().trim() === target) return true;
+  }
+  return false;
+}
+
+// ── Guest welcome email ─────────────────────────────────────────────
+// Sends a branded welcome email to first-time guests only.
+// Uses GmailApp so it sends from the sheet owner's Gmail.
+var WELCOME_EMAIL_SUBJECT = 'Great meeting you at RDU Heatwave!';
+
+function sendGuestWelcomeEmail_(firstName, lastName, email, hostName) {
+  var host = hostName || 'the team';
+  var body = [
+    'Hi ' + firstName + ',',
+    '',
+    'Thanks for visiting RDU Heatwave this week! It was great having you as ' + host + '\'s guest.',
+    '',
+    'A few things to know:',
+    '',
+    '- We meet every Thursday at 4:00 PM ET at Clouds Brewing (1233 Front St, Raleigh NC 27609).',
+    '- Each member holds an exclusive seat for their profession \u2014 no competition, only collaboration.',
+    '- Between meetings, members connect through short 1-on-1 BizChats to learn each other\'s businesses.',
+    '- The \"extra degree\" philosophy: 211\u00B0 is hot, 212\u00B0 boils. That one degree of extra effort changes everything.',
+    '',
+    'If you\u2019d like to come back next week, just show up \u2014 your second visit is on us too. If you have questions about membership, reply to this email or talk to ' + host + '.',
+    '',
+    'See you Thursday!',
+    '',
+    'RDU Heatwave',
+    'rduheatwave.team'
+  ].join('\n');
+
+  var htmlBody = [
+    '<div style="font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, sans-serif; max-width: 560px; margin: 0 auto; color: #333; line-height: 1.6;">',
+    '  <div style="background: linear-gradient(135deg, #E8580C, #FF6A1E); padding: 24px 28px; border-radius: 12px 12px 0 0;">',
+    '    <h1 style="color: #fff; font-size: 22px; margin: 0; font-weight: 700;">RDU Heatwave</h1>',
+    '    <p style="color: rgba(255,255,255,0.85); margin: 4px 0 0; font-size: 13px;">A Two Twelve Referral Network Team</p>',
+    '  </div>',
+    '  <div style="background: #fff; padding: 28px; border: 1px solid #e5e5e5; border-top: none; border-radius: 0 0 12px 12px;">',
+    '    <p style="font-size: 16px; margin-top: 0;">Hi ' + firstName + ',</p>',
+    '    <p>Thanks for visiting RDU Heatwave this week! It was great having you as <strong>' + host + '&rsquo;s guest</strong>.</p>',
+    '    <h3 style="color: #E8580C; font-size: 15px; margin: 24px 0 12px; border-bottom: 2px solid #E8580C; padding-bottom: 6px;">A few things to know</h3>',
+    '    <ul style="padding-left: 18px; margin: 0;">',
+    '      <li style="margin-bottom: 8px;"><strong>Weekly meetings</strong> &mdash; Every Thursday at 4:00 PM ET at Clouds Brewing (1233 Front St, Raleigh NC).</li>',
+    '      <li style="margin-bottom: 8px;"><strong>Exclusive seats</strong> &mdash; Each member holds a seat for their profession. No competition, only collaboration.</li>',
+    '      <li style="margin-bottom: 8px;"><strong>BizChats</strong> &mdash; Short 1-on-1 meetings between members to learn each other&rsquo;s businesses.</li>',
+    '      <li style="margin-bottom: 8px;"><strong>The 212&deg; philosophy</strong> &mdash; 211&deg; is hot, 212&deg; boils. That one extra degree of effort changes everything.</li>',
+    '    </ul>',
+    '    <div style="background: #FFF7F2; border: 1px solid #FFE0CC; border-radius: 8px; padding: 16px; margin: 24px 0; text-align: center;">',
+    '      <p style="margin: 0; font-size: 15px;"><strong>Want to come back next week?</strong></p>',
+    '      <p style="margin: 6px 0 0; color: #666; font-size: 14px;">Just show up &mdash; your second visit is on us too.</p>',
+    '    </div>',
+    '    <p style="font-size: 14px; color: #666;">Questions about membership? Reply to this email or talk to ' + host + '.</p>',
+    '    <p style="margin-bottom: 0;">See you Thursday!</p>',
+    '    <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;">',
+    '    <p style="font-size: 13px; color: #999; margin: 0;">RDU Heatwave &middot; <a href="https://rduheatwave.team" style="color: #E8580C;">rduheatwave.team</a></p>',
+    '  </div>',
+    '</div>'
+  ].join('\n');
+
+  GmailApp.sendEmail(email, WELCOME_EMAIL_SUBJECT, body, {
+    htmlBody: htmlBody,
+    name: 'RDU Heatwave',
+    replyTo: 'will@willsigmon.media'
+  });
 }
 
 function jsonOutput_(payload) {

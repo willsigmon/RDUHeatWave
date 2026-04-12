@@ -24,6 +24,21 @@ var PHOTO_OVERRIDES = {
     photo: '/member-photos/robert-courts.png',
     photoObjectPosition: 'center 20%',
     sourceUrl: 'https://advantagelending.com/wp-content/uploads/2025/06/rcourts-square.png'
+  },
+  'dana walsh': {
+    photo: '/member-photos/dana-walsh.jpg',
+    photoObjectPosition: 'center 25%',
+    sourceUrl: 'https://strollmag.com'
+  },
+  'nathan senn': {
+    photo: '/member-photos/nathan-senn.jpg',
+    photoObjectPosition: 'center 18%',
+    sourceUrl: 'https://linkedin.com/in/nathan-senn-2b2332153'
+  },
+  'sue kerata': {
+    photo: '/member-photos/sue-kerata.jpg',
+    photoObjectPosition: 'center 20%',
+    sourceUrl: 'https://suekhomes.com'
   }
 };
 

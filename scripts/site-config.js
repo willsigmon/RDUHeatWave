@@ -6,15 +6,15 @@
   var SPEAKER_ROSTER = [
     { name: 'Carter Helms', company: 'Highstreet Ins & Financial Svcs', photo: '/member-photos/carter-helms.jpg', photoObjectPosition: 'center 18%' },
     { name: 'Craig Morrill', company: 'Summit Global Investments', photo: '/member-photos/craig-morrill.jpg', photoObjectPosition: 'center 18%' },
-    { name: 'Dana Walsh', company: 'Stroll Magazine' },
+    { name: 'Dana Walsh', company: 'Stroll Magazine', photo: '/member-photos/dana-walsh.jpg', photoObjectPosition: 'center 25%' },
     { name: 'David Mercado', company: 'William Douglas Management' },
-    { name: 'Nathan Senn', company: 'Franco Restorations' },
+    { name: 'Nathan Senn', company: 'Franco Restorations', photo: '/member-photos/nathan-senn.jpg', photoObjectPosition: 'center 18%' },
     { name: 'Robert Courts', company: 'Advantage Lending', photo: '/member-photos/robert-courts.png', photoObjectPosition: 'center 20%' },
     { name: 'Roni Payne', company: 'R. Payne LLC' },
     { name: 'Rusty Sutton', company: 'MonkeyFans Creative' },
     { name: 'Shannida Ramsey', company: 'Ram-Z Services LLC' },
-    { name: 'Sue Kerata', company: 'Century 21 Triangle Group' },
-    { name: 'Will Sigmon', company: 'Will Sigmon Media', photo: '/member-photos/will-sigmon.jpg', photoObjectPosition: 'center 18%' }
+    { name: 'Sue Kerata', company: 'Century 21 Triangle Group', photo: '/member-photos/sue-kerata.jpg', photoObjectPosition: 'center 20%' },
+    { name: 'Will Sigmon', company: 'Will Sigmon Media Co.', photo: '/member-photos/will-sigmon.jpg', photoObjectPosition: 'center 18%' }
   ];
   var ROTATION_START = new Date('2026-04-09T00:00:00');
   var MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
