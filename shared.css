@@ -381,6 +381,23 @@ button { cursor: pointer; background: none; border: none; }
 
 /* ── Page Title Icon (from IconScout SVGs) ── */
 
+/* IconScout <img> icons — tinted to brand orange via CSS filter.
+   Replaces the old .hw-icon wrapper + inline SVG pattern. */
+.hw-icon-img {
+  display: block;
+  width: 2rem;
+  height: 2rem;
+  margin: 0 auto 0.5rem;
+  filter: brightness(0) saturate(100%) invert(38%) sepia(95%) saturate(1500%) hue-rotate(10deg) brightness(95%);
+  /* produces ~#E8580C from black source SVGs */
+}
+
+.hw-icon-img--lg {
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+
 .page-icon {
   display: inline-block;
   width: 1.5em;
