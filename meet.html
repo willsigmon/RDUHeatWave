@@ -219,12 +219,12 @@
       <aside class="meet-panel meet-panel--qr" aria-label="Check-in QR panel">
         <p class="qr-panel__eyebrow">Check-in</p>
         <h2 class="qr-panel__heading">Scan to check in</h2>
-        <p class="qr-panel__copy">Scan the QR code on the screen.</p>
+        <p class="qr-panel__copy">Scan to check in.</p>
         <a class="qr-panel__link" href="https://rduheatwave.team" aria-label="Visit rduheatwave.team">
           <img src="qr-rduheatwave.svg" alt="Scan to visit rduheatwave.team" class="qr-panel__img" loading="eager" decoding="async" width="264" height="264">
         </a>
-        <p class="qr-panel__easy-line">Easy to scan from across the room.</p>
-        <p class="qr-panel__note">Built to frame cleanly on mirrored front and back TVs at 1080p and 4K.</p>
+        <p class="qr-panel__easy-line">Quick to grab from anywhere in the room.</p>
+        <p class="qr-panel__note">Point your camera, tap the link, and you’re in.</p>
       </aside>
     </section>
   </div>
@@ -232,56 +232,55 @@
 </main>
 
 <div class="footer-stack" id="footer-stack" aria-label="Music controls and team ticker">
-  <section class="spotify-dock" id="spotify-dock" aria-label="Spotify room soundtrack controls">
-    <div class="spotify-dock__top">
-      <div class="spotify-now-playing">
-        <div class="spotify-art-shell" aria-hidden="true">
-          <img src="heatwave-logo.png" alt="" class="spotify-art" id="spotify-track-art" width="144" height="144">
-        </div>
-        <div class="spotify-copy">
-          <p class="spotify-label">Room soundtrack</p>
-          <h2 class="spotify-track-title" id="spotify-track-title">Pick a playlist and keep the room warm.</h2>
-          <p class="spotify-track-meta" id="spotify-track-meta">Use the preset buttons for oldies, ambient, feel-good tracks, or current popular picks.</p>
-
-          <div class="spotify-progress" aria-label="Spotify track progress">
-            <span class="spotify-progress__time" id="spotify-position">0:00</span>
-            <div class="spotify-progress__bar" aria-hidden="true">
-              <div class="spotify-progress__fill" id="spotify-progress-fill"></div>
-            </div>
-            <span class="spotify-progress__time spotify-progress__time--remaining" id="spotify-remaining">--:-- left</span>
-          </div>
-
-          <div class="spotify-meta-row">
-            <span class="spotify-status" id="spotify-status">Loading Spotify player…</span>
-            <span class="spotify-hint">Pause, skip, scrub, and volume live in the official Spotify player below.</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="spotify-actions">
-        <div class="spotify-preset-rail" id="spotify-presets" role="group" aria-label="Playlist presets"></div>
-
-        <div class="spotify-control-row">
-          <button class="spotify-button spotify-button--primary" id="spotify-toggle" type="button">Play</button>
-          <button class="spotify-button" id="spotify-restart" type="button">Restart song</button>
-          <button class="spotify-button" id="spotify-expand" type="button" aria-pressed="false">More controls</button>
-          <a class="spotify-button spotify-button--link" id="spotify-open-link" href="https://open.spotify.com" target="_blank" rel="noreferrer noopener">Open in Spotify</a>
-        </div>
-
-        <div class="spotify-control-note">
-          Keep this collapsed for the TV look. Open more controls only when you need the Spotify player for volume or extra playback controls.
-        </div>
-      </div>
-    </div>
-
-    <div class="spotify-embed-shell">
-      <div class="spotify-embed" id="spotify-embed"></div>
-    </div>
-  </section>
-
   <div class="ticker-wrap ticker-wrap--footer" aria-label="RDU Heatwave team stats ticker">
     <div class="ticker-content" id="ticker-content">Loading team stats…</div>
   </div>
+
+  <section class="spotify-dock" id="spotify-dock" aria-label="Spotify room soundtrack controls">
+    <div class="spotify-dock__inner">
+      <div class="spotify-dock__top">
+        <div class="spotify-now-playing">
+          <div class="spotify-art-shell" aria-hidden="true">
+            <img src="heatwave-logo.png" alt="" class="spotify-art" id="spotify-track-art" width="144" height="144">
+          </div>
+          <div class="spotify-copy">
+            <p class="spotify-label">Room soundtrack</p>
+            <h2 class="spotify-track-title" id="spotify-track-title">Pick a playlist and keep the room warm.</h2>
+            <p class="spotify-track-meta" id="spotify-track-meta">Use the preset buttons for oldies, ambient, feel-good tracks, or current popular picks.</p>
+
+            <div class="spotify-meta-row">
+              <span class="spotify-status" id="spotify-status">Loading Spotify player…</span>
+              <span class="spotify-hint">Choose a vibe, then open the player when you need pause or volume.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="spotify-actions">
+          <div class="spotify-preset-rail" id="spotify-presets" role="group" aria-label="Playlist presets"></div>
+
+          <div class="spotify-control-row">
+            <button class="spotify-button spotify-button--primary" id="spotify-expand" type="button" aria-pressed="false">Show player</button>
+            <a class="spotify-button spotify-button--link" id="spotify-open-link" href="https://open.spotify.com" target="_blank" rel="noreferrer noopener">Open in Spotify</a>
+          </div>
+
+          <div class="spotify-control-note">
+            Keep it tucked away until someone actually needs hands-on controls.
+          </div>
+        </div>
+      </div>
+
+      <div class="spotify-embed-shell">
+        <iframe
+          class="spotify-embed"
+          id="spotify-embed-frame"
+          title="Spotify room soundtrack player"
+          loading="lazy"
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          referrerpolicy="strict-origin-when-cross-origin"
+        ></iframe>
+      </div>
+    </div>
+  </section>
 </div>
 
 <section class="showtime-screen" id="showtime-screen" aria-hidden="true">
@@ -296,14 +295,14 @@
           <div class="support-label">Now starting</div>
           <div class="showtime-meta" id="showtime-speaker">Featured member: Will Sigmon • Will Sigmon Media</div>
           <div class="showtime-meta">Clouds Brewing • Raleigh, NC</div>
-          <div class="showtime-meta">High contrast, TV-safe, and readable from 25 feet.</div>
+          <div class="showtime-meta">Settle in — we’re ready to kick this thing off.</div>
         </div>
 
         <div class="showtime-qr-card">
           <a class="showtime-qr-card__link" href="https://rduheatwave.team" aria-label="Visit rduheatwave.team for check-in">
             <img src="qr-rduheatwave.svg" alt="Scan to visit rduheatwave.team" class="showtime-qr-card__img" loading="eager" decoding="async" width="264" height="264">
           </a>
-          <p class="showtime-qr-card__cta">Scan the QR code on the screen.</p>
+          <p class="showtime-qr-card__cta">Scan to check in.</p>
         </div>
       </div>
     </div>

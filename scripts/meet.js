@@ -26,16 +26,10 @@
   var footerHeightObserver = null;
 
   var spotifyState = {
-    apiReady: false,
-    controller: null,
     currentPresetId: '',
-    currentTrackUri: '',
     currentOpenUrl: 'https://open.spotify.com',
-    isPaused: true,
-    isBuffering: false,
-    duration: 0,
-    position: 0,
-    metadataCache: Object.create(null)
+    isExpanded: false,
+    embedReady: false
   };
 
   var meetingDatetimeEl = document.getElementById('meeting-datetime');
@@ -66,15 +60,10 @@
   var spotifyTrackArtEl = document.getElementById('spotify-track-art');
   var spotifyTrackTitleEl = document.getElementById('spotify-track-title');
   var spotifyTrackMetaEl = document.getElementById('spotify-track-meta');
-  var spotifyPositionEl = document.getElementById('spotify-position');
-  var spotifyRemainingEl = document.getElementById('spotify-remaining');
-  var spotifyProgressFillEl = document.getElementById('spotify-progress-fill');
   var spotifyStatusEl = document.getElementById('spotify-status');
-  var spotifyToggleButtonEl = document.getElementById('spotify-toggle');
-  var spotifyRestartButtonEl = document.getElementById('spotify-restart');
   var spotifyExpandButtonEl = document.getElementById('spotify-expand');
   var spotifyOpenLinkEl = document.getElementById('spotify-open-link');
-  var spotifyEmbedEl = document.getElementById('spotify-embed');
+  var spotifyEmbedFrameEl = document.getElementById('spotify-embed-frame');
 
   var stats = {
     bizChats: 207,
@@ -222,17 +211,6 @@
     return formatClockTime(new Date(timestamp), timeZone) + ' ET';
   }
 
-  function formatDurationMs(durationMs) {
-    if (!Number.isFinite(durationMs) || durationMs <= 0) {
-      return '--:--';
-    }
-
-    var totalSeconds = Math.max(0, Math.floor(durationMs / 1000));
-    var minutes = Math.floor(totalSeconds / 60);
-    var seconds = totalSeconds % 60;
-    return minutes + ':' + String(seconds).padStart(2, '0');
-  }
-
   function getSpotifyPresets() {
     return Array.isArray(SPOTIFY_CONFIG.presets) ? SPOTIFY_CONFIG.presets.filter(function(preset) {
       return preset && preset.id && preset.uri;
@@ -263,6 +241,17 @@
     }
 
     return baseUrl;
+  }
+
+  function spotifyUriToEmbedUrl(uri) {
+    var openUrl = spotifyUriToOpenUrl(uri);
+    var matchedPath = openUrl.match(/^https?:\/\/open\.spotify\.com\/(album|artist|episode|playlist|show|track)\/([A-Za-z0-9]+)(?:\?.*)?$/);
+
+    if (!matchedPath) {
+      return 'https://open.spotify.com/embed/playlist/2m4ynKHY1H9L0TmOJTdD7r?utm_source=generator&theme=0';
+    }
+
+    return 'https://open.spotify.com/embed/' + matchedPath[1] + '/' + matchedPath[2] + '?utm_source=generator&theme=0';
   }
 
   function updateSpotifyOpenLink(url) {
@@ -305,7 +294,7 @@
     }
 
     if (spotifyExpandButtonEl) {
-      spotifyExpandButtonEl.textContent = spotifyState.isExpanded ? 'Hide controls' : 'More controls';
+      spotifyExpandButtonEl.textContent = spotifyState.isExpanded ? 'Hide player' : 'Show player';
       spotifyExpandButtonEl.setAttribute('aria-pressed', spotifyState.isExpanded ? 'true' : 'false');
     }
 
@@ -328,38 +317,9 @@
     }
   }
 
-  function renderSpotifyProgress() {
-    var duration = spotifyState.duration;
-    var position = Math.min(Math.max(spotifyState.position, 0), duration || 0);
-    var remaining = Math.max(0, duration - position);
-    var width = duration > 0 ? (position / duration) * 100 : 0;
-
-    if (spotifyPositionEl) {
-      spotifyPositionEl.textContent = formatDurationMs(position);
-    }
-
-    if (spotifyRemainingEl) {
-      spotifyRemainingEl.textContent = formatDurationMs(remaining) + ' left';
-    }
-
-    if (spotifyProgressFillEl) {
-      spotifyProgressFillEl.style.width = width.toFixed(2) + '%';
-    }
-  }
-
   function renderSpotifyControls() {
     var preset = getSpotifyPresetById(spotifyState.currentPresetId) || getDefaultSpotifyPreset();
-    var statusText = 'Spotify dock ready. Pick a room vibe.';
-
-    if (spotifyToggleButtonEl) {
-      spotifyToggleButtonEl.disabled = !spotifyState.controller;
-      spotifyToggleButtonEl.textContent = spotifyState.isPaused ? 'Play' : 'Pause';
-      spotifyToggleButtonEl.setAttribute('aria-pressed', spotifyState.isPaused ? 'false' : 'true');
-    }
-
-    if (spotifyRestartButtonEl) {
-      spotifyRestartButtonEl.disabled = !spotifyState.controller;
-    }
+    var statusText = 'Pick a room vibe.';
 
     if (spotifyPresetsEl) {
       Array.prototype.forEach.call(spotifyPresetsEl.querySelectorAll('[data-spotify-preset]'), function(button) {
@@ -369,116 +329,37 @@
       });
     }
 
-    if (spotifyState.isBuffering) {
-      statusText = 'Buffering room soundtrack…';
-    } else if (spotifyState.controller && !spotifyState.isPaused) {
-      statusText = 'Now playing in the room.';
-    } else if (spotifyState.controller && spotifyState.isPaused) {
-      statusText = 'Paused. Resume when you want the room back on.';
+    if (spotifyState.isExpanded && spotifyState.embedReady) {
+      statusText = 'Player open — use Spotify for play, pause, and volume.';
+    } else if (spotifyState.isExpanded) {
+      statusText = 'Opening the player…';
     } else if (preset) {
       statusText = 'Ready with ' + preset.label + '.';
     }
 
     setSpotifyStatus(statusText);
-    renderSpotifyProgress();
   }
 
-  function fetchSpotifyMetadataForUri(uri) {
-    if (!uri) return Promise.resolve(null);
-    if (spotifyState.metadataCache[uri]) {
-      return Promise.resolve(spotifyState.metadataCache[uri]);
-    }
-
-    var openUrl = spotifyUriToOpenUrl(uri);
-    var endpoint = 'https://open.spotify.com/oembed?url=' + encodeURIComponent(openUrl);
-
-    return fetch(endpoint)
-      .then(function(response) {
-        if (!response.ok) throw new Error('spotify oembed unavailable');
-        return response.json();
-      })
-      .then(function(payload) {
-        spotifyState.metadataCache[uri] = payload;
-        return payload;
-      })
-      .catch(function() {
-        return null;
-      });
-  }
-
-  function syncSpotifyMetadata(uri) {
-    var preset = getSpotifyPresetById(spotifyState.currentPresetId) || getDefaultSpotifyPreset();
-    var presetLabel = preset ? preset.label : 'Spotify';
-    var fallbackMeta = preset && preset.helperText
-      ? preset.helperText
-      : 'Use the player below for volume, skip, and scrubbing.';
-
-    if (!uri) {
-      setSpotifyArtwork('heatwave-logo.png', '');
-      setSpotifyTitle('Pick a playlist and keep the room warm.', fallbackMeta);
-      updateSpotifyOpenLink(preset ? spotifyUriToOpenUrl(preset.uri) : 'https://open.spotify.com');
-      return;
-    }
-
-    updateSpotifyOpenLink(spotifyUriToOpenUrl(uri));
-
-    fetchSpotifyMetadataForUri(uri).then(function(metadata) {
-      if (spotifyState.currentTrackUri !== uri) return;
-
-      if (metadata && metadata.thumbnail_url) {
-        setSpotifyArtwork(metadata.thumbnail_url, metadata.title || 'Spotify artwork');
-      }
-
-      if (metadata && metadata.title) {
-        setSpotifyTitle(metadata.title, 'Playing from ' + presetLabel + ' • ' + fallbackMeta);
-      } else {
-        setSpotifyTitle('Now playing', 'Playing from ' + presetLabel + ' • ' + fallbackMeta);
-      }
-    });
-  }
-
-  function updateSpotifyPlaybackState(playbackData) {
-    playbackData = playbackData || {};
-    spotifyState.currentTrackUri = playbackData.playingURI || spotifyState.currentTrackUri;
-    spotifyState.isPaused = !!playbackData.isPaused;
-    spotifyState.isBuffering = !!playbackData.isBuffering;
-    spotifyState.duration = Number(playbackData.duration) || 0;
-    spotifyState.position = Number(playbackData.position) || 0;
-    renderSpotifyControls();
-
-    if (spotifyState.currentTrackUri) {
-      syncSpotifyMetadata(spotifyState.currentTrackUri);
-    }
-  }
-
-  function loadSpotifyPreset(presetId, shouldResume) {
+  function loadSpotifyPreset(presetId) {
     var preset = getSpotifyPresetById(presetId) || getDefaultSpotifyPreset();
     if (!preset) return;
 
     spotifyState.currentPresetId = preset.id;
-    spotifyState.currentTrackUri = '';
-    spotifyState.duration = 0;
-    spotifyState.position = 0;
-    spotifyState.isPaused = true;
-    spotifyState.isBuffering = false;
+    spotifyState.embedReady = false;
 
     setSpotifyArtwork('heatwave-logo.png', '');
-    setSpotifyTitle(preset.label + ' room mix', preset.helperText || 'Use the player below for volume, skip, and scrubbing.');
+    setSpotifyTitle(preset.label + ' room mix', preset.helperText || 'Choose a vibe, then open the player when you need pause or volume.');
     updateSpotifyOpenLink(spotifyUriToOpenUrl(preset.uri));
-    renderSpotifyControls();
 
-    if (!spotifyState.controller) return;
-
-    spotifyState.controller.loadUri(preset.uri);
-    setSpotifyStatus('Loaded ' + preset.label + '. Hit play or use the Spotify player below.');
-
-    if (shouldResume) {
-      window.setTimeout(function() {
-        if (spotifyState.controller) {
-          spotifyState.controller.resume();
-        }
-      }, 220);
+    if (spotifyEmbedFrameEl) {
+      var nextEmbedUrl = spotifyUriToEmbedUrl(preset.uri);
+      if (spotifyEmbedFrameEl.src !== nextEmbedUrl) {
+        spotifyEmbedFrameEl.src = nextEmbedUrl;
+      }
     }
+
+    setSpotifyStatus('Ready with ' + preset.label + '.');
+    renderSpotifyControls();
   }
 
   function mountSpotifyPresets() {
@@ -494,36 +375,29 @@
       button.textContent = preset.label;
       button.setAttribute('data-spotify-preset', preset.id);
       button.addEventListener('click', function() {
-        loadSpotifyPreset(preset.id, true);
+        loadSpotifyPreset(preset.id);
       });
       spotifyPresetsEl.appendChild(button);
     });
   }
 
   function bindSpotifyButtons() {
-    if (spotifyToggleButtonEl) {
-      spotifyToggleButtonEl.addEventListener('click', function() {
-        if (!spotifyState.controller) return;
-        spotifyState.controller.togglePlay();
-      });
-    }
-
-    if (spotifyRestartButtonEl) {
-      spotifyRestartButtonEl.addEventListener('click', function() {
-        if (!spotifyState.controller) return;
-        spotifyState.controller.restart();
-      });
-    }
-
     if (spotifyExpandButtonEl) {
       spotifyExpandButtonEl.addEventListener('click', function() {
         setSpotifyExpanded(!spotifyState.isExpanded);
       });
     }
+
+    if (spotifyEmbedFrameEl) {
+      spotifyEmbedFrameEl.addEventListener('load', function() {
+        spotifyState.embedReady = true;
+        renderSpotifyControls();
+      });
+    }
   }
 
   function initSpotifyDock() {
-    if (!spotifyDockEl || SPOTIFY_CONFIG.enabled === false || !spotifyEmbedEl) {
+    if (!spotifyDockEl || SPOTIFY_CONFIG.enabled === false || !spotifyEmbedFrameEl) {
       return;
     }
 
@@ -534,60 +408,10 @@
     var defaultPreset = getDefaultSpotifyPreset();
     if (defaultPreset) {
       spotifyState.currentPresetId = defaultPreset.id;
-      loadSpotifyPreset(defaultPreset.id, false);
+      loadSpotifyPreset(defaultPreset.id);
     }
 
-    setSpotifyStatus('Loading Spotify player…');
     renderSpotifyControls();
-
-    window.onSpotifyIframeApiReady = function(IFrameAPI) {
-      var initialPreset = getDefaultSpotifyPreset();
-      var options = {
-        width: '100%',
-        height: Number(SPOTIFY_CONFIG.embedHeight) || 112,
-        uri: initialPreset ? initialPreset.uri : 'spotify:track:4cOdK2wGLETKBW3PvgPWqT'
-      };
-
-      IFrameAPI.createController(spotifyEmbedEl, options, function(controller) {
-        spotifyState.apiReady = true;
-        spotifyState.controller = controller;
-
-        controller.addListener('ready', function() {
-          setSpotifyStatus('Spotify player ready. Use the controls below or the official player.');
-          renderSpotifyControls();
-          if (initialPreset) {
-            loadSpotifyPreset(initialPreset.id, false);
-          }
-        });
-
-        controller.addListener('playback_started', function(event) {
-          if (!event || !event.data) return;
-          spotifyState.currentTrackUri = event.data.playingURI || spotifyState.currentTrackUri;
-          spotifyState.isPaused = false;
-          spotifyState.isBuffering = false;
-          syncSpotifyMetadata(spotifyState.currentTrackUri);
-          renderSpotifyControls();
-        });
-
-        controller.addListener('playback_update', function(event) {
-          if (!event || !event.data) return;
-          updateSpotifyPlaybackState(event.data);
-        });
-
-        renderSpotifyControls();
-      });
-    };
-
-    var script = document.createElement('script');
-    script.src = 'https://open.spotify.com/embed/iframe-api/v1';
-    script.async = true;
-    script.onload = function() {
-      setSpotifyStatus('Spotify API loaded. Initializing player…');
-    };
-    script.onerror = function() {
-      setSpotifyStatus('Spotify player could not load. Use the Open in Spotify button instead.');
-    };
-    document.body.appendChild(script);
   }
 
   function resolveTargetTimestamp() {

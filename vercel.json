@@ -1,24 +1,72 @@
 {
   "version": 2,
   "builds": [
-    { "src": "api/**/*.js", "use": "@vercel/node" },
-    { "src": "*.html", "use": "@vercel/static" },
-    { "src": "*.css", "use": "@vercel/static" },
-    { "src": "crm.js", "use": "@vercel/static" },
-    { "src": "*.png", "use": "@vercel/static" },
-    { "src": "member-photos/**/*.{jpg,jpeg,png,webp}", "use": "@vercel/static" },
-    { "src": "icons/**/*.{png,svg}", "use": "@vercel/static" },
-    { "src": "*.svg", "use": "@vercel/static" },
-    { "src": "*.ico", "use": "@vercel/static" },
-    { "src": "*.txt", "use": "@vercel/static" },
-    { "src": "*.xml", "use": "@vercel/static" },
-    { "src": "*.webmanifest", "use": "@vercel/static" },
-    { "src": "sw.js", "use": "@vercel/static" },
-    { "src": "shared-form.js", "use": "@vercel/static" },
-    { "src": "scripts/*.js", "use": "@vercel/static" }
+    {
+      "src": "api/**/*.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.css",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "crm.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.png",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "member-photos/**/*.{jpg,jpeg,png,webp}",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "icons/**/*.{png,svg}",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.svg",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.ico",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.txt",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.xml",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.webmanifest",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "sw.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "shared-form.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "scripts/*.js",
+      "use": "@vercel/static"
+    }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1.js" },
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1.js"
+    },
     {
       "src": "/(.*)",
       "headers": {
@@ -27,54 +75,193 @@
         "X-Frame-Options": "DENY",
         "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
         "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
-        "Content-Security-Policy": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; script-src 'self' 'unsafe-inline'; connect-src 'self' https://docs.google.com https://fonts.googleapis.com https://fonts.gstatic.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+        "Content-Security-Policy": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; script-src 'self' 'unsafe-inline'; connect-src 'self' https://docs.google.com https://fonts.googleapis.com https://fonts.gstatic.com; frame-src https://open.spotify.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
       },
       "continue": true
     },
-    { "src": "/sw\\.js", "dest": "/sw.js", "headers": { "Cache-Control": "no-cache", "Service-Worker-Allowed": "/" } },
-{ "src": "/meet", "dest": "/meet.html" },
-    { "src": "/meet.html", "dest": "/meet.html" },
-    { "src": "/timer", "dest": "/timer.html" },
-    { "src": "/timer.html", "dest": "/timer.html" },
-    { "src": "/agenda", "dest": "/agenda.html" },
-    { "src": "/agenda.html", "dest": "/agenda.html" },
-    { "src": "/admin", "dest": "/admin.html" },
-    { "src": "/admin.html", "dest": "/admin.html" },
-    { "src": "/kiosk", "dest": "/kiosk.html" },
-    { "src": "/kiosk.html", "dest": "/kiosk.html" },
-    { "src": "/survey", "dest": "/survey.html" },
-    { "src": "/survey.html", "dest": "/survey.html" },
-    { "src": "/bizchat", "dest": "/bizchat.html" },
-    { "src": "/bizchat.html", "dest": "/bizchat.html" },
-    { "src": "/crm", "dest": "/crm.html" },
-    { "src": "/crm.html", "dest": "/crm.html" },
-    { "src": "/about", "dest": "/about.html" },
-    { "src": "/about.html", "dest": "/about.html" },
-    { "src": "/remind", "dest": "/remind.html" },
-    { "src": "/remind.html", "dest": "/remind.html" },
-    { "src": "/report", "dest": "/report.html" },
-    { "src": "/report.html", "dest": "/report.html" },
-    { "src": "/survey-results", "dest": "/survey-results.html" },
-    { "src": "/survey-results.html", "dest": "/survey-results.html" },
-    { "src": "/privacy", "dest": "/privacy.html" },
-    { "src": "/privacy.html", "dest": "/privacy.html" },
-    { "src": "/member/(?<name>[^/]+)", "dest": "/api/member-card.js?name=$name" },
-    { "src": "/crm\\.js", "dest": "/crm.js" },
-    { "src": "/(.*\\.css)", "dest": "/$1" },
-    { "src": "/member-photos/(.*)", "dest": "/member-photos/$1" },
-    { "src": "/(.*\\.jpg)", "dest": "/$1" },
-    { "src": "/(.*\\.jpeg)", "dest": "/$1" },
-    { "src": "/(.*\\.png)", "dest": "/$1" },
-    { "src": "/(.*\\.webp)", "dest": "/$1" },
-    { "src": "/icons/(.*)", "dest": "/icons/$1" },
-    { "src": "/(.*\\.svg)", "dest": "/$1" },
-    { "src": "/(.*\\.ico)", "dest": "/$1" },
-    { "src": "/(.*\\.txt)", "dest": "/$1" },
-    { "src": "/(.*\\.xml)", "dest": "/$1" },
-    { "src": "/(.*\\.webmanifest)", "dest": "/$1" },
-    { "src": "/shared-form\\.js", "dest": "/shared-form.js" },
-    { "src": "/scripts/(.*\\.js)", "dest": "/scripts/$1" },
-    { "src": "/404", "dest": "/404.html" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    {
+      "src": "/sw\\.js",
+      "dest": "/sw.js",
+      "headers": {
+        "Cache-Control": "no-cache",
+        "Service-Worker-Allowed": "/"
+      }
+    },
+    {
+      "src": "/meet",
+      "dest": "/meet.html"
+    },
+    {
+      "src": "/meet.html",
+      "dest": "/meet.html"
+    },
+    {
+      "src": "/timer",
+      "dest": "/timer.html"
+    },
+    {
+      "src": "/timer.html",
+      "dest": "/timer.html"
+    },
+    {
+      "src": "/agenda",
+      "dest": "/agenda.html"
+    },
+    {
+      "src": "/agenda.html",
+      "dest": "/agenda.html"
+    },
+    {
+      "src": "/admin",
+      "dest": "/admin.html"
+    },
+    {
+      "src": "/admin.html",
+      "dest": "/admin.html"
+    },
+    {
+      "src": "/kiosk",
+      "dest": "/kiosk.html"
+    },
+    {
+      "src": "/kiosk.html",
+      "dest": "/kiosk.html"
+    },
+    {
+      "src": "/survey",
+      "dest": "/survey.html"
+    },
+    {
+      "src": "/survey.html",
+      "dest": "/survey.html"
+    },
+    {
+      "src": "/bizchat",
+      "dest": "/bizchat.html"
+    },
+    {
+      "src": "/bizchat.html",
+      "dest": "/bizchat.html"
+    },
+    {
+      "src": "/crm",
+      "dest": "/crm.html"
+    },
+    {
+      "src": "/crm.html",
+      "dest": "/crm.html"
+    },
+    {
+      "src": "/about",
+      "dest": "/about.html"
+    },
+    {
+      "src": "/about.html",
+      "dest": "/about.html"
+    },
+    {
+      "src": "/remind",
+      "dest": "/remind.html"
+    },
+    {
+      "src": "/remind.html",
+      "dest": "/remind.html"
+    },
+    {
+      "src": "/report",
+      "dest": "/report.html"
+    },
+    {
+      "src": "/report.html",
+      "dest": "/report.html"
+    },
+    {
+      "src": "/survey-results",
+      "dest": "/survey-results.html"
+    },
+    {
+      "src": "/survey-results.html",
+      "dest": "/survey-results.html"
+    },
+    {
+      "src": "/privacy",
+      "dest": "/privacy.html"
+    },
+    {
+      "src": "/privacy.html",
+      "dest": "/privacy.html"
+    },
+    {
+      "src": "/member/(?<name>[^/]+)",
+      "dest": "/api/member-card.js?name=$name"
+    },
+    {
+      "src": "/crm\\.js",
+      "dest": "/crm.js"
+    },
+    {
+      "src": "/(.*\\.css)",
+      "dest": "/$1"
+    },
+    {
+      "src": "/member-photos/(.*)",
+      "dest": "/member-photos/$1"
+    },
+    {
+      "src": "/(.*\\.jpg)",
+      "dest": "/$1"
+    },
+    {
+      "src": "/(.*\\.jpeg)",
+      "dest": "/$1"
+    },
+    {
+      "src": "/(.*\\.png)",
+      "dest": "/$1"
+    },
+    {
+      "src": "/(.*\\.webp)",
+      "dest": "/$1"
+    },
+    {
+      "src": "/icons/(.*)",
+      "dest": "/icons/$1"
+    },
+    {
+      "src": "/(.*\\.svg)",
+      "dest": "/$1"
+    },
+    {
+      "src": "/(.*\\.ico)",
+      "dest": "/$1"
+    },
+    {
+      "src": "/(.*\\.txt)",
+      "dest": "/$1"
+    },
+    {
+      "src": "/(.*\\.xml)",
+      "dest": "/$1"
+    },
+    {
+      "src": "/(.*\\.webmanifest)",
+      "dest": "/$1"
+    },
+    {
+      "src": "/shared-form\\.js",
+      "dest": "/shared-form.js"
+    },
+    {
+      "src": "/scripts/(.*\\.js)",
+      "dest": "/scripts/$1"
+    },
+    {
+      "src": "/404",
+      "dest": "/404.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
   ]
 }

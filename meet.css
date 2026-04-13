@@ -222,9 +222,9 @@ img {
 }
 
 .ticker-wrap--footer {
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 0 0 1.25rem 1.25rem;
-  box-shadow: 0 -6px 30px rgba(0, 0, 0, 0.18);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0;
+  box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.18);
 }
 
 .ticker-content {
@@ -265,33 +265,46 @@ img {
   bottom: 0;
   z-index: 12;
   display: grid;
-  gap: 0;
-  padding:
-    0
-    var(--safe-right)
-    var(--safe-bottom)
-    var(--safe-left);
+  gap: 0.35rem;
+  padding: 0 0 var(--safe-bottom) 0;
   pointer-events: none;
 }
 
 .spotify-dock,
 .ticker-wrap--footer {
-  width: min(100%, var(--max-layout-width));
-  margin: 0 auto;
+  width: 100%;
+  margin: 0;
   pointer-events: auto;
 }
 
+.ticker-wrap--footer {
+  order: 1;
+}
+
 .spotify-dock {
+  order: 2;
   display: grid;
   gap: 0.5rem;
-  padding: clamp(0.55rem, 0.9vw, 0.75rem);
-  border: 1px solid rgba(232, 88, 12, 0.24);
-  border-bottom: 0;
-  border-radius: 1.35rem 1.35rem 0 0;
+  padding: 0;
+  border-top: 1px solid rgba(232, 88, 12, 0.24);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: 0;
+  border-right: 0;
+  border-radius: 0;
   background: linear-gradient(180deg, rgba(20, 15, 12, 0.96), rgba(28, 22, 18, 0.94));
   box-shadow: 0 -16px 40px rgba(0, 0, 0, 0.28);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+}
+
+.spotify-dock__inner {
+  width: min(100%, var(--max-layout-width));
+  margin: 0 auto;
+  padding:
+    clamp(0.55rem, 0.9vw, 0.75rem)
+    var(--safe-right)
+    clamp(0.55rem, 0.9vw, 0.75rem)
+    var(--safe-left);
 }
 
 .spotify-dock__top {
@@ -355,40 +368,11 @@ img {
   text-wrap: balance;
 }
 
-.spotify-progress {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 0.45rem;
-  align-items: center;
-  margin-top: 0.35rem;
-}
-
-.spotify-progress__time {
-  font-size: clamp(0.72rem, 0.74vw, 0.82rem);
-  color: #ffe0c9;
-  font-variant-numeric: tabular-nums;
-}
-
-.spotify-progress__bar {
-  height: 0.32rem;
-  border-radius: 999px;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.spotify-progress__fill {
-  width: 0;
-  height: 100%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, rgba(255, 144, 78, 0.9), rgba(232, 88, 12, 1));
-  box-shadow: 0 0 18px rgba(232, 88, 12, 0.35);
-}
-
 .spotify-meta-row {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem 0.7rem;
-  margin-top: 0.3rem;
+  margin-top: 0.45rem;
 }
 
 .spotify-status {
@@ -459,8 +443,13 @@ img {
 
 .spotify-embed-shell {
   overflow: hidden;
-  border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  width: min(100%, var(--max-layout-width));
+  margin: 0 auto;
+  border-radius: 0 0 1rem 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 0;
+  border-left: 0;
+  border-right: 0;
   background: rgba(12, 10, 9, 0.82);
   min-height: 0;
   max-height: 0;
@@ -471,7 +460,10 @@ img {
 }
 
 .spotify-embed {
-  min-height: 112px;
+  display: block;
+  width: min(100%, var(--max-layout-width));
+  min-height: 152px;
+  border: 0;
 }
 
 .spotify-dock.is-expanded {
@@ -485,10 +477,10 @@ img {
 }
 
 .spotify-dock.is-expanded .spotify-embed-shell {
-  max-height: 160px;
+  max-height: 210px;
   opacity: 1;
   visibility: visible;
-  margin-top: 0.15rem;
+  margin-top: 0;
 }
 
 .lobby {
@@ -1231,20 +1223,15 @@ body.phase-showtime .heat-waves {
 
 @media (max-width: 640px) {
   .spotify-dock {
-    padding: 0.55rem;
-  }
-
-  .spotify-progress {
-    grid-template-columns: 1fr;
+    padding: 0;
   }
 
   .spotify-meta-row {
     flex-direction: column;
   }
 
-  .spotify-embed-shell,
   .spotify-embed {
-    min-height: 112px;
+    min-height: 132px;
   }
 
   .header-left {
@@ -1284,7 +1271,7 @@ body.phase-showtime .heat-waves {
   }
 
   .spotify-dock {
-    padding: clamp(0.65rem, 0.8vw, 0.9rem);
+    padding: 0;
   }
 
   .spotify-track-title {
@@ -1305,7 +1292,7 @@ body.phase-showtime .heat-waves {
   }
 
   .spotify-dock.is-expanded .spotify-embed-shell {
-    max-height: 132px;
+    max-height: 188px;
   }
 
   .lobby {
@@ -1386,7 +1373,7 @@ body.phase-showtime .heat-waves {
   }
 
   .spotify-dock {
-    padding: clamp(0.85rem, 0.8vw, 1rem);
+    padding: 0;
   }
 
   .spotify-track-title {
@@ -1407,7 +1394,7 @@ body.phase-showtime .heat-waves {
   }
 
   .spotify-dock.is-expanded .spotify-embed-shell {
-    max-height: 160px;
+    max-height: 216px;
   }
 
   .lobby {
