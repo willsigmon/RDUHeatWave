@@ -49,6 +49,8 @@
   var countdownTargetLabelEl = document.getElementById('countdown-target-label');
   var countdownContextEl = document.getElementById('countdown-context');
   var statusBannerEl = document.getElementById('status-banner');
+  var countdownDaysEl = document.getElementById('cd-days');
+  var countdownHoursEl = document.getElementById('cd-hours');
   var countdownMinutesEl = document.getElementById('cd-mins');
   var countdownSecondsEl = document.getElementById('cd-secs');
   var meetingStartLabelEl = document.getElementById('meeting-start-label');
@@ -527,13 +529,24 @@
 
   function renderCountdown(remainingMs) {
     var totalSeconds = Math.max(0, Math.ceil(remainingMs / 1000));
-    var totalMinutes = Math.floor(totalSeconds / 60);
+    var days = Math.floor(totalSeconds / 86400);
+    var hours = Math.floor((totalSeconds % 86400) / 3600);
+    var minutes = Math.floor((totalSeconds % 3600) / 60);
     var seconds = totalSeconds % 60;
 
+    if (countdownDaysEl) {
+      countdownDaysEl.textContent = String(days).padStart(2, '0');
+      countdownDaysEl.classList.toggle('countdown-value--compact', String(days).length >= 3);
+      countdownDaysEl.classList.toggle('countdown-value--ultra-compact', String(days).length >= 4);
+    }
+
+    if (countdownHoursEl) {
+      countdownHoursEl.textContent = String(hours).padStart(2, '0');
+    }
+
     if (countdownMinutesEl) {
-      countdownMinutesEl.textContent = String(totalMinutes).padStart(2, '0');
-      countdownMinutesEl.classList.toggle('countdown-value--compact', String(totalMinutes).length >= 4);
-      countdownMinutesEl.classList.toggle('countdown-value--ultra-compact', String(totalMinutes).length >= 5);
+      countdownMinutesEl.textContent = String(minutes).padStart(2, '0');
+      countdownMinutesEl.classList.remove('countdown-value--compact', 'countdown-value--ultra-compact');
     }
 
     if (countdownSecondsEl) {
