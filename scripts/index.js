@@ -906,8 +906,6 @@
       var isGovernance = options && options.governance;
       return members.map(function(member) {
         var isChair = isGovernance && member.chair === true;
-        var topLine = member.leader ? (member.profession || member.title) : member.title;
-        var subtitle = member.leader ? (member.company || '') : (member.profession || member.company || '');
         var roleBadge = member.leader ? '<div class="team-member-role">' + escapeHtml(member.title) + '</div>' : '';
         var classes = 'team-member' + (member.leader ? ' leader' : '') + (isChair ? ' chair' : '');
         var photoHtml = '';
@@ -918,12 +916,22 @@
           var initials = member.name.split(' ').map(function(w) { return w.charAt(0); }).join('').toUpperCase();
           photoHtml = '<div class="team-member-photo team-member-initials">' + escapeHtml(initials) + '</div>';
         }
+        var kicker = member.leader ? (member.profession || member.title || '') : (member.title || '');
+        var specialty = member.leader
+          ? ''
+          : (member.profession && member.company
+            ? escapeHtml(member.profession) + ' · ' + escapeHtml(member.company)
+            : escapeHtml(member.profession || member.company || ''));
+        var companyLine = member.leader ? escapeHtml(member.company || '') : '';
         return '<div class="' + classes + '">' +
           photoHtml +
-          '<strong class="' + (member.specialTitle ? 'team-member-title-special' : '') + '">' + escapeHtml(topLine) + '</strong>' +
-          '<span>' + escapeHtml(member.name) + '</span>' +
-          '<div class="team-member-company">' + escapeHtml(subtitle) + '</div>' +
-          roleBadge +
+          '<div class="team-member-body">' +
+            '<div class="team-member-kicker">' + escapeHtml(kicker) + '</div>' +
+            '<div class="team-member-name">' + escapeHtml(member.name) + '</div>' +
+            (specialty ? '<div class="team-member-specialty">' + specialty + '</div>' : '') +
+            (companyLine ? '<div class="team-member-company">' + companyLine + '</div>' : '') +
+            roleBadge +
+          '</div>' +
         '</div>';
       }).join('');
     }
