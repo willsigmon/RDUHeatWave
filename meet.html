@@ -26,7 +26,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/shared.css">
-
 <link rel="stylesheet" href="/meet.css">
 
 <script type="application/ld+json">
@@ -62,27 +61,21 @@
 }
 </script>
 </head>
-<body>
+<body class="phase-countdown">
 <a href="#main-content" class="skip-link">Skip to main content</a>
 <noscript><div class="noscript-banner">JavaScript is required to use this page.</div></noscript>
-<!-- Kiosk Initialization Overlay (Bypasses Autoplay Policy) -->
 
-<!-- Ambient Noise Overlay -->
-<svg style="pointer-events: none; position: fixed; inset: 0; z-index: 9999; width: 100%; height: 100%; opacity: 0.04; mix-blend-mode: overlay;" aria-hidden="true">
-  <filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" stitchTiles="stitch" /></filter>
-  <rect width="100%" height="100%" filter="url(#noiseFilter)" />
+<svg class="noise-overlay" aria-hidden="true">
+  <filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" stitchTiles="stitch"></feTurbulence></filter>
+  <rect width="100%" height="100%" filter="url(#noiseFilter)"></rect>
 </svg>
 
-
-<div class="heat-distortion" aria-hidden="true"></div>
-<div class="heat-glow" aria-hidden="true"></div>
-<div class="warmup-edge-glow" aria-hidden="true"></div>
 <svg width="0" height="0" style="position:absolute">
   <filter id="heat-distort">
     <feTurbulence type="turbulence" baseFrequency="0.015 0.08" numOctaves="3" seed="2" result="turbulence">
-      <animate attributeName="baseFrequency" values="0.015 0.08;0.018 0.1;0.015 0.08" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="baseFrequency" values="0.015 0.08;0.017 0.09;0.015 0.08" dur="6s" repeatCount="indefinite"></animate>
     </feTurbulence>
-    <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="18" xChannelSelector="R" yChannelSelector="G"/>
+    <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="12" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap>
   </filter>
 </svg>
 
@@ -94,295 +87,234 @@
   <div class="heat-line"></div>
 </div>
 <div class="heat-orb" aria-hidden="true"></div>
-
-
-
+<div class="heat-glow" aria-hidden="true"></div>
+<div class="heat-distortion" aria-hidden="true"></div>
 <div class="heat-waves" aria-hidden="true">
-  <div class="hw-wave"></div>
-  <div class="hw-wave"></div>
-  <div class="hw-wave"></div>
-  <div class="hw-wave"></div>
+  <div class="hw-wave hw-wave--one"></div>
+  <div class="hw-wave hw-wave--two"></div>
+  <div class="hw-wave hw-wave--three"></div>
   <div class="hw-shimmer"></div>
 </div>
-<div id="embers-container"></div>
+<div id="embers-container" aria-hidden="true"></div>
 
-<!-- BIG HEADER -->
 <main id="main-content">
-<header class="header">
-  <div class="header-left" style="gap: 1.25rem;">
-    <div class="header-logo" style="display:flex; align-items:center; gap: 1rem;">
-      <img src="heatwave-logo.png" alt="RDU Heatwave" width="315" height="309" style="filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));">
-      <div class="header-title heat-text" style="font-size: clamp(2.5rem, 4vw, 3.5rem);">RDU HEATWAVE</div>
-    </div>
-    <div style="width: 2px; height: 50px; background: rgba(0,0,0,0.1);"></div>
-    <div class="header-tt-wrap" style="display:flex; align-items:center;">
-      <img src="twotwelve-logo.png" alt="Two Twelve Referral Network" width="254" height="95" style="height: clamp(30px, 3vw, 40px); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); opacity: 0.95;" loading="lazy" decoding="async">
-    </div>
-  </div>
-  <div class="header-center">
-    <div class="header-datetime" id="meeting-datetime"></div>
-    <div class="header-location">Clouds Brewing &bull; Raleigh, NC</div>
-  </div>
-  <div class="header-right">
-    <div class="header-date" id="top-date"></div>
-    <div class="header-time" id="top-time"></div>
-  </div>
-</header>
-
-<!-- Stats Ticker (populated from STATS_ vars in script) -->
-<div class="ticker-wrap">
-  <div class="ticker-content" id="ticker-content">
-    <span class="ticker-stat" id="ticker-bizchats-1"><span class="hw-icon hw-icon--inline hw-icon--chat" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" fill="rgba(232,88,12,0.2)"/></svg></span> 159 BIZCHATS</span>
-    <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat" id="ticker-guests-1"><span class="hw-icon hw-icon--inline hw-icon--handshake" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 17l-3.5-3.5M6.5 12L2 17"/><path d="M2 7l4.5 4.5"/><path d="M22 7l-4.5 4.5"/><path d="M10.5 12.5l-2 2a1.4 1.4 0 0 0 2 2l3.5-3.5"/><path d="M13.5 9.5l2-2a1.4 1.4 0 0 0-2-2L10 9"/><path d="M7 4l3 3"/><path d="M14 4l3 3"/></svg></span> 114 GUESTS HOSTED</span>
-    <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat" id="ticker-revenue-1"><span class="hw-icon hw-icon--inline hw-icon--money" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" fill="none"/></svg></span> $106,143 REVENUE GENERATED</span>
-    <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat" id="ticker-referrals-1"><span class="hw-icon hw-icon--inline hw-icon--envelope" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" fill="rgba(232,88,12,0.2)"/><polyline points="22,6 12,13 2,6"/></svg></span> 44 REFERRALS PASSED</span>
-    <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat" id="ticker-incentives-1"><span class="hw-icon hw-icon--inline hw-icon--star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="rgba(232,88,12,0.2)"/></svg></span> 27 GRATITUDE INCENTIVES RECEIVED</span>
-    <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat"><span class="hw-icon hw-icon--inline hw-icon--flame" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c.5 3.5-1 6-3 8 2 0 4 1 4.5 3.5C14.5 16 16 18 18 18c-3 2-7 2-9-.5C7 14 8 10 12 2z" fill="rgba(232,88,12,0.2)"/></svg></span> ROLLING 12-MONTH STATS &mdash; RDU HEATWAVE</span>
-    <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat" id="ticker-bizchats-2"><span class="hw-icon hw-icon--inline hw-icon--chat" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" fill="rgba(232,88,12,0.2)"/></svg></span> 159 BIZCHATS</span>
-    <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat" id="ticker-guests-2"><span class="hw-icon hw-icon--inline hw-icon--handshake" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 17l-3.5-3.5M6.5 12L2 17"/><path d="M2 7l4.5 4.5"/><path d="M22 7l-4.5 4.5"/><path d="M10.5 12.5l-2 2a1.4 1.4 0 0 0 2 2l3.5-3.5"/><path d="M13.5 9.5l2-2a1.4 1.4 0 0 0-2-2L10 9"/><path d="M7 4l3 3"/><path d="M14 4l3 3"/></svg></span> 114 GUESTS HOSTED</span>
-    <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat" id="ticker-revenue-2"><span class="hw-icon hw-icon--inline hw-icon--money" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" fill="none"/></svg></span> $106,143 REVENUE GENERATED</span>
-    <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat" id="ticker-referrals-2"><span class="hw-icon hw-icon--inline hw-icon--envelope" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" fill="rgba(232,88,12,0.2)"/><polyline points="22,6 12,13 2,6"/></svg></span> 44 REFERRALS PASSED</span>
-    <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat" id="ticker-incentives-2"><span class="hw-icon hw-icon--inline hw-icon--star" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="rgba(232,88,12,0.2)"/></svg></span> 27 GRATITUDE INCENTIVES RECEIVED</span>
-    <span class="ticker-sep">&bull;</span>
-    <span class="ticker-stat"><span class="hw-icon hw-icon--inline hw-icon--flame" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c.5 3.5-1 6-3 8 2 0 4 1 4.5 3.5C14.5 16 16 18 18 18c-3 2-7 2-9-.5C7 14 8 10 12 2z" fill="rgba(232,88,12,0.2)"/></svg></span> ROLLING 12-MONTH STATS &mdash; RDU HEATWAVE</span>
-  </div>
-</div>
-
-<!-- MAIN LOBBY -->
-<div class="lobby">
-
-  <!-- LEFT: ROTATING INFO CAROUSEL -->
-  <div class="carousel-zone">
-    <div class="carousel-stage" id="carousel-stage">
-
-      <!-- Card 1: Today's speaker -->
-      <div class="carousel-card" data-card="0">
-        <img class="card-headshot" id="speaker-headshot" alt="" loading="lazy" decoding="async" width="160" height="160" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-        <div class="card-headshot-fallback" id="speaker-initials" style="display:none; width:120px; height:120px; border-radius:50%; border:3px solid var(--color-primary); background:var(--color-surface-2); align-items:center; justify-content:center; font-family:var(--font-display); font-size:2.5rem; color:var(--color-primary); letter-spacing:0.05em; margin:0 auto 1rem;">WS</div>
-        <div class="card-heading">TODAY&rsquo;S<br>MEETING</div>
-        <div class="card-body" id="speaker-card-body">Will Sigmon from Will Sigmon Media is up today. Give him your full attention &mdash; and a warm intro if someone comes to mind.</div>
-        <div class="card-stat">
-          <div class="card-stat-item">
-            <div class="card-stat-value">LIVE</div>
-            <div class="card-stat-label">Speaker Today</div>
-          </div>
-          <div class="card-stat-item">
-            <div class="card-stat-value">4:00</div>
-            <div class="card-stat-label">Kickoff Time</div>
-          </div>
+  <header class="header">
+    <div class="header-left">
+      <div class="header-branding">
+        <img src="heatwave-logo.png" alt="RDU Heatwave" class="brand-logo brand-logo--main" width="315" height="309">
+        <div class="header-brand-copy">
+          <div class="header-title heat-text">RDU HEATWAVE</div>
+          <div class="header-subtitle">Meet lobby</div>
         </div>
       </div>
+      <div class="header-divider" aria-hidden="true"></div>
+      <div class="header-two12">
+        <img src="twotwelve-logo.png" alt="Two Twelve Referral Network" class="brand-logo brand-logo--two12" width="254" height="95" loading="lazy" decoding="async">
+      </div>
+    </div>
 
-      <!-- Card 2: Upcoming events -->
-      <div class="carousel-card" data-card="1">
-        <div class="card-icon"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#E8580C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 8px rgba(232,88,12,0.4))"><rect x="3" y="4" width="18" height="18" rx="2" fill="rgba(232,88,12,0.12)"/><line x1="8" y1="2.5" x2="8" y2="6.5"/><line x1="16" y1="2.5" x2="16" y2="6.5"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h3"/><path d="M8 18h8"/></svg></div>
-        <div class="card-heading">UPCOMING<br>EVENTS</div>
-        <div class="card-body card-body--events">
-          <div class="card-sync-pill" id="events-sync-pill">Weekly Schedule</div>
-          <ul class="card-event-list" id="upcoming-events-list">
-            <li class="card-event-empty">Loading upcoming events&hellip;</li>
+    <div class="header-center">
+      <div class="header-datetime" id="meeting-datetime">Thursday • 4:00 PM ET</div>
+      <div class="header-location">Clouds Brewing • Raleigh, NC</div>
+    </div>
+
+    <div class="header-right">
+      <div class="header-date" id="top-date"></div>
+      <div class="header-time" id="top-time"></div>
+    </div>
+  </header>
+
+  <div class="meet-shell">
+    <section class="lobby" id="meet-layout" aria-label="RDU Heat meet countdown layout">
+      <aside class="meet-panel meet-panel--info" aria-label="Meeting info panel">
+        <section class="meet-block meet-block--speaker">
+          <p class="meet-block__eyebrow">Today at RDU Heat</p>
+          <div class="speaker-card">
+            <img class="speaker-card__photo" id="speaker-headshot" alt="" loading="lazy" decoding="async" width="160" height="160">
+            <div class="speaker-card__fallback" id="speaker-initials" aria-hidden="true">RH</div>
+            <div class="speaker-card__content">
+              <h2 class="meet-block__title">Today&rsquo;s meeting</h2>
+              <p class="speaker-card__name" id="speaker-name">Will Sigmon</p>
+              <p class="speaker-card__company" id="speaker-company">Will Sigmon Media</p>
+              <p class="meet-block__body" id="speaker-card-body">Give today&rsquo;s featured member your full attention and keep a warm introduction ready.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="meet-block meet-block--venue">
+          <p class="meet-block__eyebrow">Venue</p>
+          <h2 class="meet-block__title">Clouds Brewing</h2>
+          <p class="meet-block__body">1233 Front St, Raleigh, NC 27609<br>Side room • special deal for the group</p>
+          <ul class="meet-inline-list" aria-label="Venue reminders">
+            <li>Open networking from 3:45 PM</li>
+            <li>Meeting starts at 4:00 PM ET</li>
+            <li>Stick around after to support the brewery</li>
           </ul>
+        </section>
+
+        <section class="meet-block meet-block--schedule">
+          <p class="meet-block__eyebrow">Schedule + events</p>
+          <div class="schedule-list" id="meeting-schedule" aria-label="Meeting schedule">
+            <div class="schedule-row">
+              <span class="schedule-row__time">3:45–4:00</span>
+              <span class="schedule-row__label">Open networking</span>
+            </div>
+            <div class="schedule-row">
+              <span class="schedule-row__time">4:00–5:00</span>
+              <span class="schedule-row__label">Networking meeting</span>
+            </div>
+            <div class="schedule-row">
+              <span class="schedule-row__time">5:00+</span>
+              <span class="schedule-row__label">Stay and connect</span>
+            </div>
+          </div>
+
+          <div class="meet-events">
+            <div class="card-sync-pill" id="events-sync-pill">Weekly schedule</div>
+            <ul class="meet-events__list" id="upcoming-events-list">
+              <li class="meet-events__empty">Loading upcoming events…</li>
+            </ul>
+          </div>
+        </section>
+      </aside>
+
+      <section class="meet-panel meet-panel--countdown" id="countdown-zone" aria-label="Countdown panel">
+        <div class="countdown-intro">
+          <p class="countdown-kicker">Heat Wave countdown</p>
+          <h1 class="countdown-header" id="countdown-header">RDU Heat starts in</h1>
+          <p class="countdown-target" id="countdown-target-label">Showtime target loading…</p>
         </div>
-      </div>
 
-      <!-- Card 3: What is TwoTwelve -->
-      <div class="carousel-card" data-card="2">
-        <div class="card-icon"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#E8580C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 8px rgba(232,88,12,0.4))"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" fill="rgba(232,88,12,0.15)"/><line x1="11.5" y1="8" x2="11.5" y2="14"/></svg></div>
-        <div class="card-heading">WHAT 212&deg;<br>MEANS</div>
-        <div class="card-body">212 comes from the boiling point of water: 211&deg; is hot, 212&deg; makes steam. Founder Andy Fulghum built the network around that extra degree.</div>
-      </div>
-
-      <!-- Card 4: How it works -->
-      <div class="carousel-card" data-card="3">
-        <div class="card-icon"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#E8580C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 8px rgba(232,88,12,0.4))"><path d="M20 17l-3.5-3.5M6.5 12L2 17"/><path d="M2 7l4.5 4.5"/><path d="M22 7l-4.5 4.5"/><path d="M10.5 12.5l-2 2a1.4 1.4 0 0 0 2 2l3.5-3.5"/><path d="M13.5 9.5l2-2a1.4 1.4 0 0 0-2-2L10 9"/><path d="M7 4l3 3"/><path d="M14 4l3 3"/></svg></div>
-        <div class="card-heading">HOW 212<br>WORKS</div>
-        <div class="card-body">Members meet weekly, learn each other&rsquo;s businesses through BizChats, and pass permission-based referrals they can confidently stand behind.</div>
-        <div class="card-stat">
-          <div class="card-stat-item">
-            <div class="card-stat-value">BIZCHATS</div>
-            <div class="card-stat-label">Trust Before Referrals</div>
+        <div class="countdown-display" aria-live="polite" aria-atomic="true">
+          <div class="countdown-unit">
+            <div class="countdown-value" id="cd-mins">--</div>
+            <div class="countdown-label">Minutes</div>
           </div>
-          <div class="card-stat-item">
-            <div class="card-stat-value">WEEKLY</div>
-            <div class="card-stat-label">Structured Rhythm</div>
+          <div class="countdown-separator" aria-hidden="true">:</div>
+          <div class="countdown-unit">
+            <div class="countdown-value" id="cd-secs">--</div>
+            <div class="countdown-label">Seconds</div>
           </div>
         </div>
-      </div>
 
-      <!-- Card 5: Why it feels different -->
-      <div class="carousel-card" data-card="4">
-        <div class="card-icon"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#E8580C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 8px rgba(232,88,12,0.4))"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="rgba(232,88,12,0.2)"/></svg></div>
-        <div class="card-heading">WHY IT FEELS<br>DIFFERENT</div>
-        <div class="card-body">Like BNI, there&rsquo;s structure. But 212 leans harder into gratitude, 24-hour follow-up, and performance-based accountability.</div>
-        <div class="card-stat">
-          <div class="card-stat-item">
-            <div class="card-stat-value">24 HR</div>
-            <div class="card-stat-label">Referral Follow-Up</div>
+        <p class="countdown-context" id="countdown-context">Single-shot countdown. When it reaches zero, the screen flips to showtime once and stays there.</p>
+        <div class="status-banner" id="status-banner" role="status" aria-live="polite">Countdown armed for showtime.</div>
+
+        <div class="countdown-support-grid" aria-label="Meeting details">
+          <div class="countdown-support-card">
+            <div class="support-label">Meeting start</div>
+            <div class="support-value" id="meeting-start-label">4:00 PM ET</div>
           </div>
-          <div class="card-stat-item">
-            <div class="card-stat-value">EARNED</div>
-            <div class="card-stat-label">Renewal, Not Auto</div>
+          <div class="countdown-support-card">
+            <div class="support-label">Showtime target</div>
+            <div class="support-value" id="meeting-target-time">4:05 PM ET</div>
+          </div>
+          <div class="countdown-support-card">
+            <div class="support-label">Location</div>
+            <div class="support-value">Clouds Brewing</div>
           </div>
         </div>
-      </div>
+      </section>
 
-    </div>
-    <div class="carousel-dots" id="carousel-dots"></div>
+      <aside class="meet-panel meet-panel--qr" aria-label="Check-in QR panel">
+        <p class="qr-panel__eyebrow">Check-in</p>
+        <h2 class="qr-panel__heading">Scan to check in</h2>
+        <p class="qr-panel__copy">Scan the QR code on the screen.</p>
+        <a class="qr-panel__link" href="https://rduheatwave.team" aria-label="Visit rduheatwave.team">
+          <img src="qr-rduheatwave.svg" alt="Scan to visit rduheatwave.team" class="qr-panel__img" loading="eager" decoding="async" width="264" height="264">
+        </a>
+        <p class="qr-panel__easy-line">Easy to scan from across the room.</p>
+        <p class="qr-panel__note">Built to frame cleanly on mirrored front and back TVs at 1080p and 4K.</p>
+      </aside>
+    </section>
   </div>
 
-  <!-- CENTER: COUNTDOWN -->
-  <div class="countdown-zone" id="countdown-zone">
-    <div class="welcome-msg">Welcome to our guests. We&rsquo;re glad you&rsquo;re here.</div>
-    <div class="countdown-header" id="countdown-header">WE START IN</div>
-
-    <!-- Main countdown -->
-    <div class="countdown-grid" id="countdown-grid">
-      <div class="countdown-unit" id="cd-days-unit">
-        <div class="countdown-value" id="cd-days">--</div>
-        <div class="countdown-label">Days</div>
-      </div>
-      <div class="countdown-unit">
-        <div class="countdown-value" id="cd-hours">--</div>
-        <div class="countdown-label">Hours</div>
-      </div>
-      <div class="countdown-unit">
-        <div class="countdown-value" id="cd-mins">--</div>
-        <div class="countdown-label">Mins</div>
-      </div>
-      <div class="countdown-unit">
-        <div class="countdown-value" id="cd-secs">--</div>
-        <div class="countdown-label">Secs</div>
-      </div>
-    </div>
-
-    <!-- Meeting schedule -->
-    <div class="meeting-schedule" id="meeting-schedule">
-      <div class="schedule-item">
-        <span class="schedule-time">3:45 &ndash; 4:00</span>
-        <span class="schedule-desc">Open Networking</span>
-      </div>
-      <div class="schedule-item">
-        <span class="schedule-time">4:00 &ndash; 5:00</span>
-        <span class="schedule-desc">Networking Meeting</span>
-      </div>
-      <div class="schedule-item">
-        <span class="schedule-time">5:00 PM+</span>
-        <span class="schedule-desc">Stick Around &amp; Connect</span>
-      </div>
-    </div>
-
-    <!-- Status banner -->
-    <div class="status-banner" id="status-banner" role="status" aria-live="polite"></div>
-
-    <!-- Warmup timer (4:00 - 4:05) -->
-    <div class="warmup-display" id="warmup-display">
-      <div class="warmup-time" id="warmup-time">05:00</div>
-      <div class="warmup-sub">until we kick off</div>
-    </div>
-
-    <div class="progress-wrap" id="progress-wrap">
-      <div class="progress-bar">
-        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
-      </div>
-    </div>
-
-    <!-- Horn blast display -->
-    <div class="horn-display" id="horn-display">
-      <div class="horn-siren" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#E8580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;">
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" fill="rgba(232,88,12,0.2)"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-        </svg>
-      </div>
-      <div class="horn-text" id="horn-text">LET&rsquo;S GO!</div>
-      <div class="horn-joke" id="horn-joke">We&rsquo;re about to boil over.</div>
-    </div>
-
-    <div class="final-display" id="anchor-display">
-      <div class="final-label">TODAY&rsquo;S SPEAKER</div>
-      <div class="horn-text" id="anchor-speaker-name" style="font-size:clamp(2.5rem,4vw,3.8rem); letter-spacing:0.08em; animation:none; text-shadow:0 0 48px rgba(232,88,12,0.4);">WILL SIGMON</div>
-      <div class="horn-joke" style="max-width:28ch;">Warm introductions. Trusted professionals. Real follow-through.</div>
-    </div>
-  </div>
-
-  <!-- RIGHT: QR CODE (always visible) -->
-  <div class="qr-panel">
-    <div class="qr-panel-heading">SCAN TO<br>CHECK IN</div>
-    <div class="qr-panel-arrow">&#x2193;</div>
-    <a class="qr-panel-link" href="https://rduheatwave.team" aria-label="Visit rduheatwave.team">
-      <img src="qr-rduheatwave.svg" alt="Scan to visit rduheatwave.team" class="qr-panel-img" loading="lazy" decoding="async" width="264" height="264">
-    </a>
-    <div class="qr-panel-cta">All visitors can check in at rduheatwave.team &mdash; fast, clear, and easy to scan.</div>
-  </div>
-
-</div>
 </main>
 
-<!-- FULL SCREEN TAKEOVER (horn phase) -->
-<div class="takeover" id="takeover" aria-hidden="true">
-  <div class="takeover-bg"></div>
-  <div class="takeover-content">
-    <div class="takeover-siren">🚨</div>
-    <div class="takeover-headline" id="takeover-headline">IT&rsquo;S 212&deg;!</div>
-    <div class="takeover-sub" id="takeover-sub">TAKE YOUR SEATS — WE&rsquo;RE ABOUT TO BOIL OVER</div>
-    <div class="takeover-timer" id="takeover-timer">30</div>
+<div class="footer-stack" id="footer-stack" aria-label="Music controls and team ticker">
+  <section class="spotify-dock" id="spotify-dock" aria-label="Spotify room soundtrack controls">
+    <div class="spotify-dock__top">
+      <div class="spotify-now-playing">
+        <div class="spotify-art-shell" aria-hidden="true">
+          <img src="heatwave-logo.png" alt="" class="spotify-art" id="spotify-track-art" width="144" height="144">
+        </div>
+        <div class="spotify-copy">
+          <p class="spotify-label">Room soundtrack</p>
+          <h2 class="spotify-track-title" id="spotify-track-title">Pick a playlist and keep the room warm.</h2>
+          <p class="spotify-track-meta" id="spotify-track-meta">Use the preset buttons for oldies, ambient, feel-good tracks, or current popular picks.</p>
+
+          <div class="spotify-progress" aria-label="Spotify track progress">
+            <span class="spotify-progress__time" id="spotify-position">0:00</span>
+            <div class="spotify-progress__bar" aria-hidden="true">
+              <div class="spotify-progress__fill" id="spotify-progress-fill"></div>
+            </div>
+            <span class="spotify-progress__time spotify-progress__time--remaining" id="spotify-remaining">--:-- left</span>
+          </div>
+
+          <div class="spotify-meta-row">
+            <span class="spotify-status" id="spotify-status">Loading Spotify player…</span>
+            <span class="spotify-hint">Pause, skip, scrub, and volume live in the official Spotify player below.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="spotify-actions">
+        <div class="spotify-preset-rail" id="spotify-presets" role="group" aria-label="Playlist presets"></div>
+
+        <div class="spotify-control-row">
+          <button class="spotify-button spotify-button--primary" id="spotify-toggle" type="button">Play</button>
+          <button class="spotify-button" id="spotify-restart" type="button">Restart song</button>
+          <a class="spotify-button spotify-button--link" id="spotify-open-link" href="https://open.spotify.com" target="_blank" rel="noreferrer noopener">Open in Spotify</a>
+        </div>
+
+        <div class="spotify-control-note">
+          Best for the room: keep a mellow preset running during arrivals, then switch to popular or upbeat once the meeting wraps.
+        </div>
+      </div>
+    </div>
+
+    <div class="spotify-embed-shell">
+      <div class="spotify-embed" id="spotify-embed"></div>
+    </div>
+  </section>
+
+  <div class="ticker-wrap ticker-wrap--footer" aria-label="RDU Heatwave team stats ticker">
+    <div class="ticker-content" id="ticker-content">Loading team stats…</div>
   </div>
 </div>
 
-<!-- After-meeting nudge (OVER phase, first 30 min) -->
-<div class="afterglow" id="afterglow" aria-hidden="true">
-  <div class="afterglow-bg"></div>
-  <div class="afterglow-content">
-    <div class="afterglow-thanks">GREAT MEETING, HEATWAVE!</div>
-    <div class="afterglow-message">Don&rsquo;t leave yet &mdash; stick around and connect.</div>
-    <div class="afterglow-divider"></div>
-    <div class="afterglow-clouds">
-      <img src="clouds-brewing-logo.png" alt="Clouds Brewing" class="afterglow-clouds-logo" loading="lazy" decoding="async" width="641" height="643">
-      <div class="afterglow-clouds-text">Clouds Brewing has 17 taps and great food.<br>Grab a drink &mdash; you&rsquo;ve earned it.</div>
-    </div>
-    <div class="afterglow-divider"></div>
-    <div class="afterglow-next">
-      <div class="afterglow-next-label">NEXT MEETING</div>
-      <div class="afterglow-next-date" id="afterglow-next-date"></div>
-    </div>
-    <div class="afterglow-visit">
-      <div class="afterglow-visit-label">VISIT US ONLINE</div>
-      <div class="afterglow-visit-text">See current rotations on tap at Clouds and connect with the team.</div>
-      <div class="afterglow-visit-url">rduheatwave.team</div>
+<section class="showtime-screen" id="showtime-screen" aria-hidden="true">
+  <div class="showtime-screen__inner">
+    <div class="showtime-panel">
+      <p class="showtime-kicker">Heat Wave Showtime</p>
+      <h2 class="showtime-headline" id="showtime-headline">RDU Heat is starting — grab your seat</h2>
+      <p class="showtime-sub" id="showtime-sub">The room is ready. Take your seat, scan in, and lock in.</p>
+
+      <div class="showtime-grid">
+        <div class="showtime-copy-card">
+          <div class="support-label">Now starting</div>
+          <div class="showtime-meta" id="showtime-speaker">Featured member: Will Sigmon • Will Sigmon Media</div>
+          <div class="showtime-meta">Clouds Brewing • Raleigh, NC</div>
+          <div class="showtime-meta">High contrast, TV-safe, and readable from 25 feet.</div>
+        </div>
+
+        <div class="showtime-qr-card">
+          <a class="showtime-qr-card__link" href="https://rduheatwave.team" aria-label="Visit rduheatwave.team for check-in">
+            <img src="qr-rduheatwave.svg" alt="Scan to visit rduheatwave.team" class="showtime-qr-card__img" loading="eager" decoding="async" width="264" height="264">
+          </a>
+          <p class="showtime-qr-card__cta">Scan the QR code on the screen.</p>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-
-<!-- Overscan: press +/- keys to adjust, 0 to reset -->
-<div class="overscan-toast" id="overscan-toast" aria-live="polite"></div>
-
-<!-- Countdown milestone toast -->
-<div class="milestone-toast" id="milestone-toast" aria-live="polite">
-  <div class="milestone-toast-icon" id="milestone-icon"></div>
-  <div class="milestone-toast-text" id="milestone-text"></div>
-</div>
-
-<!-- Screen flash overlay -->
-<div class="screen-flash" id="screen-flash" style="display:none" aria-hidden="true"></div>
-<div class="edge-glow" id="edge-glow" style="display:none" aria-hidden="true"></div>
-
-<!-- Audio cues are synthesized locally via Web Audio API -->
-
+</section>
 
 <script src="/scripts/site-config.js"></script>
 <script src="/scripts/meet.js"></script>
-
-
-<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
-<script src="/scripts/scroll-reveal.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(function() {});
+  }
+</script>
 </body>
 </html>
