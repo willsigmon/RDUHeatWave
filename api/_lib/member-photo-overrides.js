@@ -5,45 +5,40 @@ var shared = require('./shared');
 // Checked-in speaker/member headshots sourced from public official profiles
 // on 2026-03-31 so /meet does not depend on brittle third-party hotlinks.
 var PHOTO_OVERRIDES = {
-  'will sigmon': {
-    photo: '/member-photos/will-sigmon.jpg',
-    photoObjectPosition: 'center 18%',
-    sourceUrl: 'https://lh3.googleusercontent.com/a/ACg8ocIYpRI36Bq0th_qn7spnte-zssR0tHrkxPSw-omHrB80EsLE-PLaw=s512-c'
-  },
   'carter helms': {
     photo: '/member-photos/carter-helms.jpg',
-    photoObjectPosition: 'center 18%',
+    photoObjectPosition: 'center 28%',
     sourceUrl: 'https://carterhelms.com/carter.jpeg'
   },
   'craig morrill': {
     photo: '/member-photos/craig-morrill.jpg',
-    photoObjectPosition: 'center 18%',
+    photoObjectPosition: 'center 22%',
     sourceUrl: 'https://www.sgipw.com/wp-content/uploads/2025/12/CraigMorrill-1.jpg'
+  },
+  'will sigmon': {
+    photo: '/member-photos/will-sigmon.jpg',
+    photoObjectPosition: 'center 35%',
+    sourceUrl: 'https://lh3.googleusercontent.com/a/ACg8ocIYpRI36Bq0th_qn7spnte-zssR0tHrkxPSw-omHrB80EsLE-PLaw=s512-c'
   },
   'robert courts': {
     photo: '/member-photos/robert-courts.png',
-    photoObjectPosition: 'center 20%',
+    photoObjectPosition: 'center 25%',
     sourceUrl: 'https://advantagelending.com/wp-content/uploads/2025/06/rcourts-square.png'
   },
   'dana walsh': {
     photo: '/member-photos/dana-walsh.jpg',
-    photoObjectPosition: 'center 25%',
+    photoObjectPosition: 'center 28%',
     sourceUrl: 'https://strollmag.com'
   },
   'nathan senn': {
     photo: '/member-photos/nathan-senn.jpg',
-    photoObjectPosition: 'center 18%',
+    photoObjectPosition: 'center 25%',
     sourceUrl: 'https://linkedin.com/in/nathan-senn-2b2332153'
   },
   'sue kerata': {
     photo: '/member-photos/sue-kerata.jpg',
-    photoObjectPosition: 'center 20%',
+    photoObjectPosition: 'center 30%',
     sourceUrl: 'https://suekhomes.com'
-  },
-  'rusty sutton': {
-    photo: '/member-photos/rusty-sutton.jpg',
-    photoObjectPosition: 'center 20%',
-    sourceUrl: 'https://monkeyfansraleigh.com'
   }
 };
 

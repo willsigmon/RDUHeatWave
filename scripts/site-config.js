@@ -4,17 +4,17 @@
   // Speaker rotation roster — alphabetical by first name.
   // Rotation begins Apr 9 2026 with Carter at index 0.
   var SPEAKER_ROSTER = [
-    { name: 'Carter Helms', company: 'Highstreet Ins & Financial Svcs', photo: '/member-photos/carter-helms.jpg', photoObjectPosition: 'center 18%' },
-    { name: 'Craig Morrill', company: 'Summit Global Investments', photo: '/member-photos/craig-morrill.jpg', photoObjectPosition: 'center 18%' },
-    { name: 'Dana Walsh', company: 'Stroll Magazine', photo: '/member-photos/dana-walsh.jpg', photoObjectPosition: 'center 25%' },
+    { name: 'Carter Helms', company: 'Highstreet Ins & Financial Svcs', photo: '/member-photos/carter-helms.jpg', photoObjectPosition: 'center 28%' },
+    { name: 'Craig Morrill', company: 'Summit Global Investments', photo: '/member-photos/craig-morrill.jpg', photoObjectPosition: 'center 22%' },
+    { name: 'Dana Walsh', company: 'Stroll Magazine', photo: '/member-photos/dana-walsh.jpg', photoObjectPosition: 'center 28%' },
     { name: 'David Mercado', company: 'William Douglas Management' },
-    { name: 'Nathan Senn', company: 'Franco Restorations', photo: '/member-photos/nathan-senn.jpg', photoObjectPosition: 'center 18%' },
-    { name: 'Robert Courts', company: 'Advantage Lending', photo: '/member-photos/robert-courts.png', photoObjectPosition: 'center 20%' },
+    { name: 'Nathan Senn', company: 'Franco Restorations', photo: '/member-photos/nathan-senn.jpg', photoObjectPosition: 'center 25%' },
+    { name: 'Robert Courts', company: 'Advantage Lending', photo: '/member-photos/robert-courts.png', photoObjectPosition: 'center 25%' },
     { name: 'Roni Payne', company: 'R. Payne LLC' },
-    { name: 'Rusty Sutton', company: 'MonkeyFans Creative', photo: '/member-photos/rusty-sutton.jpg', photoObjectPosition: 'center 20%' },
+    { name: 'Rusty Sutton', company: 'MonkeyFans Creative' },
     { name: 'Shannida Ramsey', company: 'Ram-Z Services LLC' },
-    { name: 'Sue Kerata', company: 'Century 21 Triangle Group', photo: '/member-photos/sue-kerata.jpg', photoObjectPosition: 'center 20%' },
-    { name: 'Will Sigmon', company: 'Will Sigmon Media Co.', photo: '/member-photos/will-sigmon.jpg', photoObjectPosition: 'center 18%' }
+    { name: 'Sue Kerata', company: 'Century 21 Triangle Group', photo: '/member-photos/sue-kerata.jpg', photoObjectPosition: 'center 30%' },
+    { name: 'Will Sigmon', company: 'Will Sigmon Media Co.', photo: '/member-photos/will-sigmon.jpg', photoObjectPosition: 'center 35%' }
   ];
   var ROTATION_START = new Date('2026-04-09T00:00:00');
   var MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;

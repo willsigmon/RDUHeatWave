@@ -74,7 +74,9 @@ describe('members handler — sheet data', () => {
     const result = getResult();
     expect(result.statusCode).toBe(200);
     expect(result.body.source).toBe('sheet');
-    expect(result.body.members).toHaveLength(3);
+    // 3 sheet rows merged with 11 DEFAULT_MEMBERS = 12 unique members
+    // (Alice Smith from the mock + 11 defaults)
+    expect(result.body.members).toHaveLength(12);
   });
 
   it('sets leader flag based on LEADER_OVERRIDES', async () => {
@@ -106,7 +108,7 @@ describe('members handler — sheet data', () => {
     const alice = members.find((m) => m.name === 'Alice Smith');
 
     expect(carter.photo).toBe('/member-photos/carter-helms.jpg');
-    expect(carter.photoObjectPosition).toBe('center 18%');
+    expect(carter.photoObjectPosition).toBe('center 28%');
     expect(craig.photo).toBe('/member-photos/craig-morrill.jpg');
     expect(alice.photo).toBeUndefined();
   });
