@@ -110,9 +110,9 @@ img {
   justify-content: space-between;
   gap: clamp(1rem, 2vw, 2rem);
   padding:
-    calc(var(--safe-top) + 0.35rem)
+    calc(var(--safe-top) + 0.5rem)
     var(--safe-right)
-    1rem
+    clamp(0.9rem, 1.4vw, 1.3rem)
     var(--safe-left);
 }
 
@@ -252,7 +252,7 @@ img {
   position: relative;
   z-index: 3;
   padding:
-    clamp(1rem, 1.8vw, 1.6rem)
+    clamp(0.8rem, 1.4vw, 1.3rem)
     var(--safe-right)
     calc(var(--heat-wave-max-height) + var(--safe-bottom) + 0.9rem)
     var(--safe-left);
@@ -486,10 +486,10 @@ img {
 .lobby {
   display: grid;
   grid-template-columns: minmax(320px, 0.85fr) minmax(360px, 1.25fr) minmax(280px, 0.9fr);
-  gap: clamp(0.9rem, 1.6vw, 1.6rem);
+  gap: clamp(1.1rem, 2vw, 2rem);
   align-items: stretch;
   width: min(100%, var(--max-layout-width, 1800px));
-  min-height: clamp(520px, 58vh, 1100px);
+  min-height: clamp(540px, 64vh, 1100px);
   margin: 0 auto;
 }
 
@@ -498,7 +498,7 @@ img {
   min-width: 0;
   height: 100%;
   overflow: hidden;
-  padding: clamp(0.9rem, 1.8vw, 1.8rem);
+  padding: clamp(1.1rem, 2vw, 2rem);
   border-radius: var(--radius-2xl);
   border: 1px solid var(--color-border);
   background: linear-gradient(180deg, rgba(35, 28, 24, 0.96), rgba(26, 20, 18, 0.97));
@@ -508,26 +508,54 @@ img {
 .meet-panel--info {
   display: grid;
   grid-template-rows: minmax(140px, 0.34fr) minmax(120px, 0.28fr) minmax(140px, 0.38fr);
-  gap: clamp(0.7rem, 1.2vw, 1rem);
+  gap: clamp(0.85rem, 1.4vw, 1.2rem);
 }
 
-.meet-panel--countdown,
-.meet-panel--qr {
+.meet-panel--countdown {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
+.meet-panel--qr {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .meet-block {
   display: flex;
   flex-direction: column;
-  gap: clamp(0.45rem, 0.9vw, 0.8rem);
+  justify-content: center;
+  gap: clamp(0.55rem, 1vw, 0.9rem);
   min-width: 0;
-  padding: clamp(0.85rem, 1.2vw, 1.1rem);
+  padding: clamp(1rem, 1.4vw, 1.3rem);
   border-radius: var(--radius-xl);
   border: 1px solid rgba(232, 88, 12, 0.18);
   background: linear-gradient(180deg, rgba(48, 39, 34, 0.74), rgba(34, 28, 24, 0.82));
   overflow: hidden;
+}
+
+.meet-block--venue {
+  text-align: center;
+  align-items: center;
+}
+
+.meet-block--schedule {
+  text-align: center;
+  align-items: center;
+}
+
+.meet-block--schedule .schedule-list {
+  text-align: left;
+  justify-self: center;
+  width: auto;
+}
+
+.meet-block--speaker {
+  text-align: center;
+  align-items: center;
 }
 
 .meet-block__eyebrow,
@@ -536,7 +564,7 @@ img {
 .showtime-kicker,
 .card-sync-pill {
   margin: 0;
-  font-size: clamp(0.76rem, 0.9vw, 0.95rem);
+  font-size: clamp(0.78rem, 0.95vw, 1rem);
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--color-primary);
@@ -559,7 +587,7 @@ img {
 .meet-events__list,
 .meet-inline-list {
   margin: 0;
-  font-size: clamp(0.94rem, 1.02vw, 1.12rem);
+  font-size: clamp(0.96rem, 1.05vw, 1.15rem);
   line-height: 1.5;
   color: var(--color-text-muted);
   text-wrap: balance;
@@ -568,7 +596,7 @@ img {
 .speaker-card {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
-  gap: clamp(0.75rem, 1vw, 1rem);
+  gap: clamp(0.85rem, 1.2vw, 1.1rem);
   align-items: center;
   min-width: 0;
 }
@@ -600,6 +628,7 @@ img {
 
 .speaker-card__content {
   min-width: 0;
+  text-align: left;
 }
 
 .speaker-card__name {
@@ -616,19 +645,29 @@ img {
   letter-spacing: 0.03em;
 }
 
-.meet-inline-list,
-.meet-events__list {
-  padding-left: 1.15rem;
+.meet-inline-list {
+  padding-left: 0;
+  list-style: none;
+  text-align: center;
 }
 
-.meet-inline-list li,
+.meet-events__list {
+  padding-left: 0;
+  list-style: none;
+}
+
+.meet-inline-list li {
+  margin-bottom: 0.3rem;
+}
+
 .meet-events__list li {
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.3rem;
 }
 
 .schedule-list {
   display: grid;
-  gap: 0.55rem;
+  gap: 0.6rem;
+  width: 100%;
 }
 
 .schedule-row {
@@ -657,12 +696,14 @@ img {
 .meet-events {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 0.55rem;
   min-width: 0;
 }
 
 .meet-events__list {
   margin: 0;
+  text-align: left;
 }
 
 .meet-events__list strong {
@@ -671,13 +712,13 @@ img {
 
 .meet-events__empty {
   list-style: none;
-  margin-left: -1.15rem;
 }
 
 .countdown-intro {
   display: grid;
-  gap: 0.6rem;
+  gap: 0.7rem;
   text-align: center;
+  width: 100%;
 }
 
 .countdown-header {
@@ -698,8 +739,9 @@ img {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   align-items: center;
-  gap: clamp(0.6rem, 1.2vw, 1rem);
-  margin: clamp(0.8rem, 1.6vw, 1.3rem) 0;
+  gap: clamp(0.7rem, 1.4vw, 1.2rem);
+  margin: clamp(1rem, 2vw, 1.6rem) 0;
+  width: 100%;
 }
 
 .countdown-unit {
@@ -739,9 +781,9 @@ img {
 }
 
 .status-banner {
-  margin: 1rem auto 0;
+  margin: 1.1rem auto 0;
   padding: 0.75rem 1rem;
-  width: min(100%, 38rem);
+  width: 100%;
   border-radius: 999px;
   border: 1px solid rgba(232, 88, 12, 0.22);
   background: rgba(232, 88, 12, 0.08);
@@ -759,17 +801,19 @@ img {
 
 .countdown-support-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-top: clamp(1rem, 1.6vw, 1.4rem);
+  margin-top: clamp(1.1rem, 1.8vw, 1.6rem);
+  width: 100%;
 }
 
 .countdown-support-card,
 .showtime-copy-card,
 .showtime-qr-card {
   min-width: 0;
-  padding: clamp(0.75rem, 1vw, 1rem);
+  padding: clamp(0.85rem, 1.1vw, 1.1rem);
   border-radius: var(--radius-xl);
   border: 1px solid rgba(232, 88, 12, 0.18);
   background: rgba(17, 13, 11, 0.62);
+  text-align: center;
 }
 
 .support-label {
@@ -786,7 +830,7 @@ img {
 }
 
 .meet-panel--qr {
-  gap: 0.75rem;
+  gap: clamp(0.85rem, 1.2vw, 1.1rem);
   text-align: center;
   align-items: center;
 }
@@ -1134,15 +1178,15 @@ body.phase-showtime .heat-waves {
 
 @media (max-height: 1100px) {
   .lobby {
-    min-height: clamp(460px, 46vh, 620px);
+    min-height: clamp(480px, 52vh, 660px);
   }
 
   .meet-panel {
-    padding: clamp(0.78rem, 1.2vw, 1.1rem);
+    padding: clamp(0.85rem, 1.3vw, 1.2rem);
   }
 
   .meet-panel--info {
-    grid-template-rows: minmax(120px, 0.33fr) minmax(110px, 0.27fr) minmax(120px, 0.36fr);
+    grid-template-rows: minmax(130px, 0.33fr) minmax(115px, 0.27fr) minmax(130px, 0.36fr);
   }
 
   .spotify-track-meta,

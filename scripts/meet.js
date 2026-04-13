@@ -503,7 +503,7 @@
     syncHeaderMeta();
 
     if (countdownTargetLabelEl) {
-      countdownTargetLabelEl.textContent = 'Showtime target • ' + targetState.label;
+      countdownTargetLabelEl.textContent = targetState.label;
     }
 
     if (meetingStartLabelEl) {
@@ -558,18 +558,18 @@
     }
 
     if (countdownContextEl && targetState) {
-      countdownContextEl.textContent = 'Single-shot countdown to ' + targetState.label + '. At 00:00, showtime takes over and stays there.';
+      countdownContextEl.textContent = 'Counting down to this week\u2019s meeting.';
     }
 
     if (statusBannerEl) {
       if (DEMO_SHOWTIME) {
-        statusBannerEl.textContent = 'Demo showtime mode is enabled.';
+        statusBannerEl.textContent = 'Demo mode is on.';
       } else if (totalMinutes <= 5) {
-        statusBannerEl.textContent = 'Final five minutes. Keep the QR visible and start gathering the room.';
+        statusBannerEl.textContent = 'Almost time — grab your seat.';
       } else if (totalMinutes <= 15) {
-        statusBannerEl.textContent = 'Countdown is live. This screen will transition once at zero.';
+        statusBannerEl.textContent = 'Meeting starts soon.';
       } else {
-        statusBannerEl.textContent = 'Countdown armed for showtime.';
+        statusBannerEl.textContent = 'See you Thursday.';
       }
     }
   }
@@ -584,7 +584,7 @@
     }
 
     if (statusBannerEl) {
-      statusBannerEl.textContent = 'Showtime has started.';
+      statusBannerEl.textContent = 'We\u2019re live — let\u2019s go.';
     }
 
     setPhase('showtime');
