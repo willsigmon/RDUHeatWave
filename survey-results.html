@@ -74,7 +74,7 @@
     border: 1px solid rgba(255,255,255,0.08); background: var(--surface-2);
     color: var(--text); font-family: inherit; font-size: 0.97rem; box-sizing: border-box;
   }
-  input[type="password"]:focus { outline: none; border-color: rgba(232,88,12,0.6); box-shadow: 0 0 0 3px rgba(232,88,12,0.15); }
+  input[type="password"]:focus-visible { outline: 2px solid rgba(232,88,12,0.55); outline-offset: 2px; border-color: rgba(232,88,12,0.6); box-shadow: 0 0 0 3px rgba(232,88,12,0.15); }
 
   button {
     border: 0; border-radius: 14px; padding: 14px 18px;
@@ -127,12 +127,12 @@
 <div class="login-shell" id="login-shell">
   <div class="login-card gradient-border">
     <div class="eyebrow">RDU Heatwave</div>
-    <h1 class="heat-text"><img src="/icons/iconscout/survey.svg" alt="" class="page-icon">Survey Results</h1>
+    <h1 class="heat-text"><img src="/icons/iconscout/survey.svg" alt="" class="page-icon" width="32" height="32">Survey Results</h1>
     <p>Aggregated member survey data. Admin passcode required.</p>
     <form id="login-form" style="display:grid;gap:14px;">
       <div class="field">
         <label for="passcode" style="font-size:0.9rem;color:var(--text-muted);">Passcode</label>
-        <input id="passcode" type="password" inputmode="numeric" autocomplete="current-password" placeholder="Enter passcode">
+        <input id="passcode" name="passcode" type="password" inputmode="numeric" autocomplete="current-password" placeholder="Enter passcode…" spellcheck="false">
       </div>
       <button type="submit">View Survey Results</button>
       <div class="error" id="login-error"></div>
@@ -145,7 +145,7 @@
     <div class="hero">
       <div>
         <div class="eyebrow">RDU Heatwave</div>
-        <h1 class="heat-text"><img src="/icons/iconscout/survey.svg" alt="" class="page-icon">Survey Results</h1>
+        <h1 class="heat-text"><img src="/icons/iconscout/survey.svg" alt="" class="page-icon" width="32" height="32">Survey Results</h1>
         <p class="muted" style="margin:6px 0 0;font-size:0.95rem;">Aggregated member feedback.</p>
       </div>
       <div class="actions">
@@ -153,7 +153,7 @@
         <button class="secondary" type="button" id="lock-btn">Lock</button>
       </div>
     </div>
-    <div id="results-content" class="loading">Loading results...</div>
+    <div id="results-content" class="loading">Loading results…</div>
   </div>
 </div>
 
@@ -366,7 +366,7 @@
 
   async function loadResults(passcode) {
     resultsContent.className = 'loading';
-    resultsContent.textContent = 'Loading results...';
+    resultsContent.textContent = 'Loading results…';
     loginError.textContent = '';
 
     var response = await fetch('/api/survey-results', {

@@ -128,14 +128,14 @@ select:focus, input[type="time"]:focus, input[type="date"]:focus {
 <noscript><div class="noscript-banner">JavaScript is required for this page to work.</div></noscript>
 <div class="page">
   <div class="eyebrow">RDU Heatwave</div>
-  <h1 class="heat-text"><img src="/icons/iconscout/bell-reminder.svg" alt="" class="page-icon">BizChat Reminder</h1>
+  <h1 class="heat-text"><img src="/icons/iconscout/bell-reminder.svg" alt="" class="page-icon" width="32" height="32">BizChat Reminder</h1>
   <p class="subtitle">Track your weekly BizChats and set daily nudges.</p>
 
   <!-- ── Member + Stats ─────────────────────────────────────────── -->
   <div class="card gradient-border">
     <div class="card-label">Your Name</div>
-    <select id="member-select" disabled>
-      <option value="">Loading members...</option>
+    <select id="member-select" name="memberSelect" disabled>
+      <option value="">Loading members…</option>
     </select>
     <div id="stats-area" class="hidden">
       <div class="stat-row">
@@ -161,13 +161,13 @@ select:focus, input[type="time"]:focus, input[type="date"]:focus {
     <div class="quick-log-form">
       <div>
         <label class="field-label" for="ql-met-with">Met with</label>
-        <select id="ql-met-with" disabled>
-          <option value="">Choose member...</option>
+        <select id="ql-met-with" name="quickLogMetWith" disabled>
+          <option value="">Choose member…</option>
         </select>
       </div>
       <div>
         <label class="field-label" for="ql-date">Date</label>
-        <input type="date" id="ql-date">
+        <input type="date" id="ql-date" name="quickLogDate">
       </div>
       <button class="btn btn-primary fire-btn" id="ql-submit" style="margin-top:4px">Log BizChat<div class="ember-wrap" aria-hidden="true"><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div></div></button>
       <div class="feedback" id="ql-feedback"></div>
@@ -183,11 +183,11 @@ select:focus, input[type="time"]:focus, input[type="date"]:focus {
 
     <div class="reminder-row">
       <label for="remind-am">Morning</label>
-      <input type="time" id="remind-am" value="09:00">
+      <input type="time" id="remind-am" name="remindMorning" value="09:00">
     </div>
     <div class="reminder-row">
       <label for="remind-pm">Afternoon</label>
-      <input type="time" id="remind-pm" value="15:00">
+      <input type="time" id="remind-pm" name="remindAfternoon" value="15:00">
     </div>
 
     <div class="btn-row">
@@ -335,7 +335,7 @@ select:focus, input[type="time"]:focus, input[type="date"]:focus {
   }
 
   function updateStats(name) {
-    if (!bizData) { $count.textContent = '...'; $nudge.classList.add('hidden'); return; }
+    if (!bizData) { $count.textContent = '…'; $nudge.classList.add('hidden'); return; }
     var col = -1;
     var lo = name.toLowerCase();
     for (var i = 0; i < bizData.cols.length; i++) {

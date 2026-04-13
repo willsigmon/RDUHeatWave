@@ -331,8 +331,9 @@
       line-height: 1.6;
     }
     .q-textarea::placeholder { color: var(--color-text-faint); }
-    .q-textarea:focus {
-      outline: none;
+    .q-textarea:focus-visible {
+      outline: 2px solid rgba(232, 88, 12, 0.45);
+      outline-offset: 2px;
       border-color: var(--color-primary);
       box-shadow: 0 0 0 3px rgba(232, 88, 12, 0.1);
     }
@@ -411,7 +412,7 @@
 
   <!-- HEADER -->
   <header class="site-header">
-    <a class="logo-mark" href="#">
+    <a class="logo-mark" href="/" aria-label="Back to the RDU Heatwave home page">
       <!-- Flame / Heatwave SVG logo -->
       <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-label="RDU Heatwave" xmlns="http://www.w3.org/2000/svg">
         <circle cx="16" cy="16" r="16" fill="#E8580C"/>
@@ -432,7 +433,7 @@
       <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#f47b4a"/></svg>
       Member Feedback · 2026
     </div>
-    <h1 class="heat-text"><img src="/icons/iconscout/survey.svg" alt="" class="page-icon">How's the <em>heat</em> treating you?</h1>
+    <h1 class="heat-text"><img src="/icons/iconscout/survey.svg" alt="" class="page-icon" width="32" height="32">How's the <em>heat</em> treating you?</h1>
     <p>A quick, anonymous pulse check from your RDU Heatwave team. Five minutes, ten questions — your honest feedback helps us fire on all cylinders.</p>
     <div class="hero-meta">
       <span class="hero-pill">
@@ -639,7 +640,7 @@
   </main>
 
   <footer class="site-footer">
-    <p>RDU Heatwave · <a href="https://twotwelvereferrals.com" target="_blank" rel="noopener">Two Twelve Referral Network</a> · Clouds Brewing Taproom, Raleigh NC · Thursdays 4 PM</p>
+    <p>RDU Heatwave · <a href="https://twotwelvereferrals.com" target="_blank" rel="noopener noreferrer">Two Twelve Referral Network</a> · Clouds Brewing Taproom, Raleigh NC · Thursdays 4 PM</p>
   </footer>
 </div>
 

@@ -2,7 +2,7 @@
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#E8580C">
 <meta name="robots" content="noindex, nofollow">
 <title>RDU Heatwave — Kiosk Check-In</title>
@@ -95,11 +95,11 @@
     </div>
 
     <div class="kiosk-brand">
-      <img src="heatwave-logo.png" alt="RDU Heatwave logo" class="kiosk-logo">
+      <img src="heatwave-logo.png" alt="RDU Heatwave logo" class="kiosk-logo" width="315" height="309" fetchpriority="high">
       <div class="kiosk-brand-text">
         <div class="kiosk-title heat-text">RDU HEATWAVE</div>
         <div class="kiosk-tt-badge">
-          <img src="twotwelve-logo.png" alt="Two Twelve" loading="lazy" decoding="async">
+          <img src="twotwelve-logo.png" alt="Two Twelve Referral Network" loading="lazy" decoding="async" width="254" height="95">
           <span>Two Twelve Referral Network</span>
         </div>
       </div>
@@ -108,7 +108,7 @@
     <!-- Countdown -->
     <div class="kiosk-countdown-section">
       <div class="kiosk-meeting-label">Next Meeting</div>
-      <div class="kiosk-meeting-datetime" id="meeting-datetime">Loading...</div>
+      <div class="kiosk-meeting-datetime" id="meeting-datetime">Loading…</div>
       <div class="kiosk-countdown-grid" id="countdown-grid">
         <div class="kiosk-cd-unit">
           <div class="kiosk-cd-value thermal-scan" id="cd-days">--</div>
@@ -154,8 +154,8 @@
     <!-- QR Code -->
     <div class="kiosk-qr-section">
       <div class="kiosk-qr-label">Scan to Check In</div>
-      <a href="https://rduheatwave.team" target="_blank" rel="noopener">
-        <img src="qr-rduheatwave.svg" alt="Scan to check in at rduheatwave.team" class="kiosk-qr-img" loading="lazy" decoding="async">
+      <a href="https://rduheatwave.team" target="_blank" rel="noopener noreferrer">
+        <img src="qr-rduheatwave.svg" alt="Scan to check in at rduheatwave.team" class="kiosk-qr-img" loading="lazy" decoding="async" width="264" height="264">
       </a>
     </div>
 
@@ -172,7 +172,7 @@
 
       <div class="kiosk-form-header">
         <div class="kiosk-form-title-row">
-          <img src="heatwave-logo.png" alt="" loading="lazy" decoding="async">
+          <img src="heatwave-logo.png" alt="" loading="lazy" decoding="async" width="315" height="309">
           <h1 class="kiosk-form-title">CHECK IN</h1>
         </div>
         <p class="kiosk-form-subtitle">Tap to type on screen, or use a keyboard if one is connected.</p>
@@ -196,7 +196,7 @@
           <div class="field">
             <label class="field-label" for="profession">Profession</label>
             <div class="profession-picker" id="profession-picker">
-              <input class="field-input" type="text" id="profession" name="profession" placeholder="Start typing..." maxlength="120" autocomplete="off" autocapitalize="words" spellcheck="false" required>
+              <input class="field-input" type="text" id="profession" name="profession" placeholder="Start typing…" maxlength="120" autocomplete="off" autocapitalize="words" spellcheck="false" required>
               <div class="profession-results" id="profession-results" role="listbox" aria-label="Industry suggestions"></div>
             </div>
             <div class="field-error" id="profession-error">Please enter your profession</div>
@@ -225,7 +225,7 @@
           <label class="field-label" for="guestOfSearch">Guest Of</label>
           <div class="guest-picker" id="guestOf-picker">
             <div class="guest-quick-picks" id="guestOf-quick" role="group" aria-label="Quick host picks"></div>
-            <input class="field-input guest-search-input" type="text" id="guestOfSearch" style="display:none" maxlength="120" autocomplete="off">
+            <input class="field-input guest-search-input" type="text" id="guestOfSearch" name="guestOfSearch" style="display:none" maxlength="120" autocomplete="off" spellcheck="false">
             <div class="guest-results" id="guestOf-results" role="listbox" aria-label="Guest suggestions" style="display:none"></div>
           </div>
           <input type="hidden" id="guestOf" name="guestOf">

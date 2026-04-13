@@ -114,8 +114,9 @@
     font-family: inherit;
   }
 
-  input:focus {
-    outline: none;
+  input:focus-visible {
+    outline: 2px solid rgba(232,88,12,0.55);
+    outline-offset: 2px;
     border-color: rgba(232,88,12,0.6);
     box-shadow: 0 0 0 3px rgba(232,88,12,0.15);
   }

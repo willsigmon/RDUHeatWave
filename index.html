@@ -63,6 +63,7 @@
 <body>
 <a href="#checkin-form" class="skip-link">Skip to check-in form</a>
 <noscript><div class="noscript-banner">JavaScript is required to use this page.</div></noscript>
+<h1 class="sr-only">RDU Heatwave visitor check-in & team overview</h1>
 
 <!-- Heat shimmer background -->
 <div class="heat-bg" aria-hidden="true" style="opacity: 0.35;">
@@ -154,17 +155,17 @@
         <div class="flame-particle"></div>
         <div class="flame-particle"></div>
       </div>
-      <img src="heatwave-logo.png" alt="RDU Heatwave logo">
+      <img src="heatwave-logo.png" alt="RDU Heatwave logo" width="315" height="309" fetchpriority="high">
     </div>
   </div>
 
-  <h1 class="form-title heat-text"><img src="/icons/iconscout/check-in.svg" alt="" class="page-icon">RDU HEATWAVE</h1>
+  <h2 class="form-title heat-text"><img src="/icons/iconscout/check-in.svg" alt="" class="page-icon" width="32" height="32">RDU HEATWAVE</h2>
   <p class="form-subtitle">The Raleigh-Durham team of the Two Twelve Referral Network</p>
 
   <!-- Countdown -->
   <div class="countdown-section" data-reveal id="countdown-section">
     <div class="meeting-label">Next Meeting</div>
-    <div class="meeting-datetime" id="meeting-datetime">Loading...</div>
+    <div class="meeting-datetime" id="meeting-datetime">Loading…</div>
     <div class="meeting-location" id="meeting-location">Clouds Brewing &bull; 1233 Front St, Raleigh NC</div>
     <div class="countdown-grid" id="countdown-grid">
       <div class="countdown-unit">
@@ -206,7 +207,7 @@
       <div class="field">
         <label class="field-label" for="profession">Profession</label>
         <div class="profession-picker" id="profession-picker">
-          <input class="field-input" type="text" id="profession" name="profession" placeholder="Start typing your industry..." maxlength="120" autocomplete="off" autocapitalize="words" spellcheck="false" required>
+          <input class="field-input" type="text" id="profession" name="profession" placeholder="Start typing your industry…" maxlength="120" autocomplete="off" autocapitalize="words" spellcheck="false" required>
           <div class="profession-results" id="profession-results" role="listbox" aria-label="Industry suggestions"></div>
         </div>
         <div class="field-error" id="profession-error">Please enter your profession</div>
@@ -235,7 +236,7 @@
       <label class="field-label" for="guestOfSearch">Guest Of</label>
       <div class="guest-picker" id="guestOf-picker">
         <div class="guest-quick-picks" id="guestOf-quick" role="group" aria-label="Quick host picks"></div>
-        <input class="field-input guest-search-input" type="text" id="guestOfSearch" placeholder="Search team member or type a name" maxlength="120" autocomplete="off" autocapitalize="words" spellcheck="false">
+        <input class="field-input guest-search-input" type="text" id="guestOfSearch" name="guestOfSearch" placeholder="Search team member or type a name…" maxlength="120" autocomplete="off" autocapitalize="words" spellcheck="false">
         <div class="guest-results" id="guestOf-results" role="listbox" aria-label="Guest suggestions"></div>
       </div>
       <input type="hidden" id="guestOf" name="guestOf">
@@ -289,7 +290,7 @@
   </div>
   <div class="menu-card" data-reveal="scale" style="margin-top: 2.5rem;">
     <div class="menu-header">
-      <img src="clouds-brewing-logo.png" alt="Clouds Brewing" loading="lazy" decoding="async">
+      <img src="clouds-brewing-logo.png" alt="Clouds Brewing" loading="lazy" decoding="async" width="641" height="643">
       <h2>Clouds Brewing</h2>
       <p>1233 Front St &bull; Raleigh, NC</p>
     </div>

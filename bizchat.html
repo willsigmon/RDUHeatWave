@@ -101,9 +101,10 @@ body {
   padding-right: 2.5rem;
 }
 
-.form-group select:focus,
-.form-group input:focus {
-  outline: none;
+.form-group select:focus-visible,
+.form-group input:focus-visible {
+  outline: 2px solid rgba(232, 88, 12, 0.55);
+  outline-offset: 2px;
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(232, 88, 12, 0.15);
 }
@@ -187,7 +188,7 @@ body {
 <main id="main-content">
 <div class="form-shell gradient-border">
   <div class="form-header">
-    <h1 class="heat-text"><img src="/icons/iconscout/coffee-chat.svg" alt="" class="page-icon">LOG A BIZCHAT</h1>
+    <h1 class="heat-text"><img src="/icons/iconscout/coffee-chat.svg" alt="" class="page-icon" width="32" height="32">LOG A BIZCHAT</h1>
     <p>Had a 1-on-1 with a team member? Log it here.<br>Each BizChat counts toward your weekly total.</p>
   </div>
 
@@ -313,7 +314,7 @@ body {
 
     submitBtn.disabled = true;
     var btnText = submitBtn.firstChild;
-    btnText.textContent = 'LOGGING...';
+    btnText.textContent = 'LOGGING…';
     setStatus('', '');
 
     fetch(FORM_ENDPOINT, {
