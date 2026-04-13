@@ -478,6 +478,8 @@
   var swipePeekRightLabel = document.getElementById('swipe-peek-right-label');
   var panelArrowLeft = document.getElementById('panel-arrow-left');
   var panelArrowRight = document.getElementById('panel-arrow-right');
+  var infoDrawer = document.getElementById('info-drawer');
+  var infoDrawerTab = document.getElementById('info-drawer-tab');
   var panelCount = slider ? slider.querySelectorAll('.panel').length : 0;
   var maxPanelIndex = Math.max(0, panelCount - 1);
   var currentPanel = 1; // Form is default (center)
@@ -580,12 +582,19 @@
   function goToPanel(index) {
     if (index < 0 || index > maxPanelIndex) return;
     currentPanel = index;
+    document.body.classList.toggle('about-panel-active', index === 0);
     setSliderOffset(-index * getPanelWidth());
     dots.forEach(function(d, i) {
       var isActive = i === index;
       d.classList.toggle('active', isActive);
       d.setAttribute('aria-current', isActive ? 'true' : 'false');
     });
+
+    if (index === 0 && infoDrawer && infoDrawer.classList.contains('open')) {
+      infoDrawer.classList.remove('open');
+      document.body.classList.remove('drawer-open');
+      if (infoDrawerTab) infoDrawerTab.setAttribute('aria-expanded', 'false');
+    }
 
     /* Haptic feedback on panel change */
     if (typeof HeatFX !== 'undefined') HeatFX.haptics.swipe();
@@ -906,7 +915,8 @@
       var isGovernance = options && options.governance;
       return members.map(function(member) {
         var isChair = isGovernance && member.chair === true;
-        var roleBadge = member.leader ? '<div class="team-member-role">' + escapeHtml(member.title) + '</div>' : '';
+        var roleText = member.leader ? member.title : (member.specialTitle ? member.title : '');
+        var roleBadge = roleText ? '<div class="team-member-role">' + escapeHtml(roleText) + '</div>' : '';
         var classes = 'team-member' + (member.leader ? ' leader' : '') + (isChair ? ' chair' : '');
         var photoHtml = '';
         if (member.photo) {
@@ -916,20 +926,14 @@
           var initials = member.name.split(' ').map(function(w) { return w.charAt(0); }).join('').toUpperCase();
           photoHtml = '<div class="team-member-photo team-member-initials">' + escapeHtml(initials) + '</div>';
         }
-        var kicker = member.leader ? (member.profession || member.title || '') : (member.title || '');
-        var specialty = member.leader
-          ? ''
-          : (member.profession && member.company
-            ? escapeHtml(member.profession) + ' · ' + escapeHtml(member.company)
-            : escapeHtml(member.profession || member.company || ''));
-        var companyLine = member.leader ? escapeHtml(member.company || '') : '';
+        var specialty = member.profession || member.title || '';
+        var companyLine = member.company || '';
         return '<div class="' + classes + '">' +
           photoHtml +
           '<div class="team-member-body">' +
-            '<div class="team-member-kicker">' + escapeHtml(kicker) + '</div>' +
             '<div class="team-member-name">' + escapeHtml(member.name) + '</div>' +
-            (specialty ? '<div class="team-member-specialty">' + specialty + '</div>' : '') +
-            (companyLine ? '<div class="team-member-company">' + companyLine + '</div>' : '') +
+            (specialty ? '<div class="team-member-specialty">' + escapeHtml(specialty) + '</div>' : '') +
+            (companyLine ? '<div class="team-member-company">' + escapeHtml(companyLine) + '</div>' : '') +
             roleBadge +
           '</div>' +
         '</div>';
@@ -937,21 +941,14 @@
     }
 
     teamGrid.innerHTML =
-      '<div class="team-grid-group">' +
+      '<div class="team-grid-group team-grid-group--governance">' +
         '<div class="team-grid-label">Governance Committee</div>' +
-        '<div class="team-grid-cards">' + renderMemberCards(governanceMembers, { governance: true }) + '</div>' +
+        '<div class="team-grid-cards team-grid-cards--governance">' + renderMemberCards(governanceMembers, { governance: true }) + '</div>' +
       '</div>' +
-      '<div class="team-grid-group">' +
+      '<div class="team-grid-group team-grid-group--members">' +
         '<div class="team-grid-label">Members</div>' +
-        '<div class="team-grid-cards">' + renderMemberCards(memberRoster) + '</div>' +
+        '<div class="team-grid-cards team-grid-cards--members">' + renderMemberCards(memberRoster) + '</div>' +
       '</div>';
-
-    /* Staggered entrance animation */
-    var cards = teamGrid.querySelectorAll('.team-member');
-    for (var ci = 0; ci < cards.length; ci++) {
-      cards[ci].style.animationDelay = (ci * 0.06) + 's';
-      cards[ci].classList.add('animate-in');
-    }
   }
 
   renderTeamGrid();
