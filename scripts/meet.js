@@ -72,6 +72,7 @@
   var spotifyStatusEl = document.getElementById('spotify-status');
   var spotifyToggleButtonEl = document.getElementById('spotify-toggle');
   var spotifyRestartButtonEl = document.getElementById('spotify-restart');
+  var spotifyExpandButtonEl = document.getElementById('spotify-expand');
   var spotifyOpenLinkEl = document.getElementById('spotify-open-link');
   var spotifyEmbedEl = document.getElementById('spotify-embed');
 
@@ -296,6 +297,21 @@
     }
   }
 
+  function setSpotifyExpanded(isExpanded) {
+    spotifyState.isExpanded = !!isExpanded;
+
+    if (spotifyDockEl) {
+      spotifyDockEl.classList.toggle('is-expanded', spotifyState.isExpanded);
+    }
+
+    if (spotifyExpandButtonEl) {
+      spotifyExpandButtonEl.textContent = spotifyState.isExpanded ? 'Hide controls' : 'More controls';
+      spotifyExpandButtonEl.setAttribute('aria-pressed', spotifyState.isExpanded ? 'true' : 'false');
+    }
+
+    window.setTimeout(updateFooterStackHeight, 30);
+  }
+
   function setSpotifyArtwork(src, alt) {
     if (!spotifyTrackArtEl) return;
     spotifyTrackArtEl.src = src || 'heatwave-logo.png';
@@ -498,6 +514,12 @@
         spotifyState.controller.restart();
       });
     }
+
+    if (spotifyExpandButtonEl) {
+      spotifyExpandButtonEl.addEventListener('click', function() {
+        setSpotifyExpanded(!spotifyState.isExpanded);
+      });
+    }
   }
 
   function initSpotifyDock() {
@@ -507,6 +529,7 @@
 
     mountSpotifyPresets();
     bindSpotifyButtons();
+    setSpotifyExpanded(false);
 
     var defaultPreset = getDefaultSpotifyPreset();
     if (defaultPreset) {
