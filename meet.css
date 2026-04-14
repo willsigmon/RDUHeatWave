@@ -257,7 +257,7 @@ img {
   padding:
     clamp(0.8rem, 1.4vw, 1.3rem)
     var(--safe-right)
-    calc(var(--footer-stack-height) + var(--safe-bottom) + 0.5rem)
+    0
     var(--safe-left);
 }
 
