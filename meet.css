@@ -514,12 +514,6 @@ img {
   display: flex;
   flex-direction: column;
   gap: clamp(0.6rem, 1vw, 0.9rem);
-  overflow-y: auto;
-  scrollbar-width: none;
-}
-
-.meet-panel--info::-webkit-scrollbar {
-  display: none;
 }
 
 .meet-panel--countdown {
@@ -878,6 +872,14 @@ img {
   height: auto;
 }
 
+.qr-panel__context {
+  margin: 0;
+  font-size: clamp(0.88rem, 0.95vw, 1rem);
+  color: var(--color-text-muted);
+  text-wrap: balance;
+  max-width: 26ch;
+}
+
 .qr-panel__easy-line {
   margin: 0;
   font-size: clamp(0.92rem, 1vw, 1.05rem);
@@ -886,7 +888,15 @@ img {
   text-wrap: balance;
 }
 
+.qr-panel__footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  align-items: center;
+}
+
 .qr-panel__note {
+  margin: 0;
   max-width: 28ch;
 }
 
@@ -1337,6 +1347,14 @@ body.phase-showtime .heat-waves {
 
   .countdown-intro {
     gap: 0.35rem;
+  }
+
+  .meet-events {
+    display: none;
+  }
+
+  .meet-inline-list {
+    display: none;
   }
 
   .spotify-track-meta,
