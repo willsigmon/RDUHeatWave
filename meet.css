@@ -90,8 +90,8 @@ img {
 }
 
 .brand-logo--two12 {
-  max-width: clamp(9rem, 15vw, 13rem);
-  max-height: clamp(2.25rem, 4vw, 3rem);
+  max-width: clamp(10rem, 16vw, 15rem);
+  max-height: clamp(2.8rem, 4.5vw, 3.5rem);
   filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.2));
 }
 
@@ -126,6 +126,7 @@ img {
 .header-left {
   gap: clamp(0.8rem, 1.6vw, 1.3rem);
   min-width: 0;
+  flex-shrink: 0;
 }
 
 .header-branding {
@@ -251,6 +252,8 @@ img {
 .meet-shell {
   position: relative;
   z-index: 3;
+  display: flex;
+  flex-direction: column;
   padding:
     clamp(0.8rem, 1.4vw, 1.3rem)
     var(--safe-right)
@@ -489,7 +492,8 @@ img {
   gap: clamp(1.1rem, 2vw, 2rem);
   align-items: stretch;
   width: min(100%, var(--max-layout-width, 1800px));
-  min-height: clamp(540px, 64vh, 1100px);
+  flex: 1 1 0;
+  min-height: 0;
   margin: 0 auto;
 }
 
@@ -594,10 +598,9 @@ img {
 }
 
 .speaker-card {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: clamp(0.85rem, 1.2vw, 1.1rem);
+  display: flex;
   align-items: center;
+  gap: clamp(0.85rem, 1.2vw, 1.1rem);
   min-width: 0;
 }
 
@@ -1177,10 +1180,6 @@ body.phase-showtime .heat-waves {
 }
 
 @media (max-height: 1100px) {
-  .lobby {
-    min-height: clamp(480px, 52vh, 660px);
-  }
-
   .meet-panel {
     padding: clamp(0.85rem, 1.3vw, 1.2rem);
   }
@@ -1327,10 +1326,6 @@ body.phase-showtime .heat-waves {
     max-height: 188px;
   }
 
-  .lobby {
-    min-height: clamp(660px, 66vh, 920px);
-  }
-
   .meet-panel {
     padding: clamp(1.15rem, 1.5vw, 1.95rem);
   }
@@ -1430,7 +1425,6 @@ body.phase-showtime .heat-waves {
   }
 
   .lobby {
-    min-height: clamp(960px, 76vh, 1460px);
     gap: clamp(1.2rem, 1.5vw, 2rem);
   }
 
