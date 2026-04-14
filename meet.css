@@ -489,6 +489,7 @@ img {
 .lobby {
   display: grid;
   grid-template-columns: minmax(320px, 0.85fr) minmax(360px, 1.25fr) minmax(280px, 0.9fr);
+  grid-template-rows: minmax(0, 1fr);
   gap: clamp(1.1rem, 2vw, 2rem);
   align-items: stretch;
   width: min(100%, var(--max-layout-width, 1800px));
@@ -500,7 +501,7 @@ img {
 .meet-panel {
   position: relative;
   min-width: 0;
-  height: 100%;
+  min-height: 0;
   overflow: hidden;
   padding: clamp(1.1rem, 2vw, 2rem);
   border-radius: var(--radius-2xl);
