@@ -257,7 +257,7 @@ img {
   padding:
     clamp(0.8rem, 1.4vw, 1.3rem)
     var(--safe-right)
-    calc(var(--heat-wave-max-height) + var(--safe-bottom) + 0.9rem)
+    calc(var(--footer-stack-height) + var(--safe-bottom) + 0.5rem)
     var(--safe-left);
 }
 
@@ -510,9 +510,15 @@ img {
 }
 
 .meet-panel--info {
-  display: grid;
-  grid-template-rows: minmax(140px, 0.34fr) minmax(120px, 0.28fr) minmax(140px, 0.38fr);
+  display: flex;
+  flex-direction: column;
   gap: clamp(0.85rem, 1.4vw, 1.2rem);
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.meet-panel--info::-webkit-scrollbar {
+  display: none;
 }
 
 .meet-panel--countdown {
@@ -534,11 +540,11 @@ img {
   justify-content: center;
   gap: clamp(0.55rem, 1vw, 0.9rem);
   min-width: 0;
+  flex-shrink: 0;
   padding: clamp(1rem, 1.4vw, 1.3rem);
   border-radius: var(--radius-xl);
   border: 1px solid rgba(232, 88, 12, 0.18);
   background: linear-gradient(180deg, rgba(48, 39, 34, 0.74), rgba(34, 28, 24, 0.82));
-  overflow: hidden;
 }
 
 .meet-block--venue {
@@ -1184,10 +1190,6 @@ body.phase-showtime .heat-waves {
     padding: clamp(0.85rem, 1.3vw, 1.2rem);
   }
 
-  .meet-panel--info {
-    grid-template-rows: minmax(130px, 0.33fr) minmax(115px, 0.27fr) minmax(130px, 0.36fr);
-  }
-
   .spotify-track-meta,
   .spotify-hint,
   .spotify-control-note {
@@ -1238,9 +1240,6 @@ body.phase-showtime .heat-waves {
     grid-template-columns: 1fr;
   }
 
-  .meet-panel--info {
-    grid-template-rows: repeat(3, minmax(0, auto));
-  }
 
   .countdown-display {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1432,9 +1431,6 @@ body.phase-showtime .heat-waves {
     padding: clamp(1.45rem, 1.7vw, 2.4rem);
   }
 
-  .meet-panel--info {
-    grid-template-rows: minmax(220px, 0.34fr) minmax(180px, 0.28fr) minmax(240px, 0.38fr);
-  }
 
   .meet-block {
     padding: clamp(1rem, 1.15vw, 1.35rem);
