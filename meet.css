@@ -1188,9 +1188,155 @@ body.phase-showtime .heat-waves {
   }
 }
 
-@media (max-height: 1100px) {
+/* ── Laptop: viewport height ≤ 960px (MacBook + browser chrome) ── */
+@media (max-height: 960px) {
+  .header {
+    padding-top: calc(var(--safe-top) + 0.25rem);
+    padding-bottom: 0.5rem;
+  }
+
+  .header-title {
+    font-size: clamp(1.6rem, 2.6vw, 2.4rem);
+  }
+
+  .header-time {
+    font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  }
+
+  .brand-logo--main {
+    max-width: clamp(3rem, 5vw, 4rem);
+    max-height: clamp(3rem, 5vw, 4rem);
+  }
+
+  .brand-logo--two12 {
+    max-width: clamp(7rem, 11vw, 9rem);
+    max-height: clamp(1.8rem, 3vw, 2.2rem);
+  }
+
+  .lobby {
+    gap: clamp(0.6rem, 1.2vw, 1rem);
+  }
+
   .meet-panel {
-    padding: clamp(0.85rem, 1.3vw, 1.2rem);
+    padding: clamp(0.6rem, 1vw, 0.85rem);
+  }
+
+  .meet-panel--info {
+    gap: clamp(0.4rem, 0.7vw, 0.6rem);
+  }
+
+  .meet-block {
+    gap: clamp(0.25rem, 0.5vw, 0.4rem);
+    padding: clamp(0.5rem, 0.8vw, 0.7rem);
+  }
+
+  .meet-block__eyebrow,
+  .qr-panel__eyebrow,
+  .countdown-kicker {
+    font-size: clamp(0.65rem, 0.75vw, 0.8rem);
+  }
+
+  .meet-block__title,
+  .qr-panel__heading {
+    font-size: clamp(1.2rem, 1.6vw, 1.6rem);
+  }
+
+  .meet-block__body,
+  .schedule-row__label,
+  .meet-inline-list,
+  .meet-events__list,
+  .qr-panel__note,
+  .countdown-context {
+    font-size: clamp(0.78rem, 0.85vw, 0.9rem);
+    line-height: 1.4;
+  }
+
+  .speaker-card__photo,
+  .speaker-card__fallback {
+    width: clamp(3rem, 4.5vw, 3.8rem);
+    height: clamp(3rem, 4.5vw, 3.8rem);
+  }
+
+  .speaker-card__name {
+    font-size: clamp(0.95rem, 1.1vw, 1.1rem);
+  }
+
+  .speaker-card__company {
+    font-size: clamp(0.78rem, 0.85vw, 0.88rem);
+    margin-bottom: 0.2rem;
+  }
+
+  .schedule-row {
+    gap: 0.4rem;
+  }
+
+  .schedule-row__time {
+    font-size: clamp(0.78rem, 0.85vw, 0.88rem);
+  }
+
+  .countdown-header {
+    font-size: clamp(1.6rem, 3vw, 2.8rem);
+  }
+
+  .countdown-target {
+    font-size: clamp(0.82rem, 0.95vw, 0.95rem);
+  }
+
+  .countdown-display {
+    gap: clamp(0.4rem, 0.8vw, 0.7rem);
+    margin: clamp(0.5rem, 1vw, 0.8rem) 0;
+  }
+
+  .countdown-value {
+    font-size: clamp(3rem, 6.5vw, 5.5rem);
+    padding: clamp(0.4rem, 0.8vw, 0.65rem) clamp(0.3rem, 0.6vw, 0.5rem);
+  }
+
+  .countdown-label {
+    margin-top: 0.3rem;
+    font-size: clamp(0.72rem, 0.8vw, 0.85rem);
+  }
+
+  .status-banner {
+    margin-top: 0.5rem;
+    padding: 0.45rem 0.75rem;
+    font-size: clamp(0.78rem, 0.85vw, 0.88rem);
+  }
+
+  .countdown-support-grid {
+    margin-top: 0.6rem;
+    gap: clamp(0.4rem, 0.7vw, 0.6rem);
+  }
+
+  .countdown-support-card {
+    padding: clamp(0.45rem, 0.7vw, 0.65rem);
+  }
+
+  .support-label {
+    font-size: clamp(0.65rem, 0.75vw, 0.78rem);
+  }
+
+  .support-value {
+    font-size: clamp(0.82rem, 0.9vw, 0.95rem);
+  }
+
+  .meet-panel--qr {
+    gap: clamp(0.4rem, 0.7vw, 0.6rem);
+  }
+
+  .qr-panel__img,
+  .showtime-qr-card__img {
+    width: clamp(180px, 14vw, 240px);
+    min-width: 160px;
+    min-height: 160px;
+  }
+
+  .qr-panel__easy-line {
+    font-size: clamp(0.78rem, 0.85vw, 0.88rem);
+  }
+
+  .countdown-intro {
+    gap: 0.35rem;
   }
 
   .spotify-track-meta,
@@ -1200,7 +1346,12 @@ body.phase-showtime .heat-waves {
   }
 
   .spotify-meta-row {
-    margin-top: 0.4rem;
+    margin-top: 0.3rem;
+  }
+
+  .ticker-content {
+    padding: 0.45rem 0;
+    font-size: clamp(0.85rem, 1.1vw, 1.1rem);
   }
 }
 
