@@ -562,10 +562,11 @@
     }
 
     if (statusBannerEl) {
+      var totalMinutes = Math.floor(totalSeconds / 60);
       if (DEMO_SHOWTIME) {
         statusBannerEl.textContent = 'Demo mode is on.';
       } else if (totalMinutes <= 5) {
-        statusBannerEl.textContent = 'Almost time — grab your seat.';
+        statusBannerEl.textContent = 'Almost time \u2014 grab your seat.';
       } else if (totalMinutes <= 15) {
         statusBannerEl.textContent = 'Meeting starts soon.';
       } else {
