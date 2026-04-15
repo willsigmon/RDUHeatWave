@@ -123,6 +123,12 @@ img {
   align-items: center;
 }
 
+.header-two12 {
+  background: #fff;
+  padding: clamp(0.28rem, 0.5vw, 0.45rem) clamp(0.5rem, 0.85vw, 0.75rem);
+  border-radius: 0.5rem;
+}
+
 .header-left {
   gap: clamp(0.8rem, 1.6vw, 1.3rem);
   min-width: 0;
@@ -836,14 +842,14 @@ img {
 }
 
 .meet-panel--qr {
-  gap: clamp(0.85rem, 1.2vw, 1.1rem);
+  gap: clamp(0.55rem, 0.85vw, 0.85rem);
   text-align: center;
   align-items: center;
 }
 
 .qr-panel__heading {
   margin: 0;
-  font-size: clamp(2rem, 3vw, 3.25rem);
+  font-size: clamp(1.75rem, 2.5vw, 2.75rem);
   line-height: 0.92;
 }
 
@@ -858,7 +864,7 @@ img {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.9rem;
+  padding: 0.6rem;
   border-radius: 1.5rem;
   background: #fff;
   box-shadow: 0 22px 44px rgba(0, 0, 0, 0.28);
@@ -866,9 +872,9 @@ img {
 
 .qr-panel__img,
 .showtime-qr-card__img {
-  width: clamp(280px, 18vw, 340px);
-  min-width: 280px;
-  min-height: 280px;
+  width: clamp(200px, 15vw, 280px);
+  min-width: 140px;
+  min-height: 0;
   height: auto;
 }
 
