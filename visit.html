@@ -29,6 +29,36 @@
 <link rel="stylesheet" href="/about.css">
 
 <style>
+/* ── Visit page overrides ── */
+section { padding: 2.5rem 1.5rem; }
+.hero { min-height: 44vh; padding: 3.5rem 1.5rem 2.5rem; }
+.hero-title { font-size: clamp(2.8rem, 2.5rem + 4vw, 6rem); }
+.hero-temp { font-size: clamp(4rem, 3rem + 3vw, 7rem); }
+.hero-tagline { margin-top: 0.6rem; }
+.section-title { margin-bottom: 0.75rem; }
+.section-body { font-size: 0.95rem; line-height: 1.6; }
+.cards-grid { gap: 0.85rem; margin-top: 1.25rem; }
+.card { padding: 1.15rem 1.25rem; }
+.card h3 { font-size: 1.15rem; margin-bottom: 0.3rem; }
+.card p { font-size: 0.85rem; line-height: 1.5; }
+.card .detail { margin-top: 0.5rem; font-size: 0.75rem; }
+.temp-callout { margin: 1rem 0; padding: 0.75rem 1.15rem; }
+.temp-callout .deg { font-size: 2rem; }
+.temp-callout .label { font-size: 0.85rem; }
+.team-grid { gap: 0.75rem; margin-top: 1.25rem; }
+.member-card { padding: 0.85rem 1rem; gap: 0.7rem; }
+.member-photo { width: 44px; height: 44px; }
+.member-name { font-size: 1.05rem; }
+.member-title { font-size: 0.75rem; }
+.member-company { font-size: 0.78rem; margin-top: 0.2rem; }
+.venue-block { margin-top: 1.25rem; padding: 1.25rem 1.5rem; gap: 1.25rem; }
+.venue-logo { width: 4.5rem; height: 4.5rem; }
+.venue-info h3 { font-size: 1.35rem; }
+.venue-schedule { margin-top: 0.6rem; padding: 0.45rem 0.85rem; font-size: 1rem; }
+.cta-section { padding: 2.5rem 1.5rem 3rem; }
+.shimmer-line { margin: 0; }
+.site-footer { padding: 1.25rem 1rem; }
+
 .two12-link {
   color: var(--color-primary);
   text-decoration: none;
@@ -43,26 +73,26 @@
 /* Seat availability grid */
 .seat-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
-  gap: 1rem;
-  margin-top: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: 0.6rem;
+  margin-top: 1.25rem;
 }
 .seat-card {
-  padding: 1rem 1.25rem;
+  padding: 0.65rem 0.85rem;
   background: var(--color-surface);
   border: 1px solid var(--color-divider);
   border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.55rem;
 }
 .seat-card--open {
   border-color: rgba(91, 168, 71, 0.4);
   background: rgba(91, 168, 71, 0.05);
 }
 .seat-dot {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   flex-shrink: 0;
   background: var(--color-text-faint);
@@ -74,14 +104,14 @@
 .seat-info { min-width: 0; }
 .seat-title {
   font-family: var(--font-display);
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   letter-spacing: 0.02em;
   line-height: 1.2;
 }
 .seat-member {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--color-text-muted);
-  margin-top: 0.2rem;
+  margin-top: 0.1rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -89,6 +119,38 @@
 .seat-card--open .seat-member {
   color: var(--color-success);
   font-weight: 600;
+}
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  section { padding: 2rem 1rem; }
+  .hero { min-height: 36vh; padding: 2.5rem 1rem 2rem; }
+  .hero-title { font-size: clamp(2.2rem, 10vw, 3.5rem); }
+  .hero-tagline { font-size: 0.9rem; max-width: 22rem; }
+  .section-title { font-size: clamp(1.6rem, 1.2rem + 2vw, 2.25rem); }
+  .section-body { font-size: 0.88rem; }
+  .cards-grid { grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-top: 1rem; }
+  .card { padding: 0.85rem; }
+  .card h3 { font-size: 1rem; }
+  .card p { font-size: 0.8rem; }
+  .card .detail { font-size: 0.7rem; }
+  .temp-callout { flex-direction: column; gap: 0.25rem; padding: 0.65rem 1rem; }
+  .temp-callout .deg { font-size: 1.6rem; }
+  .temp-callout .label { font-size: 0.8rem; }
+  .team-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+  .member-card { padding: 0.65rem 0.75rem; gap: 0.5rem; flex-direction: column; align-items: flex-start; }
+  .member-photo { width: 36px; height: 36px; }
+  .member-name { font-size: 0.92rem; }
+  .seat-grid { grid-template-columns: 1fr 1fr; gap: 0.45rem; }
+  .seat-card { padding: 0.5rem 0.65rem; }
+  .seat-title { font-size: 0.82rem; }
+  .seat-member { font-size: 0.7rem; }
+  .venue-block { padding: 1rem; gap: 1rem; }
+  .venue-logo { width: 3.5rem; height: 3.5rem; }
+  .venue-info h3 { font-size: 1.15rem; }
+  .venue-schedule { font-size: 0.9rem; padding: 0.4rem 0.75rem; }
+  .cta-section { padding: 2rem 1rem; }
+  .btn-cta { font-size: 1.1rem; padding: 0.75rem 2rem; }
 }
 </style>
 
@@ -153,8 +215,8 @@
   <h1 class="hero-title heat-text">
     <img src="/icons/iconscout/fire.svg" alt="" class="page-icon page-icon--lg" width="48" height="48">YOU&rsquo;RE INVITED
   </h1>
-  <p class="hero-tagline">Visit RDU Heatwave &mdash; the Raleigh-Durham team of the Two Twelve Referral Network</p>
-  <a href="/" class="btn-cta fire-btn" style="margin-top: 2rem;" data-haptic="nudge">
+  <p class="hero-tagline">RDU Heatwave &mdash; Raleigh-Durham&rsquo;s Two Twelve Referral Network team. Thursdays at 4&nbsp;PM, Clouds Brewing.</p>
+  <a href="/" class="btn-cta fire-btn" style="margin-top: 1.25rem;" data-haptic="nudge">
     Register to Visit<span class="ember" aria-hidden="true"></span><span class="ember" aria-hidden="true"></span><span class="ember" aria-hidden="true"></span>
   </a>
 </section>
@@ -165,31 +227,30 @@
 <section id="expect" data-reveal>
   <p class="section-label">Your First Visit</p>
   <h2 class="section-title">What to Expect</h2>
-  <p class="section-body">Visiting RDU Heatwave is low-pressure and high-value. Here&rsquo;s how the experience flows:</p>
   <div class="cards-grid">
     <div class="card gradient-border">
       <img src="/icons/iconscout/coffee-chat.svg" alt="" class="hw-icon-img" aria-hidden="true" width="32" height="32">
       <h3>Arrive at 3:45</h3>
-      <p>Open networking starts at 3:45&nbsp;PM. Come early, grab a drink at the bar, and meet a few members before things kick off.</p>
-      <span class="detail">Clouds Brewing &middot; 1233 Front St, Raleigh</span>
+      <p>Grab a drink, meet members before kickoff.</p>
+      <span class="detail">Clouds Brewing &middot; Raleigh</span>
     </div>
     <div class="card gradient-border">
       <img src="/icons/iconscout/chat-bubble.svg" alt="" class="hw-icon-img" aria-hidden="true" width="32" height="32">
       <h3>Introduce Yourself</h3>
-      <p>Every visitor gets 60 seconds to introduce their business to the full group. Come ready with your elevator pitch &mdash; keep it sharp.</p>
-      <span class="detail">60 seconds &middot; No slides required</span>
+      <p>60 seconds to pitch your business to the room.</p>
+      <span class="detail">No slides required</span>
     </div>
     <div class="card gradient-border">
       <img src="/icons/iconscout/handshake.svg" alt="" class="hw-icon-img" aria-hidden="true" width="32" height="32">
       <h3>See Referrals Move</h3>
-      <p>Watch members pass real, qualified referrals to each other in the room. This is a working meeting &mdash; not a business card swap.</p>
-      <span class="detail">Structured &middot; Tracked &middot; Accountable</span>
+      <p>Watch real, qualified referrals pass in the room.</p>
+      <span class="detail">Structured &middot; Tracked</span>
     </div>
     <div class="card gradient-border">
       <img src="/icons/iconscout/fire.svg" alt="" class="hw-icon-img" aria-hidden="true" width="32" height="32">
-      <h3>Stay for a Drink</h3>
-      <p>After the meeting, hang around and connect one-on-one. Clouds Brewing provides our space at no cost &mdash; supporting them keeps this deal alive.</p>
-      <span class="detail">5:00&nbsp;PM onward &middot; Optional but encouraged</span>
+      <h3>Stay &amp; Connect</h3>
+      <p>Hang around after and build relationships 1-on-1.</p>
+      <span class="detail">5&nbsp;PM onward</span>
     </div>
   </div>
 </section>
@@ -201,17 +262,11 @@
   <p class="section-label">The Network</p>
   <h2 class="section-title">Two Twelve Referral Network</h2>
   <div class="section-body">
-    <p>RDU Heatwave is a local team of the <strong>Two Twelve Referral Network</strong> &mdash; a national organization built on the principle that one extra degree makes all the difference.</p>
     <div class="temp-callout">
       <span class="deg">212&deg;F</span>
-      <span class="label">Water boils. Steam powers a locomotive. One degree beyond ordinary changes everything.</span>
+      <span class="label">Water boils. Steam powers a locomotive. One extra degree changes everything.</span>
     </div>
-    <p>The 212 platform tracks every referral given, received, and converted so membership has measurable ROI. Each seat is exclusive: one professional per category, no internal competition &mdash; only collaboration.</p>
-    <p style="margin-top: 1.25rem;">
-      <a href="https://www.twotwelvereferrals.com/teams/rdu-heatwave/" target="_blank" rel="noopener noreferrer" class="two12-link">
-        View our full team profile on twotwelvereferrals.com &rarr;
-      </a>
-    </p>
+    <p>Every referral is tracked. Every seat is exclusive &mdash; one professional per category, zero competition. <a href="https://www.twotwelvereferrals.com/teams/rdu-heatwave/" target="_blank" rel="noopener noreferrer" class="two12-link">Learn more &rarr;</a></p>
   </div>
 </section>
 
@@ -221,7 +276,7 @@
 <section id="team" data-reveal>
   <p class="section-label">Who You&rsquo;ll Meet</p>
   <h2 class="section-title">The Team</h2>
-  <p class="section-body">One seat per profession &mdash; no competition within the team, only collaboration. These are the people who will root for your business.</p>
+  <p class="section-body">One seat per profession. No competition &mdash; only collaboration.</p>
   <div class="team-grid" id="team-grid">
     <div class="team-loading">Loading team roster&hellip;</div>
   </div>
@@ -250,7 +305,7 @@
 <section id="seat" data-reveal>
   <p class="section-label">Exclusive Seating</p>
   <h2 class="section-title">Is There a Seat for You?</h2>
-  <p class="section-body">Each profession gets exactly one seat at the table. If your category is open, you could be the next member. If it&rsquo;s filled, you&rsquo;re still welcome to visit &mdash; referrals flow to guests too.</p>
+  <p class="section-body">If your category is open, you could be next. Filled seats still welcome visitors &mdash; referrals flow to guests too.</p>
   <div class="seat-grid" id="seat-grid">
     <div class="team-loading">Loading seats&hellip;</div>
   </div>
@@ -261,7 +316,7 @@
 <!-- CTA -->
 <section class="cta-section" id="register" data-reveal="scale">
   <h2 class="section-title">Ready to Visit?</h2>
-  <p class="section-body" style="margin: 0 auto 2rem; text-align: center;">Your first visit is free. Register so we can make sure you have a great experience.</p>
+  <p class="section-body" style="margin: 0 auto 1.25rem; text-align: center;">Your first visit is free.</p>
   <a href="/" class="btn-cta fire-btn" data-haptic="nudge">
     Register to Visit<span class="ember" aria-hidden="true"></span><span class="ember" aria-hidden="true"></span><span class="ember" aria-hidden="true"></span>
   </a>
