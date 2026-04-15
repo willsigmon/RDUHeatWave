@@ -192,6 +192,14 @@
       "dest": "/privacy.html"
     },
     {
+      "src": "/visit",
+      "dest": "/visit.html"
+    },
+    {
+      "src": "/visit.html",
+      "dest": "/visit.html"
+    },
+    {
       "src": "/member/(?<name>[^/]+)",
       "dest": "/api/member-card.js?name=$name"
     },

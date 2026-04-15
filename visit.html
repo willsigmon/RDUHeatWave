@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#E8580C">
+<title>Visit RDU Heatwave — 212 Referral Network</title>
+<meta name="description" content="Come visit RDU Heatwave, a 212 Referral Network team in Raleigh-Durham. Thursdays at 4:00 PM ET at Clouds Brewing. Your first visit is free.">
+<link rel="canonical" href="https://rduheatwave.team/visit">
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" href="/icons/heatwave-icon-192.png">
+<link rel="apple-touch-icon" href="/icons/heatwave-icon-180.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Visit RDU Heatwave — 212 Referral Network">
+<meta property="og:description" content="Come visit RDU Heatwave. Thursdays at 4:00 PM ET at Clouds Brewing, Raleigh NC. Your first visit is free.">
+<meta property="og:url" content="https://rduheatwave.team/visit">
+<meta property="og:image" content="https://rduheatwave.team/icons/heatwave-icon-512.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Visit RDU Heatwave — 212 Referral Network">
+<meta name="twitter:description" content="Come visit RDU Heatwave. Thursdays at 4:00 PM ET at Clouds Brewing, Raleigh NC. Your first visit is free.">
+<meta name="twitter:image" content="https://rduheatwave.team/icons/heatwave-icon-512.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared.css">
+<link rel="stylesheet" href="/about.css">
+
+<style>
+.two12-link {
+  color: var(--color-primary);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(232, 88, 12, 0.35);
+  transition: border-color 0.2s, color 0.2s;
+}
+.two12-link:hover {
+  color: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+}
+
+/* Seat availability grid */
+.seat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+.seat-card {
+  padding: 1rem 1.25rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.seat-card--open {
+  border-color: rgba(91, 168, 71, 0.4);
+  background: rgba(91, 168, 71, 0.05);
+}
+.seat-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--color-text-faint);
+}
+.seat-dot--open {
+  background: var(--color-success);
+  box-shadow: 0 0 6px rgba(91, 168, 71, 0.5);
+}
+.seat-info { min-width: 0; }
+.seat-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+.seat-member {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-top: 0.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.seat-card--open .seat-member {
+  color: var(--color-success);
+  font-weight: 600;
+}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Event",
+  "name": "Visit RDU Heatwave — 212 Referral Network",
+  "description": "Come visit RDU Heatwave, a 212 Referral Network team in Raleigh-Durham, NC. Your first visit is free.",
+  "url": "https://rduheatwave.team/visit",
+  "location": {
+    "@type": "Place",
+    "name": "Clouds Brewing",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "1233 Front St",
+      "addressLocality": "Raleigh",
+      "addressRegion": "NC",
+      "postalCode": "27609"
+    }
+  },
+  "organizer": {
+    "@type": "Organization",
+    "name": "RDU Heatwave",
+    "url": "https://rduheatwave.team"
+  }
+}
+</script>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<div class="heat-bg" aria-hidden="true">
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+  <div class="heat-line"></div>
+</div>
+
+<noscript>
+  <div class="noscript-banner">
+    This page requires JavaScript to load the team roster. Other content is still visible.
+  </div>
+</noscript>
+
+<!-- Sticky Nav -->
+<nav class="site-nav" aria-label="Page sections">
+  <a href="/visit" class="nav-brand">RDU HEATWAVE</a>
+  <a href="#expect">What to Expect</a>
+  <a href="#team">Team</a>
+  <a href="#venue">Venue</a>
+  <a href="#register">Register</a>
+</nav>
+
+<main id="main-content">
+
+<!-- Hero -->
+<section class="hero" id="top">
+  <div class="hero-temp" aria-hidden="true">212&deg;</div>
+  <h1 class="hero-title heat-text">
+    <img src="/icons/iconscout/fire.svg" alt="" class="page-icon page-icon--lg" width="48" height="48">YOU&rsquo;RE INVITED
+  </h1>
+  <p class="hero-tagline">Visit RDU Heatwave &mdash; the Raleigh-Durham team of the Two Twelve Referral Network</p>
+  <a href="/" class="btn-cta fire-btn" style="margin-top: 2rem;" data-haptic="nudge">
+    Register to Visit<span class="ember" aria-hidden="true"></span><span class="ember" aria-hidden="true"></span><span class="ember" aria-hidden="true"></span>
+  </a>
+</section>
+
+<div class="shimmer-line" aria-hidden="true"></div>
+
+<!-- What to Expect -->
+<section id="expect" data-reveal>
+  <p class="section-label">Your First Visit</p>
+  <h2 class="section-title">What to Expect</h2>
+  <p class="section-body">Visiting RDU Heatwave is low-pressure and high-value. Here&rsquo;s how the experience flows:</p>
+  <div class="cards-grid">
+    <div class="card gradient-border">
+      <img src="/icons/iconscout/coffee-chat.svg" alt="" class="hw-icon-img" aria-hidden="true" width="32" height="32">
+      <h3>Arrive at 3:45</h3>
+      <p>Open networking starts at 3:45&nbsp;PM. Come early, grab a drink at the bar, and meet a few members before things kick off.</p>
+      <span class="detail">Clouds Brewing &middot; 1233 Front St, Raleigh</span>
+    </div>
+    <div class="card gradient-border">
+      <img src="/icons/iconscout/chat-bubble.svg" alt="" class="hw-icon-img" aria-hidden="true" width="32" height="32">
+      <h3>Introduce Yourself</h3>
+      <p>Every visitor gets 60 seconds to introduce their business to the full group. Come ready with your elevator pitch &mdash; keep it sharp.</p>
+      <span class="detail">60 seconds &middot; No slides required</span>
+    </div>
+    <div class="card gradient-border">
+      <img src="/icons/iconscout/handshake.svg" alt="" class="hw-icon-img" aria-hidden="true" width="32" height="32">
+      <h3>See Referrals Move</h3>
+      <p>Watch members pass real, qualified referrals to each other in the room. This is a working meeting &mdash; not a business card swap.</p>
+      <span class="detail">Structured &middot; Tracked &middot; Accountable</span>
+    </div>
+    <div class="card gradient-border">
+      <img src="/icons/iconscout/fire.svg" alt="" class="hw-icon-img" aria-hidden="true" width="32" height="32">
+      <h3>Stay for a Drink</h3>
+      <p>After the meeting, hang around and connect one-on-one. Clouds Brewing provides our space at no cost &mdash; supporting them keeps this deal alive.</p>
+      <span class="detail">5:00&nbsp;PM onward &middot; Optional but encouraged</span>
+    </div>
+  </div>
+</section>
+
+<div class="shimmer-line" aria-hidden="true"></div>
+
+<!-- The 212 Platform -->
+<section class="philosophy" id="platform" data-reveal>
+  <p class="section-label">The Network</p>
+  <h2 class="section-title">Two Twelve Referral Network</h2>
+  <div class="section-body">
+    <p>RDU Heatwave is a local team of the <strong>Two Twelve Referral Network</strong> &mdash; a national organization built on the principle that one extra degree makes all the difference.</p>
+    <div class="temp-callout">
+      <span class="deg">212&deg;F</span>
+      <span class="label">Water boils. Steam powers a locomotive. One degree beyond ordinary changes everything.</span>
+    </div>
+    <p>The 212 platform tracks every referral given, received, and converted so membership has measurable ROI. Each seat is exclusive: one professional per category, no internal competition &mdash; only collaboration.</p>
+    <p style="margin-top: 1.25rem;">
+      <a href="https://www.twotwelvereferrals.com/teams/rdu-heatwave/" target="_blank" rel="noopener noreferrer" class="two12-link">
+        View our full team profile on twotwelvereferrals.com &rarr;
+      </a>
+    </p>
+  </div>
+</section>
+
+<div class="shimmer-line" aria-hidden="true"></div>
+
+<!-- The Team -->
+<section id="team" data-reveal>
+  <p class="section-label">Who You&rsquo;ll Meet</p>
+  <h2 class="section-title">The Team</h2>
+  <p class="section-body">One seat per profession &mdash; no competition within the team, only collaboration. These are the people who will root for your business.</p>
+  <div class="team-grid" id="team-grid">
+    <div class="team-loading">Loading team roster&hellip;</div>
+  </div>
+</section>
+
+<div class="shimmer-line" aria-hidden="true"></div>
+
+<!-- Venue -->
+<section id="venue" data-reveal>
+  <p class="section-label">Where &amp; When</p>
+  <h2 class="section-title">Meeting Details</h2>
+  <div class="venue-block">
+    <img src="/clouds-brewing-logo.png" alt="Clouds Brewing logo" class="venue-logo" width="96" height="96" loading="lazy" decoding="async">
+    <div class="venue-info">
+      <h3>Clouds Brewing</h3>
+      <p>1233 Front St, Raleigh, NC 27609</p>
+      <p style="margin-top: 0.25rem; font-size: 0.875rem; color: var(--color-text-faint);">Side room &bull; special deal for the group</p>
+      <div class="venue-schedule">Thursdays at 4:00 PM ET</div>
+    </div>
+  </div>
+</section>
+
+<div class="shimmer-line" aria-hidden="true"></div>
+
+<!-- Is There a Seat for You? -->
+<section id="seat" data-reveal>
+  <p class="section-label">Exclusive Seating</p>
+  <h2 class="section-title">Is There a Seat for You?</h2>
+  <p class="section-body">Each profession gets exactly one seat at the table. If your category is open, you could be the next member. If it&rsquo;s filled, you&rsquo;re still welcome to visit &mdash; referrals flow to guests too.</p>
+  <div class="seat-grid" id="seat-grid">
+    <div class="team-loading">Loading seats&hellip;</div>
+  </div>
+</section>
+
+<div class="shimmer-line" aria-hidden="true"></div>
+
+<!-- CTA -->
+<section class="cta-section" id="register" data-reveal="scale">
+  <h2 class="section-title">Ready to Visit?</h2>
+  <p class="section-body" style="margin: 0 auto 2rem; text-align: center;">Your first visit is free. Register so we can make sure you have a great experience.</p>
+  <a href="/" class="btn-cta fire-btn" data-haptic="nudge">
+    Register to Visit<span class="ember" aria-hidden="true"></span><span class="ember" aria-hidden="true"></span><span class="ember" aria-hidden="true"></span>
+  </a>
+</section>
+
+</main>
+
+<!-- Footer -->
+<footer class="site-footer">
+  &copy; 2026 RDU Heatwave &middot; A
+  <a href="https://www.twotwelvereferrals.com/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none; border-bottom: 1px solid var(--color-divider);">Two Twelve Referral Network</a>
+  Team
+</footer>
+
+<script src="/scripts/site-config.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var teamGrid = document.getElementById('team-grid');
+  var seatGrid = document.getElementById('seat-grid');
+
+  /* Build a member card using DOM methods — no untrusted innerHTML */
+  function buildMemberCard(m) {
+    var card = document.createElement('div');
+    card.className = 'member-card' + (m.leader ? ' is-leader' : '');
+
+    if (m.photo) {
+      var img = document.createElement('img');
+      img.className = 'member-photo';
+      img.src = m.photo;
+      img.alt = m.name;
+      img.width = 72;
+      img.height = 72;
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      if (m.photoObjectPosition) img.style.objectPosition = m.photoObjectPosition;
+      card.appendChild(img);
+    } else {
+      var initDiv = document.createElement('div');
+      initDiv.className = 'member-photo member-initials';
+      initDiv.textContent = m.name.split(' ').map(function (w) { return w.charAt(0); }).join('').toUpperCase();
+      card.appendChild(initDiv);
+    }
+
+    var info = document.createElement('div');
+    info.className = 'member-info';
+
+    var nameEl = document.createElement('div');
+    nameEl.className = 'member-name';
+    nameEl.textContent = m.name;
+    info.appendChild(nameEl);
+
+    var titleEl = document.createElement('div');
+    titleEl.className = 'member-title';
+    titleEl.textContent = m.title || '';
+    info.appendChild(titleEl);
+
+    var companyEl = document.createElement('div');
+    companyEl.className = 'member-company';
+    if (m.website) {
+      var link = document.createElement('a');
+      link.href = m.website;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.textContent = m.company || '';
+      companyEl.appendChild(link);
+    } else {
+      companyEl.textContent = m.company || '';
+    }
+    info.appendChild(companyEl);
+
+    card.appendChild(info);
+    return card;
+  }
+
+  /* Build a seat card using DOM methods */
+  function buildSeatCard(title, member) {
+    var filled = !!(member && member.name);
+    var card = document.createElement('div');
+    card.className = 'seat-card' + (filled ? '' : ' seat-card--open');
+
+    var dot = document.createElement('div');
+    dot.className = 'seat-dot' + (filled ? '' : ' seat-dot--open');
+    dot.setAttribute('aria-hidden', 'true');
+    card.appendChild(dot);
+
+    var info = document.createElement('div');
+    info.className = 'seat-info';
+
+    var titleEl = document.createElement('div');
+    titleEl.className = 'seat-title';
+    titleEl.textContent = title;
+    info.appendChild(titleEl);
+
+    var memberEl = document.createElement('div');
+    memberEl.className = 'seat-member';
+    memberEl.textContent = filled ? member.name : 'Open seat';
+    info.appendChild(memberEl);
+
+    card.appendChild(info);
+    return card;
+  }
+
+  fetch('/api/members')
+    .then(function (res) {
+      if (!res.ok) throw new Error('fetch failed');
+      return res.json();
+    })
+    .then(function (data) {
+      var members = (data && data.members) || [];
+
+      if (!members.length) {
+        if (teamGrid) teamGrid.textContent = 'No members found.';
+        if (seatGrid) seatGrid.textContent = '';
+        return;
+      }
+
+      /* Sort: chair first, then leaders, then alphabetical */
+      var sorted = members.slice().sort(function (a, b) {
+        if (a.chair && !b.chair) return -1;
+        if (!a.chair && b.chair) return 1;
+        if (a.leader && !b.leader) return -1;
+        if (!a.leader && b.leader) return 1;
+        return a.name.localeCompare(b.name);
+      });
+
+      /* Team grid */
+      if (teamGrid) {
+        teamGrid.textContent = '';
+        var frag = document.createDocumentFragment();
+        sorted.forEach(function (m) { frag.appendChild(buildMemberCard(m)); });
+        teamGrid.appendChild(frag);
+      }
+
+      /* Seat availability grid — deduplicate by profession title */
+      if (seatGrid) {
+        var seen = Object.create(null);
+        var byTitle = [];
+        sorted.forEach(function (m) {
+          var t = m.title || 'Member';
+          if (!seen[t]) {
+            seen[t] = true;
+            byTitle.push({ title: t, member: m });
+          }
+        });
+        byTitle.sort(function (a, b) { return a.title.localeCompare(b.title); });
+
+        seatGrid.textContent = '';
+        var seatFrag = document.createDocumentFragment();
+        byTitle.forEach(function (row) { seatFrag.appendChild(buildSeatCard(row.title, row.member)); });
+        seatGrid.appendChild(seatFrag);
+      }
+    })
+    .catch(function () {
+      if (teamGrid) teamGrid.textContent = 'Could not load team roster. Please try again later.';
+      if (seatGrid) seatGrid.textContent = '';
+    });
+})();
+</script>
+
+<script src="/scripts/scroll-reveal.js"></script>
+<script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function () {});</script>
+</body>
+</html>
