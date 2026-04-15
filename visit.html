@@ -29,128 +29,282 @@
 <link rel="stylesheet" href="/about.css">
 
 <style>
-/* ── Visit page overrides ── */
-section { padding: 2.5rem 1.5rem; }
-.hero { min-height: 44vh; padding: 3.5rem 1.5rem 2.5rem; }
-.hero-title { font-size: clamp(2.8rem, 2.5rem + 4vw, 6rem); }
-.hero-temp { font-size: clamp(4rem, 3rem + 3vw, 7rem); }
-.hero-tagline { margin-top: 0.6rem; }
-.section-title { margin-bottom: 0.75rem; }
-.section-body { font-size: 0.95rem; line-height: 1.6; }
-.cards-grid { gap: 0.85rem; margin-top: 1.25rem; }
-.card { padding: 1.15rem 1.25rem; }
-.card h3 { font-size: 1.15rem; margin-bottom: 0.3rem; }
-.card p { font-size: 0.85rem; line-height: 1.5; }
-.card .detail { margin-top: 0.5rem; font-size: 0.75rem; }
-.temp-callout { margin: 1rem 0; padding: 0.75rem 1.15rem; }
-.temp-callout .deg { font-size: 2rem; }
-.temp-callout .label { font-size: 0.85rem; }
-.team-grid { gap: 0.75rem; margin-top: 1.25rem; }
-.member-card { padding: 0.85rem 1rem; gap: 0.7rem; }
-.member-photo { width: 44px; height: 44px; }
-.member-name { font-size: 1.05rem; }
-.member-title { font-size: 0.75rem; }
-.member-company { font-size: 0.78rem; margin-top: 0.2rem; }
-.venue-block { margin-top: 1.25rem; padding: 1.25rem 1.5rem; gap: 1.25rem; }
-.venue-logo { width: 4.5rem; height: 4.5rem; }
-.venue-info h3 { font-size: 1.35rem; }
-.venue-schedule { margin-top: 0.6rem; padding: 0.45rem 0.85rem; font-size: 1rem; }
-.cta-section { padding: 2.5rem 1.5rem 3rem; }
+/* ── Visit page: compact layout ── */
+section { padding: 2rem 1.5rem; }
+.section-title { margin-bottom: 0.5rem; }
+.section-body { font-size: 0.92rem; line-height: 1.55; }
 .shimmer-line { margin: 0; }
-.site-footer { padding: 1.25rem 1rem; }
+.site-footer { padding: 1rem; }
 
-.two12-link {
-  color: var(--color-primary);
-  text-decoration: none;
-  border-bottom: 1px solid rgba(232, 88, 12, 0.35);
-  transition: border-color 0.2s, color 0.2s;
-}
-.two12-link:hover {
-  color: var(--color-primary-hover);
-  border-color: var(--color-primary-hover);
-}
+/* ── Hero: tight banner ── */
+.hero { min-height: 32vh; padding: 3rem 1.5rem 2rem; }
+.hero-title { font-size: clamp(2.6rem, 2.2rem + 4vw, 5.5rem); }
+.hero-temp { font-size: clamp(3.5rem, 3rem + 3vw, 6rem); }
+.hero-tagline { margin-top: 0.5rem; font-size: clamp(0.88rem, 0.8rem + 0.5vw, 1.1rem); }
 
-/* Seat availability grid */
-.seat-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
-  gap: 0.6rem;
+/* ── Timeline strip (replaces cards) ── */
+.flow-strip {
+  display: flex;
+  gap: 0;
   margin-top: 1.25rem;
+  position: relative;
 }
-.seat-card {
-  padding: 0.65rem 0.85rem;
+.flow-strip::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 28px;
+  right: 28px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-primary), rgba(232, 88, 12, 0.2));
+  z-index: 0;
+}
+.flow-step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.4rem;
+  position: relative;
+  z-index: 1;
+}
+.flow-step__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   background: var(--color-surface);
-  border: 1px solid var(--color-divider);
-  border-radius: var(--radius-lg);
+  border: 2px solid var(--color-primary);
   display: flex;
   align-items: center;
-  gap: 0.55rem;
-}
-.seat-card--open {
-  border-color: rgba(91, 168, 71, 0.4);
-  background: rgba(91, 168, 71, 0.05);
-}
-.seat-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
+  justify-content: center;
   flex-shrink: 0;
-  background: var(--color-text-faint);
 }
-.seat-dot--open {
-  background: var(--color-success);
-  box-shadow: 0 0 6px rgba(91, 168, 71, 0.5);
-}
-.seat-info { min-width: 0; }
-.seat-title {
+.flow-step__icon img { width: 20px; height: 20px; }
+.flow-step__title {
   font-family: var(--font-display);
   font-size: 0.95rem;
-  letter-spacing: 0.02em;
-  line-height: 1.2;
+  letter-spacing: 0.03em;
+  color: var(--color-text);
 }
-.seat-member {
-  font-size: 0.75rem;
+.flow-step__desc {
+  font-size: 0.78rem;
   color: var(--color-text-muted);
-  margin-top: 0.1rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.35;
+  max-width: 11rem;
 }
-.seat-card--open .seat-member {
-  color: var(--color-success);
+
+/* ── 212 interstitial banner ── */
+.banner-212 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.6rem, 1.5vw, 1rem);
+  padding: 0.85rem 1.5rem;
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  text-align: center;
+}
+.banner-212__deg {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  background: var(--gradient-fire);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  flex-shrink: 0;
+}
+.banner-212__text {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+  max-width: 36rem;
+}
+.banner-212__text a {
+  color: var(--color-primary);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(232, 88, 12, 0.3);
+}
+.banner-212__text a:hover { color: var(--color-primary-hover); }
+
+/* ── Team grid (tighter) ── */
+.team-grid { gap: 0.55rem; margin-top: 1rem; }
+.member-card { padding: 0.6rem 0.75rem; gap: 0.55rem; }
+.member-photo { width: 38px; height: 38px; }
+.member-name { font-size: 0.95rem; }
+.member-title { font-size: 0.72rem; }
+.member-company { font-size: 0.72rem; margin-top: 0.1rem; }
+
+/* ── Seat chips (inline, not a separate grid) ── */
+.seat-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+.seat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
   font-weight: 600;
+  border: 1px solid var(--color-divider);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+}
+.seat-chip--open {
+  border-color: rgba(91, 168, 71, 0.5);
+  background: rgba(91, 168, 71, 0.08);
+  color: var(--color-success);
+}
+.seat-chip__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-text-faint);
+  flex-shrink: 0;
+}
+.seat-chip--open .seat-chip__dot {
+  background: var(--color-success);
+  box-shadow: 0 0 4px rgba(91, 168, 71, 0.6);
+}
+
+/* ── Venue + CTA merged ── */
+.finale {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1rem, 3vw, 2rem);
+  align-items: center;
+  padding: 2rem 1.5rem 2.5rem;
+  max-width: 72rem;
+  margin: 0 auto;
+}
+.finale-venue {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+}
+.finale-venue__logo {
+  width: 3.5rem;
+  height: 3.5rem;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+}
+.finale-venue h3 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  letter-spacing: 0.02em;
+}
+.finale-venue p {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin-top: 0.15rem;
+}
+.finale-venue__badge {
+  display: inline-flex;
+  margin-top: 0.4rem;
+  padding: 0.3rem 0.65rem;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  color: var(--color-primary);
+  background: rgba(232, 88, 12, 0.08);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.finale-cta {
+  text-align: center;
+}
+.finale-cta h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 1.5rem + 1.5vw, 2.5rem);
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  margin-bottom: 0.35rem;
+}
+.finale-cta p {
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  margin-bottom: 1rem;
+}
+
+/* ── CTA button ── */
+.btn-cta {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  letter-spacing: 0.06em;
+  padding: 0.75rem 2rem;
+  color: #fff;
+  background: var(--gradient-fire);
+  border: none;
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 24px rgba(232, 88, 12, 0.3);
+}
+.btn-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 32px rgba(232, 88, 12, 0.45);
 }
 
 /* ── Mobile ── */
 @media (max-width: 640px) {
-  section { padding: 2rem 1rem; }
-  .hero { min-height: 36vh; padding: 2.5rem 1rem 2rem; }
-  .hero-title { font-size: clamp(2.2rem, 10vw, 3.5rem); }
-  .hero-tagline { font-size: 0.9rem; max-width: 22rem; }
-  .section-title { font-size: clamp(1.6rem, 1.2rem + 2vw, 2.25rem); }
-  .section-body { font-size: 0.88rem; }
-  .cards-grid { grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-top: 1rem; }
-  .card { padding: 0.85rem; }
-  .card h3 { font-size: 1rem; }
-  .card p { font-size: 0.8rem; }
-  .card .detail { font-size: 0.7rem; }
-  .temp-callout { flex-direction: column; gap: 0.25rem; padding: 0.65rem 1rem; }
-  .temp-callout .deg { font-size: 1.6rem; }
-  .temp-callout .label { font-size: 0.8rem; }
-  .team-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
-  .member-card { padding: 0.65rem 0.75rem; gap: 0.5rem; flex-direction: column; align-items: flex-start; }
-  .member-photo { width: 36px; height: 36px; }
-  .member-name { font-size: 0.92rem; }
-  .seat-grid { grid-template-columns: 1fr 1fr; gap: 0.45rem; }
-  .seat-card { padding: 0.5rem 0.65rem; }
-  .seat-title { font-size: 0.82rem; }
-  .seat-member { font-size: 0.7rem; }
-  .venue-block { padding: 1rem; gap: 1rem; }
-  .venue-logo { width: 3.5rem; height: 3.5rem; }
-  .venue-info h3 { font-size: 1.15rem; }
-  .venue-schedule { font-size: 0.9rem; padding: 0.4rem 0.75rem; }
-  .cta-section { padding: 2rem 1rem; }
-  .btn-cta { font-size: 1.1rem; padding: 0.75rem 2rem; }
+  section { padding: 1.5rem 1rem; }
+  .hero { min-height: 28vh; padding: 2.5rem 1rem 1.5rem; }
+  .hero-title { font-size: clamp(2rem, 9vw, 3.2rem); }
+  .hero-tagline { font-size: 0.85rem; max-width: 22rem; }
+  .section-title { font-size: clamp(1.5rem, 1.1rem + 2vw, 2rem); }
+
+  .flow-strip { flex-wrap: wrap; gap: 0.75rem; }
+  .flow-strip::before { display: none; }
+  .flow-step {
+    flex: 1 1 40%;
+    flex-direction: row;
+    text-align: left;
+    gap: 0.5rem;
+  }
+  .flow-step__icon { width: 34px; height: 34px; }
+  .flow-step__icon img { width: 17px; height: 17px; }
+  .flow-step__title { font-size: 0.85rem; }
+  .flow-step__desc { font-size: 0.72rem; max-width: none; }
+
+  .banner-212 { flex-direction: column; gap: 0.2rem; padding: 0.65rem 1rem; }
+  .banner-212__deg { font-size: 1.3rem; }
+  .banner-212__text { font-size: 0.78rem; }
+
+  .team-grid { grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+  .member-card {
+    padding: 0.5rem 0.6rem;
+    gap: 0.35rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .member-photo { width: 32px; height: 32px; }
+  .member-name { font-size: 0.85rem; }
+
+  .seat-chips { gap: 0.3rem; }
+  .seat-chip { font-size: 0.65rem; padding: 0.25rem 0.5rem; }
+
+  .finale {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1.5rem 1rem;
+  }
+  .finale-venue { padding: 0.85rem; gap: 0.75rem; }
+  .finale-venue__logo { width: 2.8rem; height: 2.8rem; }
+  .finale-venue h3 { font-size: 1.05rem; }
+  .finale-cta h2 { font-size: 1.6rem; }
+  .btn-cta { font-size: 1rem; padding: 0.65rem 1.75rem; }
 }
 </style>
 
@@ -201,9 +355,8 @@ section { padding: 2.5rem 1.5rem; }
 <!-- Sticky Nav -->
 <nav class="site-nav" aria-label="Page sections">
   <a href="/visit" class="nav-brand">RDU HEATWAVE</a>
-  <a href="#expect">What to Expect</a>
+  <a href="#expect">Visit</a>
   <a href="#team">Team</a>
-  <a href="#venue">Venue</a>
   <a href="#register">Register</a>
 </nav>
 
@@ -216,115 +369,89 @@ section { padding: 2.5rem 1.5rem; }
     <img src="/icons/iconscout/fire.svg" alt="" class="page-icon page-icon--lg" width="48" height="48">YOU&rsquo;RE INVITED
   </h1>
   <p class="hero-tagline">RDU Heatwave &mdash; Raleigh-Durham&rsquo;s Two Twelve Referral Network team. Thursdays at 4&nbsp;PM, Clouds Brewing.</p>
-  <a href="/" class="btn-cta fire-btn" style="margin-top: 1.25rem;" data-haptic="nudge">
+  <a href="/" class="btn-cta fire-btn" style="margin-top: 1rem;" data-haptic="nudge">
     Register to Visit<span class="ember" aria-hidden="true"></span><span class="ember" aria-hidden="true"></span><span class="ember" aria-hidden="true"></span>
   </a>
 </section>
 
 <div class="shimmer-line" aria-hidden="true"></div>
 
-<!-- What to Expect -->
+<!-- What to Expect — timeline strip -->
 <section id="expect" data-reveal>
   <p class="section-label">Your First Visit</p>
   <h2 class="section-title">What to Expect</h2>
-  <div class="cards-grid">
-    <div class="card gradient-border">
-      <img src="/icons/iconscout/coffee-chat.svg" alt="" class="hw-icon-img" aria-hidden="true" width="32" height="32">
-      <h3>Arrive at 3:45</h3>
-      <p>Grab a drink, meet members before kickoff.</p>
-      <span class="detail">Clouds Brewing &middot; Raleigh</span>
+  <div class="flow-strip">
+    <div class="flow-step">
+      <div class="flow-step__icon"><img src="/icons/iconscout/coffee-chat.svg" alt="" width="20" height="20"></div>
+      <div>
+        <div class="flow-step__title">3:45 PM</div>
+        <div class="flow-step__desc">Arrive, grab a drink, meet the team</div>
+      </div>
     </div>
-    <div class="card gradient-border">
-      <img src="/icons/iconscout/chat-bubble.svg" alt="" class="hw-icon-img" aria-hidden="true" width="32" height="32">
-      <h3>Introduce Yourself</h3>
-      <p>60 seconds to pitch your business to the room.</p>
-      <span class="detail">No slides required</span>
+    <div class="flow-step">
+      <div class="flow-step__icon"><img src="/icons/iconscout/chat-bubble.svg" alt="" width="20" height="20"></div>
+      <div>
+        <div class="flow-step__title">Introduce</div>
+        <div class="flow-step__desc">60-second pitch to the room</div>
+      </div>
     </div>
-    <div class="card gradient-border">
-      <img src="/icons/iconscout/handshake.svg" alt="" class="hw-icon-img" aria-hidden="true" width="32" height="32">
-      <h3>See Referrals Move</h3>
-      <p>Watch real, qualified referrals pass in the room.</p>
-      <span class="detail">Structured &middot; Tracked</span>
+    <div class="flow-step">
+      <div class="flow-step__icon"><img src="/icons/iconscout/handshake.svg" alt="" width="20" height="20"></div>
+      <div>
+        <div class="flow-step__title">Referrals</div>
+        <div class="flow-step__desc">Watch real referrals pass live</div>
+      </div>
     </div>
-    <div class="card gradient-border">
-      <img src="/icons/iconscout/fire.svg" alt="" class="hw-icon-img" aria-hidden="true" width="32" height="32">
-      <h3>Stay &amp; Connect</h3>
-      <p>Hang around after and build relationships 1-on-1.</p>
-      <span class="detail">5&nbsp;PM onward</span>
+    <div class="flow-step">
+      <div class="flow-step__icon"><img src="/icons/iconscout/fire.svg" alt="" width="20" height="20"></div>
+      <div>
+        <div class="flow-step__title">5:00 PM</div>
+        <div class="flow-step__desc">Stay, connect, build 1-on-1</div>
+      </div>
     </div>
   </div>
 </section>
 
-<div class="shimmer-line" aria-hidden="true"></div>
+<!-- 212 interstitial -->
+<div class="banner-212" aria-label="About Two Twelve">
+  <span class="banner-212__deg">212&deg;F</span>
+  <span class="banner-212__text">One extra degree turns water to steam. Every referral tracked, every seat exclusive &mdash; one pro per category, zero competition. <a href="https://www.twotwelvereferrals.com/teams/rdu-heatwave/" target="_blank" rel="noopener noreferrer">Learn more &rarr;</a></span>
+</div>
 
-<!-- The 212 Platform -->
-<section class="philosophy" id="platform" data-reveal>
-  <p class="section-label">The Network</p>
-  <h2 class="section-title">Two Twelve Referral Network</h2>
-  <div class="section-body">
-    <div class="temp-callout">
-      <span class="deg">212&deg;F</span>
-      <span class="label">Water boils. Steam powers a locomotive. One extra degree changes everything.</span>
-    </div>
-    <p>Every referral is tracked. Every seat is exclusive &mdash; one professional per category, zero competition. <a href="https://www.twotwelvereferrals.com/teams/rdu-heatwave/" target="_blank" rel="noopener noreferrer" class="two12-link">Learn more &rarr;</a></p>
-  </div>
-</section>
-
-<div class="shimmer-line" aria-hidden="true"></div>
-
-<!-- The Team -->
+<!-- Team + Seats merged -->
 <section id="team" data-reveal>
   <p class="section-label">Who You&rsquo;ll Meet</p>
   <h2 class="section-title">The Team</h2>
-  <p class="section-body">One seat per profession. No competition &mdash; only collaboration.</p>
   <div class="team-grid" id="team-grid">
     <div class="team-loading">Loading team roster&hellip;</div>
   </div>
+  <div class="seat-chips" id="seat-chips">
+  </div>
 </section>
 
 <div class="shimmer-line" aria-hidden="true"></div>
 
-<!-- Venue -->
-<section id="venue" data-reveal>
-  <p class="section-label">Where &amp; When</p>
-  <h2 class="section-title">Meeting Details</h2>
-  <div class="venue-block">
-    <img src="/clouds-brewing-logo.png" alt="Clouds Brewing logo" class="venue-logo" width="96" height="96" loading="lazy" decoding="async">
-    <div class="venue-info">
+<!-- Venue + CTA combined -->
+<div class="finale" id="register">
+  <div class="finale-venue">
+    <img src="/clouds-brewing-logo.png" alt="Clouds Brewing" class="finale-venue__logo" width="96" height="96" loading="lazy" decoding="async">
+    <div>
       <h3>Clouds Brewing</h3>
-      <p>1233 Front St, Raleigh, NC 27609</p>
-      <p style="margin-top: 0.25rem; font-size: 0.875rem; color: var(--color-text-faint);">Side room &bull; special deal for the group</p>
-      <div class="venue-schedule">Thursdays at 4:00 PM ET</div>
+      <p>1233 Front St, Raleigh NC 27609</p>
+      <div class="finale-venue__badge">Thursdays at 4:00 PM ET</div>
     </div>
   </div>
-</section>
-
-<div class="shimmer-line" aria-hidden="true"></div>
-
-<!-- Is There a Seat for You? -->
-<section id="seat" data-reveal>
-  <p class="section-label">Exclusive Seating</p>
-  <h2 class="section-title">Is There a Seat for You?</h2>
-  <p class="section-body">If your category is open, you could be next. Filled seats still welcome visitors &mdash; referrals flow to guests too.</p>
-  <div class="seat-grid" id="seat-grid">
-    <div class="team-loading">Loading seats&hellip;</div>
+  <div class="finale-cta">
+    <h2>Ready to Visit?</h2>
+    <p>Your first visit is free.</p>
+    <a href="/" class="btn-cta fire-btn" data-haptic="nudge">
+      Register<span class="ember" aria-hidden="true"></span><span class="ember" aria-hidden="true"></span><span class="ember" aria-hidden="true"></span>
+    </a>
   </div>
-</section>
-
-<div class="shimmer-line" aria-hidden="true"></div>
-
-<!-- CTA -->
-<section class="cta-section" id="register" data-reveal="scale">
-  <h2 class="section-title">Ready to Visit?</h2>
-  <p class="section-body" style="margin: 0 auto 1.25rem; text-align: center;">Your first visit is free.</p>
-  <a href="/" class="btn-cta fire-btn" data-haptic="nudge">
-    Register to Visit<span class="ember" aria-hidden="true"></span><span class="ember" aria-hidden="true"></span><span class="ember" aria-hidden="true"></span>
-  </a>
-</section>
+</div>
 
 </main>
 
-<!-- Footer -->
 <footer class="site-footer">
   &copy; 2026 RDU Heatwave &middot; A
   <a href="https://www.twotwelvereferrals.com/" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none; border-bottom: 1px solid var(--color-divider);">Two Twelve Referral Network</a>
@@ -337,9 +464,8 @@ section { padding: 2.5rem 1.5rem; }
   'use strict';
 
   var teamGrid = document.getElementById('team-grid');
-  var seatGrid = document.getElementById('seat-grid');
+  var seatChips = document.getElementById('seat-chips');
 
-  /* Build a member card using DOM methods — no untrusted innerHTML */
   function buildMemberCard(m) {
     var card = document.createElement('div');
     card.className = 'member-card' + (m.leader ? ' is-leader' : '');
@@ -349,8 +475,8 @@ section { padding: 2.5rem 1.5rem; }
       img.className = 'member-photo';
       img.src = m.photo;
       img.alt = m.name;
-      img.width = 72;
-      img.height = 72;
+      img.width = 38;
+      img.height = 38;
       img.loading = 'lazy';
       img.decoding = 'async';
       if (m.photoObjectPosition) img.style.objectPosition = m.photoObjectPosition;
@@ -393,32 +519,17 @@ section { padding: 2.5rem 1.5rem; }
     return card;
   }
 
-  /* Build a seat card using DOM methods */
-  function buildSeatCard(title, member) {
-    var filled = !!(member && member.name);
-    var card = document.createElement('div');
-    card.className = 'seat-card' + (filled ? '' : ' seat-card--open');
+  function buildSeatChip(title, filled) {
+    var chip = document.createElement('span');
+    chip.className = 'seat-chip' + (filled ? '' : ' seat-chip--open');
 
-    var dot = document.createElement('div');
-    dot.className = 'seat-dot' + (filled ? '' : ' seat-dot--open');
+    var dot = document.createElement('span');
+    dot.className = 'seat-chip__dot';
     dot.setAttribute('aria-hidden', 'true');
-    card.appendChild(dot);
+    chip.appendChild(dot);
 
-    var info = document.createElement('div');
-    info.className = 'seat-info';
-
-    var titleEl = document.createElement('div');
-    titleEl.className = 'seat-title';
-    titleEl.textContent = title;
-    info.appendChild(titleEl);
-
-    var memberEl = document.createElement('div');
-    memberEl.className = 'seat-member';
-    memberEl.textContent = filled ? member.name : 'Open seat';
-    info.appendChild(memberEl);
-
-    card.appendChild(info);
-    return card;
+    chip.appendChild(document.createTextNode(title + (filled ? '' : ' — Open')));
+    return chip;
   }
 
   fetch('/api/members')
@@ -431,11 +542,9 @@ section { padding: 2.5rem 1.5rem; }
 
       if (!members.length) {
         if (teamGrid) teamGrid.textContent = 'No members found.';
-        if (seatGrid) seatGrid.textContent = '';
         return;
       }
 
-      /* Sort: chair first, then leaders, then alphabetical */
       var sorted = members.slice().sort(function (a, b) {
         if (a.chair && !b.chair) return -1;
         if (!a.chair && b.chair) return 1;
@@ -444,7 +553,6 @@ section { padding: 2.5rem 1.5rem; }
         return a.name.localeCompare(b.name);
       });
 
-      /* Team grid */
       if (teamGrid) {
         teamGrid.textContent = '';
         var frag = document.createDocumentFragment();
@@ -452,28 +560,25 @@ section { padding: 2.5rem 1.5rem; }
         teamGrid.appendChild(frag);
       }
 
-      /* Seat availability grid — deduplicate by profession title */
-      if (seatGrid) {
+      if (seatChips) {
         var seen = Object.create(null);
         var byTitle = [];
         sorted.forEach(function (m) {
           var t = m.title || 'Member';
           if (!seen[t]) {
             seen[t] = true;
-            byTitle.push({ title: t, member: m });
+            byTitle.push({ title: t, filled: true });
           }
         });
         byTitle.sort(function (a, b) { return a.title.localeCompare(b.title); });
 
-        seatGrid.textContent = '';
-        var seatFrag = document.createDocumentFragment();
-        byTitle.forEach(function (row) { seatFrag.appendChild(buildSeatCard(row.title, row.member)); });
-        seatGrid.appendChild(seatFrag);
+        var chipFrag = document.createDocumentFragment();
+        byTitle.forEach(function (row) { chipFrag.appendChild(buildSeatChip(row.title, row.filled)); });
+        seatChips.appendChild(chipFrag);
       }
     })
     .catch(function () {
-      if (teamGrid) teamGrid.textContent = 'Could not load team roster. Please try again later.';
-      if (seatGrid) seatGrid.textContent = '';
+      if (teamGrid) teamGrid.textContent = 'Could not load team roster.';
     });
 })();
 </script>
