@@ -369,9 +369,9 @@ section { padding: 2rem 1.5rem; }
     <img src="/icons/iconscout/fire.svg" alt="" class="page-icon page-icon--lg" width="48" height="48">YOU&rsquo;RE INVITED
   </h1>
   <p class="hero-tagline">RDU Heatwave &mdash; Raleigh-Durham&rsquo;s Two Twelve Referral Network team. Thursdays at 4&nbsp;PM, Clouds Brewing.</p>
-  <a href="/" class="btn-cta fire-btn" style="margin-top: 1rem;" data-haptic="nudge">
-    Register to Visit<span class="ember" aria-hidden="true"></span><span class="ember" aria-hidden="true"></span><span class="ember" aria-hidden="true"></span>
-  </a>
+  <button class="btn-cta fire-btn" style="margin-top: 1rem;" data-haptic="nudge" onclick="downloadVisitIcs()">
+    Add to Calendar<span class="ember" aria-hidden="true"></span><span class="ember" aria-hidden="true"></span><span class="ember" aria-hidden="true"></span>
+  </button>
 </section>
 
 <div class="shimmer-line" aria-hidden="true"></div>
@@ -444,9 +444,9 @@ section { padding: 2rem 1.5rem; }
   <div class="finale-cta">
     <h2>Ready to Visit?</h2>
     <p>Your first visit is free.</p>
-    <a href="/" class="btn-cta fire-btn" data-haptic="nudge">
-      Register<span class="ember" aria-hidden="true"></span><span class="ember" aria-hidden="true"></span><span class="ember" aria-hidden="true"></span>
-    </a>
+    <button class="btn-cta fire-btn" data-haptic="nudge" onclick="downloadVisitIcs()">
+      Add to Calendar<span class="ember" aria-hidden="true"></span><span class="ember" aria-hidden="true"></span><span class="ember" aria-hidden="true"></span>
+    </button>
   </div>
 </div>
 
@@ -583,6 +583,55 @@ section { padding: 2rem 1.5rem; }
 })();
 </script>
 
+<script>
+function downloadVisitIcs() {
+  var parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/New_York',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', hour12: false
+  }).formatToParts(new Date());
+  var p = {};
+  parts.forEach(function (x) { if (x.type !== 'literal') p[x.type] = x.value; });
+
+  var today = new Date(p.year + '-' + p.month + '-' + p.day + 'T00:00:00');
+  var dow = today.getDay();
+  var diff = (4 - dow + 7) % 7;
+  if (diff === 0 && Number(p.hour) >= 17) diff = 7;
+  if (diff === 0 && dow !== 4) diff = 7;
+  today.setDate(today.getDate() + diff);
+
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+  var ds = today.getFullYear() + pad(today.getMonth() + 1) + pad(today.getDate());
+
+  var ics = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//RDU Heatwave//Visit//EN',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    'BEGIN:VEVENT',
+    'DTSTART;TZID=America/New_York:' + ds + 'T160000',
+    'DTEND;TZID=America/New_York:' + ds + 'T170000',
+    'SUMMARY:Visit RDU Heatwave',
+    'LOCATION:Clouds Brewing\\, 1233 Front St\\, Raleigh\\, NC 27609',
+    'DESCRIPTION:Your first visit to RDU Heatwave \\u2014 a Two Twelve Referral Network team.\\nArrive at 3:45 PM for open networking. Meeting starts at 4:00 PM ET.\\n\\nhttps://rduheatwave.team/visit',
+    'URL:https://rduheatwave.team/visit',
+    'UID:rduheatwave-visit-' + ds + '@rduheatwave.team',
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\r\n');
+
+  var blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'rdu-heatwave-visit.ics';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+</script>
 <script src="/scripts/scroll-reveal.js"></script>
 <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function () {});</script>
 </body>
