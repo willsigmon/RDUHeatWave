@@ -30,11 +30,6 @@ var PHOTO_OVERRIDES = {
     photoObjectPosition: 'center 28%',
     sourceUrl: 'https://strollmag.com'
   },
-  'nathan senn': {
-    photo: '/member-photos/nathan-senn.jpg',
-    photoObjectPosition: 'center 25%',
-    sourceUrl: 'https://linkedin.com/in/nathan-senn-2b2332153'
-  },
   'sue kerata': {
     photo: '/member-photos/sue-kerata.jpg',
     photoObjectPosition: 'center 30%',
