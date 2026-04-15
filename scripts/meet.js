@@ -350,7 +350,7 @@
     spotifyState.embedReady = false;
 
     setSpotifyArtwork('heatwave-logo.png', '');
-    setSpotifyTitle(preset.label + ' room mix', preset.helperText || 'Choose a vibe, then open the player when you need pause or volume.');
+    setSpotifyTitle(preset.label + ' room mix', preset.helperText || 'Log into Spotify in this browser for ad-free playback with Premium.');
     updateSpotifyOpenLink(spotifyUriToOpenUrl(preset.uri));
 
     if (spotifyEmbedFrameEl) {
@@ -828,15 +828,16 @@
       return;
     }
 
-    events.slice(0, 3).forEach(function(event) {
+    events.slice(0, 2).forEach(function(event) {
       var item = document.createElement('li');
       var title = document.createElement('strong');
       var start = new Date(event.start);
       var end = event.end ? new Date(event.end) : null;
       var meta = document.createElement('span');
+      var locationShort = event.location ? event.location.split(',')[0] : '';
 
       title.textContent = event.title || 'Upcoming event';
-      meta.textContent = ' — ' + formatEventDate(start) + ' • ' + formatEventTime(start, end, !!event.allDay) + (event.location ? ' • ' + event.location : '');
+      meta.textContent = ' — ' + formatEventDate(start) + ' • ' + formatEventTime(start, end, !!event.allDay) + (locationShort ? ' • ' + locationShort : '');
       item.appendChild(title);
       item.appendChild(meta);
       upcomingEventsListEl.appendChild(item);
