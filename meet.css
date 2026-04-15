@@ -471,7 +471,7 @@ img {
 .spotify-embed {
   display: block;
   width: min(100%, var(--max-layout-width));
-  min-height: 152px;
+  min-height: 232px;
   border: 0;
 }
 
@@ -486,7 +486,7 @@ img {
 }
 
 .spotify-dock.is-expanded .spotify-embed-shell {
-  max-height: 210px;
+  max-height: 280px;
   opacity: 1;
   visibility: visible;
   margin-top: 0;
@@ -519,7 +519,7 @@ img {
 .meet-panel--info {
   display: flex;
   flex-direction: column;
-  gap: clamp(0.6rem, 1vw, 0.9rem);
+  gap: clamp(0.45rem, 0.75vw, 0.7rem);
 }
 
 .meet-panel--countdown {
@@ -539,15 +539,23 @@ img {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: clamp(0.4rem, 0.8vw, 0.7rem);
+  gap: clamp(0.3rem, 0.55vw, 0.5rem);
   min-width: 0;
   min-height: 0;
   flex: 1 1 0;
-  padding: clamp(0.75rem, 1.2vw, 1.1rem);
+  padding: clamp(0.6rem, 1vw, 0.9rem);
   border-radius: var(--radius-xl);
   border: 1px solid rgba(232, 88, 12, 0.18);
   background: linear-gradient(180deg, rgba(48, 39, 34, 0.74), rgba(34, 28, 24, 0.82));
   overflow: hidden;
+}
+
+.meet-block--speaker {
+  flex: 0.75 1 0;
+}
+
+.meet-block--schedule {
+  flex: 1.25 1 0;
 }
 
 .meet-block--venue {
@@ -583,10 +591,9 @@ img {
   color: var(--color-primary);
 }
 
-.meet-block__title,
-.qr-panel__heading {
+.meet-block__title {
   margin: 0;
-  font-size: clamp(1.65rem, 2.25vw, 2.45rem);
+  font-size: clamp(1.4rem, 1.9vw, 2rem);
   line-height: 0.95;
 }
 
@@ -600,8 +607,8 @@ img {
 .meet-events__list,
 .meet-inline-list {
   margin: 0;
-  font-size: clamp(0.96rem, 1.05vw, 1.15rem);
-  line-height: 1.5;
+  font-size: clamp(0.88rem, 0.95vw, 1.05rem);
+  line-height: 1.45;
   color: var(--color-text-muted);
   text-wrap: balance;
 }
@@ -609,14 +616,14 @@ img {
 .speaker-card {
   display: flex;
   align-items: center;
-  gap: clamp(0.85rem, 1.2vw, 1.1rem);
+  gap: clamp(0.6rem, 0.9vw, 0.85rem);
   min-width: 0;
 }
 
 .speaker-card__photo,
 .speaker-card__fallback {
-  width: clamp(4.8rem, 7vw, 6.4rem);
-  height: clamp(4.8rem, 7vw, 6.4rem);
+  width: clamp(3.8rem, 5.5vw, 5.2rem);
+  height: clamp(3.8rem, 5.5vw, 5.2rem);
   border-radius: 50%;
   flex: 0 0 auto;
 }
@@ -644,15 +651,15 @@ img {
 }
 
 .speaker-card__name {
-  margin: 0.15rem 0 0;
-  font-size: clamp(1.2rem, 1.5vw, 1.55rem);
+  margin: 0.1rem 0 0;
+  font-size: clamp(1.05rem, 1.3vw, 1.35rem);
   font-weight: 700;
   color: var(--color-text);
 }
 
 .speaker-card__company {
-  margin: 0.18rem 0 0.5rem;
-  font-size: clamp(0.88rem, 1vw, 1rem);
+  margin: 0.12rem 0 0.3rem;
+  font-size: clamp(0.82rem, 0.92vw, 0.95rem);
   color: var(--color-primary-hover);
   letter-spacing: 0.03em;
 }
@@ -661,6 +668,8 @@ img {
   padding-left: 0;
   list-style: none;
   text-align: center;
+  font-size: clamp(0.82rem, 0.9vw, 0.95rem);
+  line-height: 1.35;
 }
 
 .meet-events__list {
@@ -669,16 +678,22 @@ img {
 }
 
 .meet-inline-list li {
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.18rem;
 }
 
 .meet-events__list li {
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.25rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: clamp(0.82rem, 0.9vw, 0.95rem);
+  line-height: 1.4;
 }
 
 .schedule-list {
   display: grid;
-  gap: 0.6rem;
+  gap: 0.4rem;
   width: 100%;
 }
 
@@ -698,18 +713,19 @@ img {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.35rem 0.7rem;
+  padding: 0.25rem 0.55rem;
   border-radius: 999px;
   border: 1px solid rgba(232, 88, 12, 0.2);
   background: rgba(232, 88, 12, 0.09);
   width: fit-content;
+  font-size: clamp(0.7rem, 0.8vw, 0.85rem);
 }
 
 .meet-events {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.55rem;
+  gap: 0.35rem;
   min-width: 0;
 }
 
