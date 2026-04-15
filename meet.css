@@ -124,9 +124,12 @@ img {
 }
 
 .header-two12 {
-  background: #fff;
-  padding: clamp(0.28rem, 0.5vw, 0.45rem) clamp(0.5rem, 0.85vw, 0.75rem);
-  border-radius: 0.5rem;
+  background: none;
+  padding: 0;
+}
+
+.brand-logo--two12 {
+  filter: brightness(0) invert(1) drop-shadow(0 0 8px rgba(255, 255, 255, 0.25)) drop-shadow(0 0 20px rgba(232, 88, 12, 0.15));
 }
 
 .header-left {
@@ -525,13 +528,13 @@ img {
 .meet-panel--countdown {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .meet-panel--qr {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 }
 
