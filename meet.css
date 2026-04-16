@@ -169,13 +169,6 @@ img {
   color: var(--color-primary);
 }
 
-.header-subtitle {
-  margin-top: 0.18rem;
-  font-size: clamp(0.82rem, 1vw, 1rem);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-text-muted);
-}
 
 .header-divider {
   width: 1px;
