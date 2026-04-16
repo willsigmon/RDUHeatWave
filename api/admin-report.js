@@ -3,12 +3,21 @@
 var shared = require('./_lib/shared');
 
 var RATE_LIMITS = { burst: 10, burstWindowMs: 60 * 1000, hourly: 120 };
-var ADMIN_PASSCODE = process.env.ADMIN_PASSCODE;
+// Normalize so trailing newlines/whitespace in the Vercel env var value
+// (a common paste-in mistake) don't silently fail strict equality.
+var ADMIN_PASSCODE = shared.normalizeText(process.env.ADMIN_PASSCODE || '');
 var SHEET_ID = '1WWSxfqJ1UdMqJxKLaiIzb06n3rSQj5-AVN3m07wAkSA';
 var REQUEST_TIMEOUT_MS = 12 * 1000;
 
 if (!ADMIN_PASSCODE) {
   console.warn('[api/admin-report] ADMIN_PASSCODE env var is not set — endpoint will reject all requests');
+}
+
+function passcodeMatches(input) {
+  if (!ADMIN_PASSCODE || !input) return false;
+  // Case-insensitive match so that e.g. "mar1093" still unlocks on phones
+  // where autocaps/autocorrect can fight short alphanumeric pins.
+  return input.toLowerCase() === ADMIN_PASSCODE.toLowerCase();
 }
 
 function getPasscode(req, body) {
@@ -430,7 +439,7 @@ module.exports = async function handler(req, res) {
     var body = await shared.readRequestBody(req, 4 * 1024);
     var passcode = getPasscode(req, body);
 
-    if (!ADMIN_PASSCODE || !passcode || passcode !== ADMIN_PASSCODE) {
+    if (!passcodeMatches(passcode)) {
       return shared.sendJson(res, 401, { status: 'error', message: 'Invalid passcode' });
     }
 
