@@ -676,6 +676,45 @@ img {
   letter-spacing: 0.03em;
 }
 
+.mentor-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.55rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(232, 88, 12, 0.14), rgba(232, 88, 12, 0.05));
+  border: 1px solid var(--color-border-strong);
+  font-family: var(--font-body);
+  font-size: clamp(0.72rem, 0.78vw, 0.82rem);
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  color: var(--color-text);
+  box-shadow: 0 0 12px rgba(232, 88, 12, 0.12);
+}
+
+.mentor-pill[hidden] {
+  display: none;
+}
+
+.mentor-pill__glyph {
+  font-size: 0.95em;
+  color: var(--color-primary);
+  text-shadow: 0 0 8px rgba(232, 88, 12, 0.5);
+}
+
+.mentor-pill__label {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.mentor-pill__name {
+  font-weight: 700;
+  color: var(--color-primary-hover);
+}
+
 .meet-inline-list {
   padding-left: 0;
   list-style: none;

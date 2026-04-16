@@ -42,6 +42,8 @@
   var speakerNameEl = document.getElementById('speaker-name');
   var speakerCompanyEl = document.getElementById('speaker-company');
   var speakerCardBodyEl = document.getElementById('speaker-card-body');
+  var mentorPillEl = document.getElementById('mentor-pill');
+  var mentorPillNameEl = document.getElementById('mentor-pill-name');
   var showtimeSpeakerEl = document.getElementById('showtime-speaker');
   var eventsSyncPillEl = document.getElementById('events-sync-pill');
   var upcomingEventsListEl = document.getElementById('upcoming-events-list');
@@ -714,11 +716,19 @@
     if (speakerNameEl) speakerNameEl.textContent = speakerState.name;
     if (speakerCompanyEl) speakerCompanyEl.textContent = speakerState.company || 'Featured member';
 
+    var mentorName = SITE_CONFIG.currentMentor || '';
+
     if (speakerCardBodyEl) {
-      var mentorName = SITE_CONFIG.currentMentor || '';
-      speakerCardBodyEl.textContent = mentorName
-        ? 'Mentor Moment: ' + mentorName
-        : 'Featured today.';
+      speakerCardBodyEl.textContent = 'Give today\u2019s featured member your full attention and keep a warm introduction ready.';
+    }
+
+    if (mentorPillEl && mentorPillNameEl) {
+      if (mentorName) {
+        mentorPillNameEl.textContent = mentorName;
+        mentorPillEl.hidden = false;
+      } else {
+        mentorPillEl.hidden = true;
+      }
     }
 
     if (showtimeSpeakerEl) {
