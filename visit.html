@@ -587,7 +587,12 @@ section { padding: 2rem 1.5rem; }
 </script>
 
 <script>
+function haptic(pattern) {
+  if (navigator.vibrate) navigator.vibrate(pattern);
+}
+
 function downloadVisitIcs() {
+  haptic([12, 40, 12]);
   var parts = new Intl.DateTimeFormat('en-US', {
     timeZone: 'America/New_York',
     year: 'numeric', month: '2-digit', day: '2-digit',
@@ -634,6 +639,12 @@ function downloadVisitIcs() {
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
+</script>
+<script>
+document.addEventListener('click', function(e) {
+  var target = e.target.closest('.flow-step, .member-card, .seat-chip, .finale-venue');
+  if (target && navigator.vibrate) navigator.vibrate(8);
+});
 </script>
 <script src="/scripts/scroll-reveal.js"></script>
 <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function () {});</script>
