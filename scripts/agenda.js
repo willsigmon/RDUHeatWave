@@ -85,6 +85,13 @@
       '<span class="venue-dot">&#9670;</span>' +
       (MEETING_CONFIG.supportMessage || 'Please stay for a drink after the meeting to support the brewery &mdash; they provide our space at no cost.');
   }
+  // Mentor Moment
+  var mentorName = SITE_CONFIG.currentMentor || '';
+  var mentorItem = document.getElementById('mentor-agenda-item');
+  if (mentorItem && mentorName) {
+    mentorItem.textContent = 'Mentor Moment \u2014 ' + mentorName;
+  }
+
   if (speaker) {
     // Agenda list item
     var spotlightItem = document.getElementById('spotlight-agenda-item');

@@ -46,8 +46,47 @@
     return today;
   }
 
+  // ── Mentor Moment rotation ──────────────────────────────────────
+  // Round 1: original members only (before Shannida & Sue joined),
+  //          starting with Rusty on Apr 16 2026, then alphabetical.
+  // Round 2+: full roster alphabetical (including Shannida & Sue).
+  var MENTOR_ROUND_1 = [
+    'Rusty Sutton',
+    'Carter Helms',
+    'Craig Morrill',
+    'Dana Walsh',
+    'David Mercado',
+    'Nathan Senn',
+    'Robert Courts',
+    'Roni Payne',
+    'Will Sigmon'
+  ];
+  var MENTOR_ROUND_2 = [
+    'Carter Helms',
+    'Craig Morrill',
+    'Dana Walsh',
+    'David Mercado',
+    'Nathan Senn',
+    'Robert Courts',
+    'Roni Payne',
+    'Rusty Sutton',
+    'Shannida Ramsey',
+    'Sue Kerata',
+    'Will Sigmon'
+  ];
+  var MENTOR_START = new Date('2026-04-16T00:00:00');
+
+  function getMentorForMeeting(meetingDate) {
+    var offset = Math.round((meetingDate - MENTOR_START) / MS_PER_WEEK);
+    if (offset < 0) return MENTOR_ROUND_1[0];
+    if (offset < MENTOR_ROUND_1.length) return MENTOR_ROUND_1[offset];
+    var r2Offset = offset - MENTOR_ROUND_1.length;
+    return MENTOR_ROUND_2[((r2Offset % MENTOR_ROUND_2.length) + MENTOR_ROUND_2.length) % MENTOR_ROUND_2.length];
+  }
+
   var currentMeeting = nextThursdayET();
   var speaker = getSpeakerForMeeting(currentMeeting);
+  var mentor = getMentorForMeeting(currentMeeting);
 
   var siteConfig = {
     meeting: {
@@ -116,6 +155,13 @@
       roster: SPEAKER_ROSTER,
       startDate: ROTATION_START,
       getSpeakerForMeeting: getSpeakerForMeeting
+    },
+    currentMentor: mentor,
+    mentorRotation: {
+      round1: MENTOR_ROUND_1,
+      round2: MENTOR_ROUND_2,
+      startDate: MENTOR_START,
+      getMentorForMeeting: getMentorForMeeting
     }
   };
 

@@ -715,7 +715,10 @@
     if (speakerCompanyEl) speakerCompanyEl.textContent = speakerState.company || 'Featured member';
 
     if (speakerCardBodyEl) {
-      speakerCardBodyEl.textContent = 'Featured today.';
+      var mentorName = SITE_CONFIG.currentMentor || '';
+      speakerCardBodyEl.textContent = mentorName
+        ? 'Mentor Moment: ' + mentorName
+        : 'Featured today.';
     }
 
     if (showtimeSpeakerEl) {
