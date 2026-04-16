@@ -110,9 +110,9 @@ img {
   justify-content: space-between;
   gap: clamp(1rem, 2vw, 2rem);
   padding:
-    calc(var(--safe-top) + 0.5rem)
+    calc(var(--safe-top) + 0.35rem)
     var(--safe-right)
-    clamp(0.9rem, 1.4vw, 1.3rem)
+    clamp(0.5rem, 0.8vw, 0.75rem)
     var(--safe-left);
 }
 
@@ -273,9 +273,9 @@ img {
   display: flex;
   flex-direction: column;
   padding:
-    clamp(0.8rem, 1.4vw, 1.3rem)
+    clamp(0.4rem, 0.7vw, 0.65rem)
     var(--safe-right)
-    0
+    clamp(0.4rem, 0.7vw, 0.65rem)
     var(--safe-left);
 }
 
@@ -506,9 +506,9 @@ img {
 
 .lobby {
   display: grid;
-  grid-template-columns: minmax(320px, 0.85fr) minmax(360px, 1.25fr) minmax(280px, 0.9fr);
+  grid-template-columns: minmax(300px, 0.8fr) minmax(380px, 1.4fr) minmax(260px, 0.8fr);
   grid-template-rows: minmax(0, 1fr);
-  gap: clamp(1.1rem, 2vw, 2rem);
+  gap: clamp(0.75rem, 1.4vw, 1.4rem);
   align-items: stretch;
   width: min(100%, var(--max-layout-width, 1800px));
   flex: 1 1 0;
@@ -1745,6 +1745,54 @@ body.phase-showtime .heat-waves {
   .showtime-sub {
     font-size: clamp(2.2rem, 2.7vw, 3.8rem);
     max-width: 24ch;
+  }
+}
+
+/* ── 16:9 widescreen kiosk (typical TV / external display) ── */
+@media (min-aspect-ratio: 16/10) and (min-width: 1280px) {
+  .header {
+    padding-top: calc(var(--safe-top) + 0.25rem);
+    padding-bottom: 0.4rem;
+  }
+
+  .meet-shell {
+    padding-top: clamp(0.3rem, 0.5vw, 0.5rem);
+    padding-bottom: clamp(0.3rem, 0.5vw, 0.5rem);
+  }
+
+  .lobby {
+    grid-template-columns: minmax(280px, 0.75fr) minmax(400px, 1.5fr) minmax(260px, 0.75fr);
+    gap: clamp(0.6rem, 1.1vw, 1.1rem);
+  }
+
+  .countdown-header {
+    font-size: clamp(2.8rem, 5.5vw, 5.5rem);
+  }
+
+  .countdown-value {
+    font-size: clamp(5.5rem, 11vw, 10rem);
+    padding: clamp(0.8rem, 1.6vw, 1.3rem) clamp(0.5rem, 1.1vw, 0.8rem);
+  }
+
+  .countdown-display {
+    margin: clamp(1.2rem, 2.5vw, 2rem) 0;
+  }
+
+  .qr-panel__img,
+  .showtime-qr-card__img {
+    width: clamp(240px, 18vw, 320px);
+  }
+
+  .qr-panel__heading {
+    font-size: clamp(2rem, 3vw, 3.25rem);
+  }
+
+  .status-banner {
+    margin-top: auto;
+  }
+
+  .countdown-support-grid {
+    margin-top: auto;
   }
 }
 
