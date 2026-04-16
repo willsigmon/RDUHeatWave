@@ -288,5 +288,30 @@
 </script>
 <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
 <script src="/scripts/scroll-reveal.js"></script>
+<script>
+(function(){
+  var wakeLock = null;
+  async function acquire(){
+    if (!('wakeLock' in navigator) || document.visibilityState !== 'visible') return;
+    try {
+      wakeLock = await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release', function(){ wakeLock = null; });
+    } catch(e){}
+  }
+  acquire();
+  document.addEventListener('visibilitychange', function(){
+    if (document.visibilityState === 'visible' && !wakeLock) acquire();
+  });
+  function goFullscreen(){
+    if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen({ navigationUI: 'hide' }).catch(function(){});
+    }
+  }
+  if (!document.fullscreenElement) {
+    document.addEventListener('click', function onTap(){ goFullscreen(); document.removeEventListener('click', onTap); }, { once: true });
+    document.addEventListener('touchstart', function onTouch(){ goFullscreen(); document.removeEventListener('touchstart', onTouch); }, { once: true, passive: true });
+  }
+})();
+</script>
 </body>
 </html>

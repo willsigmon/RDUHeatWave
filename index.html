@@ -65,6 +65,31 @@
 <noscript><div class="noscript-banner">JavaScript is required to use this page.</div></noscript>
 <h1 class="sr-only">RDU Heatwave visitor check-in & team overview</h1>
 
+<aside class="kiosk-takeover" id="kiosk-takeover" aria-label="Register from your phone">
+  <div class="kiosk-takeover__inner">
+    <div class="kiosk-takeover__brand">
+      <img src="heatwave-logo.png" alt="" class="kiosk-takeover__logo" width="140" height="138">
+      <div class="kiosk-takeover__brand-copy">
+        <p class="kiosk-takeover__eyebrow">RDU Heatwave check-in</p>
+        <h2 class="kiosk-takeover__title heat-text">Grab your phone<br>&amp; scan to join</h2>
+      </div>
+    </div>
+
+    <div class="kiosk-takeover__qr-wrap">
+      <a class="kiosk-takeover__qr-link" href="https://rduheatwave.team" aria-label="Open rduheatwave.team">
+        <img src="qr-rduheatwave.svg" alt="Scan to open rduheatwave.team" class="kiosk-takeover__qr" loading="eager" decoding="async" width="520" height="520">
+      </a>
+      <p class="kiosk-takeover__domain">rduheatwave.team</p>
+      <p class="kiosk-takeover__hint">Open your phone camera &middot; point at the code &middot; tap the link</p>
+    </div>
+
+    <div class="kiosk-takeover__footer">
+      <p class="kiosk-takeover__footer-copy">This check-in is designed for your phone so we don&rsquo;t tie up the room computer.</p>
+      <button class="kiosk-takeover__dismiss" type="button" id="kiosk-takeover-dismiss">Continue on this device</button>
+    </div>
+  </div>
+</aside>
+
 <!-- Heat shimmer background -->
 <div class="heat-bg" aria-hidden="true" style="opacity: 0.35;">
   <div class="heat-line"></div>
@@ -435,10 +460,56 @@
 })();
 </script>
 
+<div style="text-align:center;margin:2rem 1rem 1rem;">
+  <button type="button" id="enter-kiosk-mode"
+    style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.85rem 1.6rem;background:linear-gradient(135deg,#E8580C,#FF8A3D);color:#fff;border:none;border-radius:999px;font-weight:700;font-size:0.95rem;letter-spacing:0.02em;cursor:pointer;box-shadow:0 4px 16px rgba(232,88,12,0.35);font-family:inherit;">
+    <span aria-hidden="true">⟡</span> Enter Kiosk Mode
+  </button>
+  <p style="margin:0.5rem auto 0;max-width:28rem;font-size:0.7rem;color:var(--color-text-muted);line-height:1.4;">
+    Fullscreen check-in display. Keeps the screen awake and hides controls. Tap Esc or 4-finger swipe to exit.
+  </p>
+</div>
 <footer style="text-align:center;padding:1.5rem 1rem 2rem;font-size:0.75rem;color:var(--color-text-muted);border-top:1px solid var(--color-divider);margin-top:2rem;">
   &copy; 2026 RDU Heatwave &middot; <a href="/privacy" style="color:var(--color-text-muted);text-decoration:underline;">Privacy</a> &middot; <a href="/about" style="color:var(--color-text-muted);text-decoration:underline;">About</a>
 </footer>
+<script>
+(function(){
+  var btn = document.getElementById('enter-kiosk-mode');
+  if (!btn) return;
+  btn.addEventListener('click', async function(){
+    try {
+      if (document.documentElement.requestFullscreen) {
+        await document.documentElement.requestFullscreen({ navigationUI: 'hide' }).catch(function(){});
+      }
+      if ('wakeLock' in navigator) {
+        try { await navigator.wakeLock.request('screen'); } catch(e){}
+      }
+    } catch(e){}
+    window.location.href = '/kiosk';
+  });
+})();
+</script>
 <script src="/scripts/scroll-reveal.js"></script>
+<script>
+  /* Kiosk takeover: on wide landscape displays show a QR-first overlay so guests
+     are directed to their phone rather than the room laptop/TV. A dismiss button
+     allows the owner to continue on the device when needed (remembered for the
+     session only). */
+  (function() {
+    var takeover = document.getElementById('kiosk-takeover');
+    var dismiss = document.getElementById('kiosk-takeover-dismiss');
+    if (!takeover || !dismiss) return;
+    try {
+      if (sessionStorage.getItem('kiosk-takeover-dismissed') === '1') {
+        document.body.classList.add('kiosk-takeover-dismissed');
+      }
+    } catch (e) { /* sessionStorage unavailable — keep takeover visible */ }
+    dismiss.addEventListener('click', function() {
+      document.body.classList.add('kiosk-takeover-dismissed');
+      try { sessionStorage.setItem('kiosk-takeover-dismissed', '1'); } catch (e) {}
+    });
+  })();
+</script>
 <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
 </body>
 </html>
