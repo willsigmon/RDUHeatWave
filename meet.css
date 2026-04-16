@@ -124,12 +124,28 @@ img {
 }
 
 .header-two12 {
-  background: none;
-  padding: 0;
+  position: relative;
+  padding: clamp(0.4rem, 0.7vw, 0.55rem) clamp(0.6rem, 1vw, 0.9rem);
+}
+
+.header-two12::before {
+  content: '';
+  position: absolute;
+  inset: -25% -15%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.09) 0%, rgba(232, 88, 12, 0.06) 40%, transparent 70%);
+  pointer-events: none;
+  animation: two12-pulse 6s ease-in-out infinite;
 }
 
 .brand-logo--two12 {
-  filter: brightness(0) invert(1) drop-shadow(0 0 8px rgba(255, 255, 255, 0.25)) drop-shadow(0 0 20px rgba(232, 88, 12, 0.15));
+  position: relative;
+  filter: brightness(0) invert(1) drop-shadow(0 0 10px rgba(255, 255, 255, 0.3)) drop-shadow(0 0 24px rgba(232, 88, 12, 0.2));
+}
+
+@keyframes two12-pulse {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.08); }
 }
 
 .header-left {
