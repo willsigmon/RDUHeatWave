@@ -1,4 +1,4 @@
-const CACHE_NAME = 'heatwave-v18';
+const CACHE_NAME = 'heatwave-v19';
 
 const PRECACHE_URLS = [
   '/',
@@ -7,6 +7,7 @@ const PRECACHE_URLS = [
   '/meet.html',
   '/meet.css',
   '/about.html',
+  '/visit.html',
   '/bizchat.html',
   '/kiosk.html',
   '/kiosk.css',
