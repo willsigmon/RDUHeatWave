@@ -75,16 +75,15 @@
     </div>
 
     <div class="kiosk-takeover__qr-wrap">
-      <a class="kiosk-takeover__qr-link" href="https://rduheatwave.team" aria-label="Open rduheatwave.team">
-        <img src="qr-rduheatwave.svg" alt="Scan to open rduheatwave.team" class="kiosk-takeover__qr" loading="eager" decoding="async" width="520" height="520">
-      </a>
+      <div class="kiosk-takeover__qr-link">
+        <img src="qr-rduheatwave.svg" alt="Scan to open rduheatwave.team on your phone" class="kiosk-takeover__qr" loading="eager" decoding="async" width="520" height="520">
+      </div>
       <p class="kiosk-takeover__domain">rduheatwave.team</p>
       <p class="kiosk-takeover__hint">Open your phone camera &middot; point at the code &middot; tap the link</p>
     </div>
 
     <div class="kiosk-takeover__footer">
-      <p class="kiosk-takeover__footer-copy">This check-in is designed for your phone so we don&rsquo;t tie up the room computer.</p>
-      <button class="kiosk-takeover__dismiss" type="button" id="kiosk-takeover-dismiss">Continue on this device</button>
+      <p class="kiosk-takeover__footer-copy">This room device is view-only. Sign-in happens from your phone now — no more keyboard check-ins.</p>
     </div>
   </div>
 </aside>
@@ -492,26 +491,6 @@
 })();
 </script>
 <script src="/scripts/scroll-reveal.js"></script>
-<script>
-  /* Kiosk takeover: on wide landscape displays show a QR-first overlay so guests
-     are directed to their phone rather than the room laptop/TV. A dismiss button
-     allows the owner to continue on the device when needed (remembered for the
-     session only). */
-  (function() {
-    var takeover = document.getElementById('kiosk-takeover');
-    var dismiss = document.getElementById('kiosk-takeover-dismiss');
-    if (!takeover || !dismiss) return;
-    try {
-      if (sessionStorage.getItem('kiosk-takeover-dismissed') === '1') {
-        document.body.classList.add('kiosk-takeover-dismissed');
-      }
-    } catch (e) { /* sessionStorage unavailable — keep takeover visible */ }
-    dismiss.addEventListener('click', function() {
-      document.body.classList.add('kiosk-takeover-dismissed');
-      try { sessionStorage.setItem('kiosk-takeover-dismissed', '1'); } catch (e) {}
-    });
-  })();
-</script>
 <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
 </body>
 </html>

@@ -4,7 +4,7 @@
 
   // ===== BEER MENU DATA =====
   var BEER_MENU = {
-    lastChecked: '2026-03-22',
+    lastChecked: null,
     featured: [
       { name: 'Tailwind Margarita', style: 'THC Seltzer', abv: 'N/A'   },
       { name: 'Mean Girl',          style: 'Kettle Sour',  abv: '5.5%' },
@@ -51,6 +51,80 @@
       }
     ]
   };
+
+  function getBeerMenuNote() {
+    var fallback = 'Tap list rotates fast — the board at Clouds is the final word for same-day pours.';
+    if (!BEER_MENU.lastChecked) return fallback;
+
+    var checkedDate = new Date(BEER_MENU.lastChecked + 'T00:00:00');
+    if (isNaN(checkedDate.getTime())) return fallback;
+
+    var ageDays = Math.floor((Date.now() - checkedDate.getTime()) / (24 * 60 * 60 * 1000));
+    if (ageDays > 10) return fallback;
+
+    return 'Menu snapshot checked ' + checkedDate.toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric'
+    }) + '.';
+  }
+
+  function syncKioskViewOnlyState() {
+    var kioskQuery = '(min-width: 1024px) and (hover: hover) and (pointer: fine)';
+    var kioskMedia = window.matchMedia ? window.matchMedia(kioskQuery) : null;
+    if (!kioskMedia) return;
+
+    var mainContent = document.getElementById('main-content');
+    var skipLink = document.querySelector('.skip-link');
+    var siteFooter = document.querySelector('footer');
+
+    function applyState(event) {
+      var locked = typeof event.matches === 'boolean' ? event.matches : kioskMedia.matches;
+      document.body.classList.toggle('kiosk-view-only', locked);
+
+      if (mainContent) {
+        if (locked) {
+          mainContent.setAttribute('inert', '');
+          mainContent.setAttribute('aria-hidden', 'true');
+        } else {
+          mainContent.removeAttribute('inert');
+          mainContent.removeAttribute('aria-hidden');
+        }
+      }
+
+      if (skipLink) {
+        if (locked) {
+          skipLink.hidden = true;
+          skipLink.setAttribute('tabindex', '-1');
+          skipLink.setAttribute('aria-hidden', 'true');
+        } else {
+          skipLink.hidden = false;
+          skipLink.removeAttribute('tabindex');
+          skipLink.removeAttribute('aria-hidden');
+        }
+      }
+
+      if (siteFooter) {
+        if (locked) {
+          siteFooter.hidden = true;
+          siteFooter.setAttribute('inert', '');
+          siteFooter.setAttribute('aria-hidden', 'true');
+        } else {
+          siteFooter.hidden = false;
+          siteFooter.removeAttribute('inert');
+          siteFooter.removeAttribute('aria-hidden');
+        }
+      }
+    }
+
+    applyState(kioskMedia);
+
+    if (typeof kioskMedia.addEventListener === 'function') {
+      kioskMedia.addEventListener('change', applyState);
+    } else if (typeof kioskMedia.addListener === 'function') {
+      kioskMedia.addListener(applyState);
+    }
+  }
 
   // Creates a DOM element with an optional CSS class.
   function makeEl(tag, cls) {
@@ -126,13 +200,11 @@
       beerColumns.appendChild(col);
     });
 
-    // "Checked" date note
-    var d = new Date(BEER_MENU.lastChecked + 'T00:00:00');
-    var formatted = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-    cloudsNote.textContent = 'Checked ' + formatted + '.';
+    cloudsNote.textContent = getBeerMenuNote();
   }
 
   renderBeerMenu();
+  syncKioskViewOnlyState();
 
   // ===== FULL-PANEL BEER POUR (gyro + haptics + sound) =====
   var pourEngine = (function() {
@@ -142,10 +214,11 @@
     var animId = null, running = false;
     var W, H, dpr;
     var beerLevel = 0, time = 0, pourActive = true;
-    var drops = [], carbonation = [];
+    var drops = [], carbonation = [], glints = [], condensation = [];
     var pourHapticTimer = null;
     var lastFrame = 0;
     var smoothTilt = 0; /* interpolated gyro for buttery motion */
+    var celebrationFlash = 0;
 
     function resize() {
       var rect = c.parentElement.getBoundingClientRect();
@@ -158,6 +231,33 @@
     function rng(a, b) { return a + Math.random() * (b - a); }
     function lerp(a, b, t) { return a + (b - a) * t; }
     function ease(t) { return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; }
+
+    function spawnGlint(x, y, size, warmth) {
+      glints.push({
+        x: x,
+        y: y,
+        size: size || rng(8, 16),
+        life: 1,
+        decay: rng(0.025, 0.06),
+        warmth: typeof warmth === 'number' ? warmth : Math.random()
+      });
+    }
+
+    function spawnCondensation() {
+      var glassMidX = W * 0.54;
+      var glassHalfTop = Math.min(W * 0.17, 110);
+      var side = Math.random() < 0.5 ? -1 : 1;
+      condensation.push({
+        x: glassMidX + side * (glassHalfTop - rng(8, 20)) + rng(-6, 6),
+        y: rng(H * 0.22, H * 0.72),
+        vy: rng(0.18, 0.5),
+        width: rng(1.5, 3.8),
+        length: rng(10, 28),
+        life: 1,
+        drift: rng(-0.08, 0.08),
+        decay: rng(0.004, 0.01)
+      });
+    }
 
     function draw(now) {
       /* Delta-time for frame-rate independent animation */
@@ -179,8 +279,41 @@
       var pourX = W * 0.4 + smoothTilt * W * 0.25;
       var surfaceY = H - (H * beerLevel);
       var tapY = 0; /* tap sits at top of canvas */
+      var glassMidX = W * 0.54;
+      var glassTop = H * 0.16;
+      var glassBottom = H * 0.94;
+      var glassHalfTop = Math.min(W * 0.17, 112);
+      var glassHalfBottom = glassHalfTop * 0.72;
 
       if (pourActive) beerLevel = Math.min(1, beerLevel + 0.0006 * dt);
+      celebrationFlash = Math.max(0, celebrationFlash - (0.035 * dt));
+
+      /* ── Brew hall glow + moving caustics ── */
+      ctx.save();
+      var bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+      bgGrad.addColorStop(0, 'rgba(14, 11, 9, 0.96)');
+      bgGrad.addColorStop(0.48, 'rgba(22, 17, 13, 0.88)');
+      bgGrad.addColorStop(1, 'rgba(9, 7, 6, 0.98)');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, W, H);
+
+      var amberGlow = ctx.createRadialGradient(glassMidX, H * 0.82, 0, glassMidX, H * 0.82, Math.max(W, H) * 0.65);
+      amberGlow.addColorStop(0, 'rgba(255, 187, 72, 0.22)');
+      amberGlow.addColorStop(0.35, 'rgba(232, 88, 12, 0.13)');
+      amberGlow.addColorStop(1, 'rgba(232, 88, 12, 0)');
+      ctx.fillStyle = amberGlow;
+      ctx.fillRect(0, 0, W, H);
+
+      for (var beam = 0; beam < 3; beam++) {
+        var beamX = ((time * (16 + beam * 9)) + beam * W * 0.34) % (W + 180) - 90;
+        var beamGrad = ctx.createLinearGradient(beamX, 0, beamX + 120, 0);
+        beamGrad.addColorStop(0, 'rgba(255,255,255,0)');
+        beamGrad.addColorStop(0.5, 'rgba(255,216,150,' + (0.04 + beam * 0.012) + ')');
+        beamGrad.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = beamGrad;
+        ctx.fillRect(beamX, 0, 120, H);
+      }
+      ctx.restore();
 
       /* ── Background Clouds Brewing clouds (subtle, slow drift) ── */
       ctx.save();
@@ -198,6 +331,42 @@
         ctx.beginPath(); ctx.arc(cx - cr * 0.3, cy - cr * 0.3, cr * 0.55, 0, Math.PI * 2); ctx.fill();
       }
       ctx.globalAlpha = 1;
+      ctx.restore();
+
+      /* ── Pint silhouette + glass highlights ── */
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(glassMidX - glassHalfTop, glassTop);
+      ctx.lineTo(glassMidX + glassHalfTop, glassTop);
+      ctx.lineTo(glassMidX + glassHalfBottom, glassBottom);
+      ctx.quadraticCurveTo(glassMidX, glassBottom + 24, glassMidX - glassHalfBottom, glassBottom);
+      ctx.closePath();
+
+      ctx.fillStyle = 'rgba(255,255,255,0.028)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.17)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(glassMidX - glassHalfTop + 18, glassTop + 12);
+      ctx.lineTo(glassMidX - glassHalfBottom + 10, glassBottom - 12);
+      ctx.strokeStyle = 'rgba(255,255,255,0.11)';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(glassMidX + glassHalfTop - 16, glassTop + 16);
+      ctx.lineTo(glassMidX + glassHalfBottom - 8, glassBottom - 20);
+      ctx.strokeStyle = 'rgba(255,220,170,0.06)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.ellipse(glassMidX, glassTop, glassHalfTop, 10, 0, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
       ctx.restore();
 
       /* ── Beer tap / faucet ── */
@@ -322,6 +491,9 @@
             r: rng(1.5, 4), life: 1, decay: rng(0.015, 0.03)
           });
         }
+        if (Math.random() < 0.1 * dt) {
+          spawnGlint(pourX + rng(-14, 14), surfaceY - rng(8, 26), rng(9, 18), 0.85);
+        }
       }
 
       /* ── Carbonation — radial gradient bubbles ── */
@@ -348,6 +520,34 @@
         ctx.fill();
       }
 
+      /* ── Cold-glass condensation trails ── */
+      if (beerLevel > 0.1 && Math.random() < 0.08 * dt) spawnCondensation();
+      for (var co = condensation.length - 1; co >= 0; co--) {
+        var drip = condensation[co];
+        drip.y += drip.vy * dt;
+        drip.x += drip.drift * dt;
+        drip.life -= drip.decay * dt;
+        if (drip.life <= 0 || drip.y > H + 16) { condensation.splice(co, 1); continue; }
+
+        var alpha = drip.life * 0.28;
+        var trailGrad = ctx.createLinearGradient(drip.x, drip.y - drip.length, drip.x, drip.y + 2);
+        trailGrad.addColorStop(0, 'rgba(255,255,255,0)');
+        trailGrad.addColorStop(0.8, 'rgba(255,255,255,' + alpha + ')');
+        trailGrad.addColorStop(1, 'rgba(255,235,200,' + (alpha * 0.9) + ')');
+        ctx.strokeStyle = trailGrad;
+        ctx.lineWidth = drip.width;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(drip.x, drip.y - drip.length);
+        ctx.lineTo(drip.x, drip.y);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(drip.x, drip.y + 1, drip.width * 0.9, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255,255,255,' + (alpha * 1.4) + ')';
+        ctx.fill();
+      }
+
       /* ── Splash drops — soft radial ── */
       for (var di = drops.length - 1; di >= 0; di--) {
         var d = drops[di];
@@ -363,6 +563,9 @@
         dg.addColorStop(1, 'rgba(218, 165, 32, 0)');
         ctx.fillStyle = dg;
         ctx.fill();
+        if (d.life > 0.72 && Math.random() < 0.16 * dt) {
+          spawnGlint(d.x, d.y, rng(6, 12), 0.65);
+        }
       }
 
       /* ── Beer foam head — thick creamy white ── */
@@ -418,13 +621,51 @@
         ctx.restore();
       }
 
+      /* ── Sparkle glints on stream, foam, and glass ── */
+      for (var gi = glints.length - 1; gi >= 0; gi--) {
+        var glint = glints[gi];
+        glint.life -= glint.decay * dt;
+        if (glint.life <= 0) { glints.splice(gi, 1); continue; }
+        var glintAlpha = glint.life * 0.45;
+        var size = glint.size * ease(Math.max(0.12, glint.life));
+        var tintR = Math.round(255 - glint.warmth * 16);
+        var tintG = Math.round(240 - glint.warmth * 50);
+        var tintB = Math.round(205 - glint.warmth * 95);
+        ctx.save();
+        ctx.translate(glint.x, glint.y);
+        ctx.strokeStyle = 'rgba(' + tintR + ',' + tintG + ',' + tintB + ',' + glintAlpha + ')';
+        ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.moveTo(-size, 0);
+        ctx.lineTo(size, 0);
+        ctx.moveTo(0, -size);
+        ctx.lineTo(0, size);
+        ctx.moveTo(-size * 0.65, -size * 0.65);
+        ctx.lineTo(size * 0.65, size * 0.65);
+        ctx.moveTo(size * 0.65, -size * 0.65);
+        ctx.lineTo(-size * 0.65, size * 0.65);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      if (celebrationFlash > 0) {
+        ctx.save();
+        ctx.fillStyle = 'rgba(255, 198, 92, ' + (celebrationFlash * 0.12) + ')';
+        ctx.fillRect(0, 0, W, H);
+        ctx.restore();
+      }
+
       /* Loop */
       if (beerLevel >= 1 && pourActive) {
         pourActive = false;
+        celebrationFlash = 1;
+        for (var burst = 0; burst < 10; burst++) {
+          spawnGlint(glassMidX + rng(-glassHalfTop * 0.7, glassHalfTop * 0.7), H * 0.45 + rng(-70, 70), rng(10, 22), 0.9);
+        }
         if (typeof HeatFX !== 'undefined') HeatFX.haptics.success();
         setTimeout(function() {
           beerLevel = 0; pourActive = true;
-          drops = []; carbonation = [];
+          drops = []; carbonation = []; glints = []; condensation = [];
         }, 5000);
       }
 

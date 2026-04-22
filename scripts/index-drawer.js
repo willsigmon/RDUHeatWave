@@ -142,6 +142,8 @@
   var bubbles = [];
   var steamParticles = [];
   var foamBubbles = [];
+  var sparks = [];
+  var pressureRings = [];
   var time = 0;
   var foamStarted = false;
   var foamHeight = 0;
@@ -177,11 +179,35 @@
     steamParticles.push({
       x: tubeX + rng(6, tubeW - 6),
       y: surfaceY - foamHeight - 4,
-      vx: rng(-0.6, 0.6),
-      vy: -rng(0.5, 1.2),
-      r: rng(4, 10),
+      vx: rng(-0.75, 0.75),
+      vy: -rng(0.7, 1.5),
+      r: rng(5, 12),
       life: 1, decay: rng(0.008, 0.018),
       drift: rng(-0.15, 0.15)
+    });
+  }
+
+  function spawnSpark(originX, originY, pressure) {
+    sparks.push({
+      x: originX,
+      y: originY,
+      vx: rng(-0.8, 0.8) + (Math.random() < 0.5 ? -1 : 1) * pressure * 0.35,
+      vy: -rng(1.2, 2.8) - pressure * 0.6,
+      len: rng(6, 16),
+      life: 1,
+      decay: rng(0.028, 0.055),
+      warmth: rng(0.4, 1)
+    });
+  }
+
+  function spawnPressureRing(surfaceY, pressure) {
+    pressureRings.push({
+      x: bulbCx,
+      y: surfaceY + rng(-6, 10),
+      r: rng(12, 24),
+      life: 1,
+      decay: rng(0.03, 0.06),
+      growth: 1.08 + pressure * 0.05
     });
   }
 
@@ -217,6 +243,33 @@
     }
     var clampedFill = Math.min(1, fillLevel);
     var surfaceY = tubeTop + tubeH * (1 - clampedFill);
+
+    /* ── Stage glow / heat shimmer backdrop ── */
+    ctx.save();
+    var stageGrad = ctx.createLinearGradient(0, 0, 0, H);
+    stageGrad.addColorStop(0, 'rgba(255, 110, 40, 0.045)');
+    stageGrad.addColorStop(0.45, 'rgba(232, 88, 12, 0.02)');
+    stageGrad.addColorStop(1, 'rgba(10, 8, 7, 0)');
+    ctx.fillStyle = stageGrad;
+    ctx.fillRect(0, 0, W, H);
+
+    var bulbHalo = ctx.createRadialGradient(bulbCx, bulbCy, 0, bulbCx, bulbCy, 108);
+    bulbHalo.addColorStop(0, 'rgba(255, 150, 60, 0.22)');
+    bulbHalo.addColorStop(0.32, 'rgba(232, 88, 12, 0.14)');
+    bulbHalo.addColorStop(1, 'rgba(232, 88, 12, 0)');
+    ctx.fillStyle = bulbHalo;
+    ctx.fillRect(0, 0, W, H);
+
+    for (var band = 0; band < 3; band++) {
+      var bandY = 60 + band * 80 + Math.sin(time * (1.3 + band * 0.25) + band) * 8;
+      var bandGrad = ctx.createLinearGradient(0, bandY, W, bandY + 30);
+      bandGrad.addColorStop(0, 'rgba(255,255,255,0)');
+      bandGrad.addColorStop(0.5, 'rgba(255,205,155,' + (0.035 + band * 0.01) + ')');
+      bandGrad.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = bandGrad;
+      ctx.fillRect(0, bandY, W, 24);
+    }
+    ctx.restore();
 
     /* Gentle pressure wobble when near full (no violent shake) */
     var pressure = Math.max(0, (fillLevel - 0.85) / 0.15);
@@ -256,6 +309,16 @@
       }
     }
 
+    if (pressure > 0.16 && Math.random() < pressure * 0.12) {
+      spawnPressureRing(surfaceY, pressure);
+    }
+    if (pressure > 0.2 && Math.random() < pressure * 0.18) {
+      spawnSpark(bulbCx + rng(-10, 10), bulbCy - rng(6, 18), pressure);
+    }
+    if (foamStarted && Math.random() < 0.18) {
+      spawnSpark(tubeX + tubeW / 2 + rng(-8, 8), surfaceY - rng(4, 14), 0.6);
+    }
+
     /* ── Glass tube outline ── */
     ctx.save();
     ctx.beginPath();
@@ -269,6 +332,12 @@
     ctx.roundRect(tubeX + 2, tubeTop + 2, tubeW - 4, tubeH - 4, 20);
     ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
     ctx.fill();
+
+    ctx.beginPath();
+    ctx.roundRect(tubeX - 4, tubeTop - 10, tubeW + 8, tubeH + 50, 26);
+    ctx.strokeStyle = 'rgba(255, 175, 90, ' + (0.04 + pressure * 0.12) + ')';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
 
     /* ── Liquid fill ── */
     ctx.beginPath();
@@ -386,6 +455,39 @@
       ctx.shadowBlur = 0;
     }
 
+    /* ── Pressure rings ── */
+    for (var ri = pressureRings.length - 1; ri >= 0; ri--) {
+      var ring = pressureRings[ri];
+      ring.r *= ring.growth;
+      ring.life -= ring.decay;
+      if (ring.life <= 0) { pressureRings.splice(ri, 1); continue; }
+      ctx.beginPath();
+      ctx.ellipse(ring.x, ring.y, ring.r, ring.r * 0.22, 0, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(255, 202, 140, ' + (ring.life * 0.18) + ')';
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+    }
+
+    /* ── Sparks / boiling embers ── */
+    for (var si = sparks.length - 1; si >= 0; si--) {
+      var spark = sparks[si];
+      spark.x += spark.vx;
+      spark.y += spark.vy;
+      spark.vy += 0.025;
+      spark.life -= spark.decay;
+      if (spark.life <= 0) { sparks.splice(si, 1); continue; }
+
+      var sx2 = spark.x - spark.vx * spark.len * 0.25;
+      var sy2 = spark.y - spark.vy * spark.len * 0.25;
+      ctx.beginPath();
+      ctx.moveTo(spark.x, spark.y);
+      ctx.lineTo(sx2, sy2);
+      ctx.strokeStyle = 'rgba(255, ' + Math.round(170 + spark.warmth * 50) + ', ' + Math.round(70 + spark.warmth * 40) + ', ' + (spark.life * 0.7) + ')';
+      ctx.lineWidth = 1.4;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+    }
+
     /* ── Foam bubbles — individual packed bubbles, no blob ── */
     for (var fi = foamBubbles.length - 1; fi >= 0; fi--) {
       var fb = foamBubbles[fi];
@@ -461,6 +563,8 @@
     bubbles = [];
     steamParticles = [];
     foamBubbles = [];
+    sparks = [];
+    pressureRings = [];
     foamStarted = false;
     foamHeight = 0;
     time = 0;
