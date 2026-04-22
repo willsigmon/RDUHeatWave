@@ -133,49 +133,51 @@ body {
 </head>
 <body>
 
-<!-- Heat background -->
-<div class="heat-bg" aria-hidden="true">
-  <div class="heat-line"></div>
-  <div class="heat-line"></div>
-  <div class="heat-line"></div>
-  <div class="heat-line"></div>
-  <div class="heat-line"></div>
-</div>
-
-<div class="error-container">
-  <div class="error-card gradient-border">
-
-    <div class="error-code thermal-scan" style="position: relative;">
-      404
-      <div class="smoke-wrapper">
-        <div class="smoke"></div>
-        <div class="smoke"></div>
-        <div class="smoke"></div>
-        <div class="smoke"></div>
-      </div>
-    </div>
-
-    <h1 class="error-title heat-text">RDU HEATWAVE</h1>
-
-    <p class="error-message">
-      This page went up in smoke.<br>
-      Nothing here but ashes and warm air.
-    </p>
-
-    <a href="/" class="home-btn fire-btn">
-      BACK TO HOME
-      <span class="ember-wrap" aria-hidden="true">
-        <span class="ember"></span>
-        <span class="ember"></span>
-        <span class="ember"></span>
-        <span class="ember"></span>
-        <span class="ember"></span>
-        <span class="ember"></span>
-      </span>
-    </a>
-
+<main id="main-content">
+  <!-- Heat background -->
+  <div class="heat-bg" aria-hidden="true">
+    <div class="heat-line"></div>
+    <div class="heat-line"></div>
+    <div class="heat-line"></div>
+    <div class="heat-line"></div>
+    <div class="heat-line"></div>
   </div>
-</div>
+
+  <div class="error-container">
+    <div class="error-card gradient-border">
+
+      <div class="error-code thermal-scan" style="position: relative;">
+        404
+        <div class="smoke-wrapper">
+          <div class="smoke"></div>
+          <div class="smoke"></div>
+          <div class="smoke"></div>
+          <div class="smoke"></div>
+        </div>
+      </div>
+
+      <h1 class="error-title heat-text">RDU HEATWAVE</h1>
+
+      <p class="error-message">
+        This page went up in smoke.<br>
+        Nothing here but ashes and warm air.
+      </p>
+
+      <a href="/" class="home-btn fire-btn">
+        BACK TO HOME
+        <span class="ember-wrap" aria-hidden="true">
+          <span class="ember"></span>
+          <span class="ember"></span>
+          <span class="ember"></span>
+          <span class="ember"></span>
+          <span class="ember"></span>
+          <span class="ember"></span>
+        </span>
+      </a>
+
+    </div>
+  </div>
+</main>
 
 <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
 </body>

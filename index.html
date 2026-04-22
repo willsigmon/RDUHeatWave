@@ -63,7 +63,6 @@
 <body>
 <a href="#checkin-form" class="skip-link">Skip to check-in form</a>
 <noscript><div class="noscript-banner">JavaScript is required to use this page.</div></noscript>
-<h1 class="sr-only">RDU Heatwave visitor check-in & team overview</h1>
 
 <aside class="kiosk-takeover" id="kiosk-takeover" aria-label="Register from your phone">
   <div class="kiosk-takeover__inner">
@@ -101,6 +100,8 @@
 <!-- Confetti canvas -->
 <canvas id="confetti-canvas" aria-hidden="true"></canvas>
 
+<main id="main-content">
+<h1 class="sr-only">RDU Heatwave visitor check-in & team overview</h1>
 <!-- Nav dots -->
 <div class="nav-dots">
   <button class="nav-dot" data-haptic="light" type="button" data-index="0" aria-label="Go to about panel" aria-current="false"></button>
@@ -124,7 +125,7 @@
 <div class="slider" id="slider">
 
 <!-- PANEL 0: ABOUT (swipe right to see) -->
-<div class="panel">
+<div class="panel" tabindex="0" aria-label="About RDU Heatwave panel">
   <div class="info-card gradient-border" data-reveal>
     <h2 class="heat-text">RDU HEATWAVE</h2>
     <p>The Raleigh-Durham team of the <strong style="color: var(--color-primary);">Two Twelve Referral Network</strong>. A structured, category-exclusive business networking group built on the "extra degree" philosophy.</p>
@@ -170,7 +171,7 @@
 
 <!-- PANEL 1: FORM (default landing) -->
 <div class="panel">
-<main class="form-card gradient-border" role="main">
+<section class="form-card gradient-border" aria-labelledby="checkin-heading">
 
   <!-- Logo -->
   <div class="logo-wrap">
@@ -188,7 +189,7 @@
     </div>
   </div>
 
-  <h2 class="form-title heat-text"><img src="/icons/iconscout/check-in.svg" alt="" class="page-icon" width="32" height="32">RDU HEATWAVE</h2>
+  <h2 class="form-title heat-text" id="checkin-heading"><img src="/icons/iconscout/check-in.svg" alt="" class="page-icon" width="32" height="32">RDU HEATWAVE</h2>
   <p class="form-subtitle">The Raleigh-Durham team of the Two Twelve Referral Network</p>
 
   <!-- Countdown -->
@@ -237,7 +238,7 @@
         <label class="field-label" for="profession">Profession</label>
         <div class="profession-picker" id="profession-picker">
           <input class="field-input" type="text" id="profession" name="profession" placeholder="Start typing your industry…" maxlength="120" autocomplete="off" autocapitalize="words" spellcheck="false" required>
-          <div class="profession-results" id="profession-results" role="listbox" aria-label="Industry suggestions"></div>
+          <div class="profession-results" id="profession-results" role="listbox" aria-label="Industry suggestions" tabindex="0"></div>
         </div>
         <div class="field-error" id="profession-error">Please enter your profession</div>
       </div>
@@ -266,7 +267,7 @@
       <div class="guest-picker" id="guestOf-picker">
         <div class="guest-quick-picks" id="guestOf-quick" role="group" aria-label="Quick host picks"></div>
         <input class="field-input guest-search-input" type="text" id="guestOfSearch" name="guestOfSearch" placeholder="Search team member or type a name…" maxlength="120" autocomplete="off" autocapitalize="words" spellcheck="false">
-        <div class="guest-results" id="guestOf-results" role="listbox" aria-label="Guest suggestions"></div>
+        <div class="guest-results" id="guestOf-results" role="listbox" aria-label="Guest suggestions" tabindex="0"></div>
       </div>
       <input type="hidden" id="guestOf" name="guestOf">
       <div class="field-error" id="guestOf-error">Please let us know who invited you</div>
@@ -309,11 +310,11 @@
     </button>
   </div>
 
-</main>
+</section>
 </div>
 
 <!-- PANEL 2: BEER MENU (swipe left to see) -->
-<div class="panel" style="position:relative;">
+<div class="panel" style="position:relative;" tabindex="0" aria-label="Clouds Brewing venue panel">
   <div class="beer-pour-bg">
     <canvas id="beer-pour-canvas"></canvas>
   </div>
@@ -469,6 +470,7 @@
     Fullscreen check-in display. Keeps the screen awake and hides controls. Tap Esc or 4-finger swipe to exit.
   </p>
 </div>
+</main>
 <footer style="text-align:center;padding:1.5rem 1rem 2rem;font-size:0.75rem;color:var(--color-text-muted);border-top:1px solid var(--color-divider);margin-top:2rem;">
   &copy; 2026 RDU Heatwave &middot; <a href="/privacy" style="color:var(--color-text-muted);text-decoration:underline;">Privacy</a> &middot; <a href="/about" style="color:var(--color-text-muted);text-decoration:underline;">About</a>
 </footer>

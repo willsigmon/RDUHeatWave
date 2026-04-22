@@ -33,6 +33,7 @@
 <div class="heat-bg" aria-hidden="true"><div class="heat-line"></div><div class="heat-line"></div><div class="heat-line"></div><div class="heat-line"></div><div class="heat-line"></div></div>
 <noscript><div class="noscript-banner">JavaScript is required to use the CRM.</div></noscript>
 
+<main id="crm-main" tabindex="-1">
 <section class="login-gate" id="login-gate" aria-labelledby="crm-login-title">
   <div class="login-shell">
     <div class="login-brand-panel">
@@ -122,7 +123,7 @@
     <nav class="sidebar" id="sidebar" aria-label="CRM tabs"></nav>
     <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
 
-    <main class="workspace" id="crm-main" tabindex="-1">
+    <section class="workspace" id="crm-workspace" aria-label="CRM workspace">
       <div class="table-area" id="table-area">
         <div class="empty-state">
           <p class="empty-state-kicker">Ready to work</p>
@@ -130,9 +131,10 @@
           <p>Choose a data source from the sidebar to open a live sheet view.</p>
         </div>
       </div>
-    </main>
+    </section>
   </div>
 </div>
+</main>
 
 <div class="toast" id="toast" aria-live="polite" aria-atomic="true"></div>
 
