@@ -10,7 +10,7 @@
   --color-surface-2: #2c2420;
   --color-text: #f0e6dc;
   --color-text-muted: #a89585;
-  --color-text-faint: #6b5c4e;
+  --color-text-faint: #9a8878;  /* WCAG AA on #1a1412: 5.4:1 */
   --color-border: rgba(232, 88, 12, 0.24);
   --color-border-strong: rgba(232, 88, 12, 0.4);
   --color-shadow: rgba(0, 0, 0, 0.45);
@@ -506,7 +506,7 @@ img {
 
 .lobby {
   display: grid;
-  grid-template-columns: minmax(300px, 0.8fr) minmax(380px, 1.4fr) minmax(260px, 0.8fr);
+  grid-template-columns: minmax(320px, 0.95fr) minmax(420px, 1.25fr) minmax(300px, 0.9fr);
   grid-template-rows: minmax(0, 1fr);
   gap: clamp(0.75rem, 1.4vw, 1.4rem);
   align-items: stretch;
@@ -563,11 +563,15 @@ img {
 }
 
 .meet-block--speaker {
-  flex: 0.75 1 0;
+  flex: 1.5 1 0;
+}
+
+.meet-block--venue {
+  flex: 0.85 1 0;
 }
 
 .meet-block--schedule {
-  flex: 1.25 1 0;
+  flex: 1 1 0;
 }
 
 .meet-block--venue {
@@ -627,15 +631,17 @@ img {
 
 .speaker-card {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: clamp(0.6rem, 0.9vw, 0.85rem);
+  gap: clamp(0.55rem, 0.9vw, 0.85rem);
   min-width: 0;
+  width: 100%;
 }
 
 .speaker-card__photo,
 .speaker-card__fallback {
-  width: clamp(3.8rem, 5.5vw, 5.2rem);
-  height: clamp(3.8rem, 5.5vw, 5.2rem);
+  width: clamp(5.5rem, 8.5vw, 9rem);
+  height: clamp(5.5rem, 8.5vw, 9rem);
   border-radius: 50%;
   flex: 0 0 auto;
 }
@@ -659,21 +665,28 @@ img {
 
 .speaker-card__content {
   min-width: 0;
-  text-align: left;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.12rem;
 }
 
 .speaker-card__name {
-  margin: 0.1rem 0 0;
-  font-size: clamp(1.05rem, 1.3vw, 1.35rem);
-  font-weight: 700;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.45rem, 2vw, 2.2rem);
+  letter-spacing: 0.03em;
+  line-height: 1;
   color: var(--color-text);
 }
 
 .speaker-card__company {
-  margin: 0.12rem 0 0.3rem;
-  font-size: clamp(0.82rem, 0.92vw, 0.95rem);
+  margin: 0;
+  font-size: clamp(0.95rem, 1.1vw, 1.15rem);
   color: var(--color-primary-hover);
   letter-spacing: 0.03em;
+  font-weight: 600;
 }
 
 .mentor-pill {
@@ -882,6 +895,10 @@ img {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   margin-top: clamp(1.1rem, 1.8vw, 1.6rem);
   width: 100%;
+}
+
+.countdown-support-grid[hidden] {
+  display: none;
 }
 
 .countdown-support-card,
@@ -1589,11 +1606,11 @@ body.phase-showtime .heat-waves {
   }
 
   .countdown-header {
-    font-size: clamp(3rem, 4.2vw, 5rem);
+    font-size: clamp(2.8rem, 3.6vw, 4.4rem);
   }
 
   .countdown-value {
-    font-size: clamp(5.6rem, 7.6vw, 8.8rem);
+    font-size: clamp(5rem, 6.4vw, 7.6rem);
   }
 
   .support-value {
@@ -1602,9 +1619,23 @@ body.phase-showtime .heat-waves {
 
   .qr-panel__img,
   .showtime-qr-card__img {
-    width: clamp(300px, 18vw, 390px);
-    min-width: 300px;
-    min-height: 300px;
+    width: clamp(340px, 22vw, 440px);
+    min-width: 340px;
+    min-height: 340px;
+  }
+
+  .speaker-card__photo,
+  .speaker-card__fallback {
+    width: clamp(6.5rem, 7.5vw, 8.5rem);
+    height: clamp(6.5rem, 7.5vw, 8.5rem);
+  }
+
+  .speaker-card__name {
+    font-size: clamp(1.9rem, 2vw, 2.4rem);
+  }
+
+  .speaker-card__company {
+    font-size: clamp(1.05rem, 1.1vw, 1.25rem);
   }
 }
 
@@ -1800,26 +1831,31 @@ body.phase-showtime .heat-waves {
   }
 
   .lobby {
-    grid-template-columns: minmax(280px, 0.75fr) minmax(400px, 1.5fr) minmax(260px, 0.75fr);
-    gap: clamp(0.6rem, 1.1vw, 1.1rem);
+    grid-template-columns: minmax(320px, 0.9fr) minmax(520px, 1.4fr) minmax(320px, 0.9fr);
+    gap: clamp(0.7rem, 1.2vw, 1.3rem);
   }
 
   .countdown-header {
-    font-size: clamp(2.8rem, 5.5vw, 5.5rem);
+    font-size: clamp(2.4rem, 4.4vw, 4.8rem);
   }
 
   .countdown-value {
-    font-size: clamp(5.5rem, 11vw, 10rem);
-    padding: clamp(0.8rem, 1.6vw, 1.3rem) clamp(0.5rem, 1.1vw, 0.8rem);
+    font-size: clamp(4.8rem, 7.2vw, 8.4rem);
+    padding: clamp(0.6rem, 1.2vw, 1rem) clamp(0.4rem, 0.8vw, 0.6rem);
   }
 
   .countdown-display {
     margin: clamp(1.2rem, 2.5vw, 2rem) 0;
   }
 
+  .meet-panel--countdown {
+    justify-content: center;
+    gap: clamp(0.8rem, 1.4vw, 1.3rem);
+  }
+
   .qr-panel__img,
   .showtime-qr-card__img {
-    width: clamp(240px, 18vw, 320px);
+    width: clamp(300px, 22vw, 420px);
   }
 
   .qr-panel__heading {
@@ -1827,11 +1863,7 @@ body.phase-showtime .heat-waves {
   }
 
   .status-banner {
-    margin-top: auto;
-  }
-
-  .countdown-support-grid {
-    margin-top: auto;
+    margin-top: 0;
   }
 }
 

@@ -127,15 +127,13 @@
     <section class="lobby" id="meet-layout" aria-label="RDU Heat meet countdown layout">
       <aside class="meet-panel meet-panel--info" aria-label="Meeting info panel">
         <section class="meet-block meet-block--speaker">
-          <p class="meet-block__eyebrow">Today at RDU Heat</p>
+          <p class="meet-block__eyebrow">Today&rsquo;s featured member</p>
           <div class="speaker-card">
-            <img class="speaker-card__photo" id="speaker-headshot" alt="" loading="lazy" decoding="async" width="160" height="160">
+            <img class="speaker-card__photo" id="speaker-headshot" alt="" loading="lazy" decoding="async" width="240" height="240">
             <div class="speaker-card__fallback" id="speaker-initials" aria-hidden="true">RH</div>
             <div class="speaker-card__content">
-              <h2 class="meet-block__title">Today&rsquo;s meeting</h2>
               <p class="speaker-card__name" id="speaker-name">&mdash;</p>
               <p class="speaker-card__company" id="speaker-company">&mdash;</p>
-              <p class="meet-block__body" id="speaker-card-body">Give today&rsquo;s featured member your full attention and keep a warm introduction ready.</p>
               <div class="mentor-pill" id="mentor-pill" hidden>
                 <span class="mentor-pill__glyph" aria-hidden="true">&#10070;</span>
                 <span class="mentor-pill__label">Mentor Moment</span>
@@ -148,12 +146,7 @@
         <section class="meet-block meet-block--venue">
           <p class="meet-block__eyebrow">Venue</p>
           <h2 class="meet-block__title">Clouds Brewing</h2>
-          <p class="meet-block__body">1233 Front St, Raleigh, NC 27609<br>Side room • special deal for the group</p>
-          <ul class="meet-inline-list" aria-label="Venue reminders">
-            <li>Open networking from 3:45 PM</li>
-            <li>Meeting starts at 4:00 PM ET</li>
-            <li>Stick around after to support the brewery</li>
-          </ul>
+          <p class="meet-block__body">1233 Front St, Raleigh, NC 27609<br>Side room reserved for our group</p>
         </section>
 
         <section class="meet-block meet-block--schedule">
@@ -211,7 +204,7 @@
         <p class="countdown-context" id="countdown-context">Counting down to this week's meeting.</p>
         <div class="status-banner" id="status-banner" role="status" aria-live="polite">See you Thursday.</div>
 
-        <div class="countdown-support-grid" aria-label="Meeting details">
+        <div class="countdown-support-grid" aria-label="Meeting details" hidden aria-hidden="true">
           <div class="countdown-support-card">
             <div class="support-label">Meeting start</div>
             <div class="support-value" id="meeting-start-label">4:00 PM ET</div>
@@ -230,15 +223,11 @@
       <aside class="meet-panel meet-panel--qr" aria-label="Check-in QR panel">
         <p class="qr-panel__eyebrow">Check-in</p>
         <h2 class="qr-panel__heading">Scan to check in</h2>
-        <p class="qr-panel__context">Open your phone camera and point it at the code below.</p>
         <a class="qr-panel__link" href="https://rduheatwave.team" aria-label="Visit rduheatwave.team">
           <img src="qr-rduheatwave.svg" alt="Scan to visit rduheatwave.team" class="qr-panel__img" loading="eager" decoding="async" width="264" height="264">
         </a>
         <p class="qr-panel__easy-line">rduheatwave.team</p>
-        <div class="qr-panel__footer">
-          <p class="qr-panel__note">Thursdays at 4:00 PM ET</p>
-          <p class="qr-panel__note">Clouds Brewing &bull; Raleigh, NC</p>
-        </div>
+        <p class="qr-panel__context">Point your phone camera at the code — takes 10 seconds.</p>
       </aside>
     </section>
   </div>

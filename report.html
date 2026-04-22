@@ -40,6 +40,19 @@
     width: 100vw;
   }
 
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    border: 0;
+    padding: 0;
+    white-space: nowrap;
+    clip-path: inset(50%);
+    clip: rect(0 0 0 0);
+    overflow: hidden;
+  }
+
   /* ── Slide container ── */
   .deck { position: relative; width: 100vw; height: 100vh; }
   .slide {
@@ -271,6 +284,8 @@
 </style>
 </head>
 <body>
+
+<h1 class="sr-only">RDU Heatwave Year to Date 2026 Report</h1>
 
 <div class="heat-bg" aria-hidden="true">
   <div class="heat-line"></div>

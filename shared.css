@@ -50,11 +50,12 @@ html {
 
   --color-text:           #f0e6dc;
   --color-text-muted:     #a89585;
-  --color-text-faint:     #6b5c4e;
+  --color-text-faint:     #9a8878;  /* WCAG AA on #1a1412: 5.4:1 */
 
   --color-primary:        #E8580C;
   --color-primary-hover:  #FF6A1E;
   --color-primary-active: #C44A0A;
+  --color-primary-text:   #FF8A4C;  /* For small text on dark/tinted backgrounds — WCAG AA safe */
   --gradient-fire:        linear-gradient(135deg, #E8580C 0%, #FF6A1E 50%, #FF9933 100%);
 
   --color-success:        #5BA847;
@@ -100,9 +101,10 @@ button { cursor: pointer; background: none; border: none; }
   z-index: 9999;
   padding: 0.75rem 1.5rem;
   background: var(--color-primary);
-  color: #fff;
+  color: #120d0b;  /* dark on orange: 4.7:1 — WCAG AA for body */
   font-family: var(--font-display);
   font-size: 1rem;
+  font-weight: 700;
   letter-spacing: 0.06em;
   text-decoration: none;
   border-radius: var(--radius-md);

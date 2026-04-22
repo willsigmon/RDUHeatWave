@@ -215,10 +215,29 @@ section { padding: 2rem 1.5rem; }
   font-family: var(--font-display);
   font-size: 0.85rem;
   letter-spacing: 0.04em;
-  color: var(--color-primary);
+  color: var(--color-primary-text);  /* WCAG AA on orange-tinted bg */
   background: rgba(232, 88, 12, 0.08);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
+}
+.finale-venue__note {
+  margin-top: 0.6rem;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--color-text);
+  background: rgba(232, 88, 12, 0.06);
+  border-left: 3px solid var(--color-primary);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  max-width: 52ch;
+}
+.finale-venue__note strong {
+  color: var(--color-primary-text);  /* WCAG AA on orange-tinted bg */
+  font-family: var(--font-display);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  margin-right: 0.35rem;
 }
 .finale-cta {
   text-align: center;
@@ -388,7 +407,7 @@ section { padding: 2rem 1.5rem; }
       <div class="flow-step__icon"><img src="/icons/iconscout/coffee-chat.svg" alt="" width="20" height="20"></div>
       <div>
         <div class="flow-step__title">3:45 PM</div>
-        <div class="flow-step__desc">Arrive, grab a drink, meet the team</div>
+        <div class="flow-step__desc">Arrive at the side room &mdash; grab a drink, meet the team</div>
       </div>
     </div>
     <div class="flow-step">
@@ -442,6 +461,7 @@ section { padding: 2rem 1.5rem; }
       <h3>Clouds Brewing</h3>
       <p>1233 Front St, Raleigh NC 27609</p>
       <div class="finale-venue__badge">Thursdays at 4:00 PM ET</div>
+      <p class="finale-venue__note"><strong>Heads up:</strong> Clouds&rsquo; public hours start at 4:30 PM, but our team has a standing early unlock. Head straight to the side room for the 3:45 PM start &mdash; if the front door looks closed, that&rsquo;s normal.</p>
     </div>
   </div>
   <div class="finale-cta">

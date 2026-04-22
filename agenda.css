@@ -4,15 +4,28 @@
   }
 
   /* Print page — light theme overrides shared dark tokens */
-  body {
-    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-    color: #1a1412;
-    font-size: 9.5pt;
-    line-height: 1.5;
-    background: #e8e0d8;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  color: #1a1412;
+  font-size: 9.5pt;
+  line-height: 1.5;
+  background: #e8e0d8;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+  clip-path: inset(50%);
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
 
   .page {
     background: #ffffff;

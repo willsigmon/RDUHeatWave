@@ -20,6 +20,16 @@
  */
 
 var MEETING_DATE = '2026-04-09'; // target row date — used for lookup in col A
+var SHEET_ID = '1WWSxfqJ1UdMqJxKLaiIzb06n3rSQj5-AVN3m07wAkSA'; // Team Stats 2026
+
+function getSheet_() {
+  // Works whether run as standalone or container-bound
+  try {
+    var active = SpreadsheetApp.getActive();
+    if (active && active.getId() === SHEET_ID) return active;
+  } catch (e) {}
+  return SpreadsheetApp.openById(SHEET_ID);
+}
 
 // Verified from physical Two Twelve cards (4/9/26 meeting).
 // Shape: tab name → { columnHeaderRowIndex, dataStartRowIndex, cardData }
@@ -91,7 +101,7 @@ function apply() {
  * Only fills blanks in rows whose date ≤ today (doesn't pre-fill future rows).
  */
 function fillAllBlanksWithZero() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = getSheet_();
   var today = new Date();
   today.setHours(23, 59, 59, 999);
 
@@ -126,7 +136,7 @@ function fillAllBlanksWithZero() {
 // ─── CORE LOGIC ──────────────────────────────────────────────────────────────
 
 function run_(write) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = getSheet_();
   var summary = [];
 
   Object.keys(TAB_FIXES).forEach(function(tabName) {
