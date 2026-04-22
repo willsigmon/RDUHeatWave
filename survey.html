@@ -461,7 +461,7 @@
           <span id="progress-text">Question 1 of 10</span>
           <span id="progress-pct">0% complete</span>
         </div>
-        <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress-bar-wrap">
+        <div class="progress-track" role="progressbar" aria-label="Survey completion progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress-bar-wrap" aria-describedby="progress-text">
           <div class="progress-fill" id="progress-fill"></div>
         </div>
       </div>
@@ -640,7 +640,8 @@
   </main>
 
   <footer class="site-footer">
-    <p>RDU Heatwave · <a href="https://twotwelvereferrals.com" target="_blank" rel="noopener noreferrer">Two Twelve Referral Network</a> · Clouds Brewing Taproom, Raleigh NC · Thursdays 4 PM</p>
+    <p>RDU Heatwave · Clouds Brewing Taproom, Raleigh NC · Thursdays 4 PM</p>
+    <p><a href="https://twotwelvereferrals.com" target="_blank" rel="noopener noreferrer">Two Twelve Referral Network</a></p>
   </footer>
 </div>
 
@@ -656,6 +657,10 @@
   const progressWrap = document.getElementById('progress-bar-wrap');
   const totalQ = 10;
 
+  document.querySelectorAll('ul.options-list li').forEach(function(item) {
+    item.setAttribute('role', 'presentation');
+  });
+
   function updateProgress() {
     let answered = 0;
     for (let i = 1; i <= totalQ; i++) {
@@ -668,6 +673,7 @@
     const pct = Math.round((answered / totalQ) * 100);
     progressFill.style.width = pct + '%';
     progressWrap.setAttribute('aria-valuenow', pct);
+    progressWrap.setAttribute('aria-valuetext', pct + '% complete');
     progressText.textContent = answered < totalQ
       ? `Question ${answered + 1} of ${totalQ}`
       : 'All questions answered!';
