@@ -69,63 +69,6 @@
     }) + '.';
   }
 
-  function syncKioskViewOnlyState() {
-    var kioskQuery = '(min-width: 1024px) and (hover: hover) and (pointer: fine)';
-    var kioskMedia = window.matchMedia ? window.matchMedia(kioskQuery) : null;
-    if (!kioskMedia) return;
-
-    var mainContent = document.getElementById('main-content');
-    var skipLink = document.querySelector('.skip-link');
-    var siteFooter = document.querySelector('footer');
-
-    function applyState(event) {
-      var locked = typeof event.matches === 'boolean' ? event.matches : kioskMedia.matches;
-      document.body.classList.toggle('kiosk-view-only', locked);
-
-      if (mainContent) {
-        if (locked) {
-          mainContent.setAttribute('inert', '');
-          mainContent.setAttribute('aria-hidden', 'true');
-        } else {
-          mainContent.removeAttribute('inert');
-          mainContent.removeAttribute('aria-hidden');
-        }
-      }
-
-      if (skipLink) {
-        if (locked) {
-          skipLink.hidden = true;
-          skipLink.setAttribute('tabindex', '-1');
-          skipLink.setAttribute('aria-hidden', 'true');
-        } else {
-          skipLink.hidden = false;
-          skipLink.removeAttribute('tabindex');
-          skipLink.removeAttribute('aria-hidden');
-        }
-      }
-
-      if (siteFooter) {
-        if (locked) {
-          siteFooter.hidden = true;
-          siteFooter.setAttribute('inert', '');
-          siteFooter.setAttribute('aria-hidden', 'true');
-        } else {
-          siteFooter.hidden = false;
-          siteFooter.removeAttribute('inert');
-          siteFooter.removeAttribute('aria-hidden');
-        }
-      }
-    }
-
-    applyState(kioskMedia);
-
-    if (typeof kioskMedia.addEventListener === 'function') {
-      kioskMedia.addEventListener('change', applyState);
-    } else if (typeof kioskMedia.addListener === 'function') {
-      kioskMedia.addListener(applyState);
-    }
-  }
-
   // Creates a DOM element with an optional CSS class.
   function makeEl(tag, cls) {
     var el = document.createElement(tag);
@@ -204,8 +147,6 @@
   }
 
   renderBeerMenu();
-  syncKioskViewOnlyState();
-
   // ===== FULL-PANEL BEER POUR (gyro + haptics + sound) =====
   var pourEngine = (function() {
     var c = document.getElementById('beer-pour-canvas');
