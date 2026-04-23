@@ -1898,151 +1898,6 @@ body.about-panel-active .info-drawer {
   z-index: 210;
 }
 
-/* === KIOSK TAKEOVER ======================================================
-   The <aside class="kiosk-takeover"> in index.html is a QR-first overlay
-   meant for room laptops / TVs so guests are directed to their phone.
-   Hidden by default for everyone; the media query below reveals it on
-   larger pointer/fine screens and leaves the room device view-only. */
-.kiosk-takeover { display: none; }
-
-@media (min-width: 1100px) and (orientation: landscape) and (pointer: fine) {
-  body .kiosk-takeover {
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: clamp(1.5rem, 4vh, 3rem);
-    background: radial-gradient(circle at 50% 32%, rgba(40, 26, 20, 0.97), rgba(14, 11, 10, 0.98) 72%);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    animation: kiosk-takeover-fade 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-
-  @keyframes kiosk-takeover-fade {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-  }
-
-  .kiosk-takeover__inner {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: clamp(2rem, 4vw, 4rem);
-    max-width: min(1100px, 94vw);
-    padding: clamp(1.75rem, 3vw, 2.5rem) clamp(2rem, 3.5vw, 3rem);
-    border-radius: 1.5rem;
-    background: rgba(22, 18, 16, 0.9);
-    border: 1px solid rgba(232, 88, 12, 0.24);
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.78), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  }
-
-  .kiosk-takeover__brand {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-
-  .kiosk-takeover__logo {
-    width: 108px;
-    height: auto;
-    filter: drop-shadow(0 4px 20px rgba(232, 88, 12, 0.45));
-  }
-
-  .kiosk-takeover__eyebrow {
-    font-family: var(--font-display);
-    font-size: 0.82rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--color-primary);
-    margin: 0;
-  }
-
-  .kiosk-takeover__title {
-    font-family: var(--font-display);
-    font-size: clamp(2.4rem, 4vw, 3.6rem);
-    color: #fff;
-    line-height: 1.02;
-    letter-spacing: 0.02em;
-    margin: 0;
-  }
-
-  .kiosk-takeover__qr-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .kiosk-takeover__qr-link {
-    display: block;
-    padding: 0.85rem;
-    border-radius: 1.1rem;
-    background: #fff;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.32);
-  }
-
-  .kiosk-takeover__qr {
-    width: clamp(220px, 26vw, 300px);
-    height: auto;
-    display: block;
-  }
-
-  .kiosk-takeover__domain {
-    font-family: var(--font-display);
-    font-size: 1.2rem;
-    letter-spacing: 0.16em;
-    color: #fff;
-    margin: 0;
-  }
-
-  .kiosk-takeover__hint {
-    margin: 0;
-    color: rgba(255, 255, 255, 0.55);
-    font-size: 0.78rem;
-    letter-spacing: 0.04em;
-    text-align: center;
-    max-width: 28ch;
-  }
-
-  .kiosk-takeover__footer {
-    grid-column: 1 / -1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-  }
-
-  .kiosk-takeover__footer-copy {
-    margin: 0;
-    color: rgba(255, 255, 255, 0.58);
-    font-size: 0.82rem;
-    max-width: 48ch;
-  }
-
-  .kiosk-takeover__dismiss {
-    padding: 0.55rem 1.2rem;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    background: transparent;
-    color: rgba(255, 255, 255, 0.78);
-    font-family: var(--font-body);
-    font-size: 0.82rem;
-    font-weight: 600;
-    border-radius: var(--radius-full);
-    cursor: pointer;
-    transition: background 0.2s ease, border-color 0.2s ease;
-  }
-
-  .kiosk-takeover__dismiss:hover {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.3);
-  }
-}
-
 /* === MOBILE === */
 @media (max-width: 820px) {
   .beer-columns { grid-template-columns: 1fr; gap: 0; }
@@ -2140,6 +1995,10 @@ body.kiosk-view-only > footer {
   display: none;
 }
 
+body.kiosk-view-only .kiosk-launch {
+  display: none;
+}
+
 @keyframes kiosk-takeover-in {
   from { opacity: 0; transform: scale(0.985); }
   to { opacity: 1; transform: scale(1); }
@@ -2229,18 +2088,18 @@ body.kiosk-view-only > footer {
   line-height: 1.45;
 }
 
-  .kiosk-takeover__footer {
-    grid-column: 1 / -1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    padding-top: clamp(1rem, 1.6vw, 1.5rem);
-    margin-top: clamp(0.75rem, 1.2vw, 1.25rem);
-    border-top: 1px solid rgba(232, 88, 12, 0.18);
-    flex-wrap: wrap;
-    text-align: center;
-  }
+.kiosk-takeover__footer {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding-top: clamp(1rem, 1.6vw, 1.5rem);
+  margin-top: clamp(0.75rem, 1.2vw, 1.25rem);
+  border-top: 1px solid rgba(232, 88, 12, 0.18);
+  flex-wrap: wrap;
+  text-align: center;
+}
 
 .kiosk-takeover__footer-copy {
   margin: 0;
@@ -2249,25 +2108,48 @@ body.kiosk-view-only > footer {
   max-width: 62ch;
 }
 
-.kiosk-takeover__dismiss {
-  appearance: none;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.04);
-  color: rgba(240, 230, 220, 0.78);
-  font-family: inherit;
-  font-size: clamp(0.82rem, 0.9vw, 0.95rem);
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  padding: 0.65rem 1.1rem;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
+.kiosk-launch {
+  display: none;
+  text-align: center;
+  margin: 2rem 1rem 1rem;
 }
 
-.kiosk-takeover__dismiss:hover,
-.kiosk-takeover__dismiss:focus-visible {
-  border-color: rgba(255, 153, 94, 0.45);
-  color: #fff4ea;
-  background: rgba(232, 88, 12, 0.12);
+.kiosk-launch__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.6rem;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #E8580C, #FF8A3D);
+  color: #fff;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(232, 88, 12, 0.35);
+  transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+}
+
+.kiosk-launch__button:hover,
+.kiosk-launch__button:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(232, 88, 12, 0.32);
+  filter: brightness(1.04);
   outline: none;
+}
+
+.kiosk-launch__note {
+  margin: 0.5rem auto 0;
+  max-width: 28rem;
+  font-size: 0.7rem;
+  line-height: 1.4;
+  color: var(--color-text-muted);
+}
+
+@media (min-width: 900px) and (hover: hover) and (pointer: fine) {
+  .kiosk-launch {
+    display: block;
+  }
 }

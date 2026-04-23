@@ -460,12 +460,11 @@
 })();
 </script>
 
-<div style="text-align:center;margin:2rem 1rem 1rem;">
-  <button type="button" id="enter-kiosk-mode"
-    style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.85rem 1.6rem;background:linear-gradient(135deg,#E8580C,#FF8A3D);color:#fff;border:none;border-radius:999px;font-weight:700;font-size:0.95rem;letter-spacing:0.02em;cursor:pointer;box-shadow:0 4px 16px rgba(232,88,12,0.35);font-family:inherit;">
+<div class="kiosk-launch">
+  <button type="button" id="enter-kiosk-mode" class="kiosk-launch__button">
     <span aria-hidden="true">⟡</span> Enter Kiosk Mode
   </button>
-  <p style="margin:0.5rem auto 0;max-width:28rem;font-size:0.7rem;color:var(--color-text-muted);line-height:1.4;">
+  <p class="kiosk-launch__note">
     Fullscreen check-in display. Keeps the screen awake and hides controls. Tap Esc or 4-finger swipe to exit.
   </p>
 </div>
