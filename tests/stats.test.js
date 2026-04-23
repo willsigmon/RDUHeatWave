@@ -31,6 +31,10 @@ function stubAllSheets() {
       ['Member', 'Weekly Total Given', 'Rcvd'],
       [['Alice', '$100', '$200'], ['Bob', '$150', '$300'], ['', '$250', '$500']],
     )},
+    { pattern: 'GIs%20Report', body: gvizResponse(
+      ['Date', 'Alice Given', 'Rcvd', 'Bob Given', 'Rcvd', 'Weekly Total Given', 'Rcvd'],
+      [['1/1/2026', '2', '1', '1', '2', '3', '3'], ['', '5', '4', '3', '4', '8', '8']],
+    )},
   ];
 
   return mockGlobalFetch(async (url) => {
@@ -80,7 +84,7 @@ describe('stats handler — response shape', () => {
     expect(stats).toHaveProperty('bizChats');
     expect(stats).toHaveProperty('referrals');
     expect(stats).toHaveProperty('revenue');
-    expect(stats).toHaveProperty('guestIncentives');
+    expect(stats).toHaveProperty('gratitudeIncentives');
     expect(result.body.stale).toBe(false);
   });
 
@@ -93,7 +97,7 @@ describe('stats handler — response shape', () => {
     expect(stats.bizChats).toBe(8);
     expect(stats.referrals).toBe(2); // only recent dates
     expect(stats.revenue).toBe(500);
-    expect(stats.guestIncentives).toBe(8);
+    expect(stats.gratitudeIncentives).toBe(8);
   });
 });
 

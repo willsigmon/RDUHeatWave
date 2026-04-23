@@ -16,10 +16,33 @@
     { name: 'Sue Kerata', company: 'Century 21 Triangle Group', photo: '/member-photos/sue-kerata.jpg', photoObjectPosition: 'center 30%' },
     { name: 'Will Sigmon', company: 'Will Sigmon Media Co.', photo: '/member-photos/will-sigmon.jpg', photoObjectPosition: 'center 35%' }
   ];
+  var SPEAKER_OVERRIDES = {
+    '2026-04-23': 'Roni Payne'
+  };
   var ROTATION_START = new Date('2026-04-09T00:00:00');
   var MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
 
+  function toIsoDate(date) {
+    var year = date.getFullYear();
+    var month = String(date.getMonth() + 1).padStart(2, '0');
+    var day = String(date.getDate()).padStart(2, '0');
+    return year + '-' + month + '-' + day;
+  }
+
+  function findSpeakerByName(name) {
+    for (var i = 0; i < SPEAKER_ROSTER.length; i++) {
+      if (SPEAKER_ROSTER[i].name === name) return SPEAKER_ROSTER[i];
+    }
+    return null;
+  }
+
   function getSpeakerForMeeting(meetingDate) {
+    var override = SPEAKER_OVERRIDES[toIsoDate(meetingDate)];
+    if (override) {
+      var speakerOverride = findSpeakerByName(override);
+      if (speakerOverride) return speakerOverride;
+    }
+
     var offset = Math.round((meetingDate - ROTATION_START) / MS_PER_WEEK);
     var len = SPEAKER_ROSTER.length;
     return SPEAKER_ROSTER[((offset % len) + len) % len];

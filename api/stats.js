@@ -29,9 +29,9 @@ var STAT_DEFINITIONS = [
     compute: function (report) { return getRevenueFromReport(report); }
   },
   {
-    key: 'guestIncentives',
-    sheetName: 'Guest Incentive Report',
-    compute: function (report) { return getTotalFromColumn(report, 'total'); }
+    key: 'gratitudeIncentives',
+    sheetName: 'GIs Report',
+    compute: function (report) { return getGiTotalFromReport(report); }
   }
 ];
 
@@ -101,6 +101,38 @@ function getRevenueFromReport(report) {
   }
 
   return targetIndex >= 0 ? shared.parseNumber(totalsRow[targetIndex]) : 0;
+}
+
+function getGiTotalFromReport(report) {
+  var totalIndex = -1;
+  var weeklyGivenIndex = report.cols.findIndex(function (label) {
+    return /weekly total given/i.test(shared.normalizeText(label));
+  });
+
+  if (weeklyGivenIndex >= 0) {
+    for (var i = weeklyGivenIndex + 1; i < report.cols.length; i++) {
+      if (/^rcvd$/i.test(shared.normalizeText(report.cols[i]))) {
+        totalIndex = i;
+      }
+    }
+  }
+
+  if (totalIndex < 0) {
+    for (var j = report.cols.length - 1; j >= 0; j--) {
+      if (/^rcvd$/i.test(shared.normalizeText(report.cols[j]))) {
+        totalIndex = j;
+        break;
+      }
+    }
+  }
+
+  var totalsRow = report.rows
+    .filter(function (row) {
+      return !shared.normalizeText(row[0]) && totalIndex >= 0 && shared.normalizeText(row[totalIndex]);
+    })
+    .slice(-1)[0] || [];
+
+  return totalIndex >= 0 ? shared.parseNumber(totalsRow[totalIndex]) : 0;
 }
 
 async function buildStats() {

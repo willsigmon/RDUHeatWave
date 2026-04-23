@@ -145,6 +145,6 @@ fetch('/api/stats').then(function(r) { return r.json(); }).then(function(data) {
   if (el('stat-guests'))    el('stat-guests').textContent = s.guestsHosted || '—';
   if (el('stat-bizchats'))  el('stat-bizchats').textContent = s.bizChats || '—';
   if (el('stat-referrals')) el('stat-referrals').textContent = s.referrals || '—';
-  if (el('stat-gis'))       el('stat-gis').textContent = s.guestIncentives || '—';
+  if (el('stat-gis'))       el('stat-gis').textContent = (s.gratitudeIncentives != null ? s.gratitudeIncentives : (s.guestIncentives != null ? s.guestIncentives : '—'));
   if (el('stat-revenue'))   el('stat-revenue').textContent = '$' + Number(s.revenue || 0).toLocaleString('en-US');
 }).catch(function() {});

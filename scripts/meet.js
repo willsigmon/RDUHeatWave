@@ -74,7 +74,7 @@
     guestsHosted: 113,
     revenue: 115331,
     referrals: 49,
-    guestIncentives: 158
+    gratitudeIncentives: 37
   };
 
   var speakerState = buildSpeakerState();
@@ -657,7 +657,7 @@
       stats.guestsHosted + ' guests hosted',
       formatCurrency(stats.revenue) + ' revenue generated',
       stats.referrals + ' referrals passed',
-      stats.guestIncentives + ' gratitude incentives received',
+      stats.gratitudeIncentives + ' gratitude incentives received',
       'Rolling 12-month stats • RDU Heatwave'
     ];
 
@@ -693,7 +693,7 @@
       stats.guestsHosted = data.stats.guestsHosted || stats.guestsHosted;
       stats.revenue = data.stats.revenue || stats.revenue;
       stats.referrals = data.stats.referrals || stats.referrals;
-      stats.guestIncentives = data.stats.guestIncentives || stats.guestIncentives;
+      stats.gratitudeIncentives = data.stats.gratitudeIncentives || data.stats.guestIncentives || stats.gratitudeIncentives;
       buildTicker();
     });
   }
