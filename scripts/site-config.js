@@ -131,7 +131,7 @@
       supportMessage: 'Please stay for a drink after the meeting to support the brewery — they provide our space at no cost.'
     },
     countdownTarget: {
-      time: '16:05',
+      time: '16:00',
       timezone: 'America/New_York',
       isoDate: null,
       allowRepeat: false

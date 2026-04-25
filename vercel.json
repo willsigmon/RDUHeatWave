@@ -88,6 +88,10 @@
       }
     },
     {
+      "src": "/",
+      "dest": "/index.html"
+    },
+    {
       "src": "/meet",
       "dest": "/meet.html"
     },
@@ -269,7 +273,8 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "/404.html",
+      "status": 404
     }
   ]
 }

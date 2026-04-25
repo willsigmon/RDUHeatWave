@@ -204,6 +204,34 @@ describe('isAllowedOriginValue', () => {
   });
 });
 
+// ── getCheckinSharedSecret ────────────────────────────────────────
+
+describe('getCheckinSharedSecret', () => {
+  var originalSecret;
+
+  beforeEach(() => {
+    originalSecret = process.env.CHECKIN_SHARED_SECRET;
+  });
+
+  afterEach(() => {
+    if (originalSecret === undefined) {
+      delete process.env.CHECKIN_SHARED_SECRET;
+    } else {
+      process.env.CHECKIN_SHARED_SECRET = originalSecret;
+    }
+  });
+
+  it('returns the configured shared secret', () => {
+    process.env.CHECKIN_SHARED_SECRET = 'abc123';
+    expect(shared.getCheckinSharedSecret()).toBe('abc123');
+  });
+
+  it('throws when the shared secret is missing', () => {
+    delete process.env.CHECKIN_SHARED_SECRET;
+    expect(() => shared.getCheckinSharedSecret()).toThrow('CHECKIN_SHARED_SECRET');
+  });
+});
+
 // ── hasAllowedOrigin ───────────────────────────────────────────────
 
 describe('hasAllowedOrigin', () => {
@@ -363,6 +391,14 @@ describe('forwardToAppsScript', () => {
     mockGlobalFetch(async () => mockFetchResponse('{"error":"fail"}', { status: 500, ok: false }));
     const result = await shared.forwardToAppsScript('https://script.google.com/exec', { name: 'test' });
     expect(result.ok).toBe(false);
+  });
+
+  it('adds the check-in shared secret when provided', async () => {
+    const fetchMock = mockGlobalFetch(async () => mockFetchResponse('{"status":"ok"}'));
+    await shared.forwardToAppsScript('https://script.google.com/exec', { name: 'test' }, {
+      sharedSecret: 'secret value'
+    });
+    expect(fetchMock.mock.calls[0][1].body).toContain('checkinSecret=secret+value');
   });
 });
 

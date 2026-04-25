@@ -430,7 +430,7 @@
       }
     }
 
-    var timeOfDay = parseTimeString(COUNTDOWN_CONFIG.time || '16:05');
+    var timeOfDay = parseTimeString(COUNTDOWN_CONFIG.time || '16:00');
     var now = Date.now();
     var currentParts = getTimeZoneParts(new Date(now), MEETING_TIME_ZONE);
     var currentDayUtc = new Date(Date.UTC(currentParts.year, currentParts.month - 1, currentParts.day));
@@ -560,7 +560,10 @@
     }
 
     if (countdownContextEl && targetState) {
-      countdownContextEl.textContent = 'Counting down to this week\u2019s meeting.';
+      countdownContextEl.textContent = 'Networking opens at ' +
+        (MEETING_CONFIG.networkingTimeShort || '3:45 PM') +
+        '; the formal meeting starts at ' +
+        (MEETING_CONFIG.publicTimeShort || '4:00 PM') + '.';
     }
 
     if (statusBannerEl) {

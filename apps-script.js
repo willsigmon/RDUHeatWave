@@ -10,6 +10,7 @@
 var SHEET_ID = '1WWSxfqJ1UdMqJxKLaiIzb06n3rSQj5-AVN3m07wAkSA';
 var SHEET_NAME = 'Guest Check In';
 var ACCESS_CONTROL_SHEET = 'Access Control';
+var CHECKIN_SHARED_SECRET_PROPERTY = 'CHECKIN_SHARED_SECRET';
 var CRM_ACCESS_PROPERTY_KEY = 'CRM_ACCESS_USERS_JSON';
 var CRM_ACCESS_PEPPER_KEY = 'CRM_ACCESS_PEPPER';
 var MEMBERS_SHEET_NAMES = ['Membership Directory', 'BKP Member Directory'];
@@ -170,8 +171,14 @@ function doPost(e) {
   if (cleanValue_(params.source) === 'crm-login') {
     return doPostCrmLogin_(params);
   }
+  if (!hasValidCheckinSecret_(params)) {
+    return jsonOutput_({ status: 'error', message: 'Forbidden' });
+  }
   var spreadsheet = SpreadsheetApp.openById(SHEET_ID);
-  var sheet = spreadsheet.getSheetByName(SHEET_NAME) || spreadsheet.getSheets()[0] || spreadsheet.insertSheet(SHEET_NAME);
+  var sheet = spreadsheet.getSheetByName(SHEET_NAME);
+  if (!sheet) {
+    return jsonOutput_({ status: 'error', message: 'Missing required sheet: ' + SHEET_NAME });
+  }
   var now = new Date();
   var timezone = spreadsheet.getSpreadsheetTimeZone() || Session.getScriptTimeZone() || 'America/New_York';
   var headerRow = getLiveHeaders_(sheet);
@@ -227,6 +234,27 @@ function doPost(e) {
   }
 
   return jsonOutput_({ status: 'ok' });
+}
+
+function getCheckinSharedSecret_() {
+  return cleanValue_(PropertiesService.getScriptProperties().getProperty(CHECKIN_SHARED_SECRET_PROPERTY));
+}
+
+function constantTimeEquals_(left, right) {
+  left = String(left || '');
+  right = String(right || '');
+  var diff = left.length ^ right.length;
+  var maxLength = Math.max(left.length, right.length);
+  for (var i = 0; i < maxLength; i++) {
+    diff |= left.charCodeAt(i % left.length || 0) ^ right.charCodeAt(i % right.length || 0);
+  }
+  return diff === 0;
+}
+
+function hasValidCheckinSecret_(params) {
+  var expected = getCheckinSharedSecret_();
+  var provided = cleanValue_(params.checkinSecret);
+  return !!expected && !!provided && constantTimeEquals_(provided, expected);
 }
 
 function doPostSurvey_(params) {

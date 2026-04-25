@@ -2,7 +2,6 @@
 
 var shared = require('./_lib/shared');
 
-var APPS_SCRIPT_URL = shared.getAppsScriptUrl();
 var REQUIRED_FIELDS = ['firstName', 'lastName', 'profession', 'phone', 'email', 'guestOf'];
 var OPTIONAL_FIELDS = ['companyName', 'idealReferral'];
 var HONEYPOT_FIELD = 'companyWebsite';
@@ -75,7 +74,9 @@ module.exports = async function handler(req, res) {
       return shared.sendJson(res, 400, { status: 'error', message: validationError });
     }
 
-    var result = await shared.forwardToAppsScript(APPS_SCRIPT_URL, entry);
+    var result = await shared.forwardToAppsScript(shared.getAppsScriptUrl(), entry, {
+      sharedSecret: shared.getCheckinSharedSecret()
+    });
     if (!result.ok) {
       console.error('[api/checkin] Apps Script sync failed:', result.statusCode);
       return shared.sendJson(res, 502, { status: 'error', message: 'Google Sheets sync failed' });

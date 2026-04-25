@@ -12,7 +12,8 @@
   // ===== CONSTANTS =====
   var FORM_ENDPOINT = '/api/checkin';
   var FORM_TIMEOUT_MS = 12000;
-  var MAX_LOCAL_ENTRIES = 250;
+  var MAX_LOCAL_ENTRIES = 25;
+  var LOCAL_ENTRY_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
   var DEFAULT_TEAM_MEMBERS = [
     { name: 'Carter Helms', title: 'Team Chair', profession: 'Community Insurance Agent', company: 'Highstreet Ins & Financial Svcs', website: 'https://carterhelms.com', leader: true },
@@ -55,7 +56,12 @@
   }
 
   function keepLatestLocalEntries(entries) {
-    return entries.slice(-MAX_LOCAL_ENTRIES);
+    var now = Date.now();
+    return entries.filter(function(entry) {
+      if (!entry || entry.synced) return false;
+      var savedAt = Date.parse(entry.timestamp || '');
+      return !isNaN(savedAt) && (now - savedAt) < LOCAL_ENTRY_TTL_MS;
+    }).slice(-MAX_LOCAL_ENTRIES);
   }
 
   function fetchWithTimeout(url, options, timeoutMs) {
@@ -69,34 +75,39 @@
   }
 
   // ===== LOCAL BACKUP =====
-  function saveToLocal(data) {
+  function saveFailedLocal(data) {
     try {
       var entries = JSON.parse(localStorage.getItem('heatwave_entries') || '[]');
       var savedEntry = Object.assign({}, data, {
         timestamp: new Date().toISOString(),
-        synced: false
+        synced: false,
+        reason: 'sync-failed'
       });
       entries.push(savedEntry);
-      localStorage.setItem('heatwave_entries', JSON.stringify(keepLatestLocalEntries(entries)));
+      var localEntries = keepLatestLocalEntries(entries);
+      if (localEntries.length) {
+        localStorage.setItem('heatwave_entries', JSON.stringify(localEntries));
+      } else {
+        localStorage.removeItem('heatwave_entries');
+      }
       return savedEntry;
     } catch(e) { return null; }
   }
 
-  function markLocalEntrySynced(timestamp) {
-    if (!timestamp) return;
+  function pruneLocalEntries() {
     try {
       var entries = JSON.parse(localStorage.getItem('heatwave_entries') || '[]');
-      var updatedEntries = entries.map(function(entry) {
-        if (entry.timestamp === timestamp) {
-          return Object.assign({}, entry, { synced: true });
-        }
-        return entry;
-      });
-      localStorage.setItem('heatwave_entries', JSON.stringify(keepLatestLocalEntries(updatedEntries)));
+      var localEntries = keepLatestLocalEntries(entries);
+      if (localEntries.length) {
+        localStorage.setItem('heatwave_entries', JSON.stringify(localEntries));
+      } else {
+        localStorage.removeItem('heatwave_entries');
+      }
     } catch(e) { /* storage unavailable */ }
   }
 
   function getLocalEntries() {
+    pruneLocalEntries();
     try { return JSON.parse(localStorage.getItem('heatwave_entries') || '[]'); }
     catch(e) { return []; }
   }
@@ -231,6 +242,45 @@
 
     var toastTimer = null;
     var autoResetTimer = null;
+
+    function ensureFormStatus() {
+      var existing = document.getElementById('form-status');
+      if (existing) return existing;
+
+      var status = document.createElement('div');
+      status.id = 'form-status';
+      status.className = 'sr-only';
+      status.setAttribute('role', 'status');
+      status.setAttribute('aria-live', 'assertive');
+      status.setAttribute('aria-atomic', 'true');
+      form.insertBefore(status, form.firstChild);
+      return status;
+    }
+
+    var formStatus = ensureFormStatus();
+
+    function announceFormStatus(message) {
+      if (!formStatus) return;
+      formStatus.textContent = '';
+      window.setTimeout(function() {
+        formStatus.textContent = message || '';
+      }, 10);
+    }
+
+    function bindFieldAccessibility() {
+      allFields.forEach(function(name) {
+        var errorEl = document.getElementById(name + '-error');
+        if (!errorEl) return;
+        errorEl.setAttribute('role', 'alert');
+
+        var input = name === 'guestOf' ? guestSearchInput : document.getElementById(name);
+        if (!input) return;
+        input.setAttribute('aria-describedby', errorEl.id);
+        input.setAttribute('aria-invalid', 'false');
+      });
+    }
+
+    bindFieldAccessibility();
 
     window.addEventListener('resize', function() {
       if (confettiCanvas) {
@@ -410,6 +460,7 @@
         valid = !!(guestOfHidden && guestOfHidden.value.trim());
         if (guestPicker) guestPicker.classList.toggle('error', !valid);
         if (guestSearchInput) guestSearchInput.classList.toggle('error', !valid);
+        if (guestSearchInput) guestSearchInput.setAttribute('aria-invalid', valid ? 'false' : 'true');
         if (errorEl) errorEl.classList.toggle('visible', !valid);
         return valid;
       }
@@ -424,6 +475,7 @@
 
       if (optionalFields.indexOf(name) !== -1 && !input.value.trim()) {
         input.classList.remove('error');
+        input.setAttribute('aria-invalid', 'false');
         if (errorEl) errorEl.classList.remove('visible');
         return true;
       }
@@ -436,9 +488,11 @@
 
       if (valid) {
         input.classList.remove('error');
+        input.setAttribute('aria-invalid', 'false');
         if (errorEl) errorEl.classList.remove('visible');
       } else {
         input.classList.add('error');
+        input.setAttribute('aria-invalid', 'true');
         if (errorEl) errorEl.classList.add('visible');
       }
 
@@ -501,7 +555,11 @@
 
       hideForm();
       successScreen.style.display = 'flex';
+      successScreen.setAttribute('tabindex', '-1');
+      try { successScreen.focus({ preventScroll: true }); }
+      catch(e) { successScreen.focus(); }
       if (confettiCanvas) launchConfetti(confettiCanvas);
+      announceFormStatus(successTitle.textContent + ' ' + successSubtitle.textContent);
 
       if (isKiosk) {
         showWelcomeToast(firstName);
@@ -521,6 +579,10 @@
       successSubtitle.textContent = submitFailedSubtitle;
       hideForm();
       successScreen.style.display = 'flex';
+      successScreen.setAttribute('tabindex', '-1');
+      try { successScreen.focus({ preventScroll: true }); }
+      catch(e) { successScreen.focus(); }
+      announceFormStatus(successTitle.textContent + ' ' + successSubtitle.textContent);
     }
 
     // ===== SUBMIT =====
@@ -529,6 +591,7 @@
         try {
           if (!validateAll()) {
             var firstError = form.querySelector('.field-input.error');
+            announceFormStatus('Please fix the highlighted fields.');
             if (firstError) firstError.focus();
             return;
           }
@@ -541,8 +604,6 @@
             entry[name] = document.getElementById(name).value.trim();
           });
 
-          var savedEntry = saveToLocal(entry);
-
           fetchWithTimeout(FORM_ENDPOINT, {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
@@ -554,9 +615,10 @@
             return response.json();
           }).then(function(result) {
             if (!result || result.status !== 'ok') throw new Error('submit-failed');
-            markLocalEntrySynced(savedEntry && savedEntry.timestamp);
+            pruneLocalEntries();
             showSuccess();
           }).catch(function() {
+            var savedEntry = saveFailedLocal(entry);
             if (savedEntry) {
               showSuccess({ localOnly: true, reason: 'sync-failed' });
               return;
@@ -591,13 +653,21 @@
       allFields.forEach(function(name) {
         var input = document.getElementById(name);
         var errorEl = document.getElementById(name + '-error');
-        if (input) { input.value = ''; input.classList.remove('error'); }
+        if (input) {
+          input.value = '';
+          input.classList.remove('error');
+          input.setAttribute('aria-invalid', 'false');
+        }
         if (errorEl) errorEl.classList.remove('visible');
       });
 
       syncGuestQuickPicks();
       if (guestPicker) guestPicker.classList.remove('error');
-      if (guestSearchInput) guestSearchInput.classList.remove('error');
+      if (guestSearchInput) {
+        guestSearchInput.classList.remove('error');
+        guestSearchInput.setAttribute('aria-invalid', 'false');
+      }
+      announceFormStatus('');
 
       var firstEl = document.getElementById('firstName');
       if (firstEl) firstEl.focus();

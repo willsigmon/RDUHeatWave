@@ -97,6 +97,14 @@ function getAppsScriptUrl() {
   return url;
 }
 
+function getCheckinSharedSecret() {
+  var secret = normalizeText(process.env.CHECKIN_SHARED_SECRET);
+  if (!secret) {
+    throw new Error('CHECKIN_SHARED_SECRET env var is required but not set');
+  }
+  return secret;
+}
+
 function isAllowedOriginValue(value) {
   if (!value) return true;
   try {
@@ -250,14 +258,18 @@ async function fetchSheet(sheetId, sheetName, timeoutMs) {
 
 // ── Apps Script forwarding ──────────────────────────────────────────
 
-async function forwardToAppsScript(appsScriptUrl, entry, timeoutMs) {
+async function forwardToAppsScript(appsScriptUrl, entry, options) {
+  var opts = typeof options === 'number' ? { timeoutMs: options } : (options || {});
   var formData = new URLSearchParams();
   Object.keys(entry).forEach(function (field) {
     formData.append(field, entry[field]);
   });
+  if (opts.sharedSecret) {
+    formData.append('checkinSecret', opts.sharedSecret);
+  }
 
   var controller = new AbortController();
-  var timeoutId = setTimeout(function () { controller.abort(); }, timeoutMs || 10000);
+  var timeoutId = setTimeout(function () { controller.abort(); }, opts.timeoutMs || 10000);
   var response;
 
   try {
@@ -353,6 +365,7 @@ module.exports = {
   isAllowedOriginValue: isAllowedOriginValue,
   hasAllowedOrigin: hasAllowedOrigin,
   getAppsScriptUrl: getAppsScriptUrl,
+  getCheckinSharedSecret: getCheckinSharedSecret,
   isRateLimited: isRateLimited,
   readRequestBody: readRequestBody,
   parseGvizResponse: parseGvizResponse,

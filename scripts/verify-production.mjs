@@ -63,7 +63,7 @@ function expect(condition, label, detail) {
   expect(homeHtml.includes('/site.webmanifest'), 'home links manifest');
   expect(homeHtml.includes('icons/heatwave-icon-512.png'), 'home has OG image');
 
-  const validPayload = {
+  const testPayload = {
     firstName: 'Smoke',
     lastName: 'Check',
     profession: 'QA',
@@ -77,34 +77,37 @@ function expect(condition, label, detail) {
     idealReferral: 'Small business owners needing automation'
   };
 
-  const valid = await fetchJson('/api/checkin', {
+  const honeypot = await fetchJson('/api/checkin', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(validPayload)
+    headers: { 'Content-Type': 'application/json', Origin: base },
+    body: JSON.stringify({ ...testPayload, companyWebsite: 'https://example.com' })
   });
-  expect(valid.response.status === 200, 'valid check-in returns 200', String(valid.response.status));
-  expect(valid.json && valid.json.status === 'ok', 'valid check-in returns status ok', valid.text);
+  expect(honeypot.response.status === 200, 'honeypot check-in returns 200 without writing', String(honeypot.response.status));
+  expect(honeypot.json && honeypot.json.status === 'ok', 'honeypot check-in returns status ok', honeypot.text);
 
   const badJson = await fetchJson('/api/checkin', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', Origin: base },
     body: '{bad json'
   });
   expect(badJson.response.status === 400, 'invalid JSON returns 400', String(badJson.response.status));
 
   const invalidEmail = await fetchJson('/api/checkin', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ...validPayload, email: 'not-an-email' })
+    headers: { 'Content-Type': 'application/json', Origin: base },
+    body: JSON.stringify({ ...testPayload, email: 'not-an-email' })
   });
   expect(invalidEmail.response.status === 400, 'invalid email returns 400', String(invalidEmail.response.status));
 
-  const invalidOption = await fetchJson('/api/checkin', {
+  const missingRequired = await fetchJson('/api/checkin', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ...validPayload, firstVisit: 'Sometimes' })
+    headers: { 'Content-Type': 'application/json', Origin: base },
+    body: JSON.stringify({ ...testPayload, guestOf: '' })
   });
-  expect(invalidOption.response.status === 400, 'invalid select option returns 400', String(invalidOption.response.status));
+  expect(missingRequired.response.status === 400, 'missing required field returns 400', String(missingRequired.response.status));
+
+  const missingPage = await fetch(`${base}/definitely-not-a-real-heatwave-page-${timestamp}`);
+  expect(missingPage.status === 404, 'unknown URL returns 404', String(missingPage.status));
 
   if (process.exitCode) {
     console.error(`\nVerification failed for ${base}`);

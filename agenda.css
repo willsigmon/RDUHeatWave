@@ -656,6 +656,13 @@ body {
     border: 0.5pt solid rgba(185,145,84,0.18);
   }
 
+  .roster-privacy-note {
+    margin: 0 0 4pt;
+    color: var(--muted);
+    font-size: 6.8pt;
+    font-style: italic;
+  }
+
   /* ===== ROSTER TABLE ===== */
   .roster-table {
     width: 100%;

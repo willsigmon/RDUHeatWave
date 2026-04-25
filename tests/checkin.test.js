@@ -1,5 +1,8 @@
 import { mockReq, mockRes, mockGlobalFetch, mockFetchResponse } from './helpers.js';
 
+process.env.APPS_SCRIPT_URL = process.env.APPS_SCRIPT_URL || 'https://script.google.com/macros/s/test/exec';
+process.env.CHECKIN_SHARED_SECRET = 'test-checkin-secret';
+
 const originalFetch = globalThis.fetch;
 
 const handler = (await import('../api/checkin.js')).default;
@@ -127,6 +130,7 @@ describe('checkin handler — success', () => {
     expect(getResult().statusCode).toBe(200);
     expect(getResult().body).toEqual({ status: 'ok' });
     expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock.mock.calls[0][1].body).toContain('checkinSecret=test-checkin-secret');
   });
 });
 

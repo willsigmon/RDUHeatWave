@@ -104,23 +104,34 @@ body.drawer-open .panel-arrow {
 .panel-arrow-right { right: 1rem; }
 
 .nav-dot {
-  width: 9px;
-  height: 9px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.25);
+  background: transparent;
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
-  transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: grid;
+  place-items: center;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   will-change: transform;
   backface-visibility: hidden;
 }
 
-.nav-dot.active {
+.nav-dot::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.28);
+  transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.nav-dot.active::after {
   background: var(--color-primary);
   box-shadow: 0 0 10px rgba(232, 88, 12, 0.5), 0 0 20px rgba(232, 88, 12, 0.2);
   transform: scale(1.25);
