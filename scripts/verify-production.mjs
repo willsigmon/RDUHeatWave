@@ -56,10 +56,11 @@ function expect(condition, label, detail) {
   }
 
   const { response: homeResponse, text: homeHtml } = await fetchText('/');
+  const { text: sharedFormJs } = await fetchText('/shared-form.js');
   expect(homeResponse.headers.get('content-security-policy'), 'home has CSP header', homeResponse.headers.get('content-security-policy') || 'missing');
   expect(homeResponse.headers.get('referrer-policy') === 'strict-origin-when-cross-origin', 'home has referrer-policy', homeResponse.headers.get('referrer-policy') || 'missing');
   expect(homeResponse.headers.get('x-content-type-options') === 'nosniff', 'home has nosniff', homeResponse.headers.get('x-content-type-options') || 'missing');
-  expect(homeHtml.includes('/api/checkin'), 'home points at /api/checkin');
+  expect(sharedFormJs.includes('/api/checkin'), 'shared form points at /api/checkin');
   expect(homeHtml.includes('/site.webmanifest'), 'home links manifest');
   expect(homeHtml.includes('icons/heatwave-icon-512.png'), 'home has OG image');
 
