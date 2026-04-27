@@ -27,7 +27,7 @@ var DEFAULT_MEMBERS = [
   { name: 'Robert Courts', title: 'Mortgage Lending', company: 'Advantage Lending', leader: false, chair: false, website: 'https://advantagelending.com/mortgage-loan-services' },
   { name: 'Dana Walsh', title: 'Magazine Publisher', company: 'Stroll Magazine', leader: false, chair: false, website: 'https://strollmag.com/locations/hayes-barton-nc' },
   { name: 'Nathan Senn', title: 'Property Restoration', company: 'Franco Restorations', leader: false, chair: false, website: 'https://francorestorations.com' },
-  { name: 'Roni Payne', title: 'Accounting / Tax', company: 'R. Payne LLC', leader: false, chair: false, website: 'https://rpayne.org/about' },
+  { name: 'Roni Payne', title: 'Accounting / Tax', company: 'R. Payne Financial & Tax Solutions', leader: false, chair: false, website: 'https://rpayne.org/about' },
   { name: 'Shannida Ramsey', title: 'Property Maintenance', company: 'Ram-Z Services LLC', leader: false, chair: false, website: 'https://ramzservices.com' },
   { name: 'David Mercado', title: 'HOA Management', company: 'William Douglas Management', leader: false, chair: false, website: 'https://wmdouglas.com/raleigh-hoa-management' },
   { name: 'Sue Kerata', title: 'Realtor', company: 'Century 21 Triangle Group', leader: false, chair: false, website: 'https://suekhomes.com' }

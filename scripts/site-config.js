@@ -10,7 +10,7 @@
     { name: 'David Mercado', company: 'William Douglas Management' },
     { name: 'Nathan Senn', company: 'Franco Restorations' },
     { name: 'Robert Courts', company: 'Advantage Lending', photo: '/member-photos/robert-courts.png', photoObjectPosition: 'center 25%' },
-    { name: 'Roni Payne', company: 'R. Payne LLC' },
+    { name: 'Roni Payne', company: 'R. Payne Financial & Tax Solutions' },
     { name: 'Rusty Sutton', company: 'MonkeyFans Creative' },
     { name: 'Shannida Ramsey', company: 'Ram-Z Services LLC' },
     { name: 'Sue Kerata', company: 'Century 21 Triangle Group', photo: '/member-photos/sue-kerata.jpg', photoObjectPosition: 'center 30%' },
