@@ -2,7 +2,7 @@
   "name": "rduheatwave",
   "version": "1.0.0",
   "private": true,
-  "description": "RDU HeatWave — 212 Referral Network chapter site",
+  "description": "RDU HeatWave \u2014 212 Referral Network chapter site",
   "scripts": {
     "check:json": "node scripts/check-json.mjs",
     "check:syntax": "node scripts/check-syntax.mjs",
@@ -13,5 +13,8 @@
   },
   "devDependencies": {
     "vitest": "^3.1.1"
+  },
+  "dependencies": {
+    "@vercel/og": "^0.11.1"
   }
 }

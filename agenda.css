@@ -215,6 +215,24 @@ body {
     text-align: center;
   }
 
+  .editable-stat {
+    min-width: 100%;
+    border-radius: 3pt;
+    cursor: text;
+    outline: 0;
+    transition: box-shadow 160ms ease, background-color 160ms ease, color 160ms ease;
+  }
+
+  .editable-stat:focus {
+    color: var(--fire);
+    background: rgba(232,88,12,0.08);
+    box-shadow: 0 0 0 1pt rgba(232,88,12,0.35);
+  }
+
+  .editable-stat[data-manual="true"] {
+    color: var(--fire);
+  }
+
   /* ===== DIVIDER ===== */
   .ornament {
     text-align: center;
@@ -715,6 +733,71 @@ body {
 
   .page-footer .fire { color: var(--fire); }
 
+  /* ===== SCREEN-ONLY AGENDA TOOLS ===== */
+  .agenda-tools {
+    max-width: 8.5in;
+    margin: 0 auto 16px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #231c18;
+    color: #f0e6dc;
+    border: 1px solid rgba(232,88,12,0.28);
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(26,20,18,0.2);
+  }
+
+  .agenda-tools-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .agenda-tools-copy strong {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 1.5px;
+    color: #FF6A1E;
+    line-height: 1;
+  }
+
+  .agenda-tools-copy span,
+  .agenda-tools-status {
+    font-size: 12px;
+    line-height: 1.35;
+    color: #cdbdaf;
+  }
+
+  .agenda-tools-status {
+    max-width: 190px;
+  }
+
+  .agenda-tools-button {
+    flex: 0 0 auto;
+    border: 0;
+    border-radius: 999px;
+    padding: 8px 12px;
+    background: #E8580C;
+    color: #fff;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 1.2px;
+    cursor: pointer;
+  }
+
+  .agenda-tools-button:hover,
+  .agenda-tools-button:focus-visible {
+    background: #FF6A1E;
+  }
+
+  .agenda-tools-button:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+
   /* ===== PRINT ===== */
   @media print {
     body { background: #fff; }
@@ -729,6 +812,14 @@ body {
       -webkit-text-fill-color: var(--fire) !important;
       background: none !important;
       animation: none !important;
+    }
+
+    .editable-stat,
+    .editable-stat:focus {
+      background: transparent !important;
+      box-shadow: none !important;
+      color: #2b1d16 !important;
+      outline: 0 !important;
     }
   }
 
@@ -770,5 +861,16 @@ body {
       animation: border-rotate 4s linear infinite;
       pointer-events: none;
       z-index: 2;
+    }
+  }
+
+  @media screen and (max-width: 760px) {
+    .agenda-tools {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .agenda-tools-status {
+      max-width: none;
     }
   }

@@ -137,14 +137,185 @@
   }
 })();
 
-// Fetch live stats
-fetch('/api/stats').then(function(r) { return r.json(); }).then(function(data) {
-  if (data.status !== 'ok' || !data.stats) return;
-  var s = data.stats;
-  var el = function(id) { return document.getElementById(id); };
-  if (el('stat-guests'))    el('stat-guests').textContent = s.guestsHosted || '—';
-  if (el('stat-bizchats'))  el('stat-bizchats').textContent = s.bizChats || '—';
-  if (el('stat-referrals')) el('stat-referrals').textContent = s.referrals || '—';
-  if (el('stat-gis'))       el('stat-gis').textContent = (s.gratitudeIncentives != null ? s.gratitudeIncentives : (s.guestIncentives != null ? s.guestIncentives : '—'));
-  if (el('stat-revenue'))   el('stat-revenue').textContent = '$' + Number(s.revenue || 0).toLocaleString('en-US');
-}).catch(function() {});
+(function () {
+  var STORAGE_KEY = 'rduheatwave.agenda.manualStats.v1';
+  var statEls = Array.prototype.slice.call(document.querySelectorAll('[data-stat-key]'));
+  var resetButton = document.getElementById('reset-agenda-stats');
+  var statusEl = document.getElementById('manual-stats-status');
+  var manualStatsActive = false;
+  var latestLiveStats = null;
+  var defaultStats = {};
+
+  function updateStatus(message) {
+    if (statusEl) statusEl.textContent = message;
+  }
+
+  function readSavedStats() {
+    try {
+      var raw = window.localStorage && window.localStorage.getItem(STORAGE_KEY);
+      var parsed = raw ? JSON.parse(raw) : {};
+      return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+    } catch (error) {
+      return {};
+    }
+  }
+
+  function writeSavedStats(stats) {
+    try {
+      if (!window.localStorage) return;
+      var keys = Object.keys(stats).filter(function (key) {
+        return stats[key] != null && String(stats[key]).trim() !== '';
+      });
+      if (keys.length === 0) {
+        window.localStorage.removeItem(STORAGE_KEY);
+        return;
+      }
+      var cleaned = {};
+      keys.forEach(function (key) {
+        cleaned[key] = String(stats[key]).trim();
+      });
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(cleaned));
+    } catch (error) {
+      // Manual edits should still work for the current print even if storage is blocked.
+    }
+  }
+
+  function getCurrentStats() {
+    return statEls.reduce(function (stats, el) {
+      var key = el.getAttribute('data-stat-key');
+      if (!key) return stats;
+      stats[key] = el.textContent.replace(/\s+/g, ' ').trim();
+      return stats;
+    }, {});
+  }
+
+  function applyStats(stats, source) {
+    statEls.forEach(function (el) {
+      var key = el.getAttribute('data-stat-key');
+      if (!key || stats[key] == null || String(stats[key]).trim() === '') return;
+      el.textContent = String(stats[key]).trim();
+      if (source === 'manual') {
+        el.setAttribute('data-manual', 'true');
+      } else {
+        el.removeAttribute('data-manual');
+      }
+    });
+  }
+
+  function markManualStats() {
+    manualStatsActive = true;
+    statEls.forEach(function (el) {
+      el.setAttribute('data-manual', 'true');
+    });
+    writeSavedStats(getCurrentStats());
+    updateStatus('Using manual stats. They will print as shown.');
+  }
+
+  function pastePlainText(event) {
+    event.preventDefault();
+    var text = '';
+    if (event.clipboardData) {
+      text = event.clipboardData.getData('text/plain');
+    } else if (window.clipboardData) {
+      text = window.clipboardData.getData('Text');
+    }
+    document.execCommand('insertText', false, text.replace(/\s+/g, ' ').trim());
+  }
+
+  function selectStatText(el) {
+    if (!window.getSelection || !document.createRange) return;
+    var range = document.createRange();
+    range.selectNodeContents(el);
+    var selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+
+  function bindEditableStats() {
+    statEls.forEach(function (el) {
+      el.addEventListener('focus', function () {
+        window.setTimeout(function () { selectStatText(el); }, 0);
+      });
+      el.addEventListener('input', markManualStats);
+      el.addEventListener('blur', function () {
+        el.textContent = el.textContent.replace(/\s+/g, ' ').trim() || '—';
+        if (manualStatsActive) writeSavedStats(getCurrentStats());
+      });
+      el.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          el.blur();
+        }
+      });
+      el.addEventListener('paste', pastePlainText);
+    });
+  }
+
+  function formatNumber(value) {
+    if (value == null || value === '') return '—';
+    var number = Number(value);
+    return isFinite(number) ? number.toLocaleString('en-US') : String(value);
+  }
+
+  function formatCurrency(value) {
+    if (value == null || value === '') return '—';
+    var number = Number(value);
+    return isFinite(number) ? '$' + number.toLocaleString('en-US') : String(value);
+  }
+
+  function statsFromApi(data) {
+    var s = data && data.stats ? data.stats : {};
+    return Object.assign({}, defaultStats, {
+      guests: formatNumber(s.guestsHosted),
+      bizChats: formatNumber(s.bizChats),
+      referrals: formatNumber(s.referrals),
+      gis: formatNumber(s.gratitudeIncentives != null ? s.gratitudeIncentives : s.guestIncentives),
+      revenue: formatCurrency(s.revenue)
+    });
+  }
+
+  function fetchLiveStats() {
+    return fetch('/api/stats').then(function (response) {
+      return response.json();
+    }).then(function (data) {
+      if (!data || data.status !== 'ok' || !data.stats) throw new Error('Stats unavailable');
+      latestLiveStats = statsFromApi(data);
+      if (!manualStatsActive) {
+        applyStats(latestLiveStats, 'live');
+        updateStatus('Using live stats. Click a number to override.');
+      }
+      return latestLiveStats;
+    }).catch(function () {
+      updateStatus(manualStatsActive ? 'Using manual stats. Live stats are unavailable.' : 'Live stats are unavailable. Type stats manually.');
+      return null;
+    });
+  }
+
+  bindEditableStats();
+  defaultStats = getCurrentStats();
+
+  var savedStats = readSavedStats();
+  if (Object.keys(savedStats).length > 0) {
+    manualStatsActive = true;
+    applyStats(savedStats, 'manual');
+    updateStatus('Using saved manual stats. They will print as shown.');
+  }
+
+  if (resetButton) {
+    resetButton.addEventListener('click', function () {
+      manualStatsActive = false;
+      writeSavedStats({});
+      statEls.forEach(function (el) { el.removeAttribute('data-manual'); });
+      updateStatus('Manual stats cleared. Loading live stats…');
+      if (latestLiveStats) {
+        applyStats(latestLiveStats, 'live');
+        updateStatus('Using live stats. Click a number to override.');
+        return;
+      }
+      applyStats(defaultStats, 'live');
+      fetchLiveStats();
+    });
+  }
+
+  fetchLiveStats();
+})();

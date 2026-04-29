@@ -5,23 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#E8580C">
 <title>RDU Heatwave — Meeting Agenda</title>
+  <link rel="canonical" href="https://rduheatwave.team/agenda">
+  <meta property="og:site_name" content="RDU Heatwave">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="RDU Heatwave — Meeting Agenda">
+  <meta property="og:description" content="Printable RDU Heatwave meeting agenda and worksheets.">
+  <meta property="og:url" content="https://rduheatwave.team/agenda">
+  <meta property="og:image" content="https://rduheatwave.team/api/og?title=RDU+Heatwave+%E2%80%94+Meeting+Agenda&amp;subtitle=Printable+RDU+Heatwave+meeting+agenda+and+worksheets.&amp;eyebrow=Raleigh-Durham+%E2%80%A2+referral+networking">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="RDU Heatwave — Meeting Agenda social preview">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RDU Heatwave — Meeting Agenda">
+  <meta name="twitter:description" content="Printable RDU Heatwave meeting agenda and worksheets.">
+  <meta name="twitter:image" content="https://rduheatwave.team/api/og?title=RDU+Heatwave+%E2%80%94+Meeting+Agenda&amp;subtitle=Printable+RDU+Heatwave+meeting+agenda+and+worksheets.&amp;eyebrow=Raleigh-Durham+%E2%80%A2+referral+networking">
+  <meta name="twitter:image:alt" content="RDU Heatwave — Meeting Agenda social preview">
+
 <meta name="description" content="Printable RDU Heatwave meeting agenda and worksheets.">
 <meta name="robots" content="noindex, nofollow">
-<link rel="canonical" href="https://rduheatwave.team/agenda">
 <link rel="shortcut icon" href="/favicon.ico">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" href="/icons/heatwave-icon-192.png">
 <link rel="apple-touch-icon" href="/icons/heatwave-icon-180.png">
 <link rel="manifest" href="/site.webmanifest">
-<meta property="og:type" content="website">
-<meta property="og:title" content="RDU Heatwave — Meeting Agenda">
-<meta property="og:description" content="Printable RDU Heatwave meeting agenda and worksheets.">
-<meta property="og:url" content="https://rduheatwave.team/agenda">
-<meta property="og:image" content="https://rduheatwave.team/icons/heatwave-icon-512.png">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="RDU Heatwave — Meeting Agenda">
-<meta name="twitter:description" content="Printable RDU Heatwave meeting agenda and worksheets.">
-<meta name="twitter:image" content="https://rduheatwave.team/icons/heatwave-icon-512.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,6 +42,15 @@
   <h1 class="sr-only">RDU Heatwave Meeting Agenda</h1>
   <div class="heat-bg no-print" aria-hidden="true"><div class="heat-line"></div><div class="heat-line"></div><div class="heat-line"></div><div class="heat-line"></div><div class="heat-line"></div></div>
   <noscript><div class="noscript-banner">JavaScript is required to use this page.</div></noscript>
+
+  <div class="agenda-tools no-print" aria-label="Agenda print controls">
+    <div class="agenda-tools-copy">
+      <strong>Manual stats for print</strong>
+      <span>Click any stat number on the agenda and type the current value. Saved in this browser until cleared.</span>
+    </div>
+    <button type="button" class="agenda-tools-button" id="reset-agenda-stats">Use live stats</button>
+    <span class="agenda-tools-status" id="manual-stats-status" aria-live="polite">Live stats load automatically unless edited.</span>
+  </div>
 
 <!-- ==================== PAGE 1: AGENDA ==================== -->
 <div class="page">
@@ -56,30 +71,30 @@
         </a>
       </div>
     </div>
-    <!-- TEAM STATS — pulled live from /api/stats -->
+    <!-- TEAM STATS — pulled live from /api/stats unless edited manually before printing -->
     <div class="header-stats">
       <div class="stat">
-        <div class="stat-value" id="stat-members">11</div>
+        <div class="stat-value editable-stat" id="stat-members" data-stat-key="members" contenteditable="true" inputmode="numeric" role="textbox" aria-label="Members stat" spellcheck="false">11</div>
         <div class="stat-label">Members</div>
       </div>
       <div class="stat">
-        <div class="stat-value" id="stat-guests">113</div>
+        <div class="stat-value editable-stat" id="stat-guests" data-stat-key="guests" contenteditable="true" inputmode="numeric" role="textbox" aria-label="Guests stat" spellcheck="false">113</div>
         <div class="stat-label">Guests</div>
       </div>
       <div class="stat">
-        <div class="stat-value" id="stat-bizchats">207</div>
+        <div class="stat-value editable-stat" id="stat-bizchats" data-stat-key="bizChats" contenteditable="true" inputmode="numeric" role="textbox" aria-label="BizChats stat" spellcheck="false">207</div>
         <div class="stat-label">BizChats</div>
       </div>
       <div class="stat">
-        <div class="stat-value" id="stat-referrals">49</div>
+        <div class="stat-value editable-stat" id="stat-referrals" data-stat-key="referrals" contenteditable="true" inputmode="numeric" role="textbox" aria-label="Referrals stat" spellcheck="false">49</div>
         <div class="stat-label">Referrals</div>
       </div>
       <div class="stat">
-        <div class="stat-value" id="stat-gis">158</div>
+        <div class="stat-value editable-stat" id="stat-gis" data-stat-key="gis" contenteditable="true" inputmode="numeric" role="textbox" aria-label="Total GIs stat" spellcheck="false">158</div>
         <div class="stat-label">Total GIs</div>
       </div>
       <div class="stat">
-        <div class="stat-value" id="stat-revenue">$115,331</div>
+        <div class="stat-value editable-stat" id="stat-revenue" data-stat-key="revenue" contenteditable="true" inputmode="text" role="textbox" aria-label="Closed Revenue stat" spellcheck="false">$115,331</div>
         <div class="stat-label">Closed Revenue</div>
       </div>
     </div>
