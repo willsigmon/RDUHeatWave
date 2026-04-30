@@ -5,17 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#E8580C">
 <meta name="robots" content="noindex, nofollow">
-<title>RDU Heatwave — Kiosk Check-In</title>
-<meta name="description" content="RDU Heatwave kiosk check-in. Thursdays at 4:00 PM ET at Clouds Brewing.">
+<title>RDU Heatwave — Welcome Kiosk</title>
+<meta name="description" content="RDU Heatwave welcome kiosk. Scan the QR code with your phone to check in.">
 <link rel="canonical" href="https://rduheatwave.team/kiosk">
 <meta property="og:type" content="website">
-<meta property="og:title" content="RDU Heatwave — Kiosk Check-In">
-<meta property="og:description" content="RDU Heatwave kiosk check-in. Thursdays at 4:00 PM ET at Clouds Brewing.">
+<meta property="og:title" content="RDU Heatwave — Welcome Kiosk">
+<meta property="og:description" content="Scan the QR code with your phone to check in for RDU Heatwave.">
 <meta property="og:url" content="https://rduheatwave.team/kiosk">
 <meta property="og:image" content="https://rduheatwave.team/icons/heatwave-icon-512.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="RDU Heatwave — Kiosk Check-In">
-<meta name="twitter:description" content="RDU Heatwave kiosk check-in. Thursdays at 4:00 PM ET at Clouds Brewing.">
+<meta name="twitter:title" content="RDU Heatwave — Welcome Kiosk">
+<meta name="twitter:description" content="Scan the QR code with your phone to check in for RDU Heatwave.">
 <meta name="twitter:image" content="https://rduheatwave.team/icons/heatwave-icon-512.png">
 <link rel="shortcut icon" href="/favicon.ico">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -32,7 +32,7 @@
 
 </head>
 <body>
-<a href="#checkin-form" class="skip-link">Skip to check-in form</a>
+<a href="#main-content" class="skip-link">Skip to welcome kiosk</a>
 <noscript><div class="noscript-banner">JavaScript is required to use this page.</div></noscript>
 
 <!-- SVG Filters (hidden) -->
@@ -71,15 +71,6 @@
 <div class="heat-distortion" aria-hidden="true"></div>
 <div class="heat-glow" aria-hidden="true"></div>
 <div class="film-grain" aria-hidden="true"></div>
-
-<!-- Confetti Canvas -->
-<canvas id="confetti-canvas" aria-hidden="true"></canvas>
-
-<!-- Welcome Toast -->
-<div class="kiosk-toast" id="kiosk-toast" aria-live="polite">
-  <div class="kiosk-toast-name" id="toast-name"></div>
-  <div class="kiosk-toast-message">Grab a seat and get ready to network. We start at 4:00!</div>
-</div>
 
 <!-- === KIOSK LAYOUT === -->
 <main id="main-content">
@@ -151,12 +142,9 @@
       <strong>Clouds Brewing</strong> &bull; 1233 Front St, Raleigh NC
     </div>
 
-    <!-- QR Code -->
-    <div class="kiosk-qr-section">
-      <div class="kiosk-qr-label">Scan to Check In</div>
-      <a href="https://rduheatwave.team" target="_blank" rel="noopener noreferrer">
-        <img src="qr-rduheatwave.svg" alt="Scan to check in at rduheatwave.team" class="kiosk-qr-img" loading="lazy" decoding="async" width="264" height="264">
-      </a>
+    <div class="kiosk-display-note" aria-label="Display only notice">
+      <span class="kiosk-display-dot" aria-hidden="true"></span>
+      Display only &mdash; please scan with your phone
     </div>
 
   </div>
@@ -166,126 +154,32 @@
     <div class="kiosk-ticker-track" id="ticker-track"></div>
   </div>
 
-  <!-- RIGHT COLUMN: Check-in Form -->
-  <div class="kiosk-right">
-    <div class="kiosk-form-card gradient-border" id="form-card">
+  <!-- RIGHT COLUMN: Display-only QR landing -->
+  <div class="kiosk-right" aria-label="Phone check-in QR code">
+    <section class="kiosk-landing-card gradient-border">
+      <div class="kiosk-scan-eyebrow">Phone Check-In</div>
+      <h1 class="kiosk-scan-title">Scan to Join the Heatwave</h1>
+      <p class="kiosk-scan-copy">Please use your own phone for check-in. This tablet is display-only so the room can keep moving.</p>
 
-      <div class="kiosk-form-header">
-        <div class="kiosk-form-title-row">
-          <img src="heatwave-logo.png" alt="" loading="lazy" decoding="async" width="315" height="309">
-          <h1 class="kiosk-form-title">CHECK IN</h1>
-        </div>
-        <p class="kiosk-form-subtitle">Tap to type on screen, or use a keyboard if one is connected.</p>
+      <div class="kiosk-qr-hero" aria-label="QR code for rduheatwave.team">
+        <img src="qr-rduheatwave.svg" alt="QR code for rduheatwave.team" class="kiosk-qr-hero-img" width="264" height="264" fetchpriority="high">
       </div>
 
-      <form id="checkin-form" class="form-fields" novalidate>
-        <div class="form-row">
-          <div class="field">
-            <label class="field-label" for="firstName">First Name</label>
-            <input class="field-input" type="text" id="firstName" name="firstName" placeholder="John" autocomplete="given-name" maxlength="80" required>
-            <div class="field-error" id="firstName-error">Please enter your first name</div>
-          </div>
-          <div class="field">
-            <label class="field-label" for="lastName">Last Name</label>
-            <input class="field-input" type="text" id="lastName" name="lastName" placeholder="Doe" autocomplete="family-name" maxlength="80" required>
-            <div class="field-error" id="lastName-error">Please enter your last name</div>
-          </div>
-        </div>
+      <div class="kiosk-url-pill">rduheatwave.team</div>
 
-        <div class="form-row">
-          <div class="field">
-            <label class="field-label" for="profession">Profession</label>
-            <div class="profession-picker" id="profession-picker">
-              <input class="field-input" type="text" id="profession" name="profession" placeholder="Start typing…" maxlength="120" autocomplete="off" autocapitalize="words" spellcheck="false" required>
-              <div class="profession-results" id="profession-results" role="listbox" aria-label="Industry suggestions"></div>
-            </div>
-            <div class="field-error" id="profession-error">Please enter your profession</div>
-          </div>
-          <div class="field">
-            <label class="field-label" for="companyName">Company <span class="field-optional">(optional)</span></label>
-            <input class="field-input" type="text" id="companyName" name="companyName" placeholder="e.g. Advantage Lending" autocomplete="organization" maxlength="120">
-            <div class="field-error" id="companyName-error">Please enter your company name</div>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="field">
-            <label class="field-label" for="phone">Phone</label>
-            <input class="field-input" type="tel" id="phone" name="phone" placeholder="(919) 555-0123" autocomplete="tel" inputmode="tel" maxlength="40" required>
-            <div class="field-error" id="phone-error">Please enter your phone number</div>
-          </div>
-          <div class="field">
-            <label class="field-label" for="email">Email</label>
-            <input class="field-input" type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" maxlength="254" required>
-            <div class="field-error" id="email-error">Please enter a valid email</div>
-          </div>
-        </div>
-
-        <div class="field">
-          <label class="field-label" for="guestOfSearch">Guest Of</label>
-          <div class="guest-picker" id="guestOf-picker">
-            <div class="guest-quick-picks" id="guestOf-quick" role="group" aria-label="Quick host picks"></div>
-            <input class="field-input guest-search-input" type="text" id="guestOfSearch" name="guestOfSearch" style="display:none" maxlength="120" autocomplete="off" spellcheck="false">
-            <div class="guest-results" id="guestOf-results" role="listbox" aria-label="Guest suggestions" style="display:none"></div>
-          </div>
-          <input type="hidden" id="guestOf" name="guestOf">
-          <div class="field-error" id="guestOf-error">Please let us know who invited you</div>
-        </div>
-
-        <div class="field">
-          <label class="field-label" for="idealReferral">Ideal Referral <span class="field-optional">(optional)</span></label>
-          <input class="field-input" type="text" id="idealReferral" name="idealReferral" placeholder="Who would be a great intro for you?" maxlength="180">
-        </div>
-
-        <!-- Honeypot -->
-        <div style="position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden;" aria-hidden="true">
-          <label for="companyWebsite">Leave this field blank</label>
-          <input type="text" id="companyWebsite" name="companyWebsite" tabindex="-1" autocomplete="off">
-        </div>
-
-        <div class="submit-wrap">
-          <button type="button" class="submit-btn fire-btn" data-haptic="success" id="submit-btn">
-            <span class="btn-text">CHECK IN</span>
-            <div class="spinner" role="status" aria-label="Submitting"></div>
-            <div class="ember-wrap" aria-hidden="true"><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div></div>
-          </button>
-        </div>
-      </form>
-
-      <!-- Success Screen -->
-      <div class="success-screen" id="success-screen" role="status" aria-live="polite">
-        <div class="success-icon">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path class="success-check" d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </div>
-        <h2 class="success-title" id="success-title">Welcome to the Heatwave!</h2>
-        <p class="success-subtitle" id="success-subtitle">Your registration has been submitted. We look forward to connecting with you.</p>
-        <button class="reset-btn" data-haptic="light" id="reset-btn" type="button">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-          Submit Another Response
-        </button>
+      <div class="kiosk-step-row" aria-label="Check-in instructions">
+        <div class="kiosk-step"><span>1</span>Open camera</div>
+        <div class="kiosk-step"><span>2</span>Scan code</div>
+        <div class="kiosk-step"><span>3</span>Check in</div>
       </div>
-
-    </div>
+    </section>
   </div>
-
 </div>
 </main>
 
 
 <script src="/scripts/site-config.js"></script>
 <script src="/scripts/kiosk.js"></script>
-<script src="/shared-form.js"></script>
-<script>
-(function() {
-  initCheckinForm({
-    formId: 'checkin-form',
-    isKiosk: true,
-    resetTimeoutMs: 15000
-  });
-})();
-</script>
 <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
 <script src="/scripts/scroll-reveal.js"></script>
 <script>

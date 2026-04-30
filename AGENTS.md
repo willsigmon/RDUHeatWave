@@ -11,11 +11,13 @@ Pure static HTML/CSS/JS deployed on Vercel. No framework, no build step.
 ### Pages
 - `index.html` — Registration/check-in form (main landing page, catch-all route)
 - `meet.html` — Meeting lobby kiosk (QR code, countdown, venue info)
-- `agenda.html` — Printable meeting agenda (letter-size, 2-page layout)
+- `agenda.html` — Paperless visitor agenda on screen, printable/admin agenda in print mode
 - `apps-script.js` — Google Apps Script for form -> Google Sheets
 
 ### Routing (vercel.json)
 - `/meet` -> `meet.html`
+- `/agenda` -> `agenda.html` (visitor-friendly paperless agenda)
+- `/agenda/admin` -> `agenda.html` (print/admin controls)
 - `/agenda.html` -> `agenda.html`
 - `/*` -> `index.html` (catch-all)
 
@@ -40,7 +42,7 @@ Gold:        #8a6d3b (print/agenda)
 ### Typography
 - **Display**: Bebas Neue (headings, countdown, buttons)
 - **Body**: Plus Jakarta Sans (form labels, paragraphs)
-- **Serif**: Cormorant Garamond (agenda print only)
+- **Serif**: Cormorant Garamond (agenda print and agenda accent copy only)
 
 ### Design Language
 - Dark theme with warm undertones (not cold/blue dark)

@@ -144,8 +144,11 @@
   var foamBubbles = [];
   var sparks = [];
   var pressureRings = [];
+  var shockwaves = [];
+  var heatBolts = [];
   var time = 0;
   var foamStarted = false;
+  var boilFired = false;
   var foamHeight = 0;
   /* W=160, H=440 logical coords (CSS shows at 80x220) */
 
@@ -183,7 +186,9 @@
       vy: -rng(0.7, 1.5),
       r: rng(5, 12),
       life: 1, decay: rng(0.008, 0.018),
-      drift: rng(-0.15, 0.15)
+      drift: rng(-0.15, 0.15),
+      curl: rng(0.8, 2.4),
+      warmth: rng(0, 1)
     });
   }
 
@@ -208,6 +213,32 @@
       life: 1,
       decay: rng(0.03, 0.06),
       growth: 1.08 + pressure * 0.05
+    });
+  }
+
+  function spawnShockwave(originY, pressure) {
+    shockwaves.push({
+      x: bulbCx,
+      y: originY,
+      rx: rng(18, 34) + pressure * 14,
+      ry: rng(5, 10) + pressure * 4,
+      growth: 1.075 + pressure * 0.04,
+      life: 1,
+      decay: rng(0.026, 0.045),
+      warmth: rng(0.55, 1)
+    });
+  }
+
+  function spawnHeatBolt(originX, originY, pressure) {
+    heatBolts.push({
+      x: originX,
+      y: originY,
+      len: rng(22, 46) + pressure * 14,
+      angle: -Math.PI / 2 + rng(-0.95, 0.95),
+      life: 1,
+      decay: rng(0.045, 0.08),
+      kink: rng(-12, 12),
+      warmth: rng(0.55, 1)
     });
   }
 
@@ -243,6 +274,7 @@
     }
     var clampedFill = Math.min(1, fillLevel);
     var surfaceY = tubeTop + tubeH * (1 - clampedFill);
+    var pressure = Math.min(1.6, Math.max(0, (fillLevel - 0.85) / 0.15));
 
     /* ── Stage glow / heat shimmer backdrop ── */
     ctx.save();
@@ -269,10 +301,41 @@
       ctx.fillStyle = bandGrad;
       ctx.fillRect(0, bandY, W, 24);
     }
+
+    /* Reactor-style scale: the extra degree gets a real visual target. */
+    ctx.save();
+    ctx.globalCompositeOperation = 'screen';
+    for (var mark = 0; mark <= 12; mark++) {
+      var markY = tubeBot - (tubeH * mark / 12);
+      var major = mark % 3 === 0;
+      var hotBand = mark >= 9;
+      ctx.beginPath();
+      ctx.moveTo(tubeX + tubeW + 8, markY);
+      ctx.lineTo(tubeX + tubeW + (major ? 24 : 16), markY);
+      ctx.strokeStyle = hotBand
+        ? 'rgba(255, 165, 82, ' + (0.2 + pressure * 0.25) + ')'
+        : 'rgba(255, 238, 214, 0.13)';
+      ctx.lineWidth = major ? 1.6 : 1;
+      ctx.stroke();
+    }
+    var thresholdY = tubeTop + tubeH * 0.055;
+    ctx.beginPath();
+    ctx.moveTo(tubeX - 34, thresholdY);
+    ctx.lineTo(tubeX + tubeW + 34, thresholdY);
+    ctx.strokeStyle = 'rgba(255, 106, 30, ' + (0.24 + pressure * 0.28 + Math.sin(time * 7) * 0.04) + ')';
+    ctx.lineWidth = 1.4;
+    ctx.stroke();
+    ctx.font = '18px Bebas Neue, Impact, sans-serif';
+    ctx.letterSpacing = '1px';
+    ctx.fillStyle = 'rgba(255, 232, 204, ' + (0.28 + pressure * 0.32) + ')';
+    ctx.fillText('212°', tubeX - 33, thresholdY - 6);
+    ctx.font = '12px Bebas Neue, Impact, sans-serif';
+    ctx.fillStyle = 'rgba(255, 185, 120, 0.24)';
+    ctx.fillText('BOILING POINT', tubeX + tubeW + 13, thresholdY - 6);
+    ctx.restore();
     ctx.restore();
 
     /* Gentle pressure wobble when near full (no violent shake) */
-    var pressure = Math.max(0, (fillLevel - 0.85) / 0.15);
     if (pressure > 0 && !overflowing) {
       var wobbleAmt = pressure * 1.5;
       ctx.save();
@@ -291,9 +354,20 @@
       }
     }
 
+    if (fillLevel >= 1 && !boilFired) {
+      boilFired = true;
+      for (var boom = 0; boom < 8; boom++) {
+        spawnShockwave(surfaceY + boom * 4, 1 + boom * 0.08);
+      }
+      for (var bolt = 0; bolt < 14; bolt++) {
+        spawnHeatBolt(bulbCx + rng(-18, 18), surfaceY + rng(-8, 18), 1.2);
+      }
+    }
+
     /* Gradually build foam — spawn bubbles one by one */
     if (foamStarted) {
       var foamAge = fillLevel - 0.98;
+      foamHeight = Math.min(116, foamHeight + 0.42 + foamAge * 1.9);
       /* Start slow, ramp up: 1 bubble/few frames → many bubbles/frame */
       var spawnChance = Math.min(0.8, foamAge * 2);
       if (Math.random() < spawnChance) {
@@ -355,6 +429,31 @@
     ctx.shadowBlur = 16 * glowIntensity * 3;
     ctx.fill();
     ctx.shadowBlur = 0;
+
+    /* Animated molten core: makes the rise feel like pressure, not a flat bar. */
+    ctx.save();
+    ctx.beginPath();
+    ctx.roundRect(tubeX + 4, surfaceY + 1, tubeW - 8, tubeBot - surfaceY, [0, 0, 16, 16]);
+    ctx.clip();
+    ctx.globalCompositeOperation = 'screen';
+    for (var core = 0; core < 4; core++) {
+      var coreX = tubeX + 8 + core * 7 + Math.sin(time * (1.4 + core * 0.28) + core) * 2.5;
+      var coreGrad = ctx.createLinearGradient(coreX, surfaceY, coreX + 5, tubeBot);
+      coreGrad.addColorStop(0, 'rgba(255, 245, 185, ' + (0.16 + pressure * 0.07) + ')');
+      coreGrad.addColorStop(0.5, 'rgba(255, 155, 48, ' + (0.09 + pressure * 0.05) + ')');
+      coreGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      ctx.fillStyle = coreGrad;
+      ctx.fillRect(coreX, surfaceY - 12, 5, tubeBot - surfaceY + 24);
+    }
+    for (var coil = 0; coil < 5; coil++) {
+      var coilY = tubeBot - ((time * (18 + coil * 5) + coil * 44) % Math.max(20, tubeBot - surfaceY + 36));
+      ctx.beginPath();
+      ctx.ellipse(bulbCx, coilY, tubeW * 0.36, 3.4, 0, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(255, 238, 178, ' + (0.12 + pressure * 0.08) + ')';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+    ctx.restore();
 
     /* ── Bulb at bottom ── */
     ctx.beginPath();
@@ -438,18 +537,23 @@
 
     for (var j = steamParticles.length - 1; j >= 0; j--) {
       var sp = steamParticles[j];
-      sp.x += sp.vx + sp.drift * Math.sin(time * 2 + j);
+      sp.x += sp.vx + sp.drift * Math.sin(time * sp.curl + j);
       sp.y += sp.vy;
       sp.r *= 1.008;
       sp.life -= sp.decay;
 
       if (sp.life <= 0) { steamParticles.splice(j, 1); continue; }
 
+      var steamR = sp.r * (0.82 + (1 - sp.life) * 0.5);
+      var steamGrad = ctx.createRadialGradient(sp.x - steamR * 0.2, sp.y - steamR * 0.2, 0, sp.x, sp.y, steamR);
+      steamGrad.addColorStop(0, 'rgba(255, 255, 255, ' + (sp.life * 0.18) + ')');
+      steamGrad.addColorStop(0.5, 'rgba(255, 220, 180, ' + (sp.life * (0.07 + sp.warmth * 0.04)) + ')');
+      steamGrad.addColorStop(1, 'rgba(255, 220, 180, 0)');
       ctx.beginPath();
-      ctx.arc(sp.x, sp.y, sp.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(255, 255, 255, ' + (sp.life * 0.15) + ')';
-      ctx.shadowColor = 'rgba(255, 255, 255, ' + (sp.life * 0.12) + ')';
-      ctx.shadowBlur = 6;
+      ctx.arc(sp.x, sp.y, steamR, 0, Math.PI * 2);
+      ctx.fillStyle = steamGrad;
+      ctx.shadowColor = 'rgba(255, 255, 255, ' + (sp.life * 0.1) + ')';
+      ctx.shadowBlur = 8;
       ctx.fill();
       ctx.shadowColor = 'transparent';
       ctx.shadowBlur = 0;
@@ -466,6 +570,46 @@
       ctx.strokeStyle = 'rgba(255, 202, 140, ' + (ring.life * 0.18) + ')';
       ctx.lineWidth = 1.2;
       ctx.stroke();
+    }
+
+    /* ── 212° shockwaves ── */
+    for (var wi = shockwaves.length - 1; wi >= 0; wi--) {
+      var wave = shockwaves[wi];
+      wave.rx *= wave.growth;
+      wave.ry *= wave.growth;
+      wave.life -= wave.decay;
+      if (wave.life <= 0) { shockwaves.splice(wi, 1); continue; }
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      ctx.beginPath();
+      ctx.ellipse(wave.x, wave.y, wave.rx, wave.ry, 0, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(255, ' + Math.round(160 + wave.warmth * 62) + ', 78, ' + (wave.life * 0.34) + ')';
+      ctx.lineWidth = 1.3 + wave.life * 2.2;
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    /* ── Heat bolts at the extra degree ── */
+    for (var hi = heatBolts.length - 1; hi >= 0; hi--) {
+      var bolt = heatBolts[hi];
+      bolt.life -= bolt.decay;
+      if (bolt.life <= 0) { heatBolts.splice(hi, 1); continue; }
+      var bx2 = bolt.x + Math.cos(bolt.angle) * bolt.len;
+      var by2 = bolt.y + Math.sin(bolt.angle) * bolt.len;
+      var midX = (bolt.x + bx2) / 2 + bolt.kink * bolt.life;
+      var midY = (bolt.y + by2) / 2 - Math.abs(bolt.kink) * 0.45;
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      ctx.beginPath();
+      ctx.moveTo(bolt.x, bolt.y);
+      ctx.lineTo(midX, midY);
+      ctx.lineTo(bx2, by2);
+      ctx.strokeStyle = 'rgba(255, ' + Math.round(185 + bolt.warmth * 50) + ', 88, ' + (bolt.life * 0.7) + ')';
+      ctx.lineWidth = 1.2 + bolt.life * 1.2;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+      ctx.restore();
     }
 
     /* ── Sparks / boiling embers ── */
@@ -565,7 +709,10 @@
     foamBubbles = [];
     sparks = [];
     pressureRings = [];
+    shockwaves = [];
+    heatBolts = [];
     foamStarted = false;
+    boilFired = false;
     foamHeight = 0;
     time = 0;
     if (animId) cancelAnimationFrame(animId);

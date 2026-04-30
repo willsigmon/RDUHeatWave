@@ -116,6 +116,14 @@
       "dest": "/timer.html"
     },
     {
+      "src": "/agenda/admin",
+      "dest": "/agenda.html"
+    },
+    {
+      "src": "/agenda/public",
+      "dest": "/agenda.html"
+    },
+    {
       "src": "/agenda",
       "dest": "/agenda.html"
     },

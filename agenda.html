@@ -9,19 +9,19 @@
   <meta property="og:site_name" content="RDU Heatwave">
   <meta property="og:type" content="website">
   <meta property="og:title" content="RDU Heatwave — Meeting Agenda">
-  <meta property="og:description" content="Printable RDU Heatwave meeting agenda and worksheets.">
+  <meta property="og:description" content="Mobile-friendly RDU Heatwave meeting agenda for this week's visitor and member flow.">
   <meta property="og:url" content="https://rduheatwave.team/agenda">
-  <meta property="og:image" content="https://rduheatwave.team/api/og?title=RDU+Heatwave+%E2%80%94+Meeting+Agenda&amp;subtitle=Printable+RDU+Heatwave+meeting+agenda+and+worksheets.&amp;eyebrow=Raleigh-Durham+%E2%80%A2+referral+networking">
+  <meta property="og:image" content="https://rduheatwave.team/api/og?title=RDU+Heatwave+%E2%80%94+Meeting+Agenda&amp;subtitle=Mobile-friendly+agenda+for+this+week%27s+visitor+and+member+flow.&amp;eyebrow=Raleigh-Durham+%E2%80%A2+referral+networking">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="RDU Heatwave — Meeting Agenda social preview">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="RDU Heatwave — Meeting Agenda">
-  <meta name="twitter:description" content="Printable RDU Heatwave meeting agenda and worksheets.">
-  <meta name="twitter:image" content="https://rduheatwave.team/api/og?title=RDU+Heatwave+%E2%80%94+Meeting+Agenda&amp;subtitle=Printable+RDU+Heatwave+meeting+agenda+and+worksheets.&amp;eyebrow=Raleigh-Durham+%E2%80%A2+referral+networking">
+  <meta name="twitter:description" content="Mobile-friendly RDU Heatwave meeting agenda for this week's visitor and member flow.">
+  <meta name="twitter:image" content="https://rduheatwave.team/api/og?title=RDU+Heatwave+%E2%80%94+Meeting+Agenda&amp;subtitle=Mobile-friendly+agenda+for+this+week%27s+visitor+and+member+flow.&amp;eyebrow=Raleigh-Durham+%E2%80%A2+referral+networking">
   <meta name="twitter:image:alt" content="RDU Heatwave — Meeting Agenda social preview">
 
-<meta name="description" content="Printable RDU Heatwave meeting agenda and worksheets.">
+<meta name="description" content="Mobile-friendly RDU Heatwave meeting agenda for this week's visitor and member flow.">
 <meta name="robots" content="noindex, nofollow">
 <link rel="shortcut icon" href="/favicon.ico">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -37,64 +37,99 @@
 <link rel="stylesheet" href="/agenda.css">
 
 </head>
-<body>
+<body class="agenda-public-mode">
 <main id="main-content" aria-label="RDU Heatwave Meeting Agenda">
   <h1 class="sr-only">RDU Heatwave Meeting Agenda</h1>
   <div class="heat-bg no-print" aria-hidden="true"><div class="heat-line"></div><div class="heat-line"></div><div class="heat-line"></div><div class="heat-line"></div><div class="heat-line"></div></div>
   <noscript><div class="noscript-banner">JavaScript is required to use this page.</div></noscript>
 
+  <section class="paperless-hero no-print" aria-labelledby="paperless-title">
+    <div class="paperless-hero-card">
+      <div class="paperless-brand">
+        <img src="/heatwave-logo.png" alt="" width="315" height="309" aria-hidden="true">
+        <div>
+          <div class="paperless-kicker">Paperless agenda</div>
+          <h2 id="paperless-title">Today&rsquo;s Paperless Agenda</h2>
+          <p id="paperless-date-meta">Loading this week&rsquo;s meeting…</p>
+        </div>
+      </div>
+      <div class="paperless-actions" aria-label="Agenda shortcuts">
+        <a class="paperless-button paperless-button-primary" href="#meeting-agenda">View agenda flow</a>
+        <a class="paperless-button" href="/">Check in</a>
+        <a class="paperless-button" href="#member-roster">Member roster</a>
+      </div>
+      <div class="paperless-meta-grid" aria-label="This week highlights">
+        <div class="paperless-meta-item">
+          <span>Spotlight</span>
+          <strong id="paperless-speaker-name">&mdash;</strong>
+        </div>
+        <div class="paperless-meta-item">
+          <span>Venue</span>
+          <strong>Clouds Brewing</strong>
+        </div>
+      </div>
+      <p class="paperless-admin-note">Need the print/stat controls? Use <a href="/agenda/admin">/agenda/admin</a>.</p>
+    </div>
+  </section>
+
   <div class="agenda-tools no-print" aria-label="Agenda print controls">
     <div class="agenda-tools-copy">
-      <strong>Manual stats for print</strong>
-      <span>Click any stat number on the agenda and type the current value. Saved in this browser until cleared.</span>
+      <strong>Verified stats for print</strong>
+      <span>Admin print view. Current verified YTD numbers are loaded first. Click any number to make a one-off print override.</span>
     </div>
-    <button type="button" class="agenda-tools-button" id="reset-agenda-stats">Use live stats</button>
-    <span class="agenda-tools-status" id="manual-stats-status" aria-live="polite">Live stats load automatically unless edited.</span>
+    <button type="button" class="agenda-tools-button" id="reset-agenda-stats">Use verified stats</button>
+    <span class="agenda-tools-status" id="manual-stats-status" aria-live="polite">Verified through Apr 23. Live stats only raise numbers when newer.</span>
   </div>
 
 <!-- ==================== PAGE 1: AGENDA ==================== -->
-<div class="page">
+<div class="page agenda-page-main">
 
   <!-- Header -->
   <div class="header">
     <div class="header-top">
-      <img class="logo-heatwave" src="heatwave-logo.png" alt="RDU Heatwave" width="315" height="309">
+      <div class="agenda-brand-lockup" aria-label="RDU Heatwave, Two Twelve Referral Network">
+        <div class="agenda-mark-ring">
+          <img class="logo-heatwave" src="/heatwave-logo.png" alt="RDU Heatwave" width="315" height="309">
+        </div>
+        <img class="agenda-network-logo" src="/twotwelve-logo.png" alt="Two Twelve Referral Network" width="254" height="95">
+      </div>
       <div class="header-text">
         <div class="team-name">RDU <span class="heat-text">Heatwave</span></div>
         <div class="team-subtitle">Two Twelve Referral Network</div>
         <div class="team-meta" id="meeting-date-meta">&mdash;</div>
+        <div class="stats-as-of" id="stats-as-of">Stats updated through April 23, 2026</div>
       </div>
       <div class="header-qr">
         <a class="header-qr-link" href="https://rduheatwave.team" aria-label="Visit rduheatwave.team">
-          <img class="qr-code" src="qr-rduheatwave.svg" alt="Scan to visit rduheatwave.team" width="264" height="264">
+          <img class="qr-code" src="/qr-rduheatwave.svg" alt="Scan to visit rduheatwave.team" width="264" height="264">
           <div class="qr-label">Scan to Visit</div>
         </a>
       </div>
     </div>
-    <!-- TEAM STATS — pulled live from /api/stats unless edited manually before printing -->
+    <!-- TEAM STATS — verified YTD public numbers; live stats only replace them when newer -->
     <div class="header-stats">
       <div class="stat">
         <div class="stat-value editable-stat" id="stat-members" data-stat-key="members" contenteditable="true" inputmode="numeric" role="textbox" aria-label="Members stat" spellcheck="false">11</div>
         <div class="stat-label">Members</div>
       </div>
       <div class="stat">
-        <div class="stat-value editable-stat" id="stat-guests" data-stat-key="guests" contenteditable="true" inputmode="numeric" role="textbox" aria-label="Guests stat" spellcheck="false">113</div>
-        <div class="stat-label">Guests</div>
+        <div class="stat-value editable-stat" id="stat-guests" data-stat-key="guests" contenteditable="true" inputmode="numeric" role="textbox" aria-label="Guest visits stat" spellcheck="false">178</div>
+        <div class="stat-label">Guest Visits</div>
       </div>
       <div class="stat">
-        <div class="stat-value editable-stat" id="stat-bizchats" data-stat-key="bizChats" contenteditable="true" inputmode="numeric" role="textbox" aria-label="BizChats stat" spellcheck="false">207</div>
+        <div class="stat-value editable-stat" id="stat-bizchats" data-stat-key="bizChats" contenteditable="true" inputmode="numeric" role="textbox" aria-label="BizChats stat" spellcheck="false">344</div>
         <div class="stat-label">BizChats</div>
       </div>
       <div class="stat">
-        <div class="stat-value editable-stat" id="stat-referrals" data-stat-key="referrals" contenteditable="true" inputmode="numeric" role="textbox" aria-label="Referrals stat" spellcheck="false">49</div>
-        <div class="stat-label">Referrals</div>
+        <div class="stat-value editable-stat" id="stat-referrals" data-stat-key="referrals" contenteditable="true" inputmode="numeric" role="textbox" aria-label="Referrals passed stat" spellcheck="false">66</div>
+        <div class="stat-label">Referrals Passed</div>
       </div>
       <div class="stat">
-        <div class="stat-value editable-stat" id="stat-gis" data-stat-key="gis" contenteditable="true" inputmode="numeric" role="textbox" aria-label="Total GIs stat" spellcheck="false">158</div>
+        <div class="stat-value editable-stat" id="stat-gis" data-stat-key="gis" contenteditable="true" inputmode="numeric" role="textbox" aria-label="Total GIs stat" spellcheck="false">40</div>
         <div class="stat-label">Total GIs</div>
       </div>
       <div class="stat">
-        <div class="stat-value editable-stat" id="stat-revenue" data-stat-key="revenue" contenteditable="true" inputmode="text" role="textbox" aria-label="Closed Revenue stat" spellcheck="false">$115,331</div>
+        <div class="stat-value editable-stat" id="stat-revenue" data-stat-key="revenue" contenteditable="true" inputmode="text" role="textbox" aria-label="Closed Revenue stat" spellcheck="false">$249,278</div>
         <div class="stat-label">Closed Revenue</div>
       </div>
     </div>
@@ -105,9 +140,20 @@
 
     <!-- Left: Agenda -->
     <div class="col-main">
-      <div class="section-heading section-heading-fire">Meeting Agenda</div>
+      <div class="section-heading section-heading-fire" id="meeting-agenda">Meeting Agenda</div>
+      <div class="agenda-mobile-guide no-print" aria-label="How to use the paperless agenda">
+        <strong>Run of show</strong>
+        <span>Follow this top to bottom during the meeting. Orange action rows are tappable.</span>
+      </div>
+      <nav class="agenda-jump-nav no-print" aria-label="Jump to agenda section">
+        <a href="#agenda-welcome">Welcome</a>
+        <a href="#agenda-connect">Connect</a>
+        <a href="#agenda-business">Business</a>
+        <a href="#agenda-referrals">Referrals</a>
+        <a href="#agenda-closing">Closing</a>
+      </nav>
       <ul class="agenda-list">
-        <li class="agenda-group-label">Welcome</li>
+        <li class="agenda-group-label" id="agenda-welcome">Welcome</li>
         <li class="agenda-item">
           <span class="agenda-glyph">&#9826;</span>
           <span class="agenda-text">Arrivals &amp; Open Networking</span>
@@ -121,7 +167,7 @@
           <span class="agenda-text">Overview of Two Twelve Referral Network</span>
         </li>
 
-        <li class="agenda-group-label">Connect</li>
+        <li class="agenda-group-label" id="agenda-connect">Connect</li>
         <li class="agenda-item">
           <span class="agenda-glyph">&#9638;</span>
           <span class="agenda-text">Exchange Business Cards</span>
@@ -131,7 +177,7 @@
           <span class="agenda-text">30-Second Profiles</span>
         </li>
 
-        <li class="agenda-group-label">Business</li>
+        <li class="agenda-group-label" id="agenda-business">Business</li>
         <li class="agenda-item">
           <span class="agenda-glyph">&#9670;</span>
           <span class="agenda-text">Vice Chair Report</span>
@@ -153,20 +199,24 @@
           <span class="agenda-text" id="mentor-agenda-item">Mentor Moment</span>
         </li>
 
-        <li class="agenda-group-label">Referrals</li>
+        <li class="agenda-group-label" id="agenda-referrals">Referrals</li>
         <li class="agenda-item">
           <span class="agenda-glyph">&#10140;</span>
           <span class="agenda-text">Passing of Referrals &amp; Testimonials</span>
         </li>
-        <li class="agenda-item">
-          <span class="agenda-glyph">&#9993;</span>
-          <span class="agenda-text">Book a BizChat</span>
+        <li class="agenda-item agenda-item--link">
+          <a class="agenda-row-link" href="/bizchat" aria-label="Book a BizChat">
+            <span class="agenda-glyph">&#9993;</span>
+            <span class="agenda-text">Book a BizChat</span>
+          </a>
         </li>
 
-        <li class="agenda-group-label">Closing</li>
-        <li class="agenda-item">
-          <span class="agenda-glyph">&#9998;</span>
-          <span class="agenda-text">Announcements &amp; How to Apply</span>
+        <li class="agenda-group-label" id="agenda-closing">Closing</li>
+        <li class="agenda-item agenda-item--link">
+          <a class="agenda-row-link" href="/visit" aria-label="Visitor information and how to apply">
+            <span class="agenda-glyph">&#9998;</span>
+            <span class="agenda-text">Announcements &amp; How to Apply</span>
+          </a>
         </li>
         <li class="agenda-item">
           <span class="agenda-glyph">&#10038;</span>
@@ -221,6 +271,24 @@
         </div>
       </div>
 
+      <div class="wins-card" aria-label="Last week wins">
+        <div class="wins-card-label">Last Week Wins</div>
+        <div class="wins-grid">
+          <div class="win-item">
+            <div class="win-value">$30,376</div>
+            <div class="win-label">closed business</div>
+          </div>
+          <div class="win-item">
+            <div class="win-value">17</div>
+            <div class="win-label">BizChats</div>
+          </div>
+          <div class="win-item">
+            <div class="win-value">4</div>
+            <div class="win-label">pipeline rows</div>
+          </div>
+        </div>
+      </div>
+
       <div class="tip-box">
         <div class="tip-box-label">Referral Tip of the Week</div>
         <div class="tip-box-text" id="tip-of-week">&mdash;</div>
@@ -253,7 +321,7 @@
   </div>
 
 <!-- ==================== PAGE 2: NOTES + ROSTER ==================== -->
-<div class="page">
+<div class="page agenda-page-support">
 
   <div class="two-col" style="margin-bottom: 6pt; padding-top: 4pt; flex-shrink: 0;">
 
@@ -265,12 +333,12 @@
           Listen for names &amp; companies. Write them down.<br>
           Take this back to your office and <strong>make that introduction.</strong>
         </div>
-        <ol class="write-lines">
-          <li class="write-line"></li>
-          <li class="write-line"></li>
-          <li class="write-line"></li>
-          <li class="write-line"></li>
-          <li class="write-line"></li>
+        <ol class="write-lines write-lines-editable" data-notes-group="connections">
+          <li class="write-line write-line-editable" data-note-key="connections-1" data-placeholder="Name or company" contenteditable="true" role="textbox" aria-label="Connection to make 1" spellcheck="true"></li>
+          <li class="write-line write-line-editable" data-note-key="connections-2" data-placeholder="Name or company" contenteditable="true" role="textbox" aria-label="Connection to make 2" spellcheck="true"></li>
+          <li class="write-line write-line-editable" data-note-key="connections-3" data-placeholder="Name or company" contenteditable="true" role="textbox" aria-label="Connection to make 3" spellcheck="true"></li>
+          <li class="write-line write-line-editable" data-note-key="connections-4" data-placeholder="Name or company" contenteditable="true" role="textbox" aria-label="Connection to make 4" spellcheck="true"></li>
+          <li class="write-line write-line-editable" data-note-key="connections-5" data-placeholder="Name or company" contenteditable="true" role="textbox" aria-label="Connection to make 5" spellcheck="true"></li>
         </ol>
         <div class="write-nudge">Every name here is a relationship waiting to happen.</div>
       </div>
@@ -284,12 +352,12 @@
           Who are you meeting 1-on-1 this week?<br>
           <strong>Book it before you leave.</strong>
         </div>
-        <ol class="write-lines">
-          <li class="write-line"></li>
-          <li class="write-line"></li>
-          <li class="write-line"></li>
-          <li class="write-line"></li>
-          <li class="write-line"></li>
+        <ol class="write-lines write-lines-editable" data-notes-group="bizchats">
+          <li class="write-line write-line-editable" data-note-key="bizchats-1" data-placeholder="Member name" contenteditable="true" role="textbox" aria-label="BizChat to book 1" spellcheck="true"></li>
+          <li class="write-line write-line-editable" data-note-key="bizchats-2" data-placeholder="Member name" contenteditable="true" role="textbox" aria-label="BizChat to book 2" spellcheck="true"></li>
+          <li class="write-line write-line-editable" data-note-key="bizchats-3" data-placeholder="Member name" contenteditable="true" role="textbox" aria-label="BizChat to book 3" spellcheck="true"></li>
+          <li class="write-line write-line-editable" data-note-key="bizchats-4" data-placeholder="Member name" contenteditable="true" role="textbox" aria-label="BizChat to book 4" spellcheck="true"></li>
+          <li class="write-line write-line-editable" data-note-key="bizchats-5" data-placeholder="Member name" contenteditable="true" role="textbox" aria-label="BizChat to book 5" spellcheck="true"></li>
         </ol>
         <div class="write-nudge">Relationships are built between meetings, not during them.</div>
       </div>
@@ -300,10 +368,10 @@
   <div class="section-heading section-heading-fire" style="flex-shrink: 0;">Notes &amp; Key Takeaways</div>
   <div class="worksheet-panel write-section-grow" style="flex: 1;">
     <div class="write-prompt">What stood out today? What can you act on <strong>this week</strong>?</div>
-    <ol class="write-lines">
-      <li class="write-line"></li>
-      <li class="write-line"></li>
-      <li class="write-line"></li>
+    <ol class="write-lines write-lines-editable" data-notes-group="takeaways">
+      <li class="write-line write-line-editable" data-note-key="takeaways-1" data-placeholder="Key takeaway" contenteditable="true" role="textbox" aria-label="Key takeaway 1" spellcheck="true"></li>
+      <li class="write-line write-line-editable" data-note-key="takeaways-2" data-placeholder="Action item" contenteditable="true" role="textbox" aria-label="Key takeaway 2" spellcheck="true"></li>
+      <li class="write-line write-line-editable" data-note-key="takeaways-3" data-placeholder="Follow-up" contenteditable="true" role="textbox" aria-label="Key takeaway 3" spellcheck="true"></li>
     </ol>
     <div class="write-nudge">The ink you put here is worth more than the agenda on the other side.</div>
   </div>
@@ -312,7 +380,7 @@
   <div class="ornament" style="flex-shrink: 0;">&#9670; &#9670; &#9670;</div>
 
   <!-- Roster -->
-  <div class="section-heading" style="flex-shrink: 0;">Member Roster</div>
+  <div class="section-heading" id="member-roster" style="flex-shrink: 0;">Member Roster</div>
   <p class="roster-privacy-note">Public agenda copy lists members by seat only. Full contact details stay in the team directory.</p>
   <div class="roster-panel">
   <table class="roster-table">
@@ -386,7 +454,7 @@
   <!-- Footer -->
   <div class="page-footer">
     <span id="footer-date-meta">&mdash;</span>
-    <img class="logo-twotwelve" src="twotwelve-logo.png" alt="Two Twelve" loading="lazy" decoding="async" width="254" height="95" style="height:14pt; opacity:0.5;">
+    <img class="logo-twotwelve" src="/twotwelve-logo.png" alt="Two Twelve Referral Network" loading="lazy" decoding="async" width="254" height="95">
     <span class="fire">rduheatwave.team</span>
   </div>
 

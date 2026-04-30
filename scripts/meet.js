@@ -6,6 +6,7 @@
   var COUNTDOWN_CONFIG = SITE_CONFIG.countdownTarget || {};
   var SPOTIFY_CONFIG = SITE_CONFIG.spotify || {};
   var CURRENT_SPEAKER_CONFIG = SITE_CONFIG.currentSpeaker || {};
+  var PUBLIC_STATS = SITE_CONFIG.publicStats || {};
 
   var urlParams = new URLSearchParams(window.location.search);
   var DEMO_SHOWTIME = urlParams.get('demoShowtime') === 'true';
@@ -13,7 +14,7 @@
   var MEETING_DAY = Number.isFinite(MEETING_CONFIG.day) ? MEETING_CONFIG.day : 4;
   var MEETING_TIME_ZONE = COUNTDOWN_CONFIG.timezone || MEETING_CONFIG.timezone || 'America/New_York';
   var ALLOW_REPEAT = COUNTDOWN_CONFIG.allowRepeat === true;
-  var CHECK_INTERVAL_MS = 250;
+  var CHECK_INTERVAL_MS = 1000;
   var PAST_TARGET_GRACE_MS = 12 * 60 * 60 * 1000;
 
   var currentPhase = 'countdown';
@@ -28,6 +29,7 @@
   var spotifyState = {
     currentPresetId: '',
     currentOpenUrl: 'https://open.spotify.com',
+    pendingEmbedUrl: '',
     isExpanded: false,
     embedReady: false
   };
@@ -55,6 +57,7 @@
   var countdownHoursEl = document.getElementById('cd-hours');
   var countdownMinutesEl = document.getElementById('cd-mins');
   var countdownSecondsEl = document.getElementById('cd-secs');
+  var countdownProgressBarEl = document.getElementById('countdown-progress-bar');
   var meetingStartLabelEl = document.getElementById('meeting-start-label');
   var meetingTargetTimeEl = document.getElementById('meeting-target-time');
   var showtimeScreenEl = document.getElementById('showtime-screen');
@@ -70,11 +73,11 @@
   var spotifyEmbedFrameEl = document.getElementById('spotify-embed-frame');
 
   var stats = {
-    bizChats: 207,
-    guestsHosted: 113,
-    revenue: 115331,
-    referrals: 49,
-    gratitudeIncentives: 37
+    bizChats: PUBLIC_STATS.bizChats || 344,
+    guestsHosted: PUBLIC_STATS.guestVisits || 178,
+    revenue: PUBLIC_STATS.closedRevenue || 249278,
+    referrals: PUBLIC_STATS.referralsPassed || 66,
+    gratitudeIncentives: PUBLIC_STATS.totalGis || 40
   };
 
   var speakerState = buildSpeakerState();
@@ -302,7 +305,20 @@
       spotifyExpandButtonEl.setAttribute('aria-pressed', spotifyState.isExpanded ? 'true' : 'false');
     }
 
+    if (spotifyState.isExpanded) {
+      ensureSpotifyEmbedLoaded();
+    }
+
     window.setTimeout(updateFooterStackHeight, 30);
+  }
+
+  function ensureSpotifyEmbedLoaded() {
+    if (!spotifyEmbedFrameEl || !spotifyState.pendingEmbedUrl) return;
+    if (spotifyEmbedFrameEl.src !== spotifyState.pendingEmbedUrl) {
+      spotifyState.embedReady = false;
+      spotifyEmbedFrameEl.src = spotifyState.pendingEmbedUrl;
+      setSpotifyStatus('Opening the player…');
+    }
   }
 
   function setSpotifyArtwork(src, alt) {
@@ -357,8 +373,9 @@
 
     if (spotifyEmbedFrameEl) {
       var nextEmbedUrl = spotifyUriToEmbedUrl(preset.uri);
-      if (spotifyEmbedFrameEl.src !== nextEmbedUrl) {
-        spotifyEmbedFrameEl.src = nextEmbedUrl;
+      spotifyState.pendingEmbedUrl = nextEmbedUrl;
+      if (spotifyState.isExpanded) {
+        ensureSpotifyEmbedLoaded();
       }
     }
 
@@ -555,6 +572,14 @@
       countdownSecondsEl.textContent = String(seconds).padStart(2, '0');
     }
 
+    if (countdownProgressBarEl && targetState) {
+      var weekMs = 7 * 24 * 60 * 60 * 1000;
+      var progress = Math.max(0, Math.min(1, 1 - (remainingMs / weekMs)));
+      countdownProgressBarEl.style.setProperty('--heat-progress', (progress * 100).toFixed(1) + '%');
+      var meter = countdownProgressBarEl.parentElement;
+      if (meter) meter.setAttribute('aria-valuenow', String(Math.round(progress * 100)));
+    }
+
     if (countdownHeaderEl) {
       countdownHeaderEl.textContent = 'RDU Heat starts in';
     }
@@ -657,7 +682,7 @@
 
     var items = [
       stats.bizChats + ' BizChats',
-      stats.guestsHosted + ' guests hosted',
+      stats.guestsHosted + ' guest visits',
       formatCurrency(stats.revenue) + ' revenue generated',
       stats.referrals + ' referrals passed',
       stats.gratitudeIncentives + ' gratitude incentives received',
@@ -692,11 +717,11 @@
     fetchStatsOnce().then(function(data) {
       if (!data || data.status !== 'ok' || !data.stats) return;
 
-      stats.bizChats = data.stats.bizChats || stats.bizChats;
-      stats.guestsHosted = data.stats.guestsHosted || stats.guestsHosted;
-      stats.revenue = data.stats.revenue || stats.revenue;
-      stats.referrals = data.stats.referrals || stats.referrals;
-      stats.gratitudeIncentives = data.stats.gratitudeIncentives || data.stats.guestIncentives || stats.gratitudeIncentives;
+      stats.bizChats = Math.max(Number(data.stats.bizChats) || 0, stats.bizChats);
+      stats.guestsHosted = Math.max(Number(data.stats.guestVisits != null ? data.stats.guestVisits : data.stats.guestsHosted) || 0, stats.guestsHosted);
+      stats.revenue = Math.max(Number(data.stats.closedRevenue != null ? data.stats.closedRevenue : data.stats.revenue) || 0, stats.revenue);
+      stats.referrals = Math.max(Number(data.stats.referralsPassed != null ? data.stats.referralsPassed : data.stats.referrals) || 0, stats.referrals);
+      stats.gratitudeIncentives = Math.max(Number(data.stats.totalGis != null ? data.stats.totalGis : (data.stats.gratitudeIncentives || data.stats.guestIncentives)) || 0, stats.gratitudeIncentives);
       buildTicker();
     });
   }

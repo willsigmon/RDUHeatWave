@@ -207,6 +207,10 @@
           </div>
         </div>
 
+        <div class="countdown-progress" role="meter" aria-label="Weekly heat level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div class="countdown-progress__bar" id="countdown-progress-bar"></div>
+        </div>
+
         <p class="countdown-context" id="countdown-context">Counting down to this week's meeting.</p>
         <div class="status-banner" id="status-banner" role="status" aria-live="polite">See you Thursday.</div>
 
@@ -227,13 +231,18 @@
       </section>
 
       <section class="meet-panel meet-panel--qr" aria-label="Check-in QR panel">
-        <p class="qr-panel__eyebrow">Check-in</p>
+        <p class="qr-panel__eyebrow">Use your phone</p>
         <h2 class="qr-panel__heading">Scan to check in</h2>
-        <a class="qr-panel__link" href="https://rduheatwave.team" aria-label="Visit rduheatwave.team">
+        <div class="qr-panel__link" aria-label="Scan rduheatwave.team with your phone camera">
           <img src="qr-rduheatwave.svg" alt="Scan to visit rduheatwave.team" class="qr-panel__img" loading="eager" decoding="async" width="264" height="264">
-        </a>
+        </div>
         <p class="qr-panel__easy-line">rduheatwave.team</p>
-        <p class="qr-panel__context">Point your phone camera at the code — takes 10 seconds.</p>
+        <ol class="qr-steps" aria-label="Check-in steps">
+          <li>Open camera</li>
+          <li>Scan code</li>
+          <li>Check in</li>
+        </ol>
+        <p class="qr-panel__context">Fast phone check-in. No need to touch the meeting screen.</p>
       </section>
     </section>
   </div>

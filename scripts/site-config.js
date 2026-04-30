@@ -17,7 +17,8 @@
     { name: 'Will Sigmon', company: 'Will Sigmon Media Co.', photo: '/member-photos/will-sigmon.jpg', photoObjectPosition: 'center 35%' }
   ];
   var SPEAKER_OVERRIDES = {
-    '2026-04-23': 'Roni Payne'
+    '2026-04-23': 'Roni Payne',
+    '2026-04-30': 'Shannida Ramsey'
   };
   var ROTATION_START = new Date('2026-04-09T00:00:00');
   var MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
@@ -97,9 +98,16 @@
     'Sue Kerata',
     'Will Sigmon'
   ];
+  var MENTOR_OVERRIDES = {
+    // Apr 30, 2026: Will is covering Mentor Moment; keep the normal rotation after this week.
+    '2026-04-30': 'Will Sigmon'
+  };
   var MENTOR_START = new Date('2026-04-16T00:00:00');
 
   function getMentorForMeeting(meetingDate) {
+    var override = MENTOR_OVERRIDES[toIsoDate(meetingDate)];
+    if (override) return override;
+
     var offset = Math.round((meetingDate - MENTOR_START) / MS_PER_WEEK);
     if (offset < 0) return MENTOR_ROUND_1[0];
     if (offset < MENTOR_ROUND_1.length) return MENTOR_ROUND_1[offset];
@@ -173,6 +181,17 @@
       company: speaker.company,
       photo: speaker.photo || '',
       photoObjectPosition: speaker.photoObjectPosition || ''
+    },
+    publicStats: {
+      asOf: 'April 23, 2026',
+      members: 11,
+      guestVisits: 178,
+      uniqueGuestEmails: 121,
+      firstTimeVisitors: 107,
+      bizChats: 344,
+      referralsPassed: 66,
+      totalGis: 40,
+      closedRevenue: 249278
     },
     speakerRotation: {
       roster: SPEAKER_ROSTER,

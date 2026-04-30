@@ -155,23 +155,79 @@
     var animId = null, running = false;
     var W, H, dpr;
     var beerLevel = 0, time = 0, pourActive = true;
-    var drops = [], carbonation = [], glints = [], condensation = [];
+    var drops = [], carbonation = [], glints = [], condensation = [], foamPuffs = [], shockRings = [], mist = [];
     var pourHapticTimer = null;
     var lastFrame = 0;
-    var smoothTilt = 0; /* interpolated gyro for buttery motion */
+    var smoothTilt = 0;
     var celebrationFlash = 0;
+    var completionHold = 0;
+
+    if (!ctx.roundRect) {
+      CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, radii) {
+        if (!Array.isArray(radii)) radii = [radii, radii, radii, radii];
+        while (radii.length < 4) radii.push(radii[radii.length - 1] || 0);
+        var tl = radii[0], tr = radii[1], br = radii[2], bl = radii[3];
+        this.moveTo(x + tl, y);
+        this.lineTo(x + w - tr, y); this.arcTo(x + w, y, x + w, y + tr, tr);
+        this.lineTo(x + w, y + h - br); this.arcTo(x + w, y + h, x + w - br, y + h, br);
+        this.lineTo(x + bl, y + h); this.arcTo(x, y + h, x, y + h - bl, bl);
+        this.lineTo(x, y + tl); this.arcTo(x, y, x + tl, y, tl);
+        this.closePath();
+      };
+    }
 
     function resize() {
       var rect = c.parentElement.getBoundingClientRect();
       dpr = Math.min(window.devicePixelRatio || 1, 2);
-      W = rect.width; H = rect.height;
+      W = Math.max(1, rect.width); H = Math.max(1, rect.height);
       c.width = W * dpr; c.height = H * dpr;
-      ctx.scale(dpr, dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
     function rng(a, b) { return a + Math.random() * (b - a); }
     function lerp(a, b, t) { return a + (b - a) * t; }
     function ease(t) { return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; }
+    function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+
+    function makeGlass() {
+      var top = H * 0.16;
+      var bottom = H * 0.92;
+      var halfTop = Math.min(W * 0.16, 112);
+      /*
+        Keep the hero pour visible. The menu card sits centered above this canvas,
+        so the pint lives off the right shoulder on desktop and tucks closer in on phones.
+      */
+      var targetX = W < 740 ? W * 0.68 : W * 0.82;
+      var midX = clamp(targetX, halfTop + 18, W - halfTop - 18);
+      return {
+        midX: midX,
+        top: top,
+        bottom: bottom,
+        halfTop: halfTop,
+        halfBottom: halfTop * 0.68,
+        lipH: 12
+      };
+    }
+
+    function glassHalfAtY(g, y) {
+      var t = clamp((y - g.top) / Math.max(1, g.bottom - g.top), 0, 1);
+      return lerp(g.halfTop, g.halfBottom, t);
+    }
+
+    function glassRandomX(g, y, pad) {
+      var half = Math.max(10, glassHalfAtY(g, y) - (pad || 0));
+      return g.midX + rng(-half, half);
+    }
+
+    function beginGlassPath(g) {
+      ctx.beginPath();
+      ctx.moveTo(g.midX - g.halfTop, g.top);
+      ctx.lineTo(g.midX + g.halfTop, g.top);
+      ctx.lineTo(g.midX + g.halfBottom, g.bottom);
+      ctx.quadraticCurveTo(g.midX + g.halfBottom * 0.56, g.bottom + 20, g.midX, g.bottom + 24);
+      ctx.quadraticCurveTo(g.midX - g.halfBottom * 0.56, g.bottom + 20, g.midX - g.halfBottom, g.bottom);
+      ctx.closePath();
+    }
 
     function spawnGlint(x, y, size, warmth) {
       glints.push({
@@ -179,302 +235,549 @@
         y: y,
         size: size || rng(8, 16),
         life: 1,
-        decay: rng(0.025, 0.06),
-        warmth: typeof warmth === 'number' ? warmth : Math.random()
+        decay: rng(0.022, 0.055),
+        warmth: typeof warmth === 'number' ? warmth : Math.random(),
+        spin: rng(-0.035, 0.035)
       });
+      if (glints.length > 70) glints.shift();
     }
 
-    function spawnCondensation() {
-      var glassMidX = W * 0.54;
-      var glassHalfTop = Math.min(W * 0.17, 110);
+    function spawnDrop(x, y, power, tilt) {
+      drops.push({
+        x: x + rng(-15, 15),
+        y: y + rng(-3, 3),
+        vx: rng(-1.8, 1.8) + (tilt || 0) * 1.6,
+        vy: -rng(1.2, 4.5) * power,
+        r: rng(1.2, 4.8) * power,
+        life: 1,
+        decay: rng(0.014, 0.032),
+        foam: Math.random() < 0.42
+      });
+      if (drops.length > 90) drops.shift();
+    }
+
+    function spawnFoamPuff(x, y, power) {
+      foamPuffs.push({
+        x: x + rng(-18, 18),
+        y: y + rng(-8, 6),
+        vx: rng(-0.22, 0.22),
+        vy: -rng(0.08, 0.42) * power,
+        r: rng(5, 17) * power,
+        life: 1,
+        decay: rng(0.006, 0.014),
+        wobble: rng(0.5, 1.8),
+        phase: rng(0, Math.PI * 2)
+      });
+      if (foamPuffs.length > 85) foamPuffs.shift();
+    }
+
+    function spawnMist(x, y, power) {
+      mist.push({
+        x: x + rng(-24, 24),
+        y: y + rng(-22, 4),
+        vx: rng(-0.18, 0.18),
+        vy: -rng(0.22, 0.75) * power,
+        r: rng(10, 34) * power,
+        life: 1,
+        decay: rng(0.006, 0.014),
+        warmth: rng(0, 1)
+      });
+      if (mist.length > 45) mist.shift();
+    }
+
+    function spawnShockRing(x, y, power) {
+      shockRings.push({
+        x: x,
+        y: y,
+        rx: rng(18, 36) * power,
+        ry: rng(6, 12) * power,
+        grow: rng(1.045, 1.075) + power * 0.01,
+        life: 1,
+        decay: rng(0.018, 0.032),
+        warmth: rng(0.45, 1)
+      });
+      if (shockRings.length > 24) shockRings.shift();
+    }
+
+    function spawnCondensation(g) {
       var side = Math.random() < 0.5 ? -1 : 1;
+      var y = rng(g.top + 22, g.bottom - 22);
+      var half = glassHalfAtY(g, y);
       condensation.push({
-        x: glassMidX + side * (glassHalfTop - rng(8, 20)) + rng(-6, 6),
-        y: rng(H * 0.22, H * 0.72),
-        vy: rng(0.18, 0.5),
-        width: rng(1.5, 3.8),
-        length: rng(10, 28),
+        x: g.midX + side * (half - rng(8, 18)) + rng(-2, 2),
+        y: y,
+        vy: rng(0.18, 0.52),
+        width: rng(1.4, 3.6),
+        length: rng(10, 30),
         life: 1,
         drift: rng(-0.08, 0.08),
         decay: rng(0.004, 0.01)
       });
+      if (condensation.length > 55) condensation.shift();
+    }
+
+    function drawStar(x, y, size, alpha, warmth, spin) {
+      var tintR = Math.round(255 - warmth * 14);
+      var tintG = Math.round(245 - warmth * 44);
+      var tintB = Math.round(214 - warmth * 104);
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(spin || 0);
+      ctx.strokeStyle = 'rgba(' + tintR + ',' + tintG + ',' + tintB + ',' + alpha + ')';
+      ctx.lineWidth = 1.25;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(-size, 0); ctx.lineTo(size, 0);
+      ctx.moveTo(0, -size); ctx.lineTo(0, size);
+      ctx.moveTo(-size * 0.55, -size * 0.55); ctx.lineTo(size * 0.55, size * 0.55);
+      ctx.moveTo(size * 0.55, -size * 0.55); ctx.lineTo(-size * 0.55, size * 0.55);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawBackground(g) {
+      var bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+      bgGrad.addColorStop(0, 'rgba(9, 7, 6, 0.98)');
+      bgGrad.addColorStop(0.42, 'rgba(26, 18, 12, 0.96)');
+      bgGrad.addColorStop(1, 'rgba(6, 5, 4, 0.99)');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, W, H);
+
+      var amberGlow = ctx.createRadialGradient(g.midX, H * 0.78, 0, g.midX, H * 0.78, Math.max(W, H) * 0.72);
+      amberGlow.addColorStop(0, 'rgba(255, 188, 72, 0.28)');
+      amberGlow.addColorStop(0.26, 'rgba(232, 88, 12, 0.18)');
+      amberGlow.addColorStop(0.58, 'rgba(138, 55, 12, 0.08)');
+      amberGlow.addColorStop(1, 'rgba(232, 88, 12, 0)');
+      ctx.fillStyle = amberGlow;
+      ctx.fillRect(0, 0, W, H);
+
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      for (var beam = 0; beam < 4; beam++) {
+        var beamX = ((time * (18 + beam * 7)) + beam * W * 0.29) % (W + 180) - 90;
+        var beamGrad = ctx.createLinearGradient(beamX, 0, beamX + 150, 0);
+        beamGrad.addColorStop(0, 'rgba(255,255,255,0)');
+        beamGrad.addColorStop(0.42, 'rgba(255,222,150,' + (0.035 + beam * 0.012) + ')');
+        beamGrad.addColorStop(0.58, 'rgba(255,132,50,' + (0.025 + beam * 0.006) + ')');
+        beamGrad.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = beamGrad;
+        ctx.fillRect(beamX, 0, 150, H);
+      }
+      for (var swirl = 0; swirl < 4; swirl++) {
+        var sy = H * (0.2 + swirl * 0.18) + Math.sin(time * 0.9 + swirl) * 9;
+        ctx.beginPath();
+        ctx.ellipse(g.midX - W * 0.04, sy, W * (0.32 + swirl * 0.04), 16 + swirl * 2, Math.sin(time * 0.25 + swirl) * 0.14, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255, 170, 76, ' + (0.035 - swirl * 0.004) + ')';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      ctx.save();
+      ctx.globalAlpha = 0.03;
+      for (var ci2 = 0; ci2 < 3; ci2++) {
+        var cx = (ci2 * W * 0.48 + time * (4 + ci2)) % (W + 340) - 170;
+        var cy = 42 + ci2 * 74;
+        var cr = 34 + ci2 * 10;
+        ctx.fillStyle = '#fff';
+        ctx.beginPath(); ctx.arc(cx, cy, cr, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(cx - cr * 0.72, cy + cr * 0.2, cr * 0.76, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(cx + cr * 0.82, cy + cr * 0.15, cr * 0.84, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(cx + cr * 0.18, cy - cr * 0.42, cr * 0.62, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    function drawGlassShell(g, surfaceY, pressure) {
+      ctx.save();
+      beginGlassPath(g);
+      ctx.fillStyle = 'rgba(255,255,255,0.028)';
+      ctx.shadowColor = 'rgba(232, 88, 12, ' + (0.18 + pressure * 0.16) + ')';
+      ctx.shadowBlur = 28 + pressure * 22;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      beginGlassPath(g);
+      ctx.lineWidth = 2.4;
+      ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+      ctx.stroke();
+
+      beginGlassPath(g);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(255, 178, 92, ' + (0.18 + pressure * 0.28) + ')';
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.ellipse(g.midX, g.top, g.halfTop + 2, g.lipH, 0, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(255,255,255,0.22)';
+      ctx.lineWidth = 1.4;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(g.midX - g.halfTop + 18, g.top + 12);
+      ctx.lineTo(g.midX - g.halfBottom + 10, g.bottom - 18);
+      ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+      ctx.lineWidth = 3.2;
+      ctx.stroke();
+
+      var edgePulse = 0.05 + 0.035 * Math.sin(time * 3.5);
+      ctx.beginPath();
+      ctx.moveTo(g.midX + g.halfTop - 16, g.top + 16);
+      ctx.lineTo(g.midX + g.halfBottom - 8, g.bottom - 24);
+      ctx.strokeStyle = 'rgba(255,206,145,' + (0.08 + edgePulse) + ')';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      if (surfaceY < g.top + 44) {
+        ctx.save();
+        ctx.globalCompositeOperation = 'screen';
+        ctx.beginPath();
+        ctx.ellipse(g.midX, g.top + 5, g.halfTop * 0.9, 18, 0, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255, 224, 172, ' + (0.1 + pressure * 0.22) + ')';
+        ctx.lineWidth = 2.8;
+        ctx.stroke();
+        ctx.restore();
+      }
+      ctx.restore();
+    }
+
+    function drawTap(pourX, nozzleY, pressure) {
+      var tapY = 0;
+      var tapW = 34;
+      var tapH = 48;
+      ctx.save();
+
+      var railGrad = ctx.createLinearGradient(0, 0, W, 0);
+      railGrad.addColorStop(0, 'rgba(60,46,33,0)');
+      railGrad.addColorStop(0.34, 'rgba(120,92,62,0.85)');
+      railGrad.addColorStop(0.5, 'rgba(220,174,104,0.92)');
+      railGrad.addColorStop(0.66, 'rgba(120,92,62,0.85)');
+      railGrad.addColorStop(1, 'rgba(60,46,33,0)');
+      ctx.fillStyle = railGrad;
+      ctx.beginPath();
+      ctx.roundRect(pourX - 96, 0, 192, 13, [0, 0, 7, 7]);
+      ctx.fill();
+
+      var tapGrad = ctx.createLinearGradient(pourX - tapW / 2, 0, pourX + tapW / 2, 0);
+      tapGrad.addColorStop(0, 'rgba(42, 34, 27, 0.94)');
+      tapGrad.addColorStop(0.22, 'rgba(116, 95, 70, 0.98)');
+      tapGrad.addColorStop(0.5, 'rgba(238, 196, 126, 0.98)');
+      tapGrad.addColorStop(0.73, 'rgba(104, 83, 61, 0.96)');
+      tapGrad.addColorStop(1, 'rgba(36, 29, 24, 0.94)');
+      ctx.fillStyle = tapGrad;
+      ctx.beginPath();
+      ctx.roundRect(pourX - tapW / 2, tapY + 6, tapW, tapH, [6, 6, 9, 9]);
+      ctx.fill();
+
+      ctx.save();
+      ctx.translate(pourX + 2, tapY + 17);
+      ctx.rotate(-0.34 + Math.sin(time * 0.72) * 0.055 - pressure * 0.045);
+      var handleGrad = ctx.createLinearGradient(-8, 0, 8, 0);
+      handleGrad.addColorStop(0, 'rgba(54, 36, 24, 0.98)');
+      handleGrad.addColorStop(0.5, 'rgba(255, 133, 44, 0.88)');
+      handleGrad.addColorStop(1, 'rgba(64, 40, 26, 0.98)');
+      ctx.fillStyle = handleGrad;
+      ctx.beginPath();
+      ctx.roundRect(-6, -45, 12, 46, 6);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(0, -48, 12, 0, Math.PI * 2);
+      var knob = ctx.createRadialGradient(-3, -51, 0, 0, -48, 13);
+      knob.addColorStop(0, 'rgba(255, 202, 122, 0.95)');
+      knob.addColorStop(0.52, 'rgba(232, 88, 12, 0.88)');
+      knob.addColorStop(1, 'rgba(116, 38, 8, 0.92)');
+      ctx.fillStyle = knob;
+      ctx.shadowColor = 'rgba(232, 88, 12, 0.55)';
+      ctx.shadowBlur = 10 + pressure * 10;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.restore();
+
+      ctx.fillStyle = 'rgba(54, 42, 32, 0.96)';
+      ctx.beginPath();
+      ctx.roundRect(pourX - 11, nozzleY - 7, 22, 12, [2, 2, 7, 7]);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(pourX, nozzleY + 4, 12, 3.2, 0, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255, 191, 92, ' + (0.17 + pressure * 0.12) + ')';
+      ctx.fill();
+
+      ctx.restore();
     }
 
     function draw(now) {
-      /* Delta-time for frame-rate independent animation */
       if (!now) now = performance.now();
       var dt = lastFrame ? Math.min((now - lastFrame) / 16.667, 3) : 1;
       lastFrame = now;
       if (!W || !H) { if (running) animId = requestAnimationFrame(draw); return; }
 
-      ctx.clearRect(0, 0, W, H);
       time += 0.016 * dt;
-
-      /* Smooth gyro interpolation — no jitter */
       var rawTilt = 0;
       if (typeof HeatFX !== 'undefined' && HeatFX.gyro.enabled) {
         rawTilt = Math.max(-1, Math.min(1, HeatFX.gyro.gamma / 90));
       }
-      smoothTilt = lerp(smoothTilt, rawTilt, 0.08 * dt);
+      smoothTilt = lerp(smoothTilt, rawTilt, 0.075 * dt);
 
-      var pourX = W * 0.4 + smoothTilt * W * 0.25;
-      var surfaceY = H - (H * beerLevel);
-      var tapY = 0; /* tap sits at top of canvas */
-      var glassMidX = W * 0.54;
-      var glassTop = H * 0.16;
-      var glassBottom = H * 0.94;
-      var glassHalfTop = Math.min(W * 0.17, 112);
-      var glassHalfBottom = glassHalfTop * 0.72;
+      var g = makeGlass();
+      var level = clamp(beerLevel, 0, 1);
+      var levelEase = Math.pow(level, 0.86);
+      var surfaceY = lerp(g.bottom - 10, g.top + 26, levelEase);
+      var pressure = clamp((beerLevel - 0.72) / 0.28, 0, 1);
+      var pourX = clamp(g.midX - g.halfTop * 0.34 + smoothTilt * g.halfTop * 0.78, g.midX - g.halfTop + 26, g.midX + g.halfTop - 26);
+      var nozzleY = 58;
+      var foamHead = beerLevel > 0.08 ? 13 + beerLevel * 28 + Math.sin(time * 2.4) * 1.8 : 0;
 
-      if (pourActive) beerLevel = Math.min(1, beerLevel + 0.0006 * dt);
-      celebrationFlash = Math.max(0, celebrationFlash - (0.035 * dt));
-
-      /* ── Brew hall glow + moving caustics ── */
-      ctx.save();
-      var bgGrad = ctx.createLinearGradient(0, 0, 0, H);
-      bgGrad.addColorStop(0, 'rgba(14, 11, 9, 0.96)');
-      bgGrad.addColorStop(0.48, 'rgba(22, 17, 13, 0.88)');
-      bgGrad.addColorStop(1, 'rgba(9, 7, 6, 0.98)');
-      ctx.fillStyle = bgGrad;
-      ctx.fillRect(0, 0, W, H);
-
-      var amberGlow = ctx.createRadialGradient(glassMidX, H * 0.82, 0, glassMidX, H * 0.82, Math.max(W, H) * 0.65);
-      amberGlow.addColorStop(0, 'rgba(255, 187, 72, 0.22)');
-      amberGlow.addColorStop(0.35, 'rgba(232, 88, 12, 0.13)');
-      amberGlow.addColorStop(1, 'rgba(232, 88, 12, 0)');
-      ctx.fillStyle = amberGlow;
-      ctx.fillRect(0, 0, W, H);
-
-      for (var beam = 0; beam < 3; beam++) {
-        var beamX = ((time * (16 + beam * 9)) + beam * W * 0.34) % (W + 180) - 90;
-        var beamGrad = ctx.createLinearGradient(beamX, 0, beamX + 120, 0);
-        beamGrad.addColorStop(0, 'rgba(255,255,255,0)');
-        beamGrad.addColorStop(0.5, 'rgba(255,216,150,' + (0.04 + beam * 0.012) + ')');
-        beamGrad.addColorStop(1, 'rgba(255,255,255,0)');
-        ctx.fillStyle = beamGrad;
-        ctx.fillRect(beamX, 0, 120, H);
+      if (pourActive) {
+        beerLevel = Math.min(1, beerLevel + (0.00105 + pressure * 0.0002) * dt);
+      } else {
+        completionHold += dt;
+        if (completionHold > 260) {
+          beerLevel = 0;
+          pourActive = true;
+          completionHold = 0;
+          drops = []; carbonation = []; glints = []; condensation = []; foamPuffs = []; shockRings = []; mist = [];
+        }
       }
-      ctx.restore();
+      celebrationFlash = Math.max(0, celebrationFlash - (0.03 * dt));
 
-      /* ── Background Clouds Brewing clouds (subtle, slow drift) ── */
-      ctx.save();
-      ctx.globalAlpha = 0.022;
-      for (var ci2 = 0; ci2 < 2; ci2++) {
-        var cx = (ci2 * W * 0.6 + time * 2) % (W + 400) - 200;
-        var cy = 50 + ci2 * 100;
-        var cr = 40 + ci2 * 12;
-        /* Solid puffy cloud shape — overlapping white circles */
-        ctx.fillStyle = '#fff';
-        ctx.beginPath(); ctx.arc(cx, cy, cr, 0, Math.PI * 2); ctx.fill();
-        ctx.beginPath(); ctx.arc(cx - cr * 0.7, cy + cr * 0.2, cr * 0.8, 0, Math.PI * 2); ctx.fill();
-        ctx.beginPath(); ctx.arc(cx + cr * 0.8, cy + cr * 0.15, cr * 0.85, 0, Math.PI * 2); ctx.fill();
-        ctx.beginPath(); ctx.arc(cx + cr * 0.2, cy - cr * 0.4, cr * 0.65, 0, Math.PI * 2); ctx.fill();
-        ctx.beginPath(); ctx.arc(cx - cr * 0.3, cy - cr * 0.3, cr * 0.55, 0, Math.PI * 2); ctx.fill();
+      ctx.clearRect(0, 0, W, H);
+      drawBackground(g);
+
+      for (var ri = shockRings.length - 1; ri >= 0; ri--) {
+        var ring = shockRings[ri];
+        ring.rx *= Math.pow(ring.grow, dt);
+        ring.ry *= Math.pow(ring.grow, dt);
+        ring.life -= ring.decay * dt;
+        if (ring.life <= 0) { shockRings.splice(ri, 1); continue; }
+        ctx.save();
+        ctx.globalCompositeOperation = 'screen';
+        ctx.beginPath();
+        ctx.ellipse(ring.x, ring.y, ring.rx, ring.ry, 0, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255, ' + Math.round(176 + ring.warmth * 34) + ', 92, ' + (ring.life * 0.36) + ')';
+        ctx.lineWidth = 1.4 + ring.life * 1.8;
+        ctx.stroke();
+        ctx.restore();
       }
-      ctx.globalAlpha = 1;
-      ctx.restore();
 
-      /* ── Pint silhouette + glass highlights ── */
-      ctx.save();
-      ctx.beginPath();
-      ctx.moveTo(glassMidX - glassHalfTop, glassTop);
-      ctx.lineTo(glassMidX + glassHalfTop, glassTop);
-      ctx.lineTo(glassMidX + glassHalfBottom, glassBottom);
-      ctx.quadraticCurveTo(glassMidX, glassBottom + 24, glassMidX - glassHalfBottom, glassBottom);
-      ctx.closePath();
+      drawGlassShell(g, surfaceY, pressure);
 
-      ctx.fillStyle = 'rgba(255,255,255,0.028)';
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(255,255,255,0.17)';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.moveTo(glassMidX - glassHalfTop + 18, glassTop + 12);
-      ctx.lineTo(glassMidX - glassHalfBottom + 10, glassBottom - 12);
-      ctx.strokeStyle = 'rgba(255,255,255,0.11)';
-      ctx.lineWidth = 3;
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.moveTo(glassMidX + glassHalfTop - 16, glassTop + 16);
-      ctx.lineTo(glassMidX + glassHalfBottom - 8, glassBottom - 20);
-      ctx.strokeStyle = 'rgba(255,220,170,0.06)';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.ellipse(glassMidX, glassTop, glassHalfTop, 10, 0, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(255,255,255,0.1)';
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-      ctx.restore();
-
-      /* ── Beer tap / faucet ── */
-      ctx.save();
-      var tapCx = pourX;
-      var tapW = 20, tapH = 38;
-      var handleW = 10, handleH = 32;
-      var nozzleY = tapY + tapH;
-
-      /* Tap body — dark chrome rectangle */
-      var tapGrad = ctx.createLinearGradient(tapCx - tapW / 2, tapY, tapCx + tapW / 2, tapY);
-      tapGrad.addColorStop(0, 'rgba(60, 50, 40, 0.9)');
-      tapGrad.addColorStop(0.3, 'rgba(100, 85, 65, 0.95)');
-      tapGrad.addColorStop(0.5, 'rgba(120, 100, 75, 0.95)');
-      tapGrad.addColorStop(0.7, 'rgba(100, 85, 65, 0.95)');
-      tapGrad.addColorStop(1, 'rgba(55, 45, 35, 0.9)');
-      ctx.fillStyle = tapGrad;
-      ctx.beginPath();
-      ctx.roundRect(tapCx - tapW / 2, tapY, tapW, tapH, [0, 0, 4, 4]);
-      ctx.fill();
-
-      /* Mounting plate */
-      ctx.fillStyle = 'rgba(80, 65, 50, 0.8)';
-      ctx.beginPath();
-      ctx.roundRect(tapCx - tapW * 0.7, tapY, tapW * 1.4, 8, [0, 0, 3, 3]);
-      ctx.fill();
-
-      /* Handle — angled lever */
-      ctx.save();
-      ctx.translate(tapCx, tapY + 10);
-      ctx.rotate(-0.25 + Math.sin(time * 0.5) * 0.03); /* subtle sway */
-      var hGrad = ctx.createLinearGradient(-handleW / 2, 0, handleW / 2, 0);
-      hGrad.addColorStop(0, 'rgba(50, 40, 30, 0.9)');
-      hGrad.addColorStop(0.4, 'rgba(90, 75, 55, 0.95)');
-      hGrad.addColorStop(1, 'rgba(50, 40, 30, 0.9)');
-      ctx.fillStyle = hGrad;
-      ctx.beginPath();
-      ctx.roundRect(-handleW / 2, -handleH, handleW, handleH, 4);
-      ctx.fill();
-      /* Handle knob */
-      ctx.fillStyle = 'rgba(232, 88, 12, 0.7)';
-      ctx.beginPath();
-      ctx.arc(0, -handleH, handleW * 0.65, 0, Math.PI * 2);
-      ctx.fill();
-      /* Knob highlight */
-      ctx.fillStyle = 'rgba(255, 160, 60, 0.3)';
-      ctx.beginPath();
-      ctx.arc(-2, -handleH - 2, handleW * 0.3, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-
-      /* Nozzle tip */
-      ctx.fillStyle = 'rgba(90, 75, 55, 0.9)';
-      ctx.beginPath();
-      ctx.roundRect(tapCx - 7, nozzleY - 2, 14, 8, [0, 0, 4, 4]);
-      ctx.fill();
-      /* Drip ring */
-      ctx.fillStyle = 'rgba(218, 165, 32, 0.2)';
-      ctx.beginPath();
-      ctx.ellipse(tapCx, nozzleY + 6, 8, 2, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.restore();
-
-      /* ── Amber beer body — fine wave resolution ── */
       if (beerLevel > 0) {
         ctx.save();
-        ctx.beginPath();
-        ctx.moveTo(-1, surfaceY);
-        /* Sub-pixel wave stepping for smooth surface */
-        for (var px = 0; px <= W + 1; px += 1.5) {
-          var wave = Math.sin(px * 0.012 + time * 2.2) * 2.5 +
-                     Math.sin(px * 0.035 + time * 3.2 + smoothTilt * 2) * 1.8 +
-                     Math.sin(px * 0.08 + time * 4.5) * 0.6;
-          ctx.lineTo(px, surfaceY + wave);
-        }
-        ctx.lineTo(W + 1, H + 1); ctx.lineTo(-1, H + 1); ctx.closePath();
+        beginGlassPath(g);
+        ctx.clip();
 
-        var bg = ctx.createLinearGradient(0, surfaceY, 0, H);
-        bg.addColorStop(0, 'rgba(218, 165, 32, 0.32)');
-        bg.addColorStop(0.25, 'rgba(200, 145, 25, 0.28)');
-        bg.addColorStop(0.6, 'rgba(170, 115, 18, 0.24)');
-        bg.addColorStop(1, 'rgba(140, 90, 10, 0.18)');
-        ctx.fillStyle = bg;
+        ctx.beginPath();
+        var startX = g.midX - g.halfTop - 10;
+        var endX = g.midX + g.halfTop + 10;
+        for (var px = startX; px <= endX; px += 1.5) {
+          var wave = Math.sin(px * 0.018 + time * 2.8) * (2.2 + pressure * 1.2) +
+                     Math.sin(px * 0.049 + time * 4.4 + smoothTilt * 3) * 1.7 +
+                     Math.cos(px * 0.105 + time * 6.1) * 0.7;
+          if (px === startX) ctx.moveTo(px, surfaceY + wave);
+          else ctx.lineTo(px, surfaceY + wave);
+        }
+        ctx.lineTo(endX, g.bottom + 38);
+        ctx.lineTo(startX, g.bottom + 38);
+        ctx.closePath();
+
+        var beerGrad = ctx.createLinearGradient(0, surfaceY, 0, g.bottom + 24);
+        beerGrad.addColorStop(0, 'rgba(255, 195, 78, 0.86)');
+        beerGrad.addColorStop(0.25, 'rgba(232, 138, 24, 0.82)');
+        beerGrad.addColorStop(0.68, 'rgba(184, 102, 16, 0.78)');
+        beerGrad.addColorStop(1, 'rgba(108, 54, 8, 0.86)');
+        ctx.fillStyle = beerGrad;
         ctx.fill();
+
+        ctx.save();
+        ctx.globalCompositeOperation = 'screen';
+        for (var ribbon = 0; ribbon < 5; ribbon++) {
+          ctx.beginPath();
+          var ribbonY = lerp(surfaceY + 20, g.bottom - 22, ribbon / 5) + Math.sin(time * 1.4 + ribbon) * 5;
+          ctx.moveTo(g.midX - glassHalfAtY(g, ribbonY) + 6, ribbonY);
+          ctx.bezierCurveTo(g.midX - 24, ribbonY - 10, g.midX + 32, ribbonY + 12, g.midX + glassHalfAtY(g, ribbonY) - 6, ribbonY - 3);
+          ctx.strokeStyle = 'rgba(255, 226, 126, ' + (0.065 + ribbon * 0.006) + ')';
+          ctx.lineWidth = 2.2;
+          ctx.stroke();
+        }
+        ctx.restore();
+
+        if (beerLevel > 0.05 && Math.random() < (0.45 + pressure * 0.28) * dt) {
+          carbonation.push({
+            x: glassRandomX(g, g.bottom - 16, 10),
+            y: g.bottom + rng(2, 16),
+            vy: -rng(0.42, 1.15) * (1 + pressure * 0.25),
+            r: rng(1, 3.9),
+            wobble: rng(-0.32, 0.32),
+            phase: rng(0, Math.PI * 2),
+            life: 1
+          });
+          if (carbonation.length > 120) carbonation.shift();
+        }
+
+        for (var ci = carbonation.length - 1; ci >= 0; ci--) {
+          var cb = carbonation[ci];
+          cb.y += cb.vy * dt;
+          cb.x += Math.sin(cb.phase + time * 2.4) * cb.wobble * dt;
+          var halfAtBubble = glassHalfAtY(g, cb.y) - 7;
+          cb.x = clamp(cb.x, g.midX - halfAtBubble, g.midX + halfAtBubble);
+          if (cb.y < surfaceY - 7 || cb.life <= 0) { carbonation.splice(ci, 1); continue; }
+          cb.life -= 0.002 * dt;
+          var cbAlpha = 0.18 * Math.min(1, (g.bottom - cb.y + 44) / Math.max(1, g.bottom - surfaceY + 44));
+          ctx.beginPath();
+          ctx.arc(cb.x, cb.y, cb.r, 0, Math.PI * 2);
+          var cg = ctx.createRadialGradient(cb.x - cb.r * 0.3, cb.y - cb.r * 0.3, 0, cb.x, cb.y, cb.r);
+          cg.addColorStop(0, 'rgba(255, 255, 230, ' + (cbAlpha * 1.8) + ')');
+          cg.addColorStop(0.55, 'rgba(255, 228, 170, ' + (cbAlpha * 0.72) + ')');
+          cg.addColorStop(1, 'rgba(255, 198, 96, 0)');
+          ctx.fillStyle = cg;
+          ctx.fill();
+        }
+
+        ctx.restore();
+
+        ctx.save();
+        beginGlassPath(g);
+        ctx.clip();
+        var foamTop = surfaceY - foamHead;
+        ctx.beginPath();
+        for (var fx = startX; fx <= endX; fx += 2) {
+          var fy = foamTop +
+                   Math.sin(fx * 0.018 + time * 1.1) * 4.6 +
+                   Math.sin(fx * 0.052 + time * 1.8) * 2.6 +
+                   Math.cos(fx * 0.083 + time * 0.72) * 1.8;
+          if (fx === startX) ctx.moveTo(fx, fy); else ctx.lineTo(fx, fy);
+        }
+        ctx.lineTo(endX, surfaceY + 8);
+        ctx.lineTo(startX, surfaceY + 8);
+        ctx.closePath();
+        var foamGrad = ctx.createLinearGradient(0, foamTop, 0, surfaceY + 10);
+        foamGrad.addColorStop(0, 'rgba(255, 252, 238, 0.92)');
+        foamGrad.addColorStop(0.34, 'rgba(255, 240, 204, 0.88)');
+        foamGrad.addColorStop(0.78, 'rgba(236, 204, 142, 0.6)');
+        foamGrad.addColorStop(1, 'rgba(210, 164, 84, 0.08)');
+        ctx.fillStyle = foamGrad;
+        ctx.fill();
+
+        ctx.save();
+        ctx.globalCompositeOperation = 'screen';
+        for (var cell = 0; cell < 40; cell++) {
+          var cellY = foamTop + rng(4, Math.max(8, foamHead));
+          var cellX = glassRandomX(g, cellY, 8);
+          var br = rng(1.3, 3.6);
+          ctx.beginPath();
+          ctx.arc(cellX, cellY, br, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(255,255,255,0.16)';
+          ctx.lineWidth = 0.7;
+          ctx.stroke();
+        }
+        ctx.restore();
         ctx.restore();
       }
 
-      /* ── Pour stream — from nozzle tip ── */
-      if (pourActive && beerLevel < 0.92) {
-        var sw = 4 + Math.sin(time * 6) * 1.2 + Math.sin(time * 11) * 0.4;
-        var tOff = smoothTilt * 18;
-        var nzY = tapY + tapH + 8; /* nozzle bottom */
+      if (pourActive && beerLevel < 0.98) {
+        var sw = 6 + Math.sin(time * 6.5) * 1.4 + Math.sin(time * 13) * 0.7;
+        var tOff = smoothTilt * 22;
         ctx.save();
         ctx.beginPath();
-        ctx.moveTo(pourX - 3, nzY);
+        ctx.moveTo(pourX - sw * 0.55, nozzleY);
         ctx.bezierCurveTo(
-          pourX - sw * 0.5 + tOff * 0.3, lerp(nzY, surfaceY, 0.3),
-          pourX + tOff * 0.7, lerp(nzY, surfaceY, 0.6),
-          pourX - 2.5, surfaceY
+          pourX - sw + tOff * 0.18, lerp(nozzleY, surfaceY, 0.26),
+          pourX + tOff * 0.68, lerp(nozzleY, surfaceY, 0.62),
+          pourX - sw * 0.32, surfaceY + 3
         );
-        ctx.lineTo(pourX + 2.5, surfaceY);
+        ctx.lineTo(pourX + sw * 0.32, surfaceY + 3);
         ctx.bezierCurveTo(
-          pourX + tOff * 0.7 + sw * 0.2, lerp(nzY, surfaceY, 0.6),
-          pourX + sw * 0.5 + tOff * 0.3, lerp(nzY, surfaceY, 0.3),
-          pourX + 3, nzY
+          pourX + tOff * 0.74 + sw * 0.2, lerp(nozzleY, surfaceY, 0.62),
+          pourX + sw + tOff * 0.18, lerp(nozzleY, surfaceY, 0.26),
+          pourX + sw * 0.55, nozzleY
         );
         ctx.closePath();
-        var sg = ctx.createLinearGradient(0, 0, 0, surfaceY);
-        sg.addColorStop(0, 'rgba(218, 165, 32, 0.65)');
-        sg.addColorStop(0.7, 'rgba(200, 140, 20, 0.45)');
-        sg.addColorStop(1, 'rgba(200, 140, 20, 0.25)');
+        var sg = ctx.createLinearGradient(0, nozzleY, 0, surfaceY + 8);
+        sg.addColorStop(0, 'rgba(255, 207, 90, 0.82)');
+        sg.addColorStop(0.45, 'rgba(232, 150, 38, 0.65)');
+        sg.addColorStop(1, 'rgba(255, 240, 185, 0.38)');
         ctx.fillStyle = sg;
+        ctx.shadowColor = 'rgba(255, 178, 70, 0.42)';
+        ctx.shadowBlur = 14;
         ctx.fill();
+        ctx.shadowBlur = 0;
+
+        ctx.save();
+        ctx.globalCompositeOperation = 'screen';
+        ctx.beginPath();
+        ctx.moveTo(pourX, nozzleY + 3);
+        ctx.bezierCurveTo(pourX + tOff * 0.18, lerp(nozzleY, surfaceY, 0.34), pourX + tOff * 0.34, lerp(nozzleY, surfaceY, 0.72), pourX, surfaceY - 2);
+        ctx.strokeStyle = 'rgba(255,255,232,0.38)';
+        ctx.lineWidth = 1.4;
+        ctx.stroke();
+        ctx.restore();
         ctx.restore();
 
-        /* Splash — radial gradient drops for softness */
-        if (Math.random() < 0.3 * dt) {
-          drops.push({
-            x: pourX + rng(-16, 16), y: surfaceY,
-            vx: rng(-1.5, 1.5) + smoothTilt * 1.5, vy: rng(-3.5, -0.8),
-            r: rng(1.5, 4), life: 1, decay: rng(0.015, 0.03)
-          });
-        }
-        if (Math.random() < 0.1 * dt) {
-          spawnGlint(pourX + rng(-14, 14), surfaceY - rng(8, 26), rng(9, 18), 0.85);
-        }
+        ctx.save();
+        ctx.globalCompositeOperation = 'screen';
+        ctx.beginPath();
+        ctx.ellipse(pourX, surfaceY + 3, 24 + pressure * 18, 6 + pressure * 5, 0, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255, 248, 216, ' + (0.22 + pressure * 0.18) + ')';
+        ctx.lineWidth = 1.6;
+        ctx.stroke();
+        ctx.restore();
+
+        if (Math.random() < (0.54 + pressure * 0.36) * dt) spawnDrop(pourX, surfaceY, 0.75 + pressure * 0.7, smoothTilt);
+        if (Math.random() < (0.38 + pressure * 0.26) * dt) spawnFoamPuff(pourX, surfaceY, 0.72 + pressure * 0.62);
+        if (Math.random() < (0.13 + pressure * 0.14) * dt) spawnMist(pourX, surfaceY - 8, 0.7 + pressure * 0.5);
+        if (Math.random() < (0.11 + pressure * 0.12) * dt) spawnGlint(pourX + rng(-16, 16), surfaceY - rng(8, 30), rng(9, 20), 0.86);
+      } else if (!pourActive && Math.random() < 0.14 * dt) {
+        spawnMist(g.midX, g.top + 8, 0.85);
       }
 
-      /* ── Carbonation — radial gradient bubbles ── */
-      if (beerLevel > 0.05 && Math.random() < 0.35 * dt) {
-        carbonation.push({
-          x: rng(0, W), y: H + 4,
-          vy: -rng(0.3, 0.9), r: rng(1, 3.5),
-          wobble: rng(-0.25, 0.25), phase: Math.random() * 6.28,
-          life: 1
-        });
-      }
-      for (var ci = carbonation.length - 1; ci >= 0; ci--) {
-        var cb = carbonation[ci];
-        cb.y += cb.vy * dt;
-        cb.x += Math.sin(cb.phase + time * 1.8) * cb.wobble;
-        if (cb.y < surfaceY - 2) { carbonation.splice(ci, 1); continue; }
-        var cbAlpha = 0.12 * Math.min(1, (H - cb.y) / (H * 0.3));
+      for (var mi = mist.length - 1; mi >= 0; mi--) {
+        var m = mist[mi];
+        m.x += m.vx * dt + Math.sin(time * 1.8 + mi) * 0.08;
+        m.y += m.vy * dt;
+        m.r *= Math.pow(1.01, dt);
+        m.life -= m.decay * dt;
+        if (m.life <= 0) { mist.splice(mi, 1); continue; }
+        var mr = Math.max(0.5, m.r * (0.6 + m.life * 0.4));
+        var mg = ctx.createRadialGradient(m.x, m.y, 0, m.x, m.y, mr);
+        mg.addColorStop(0, 'rgba(255, 250, 236, ' + (m.life * 0.13) + ')');
+        mg.addColorStop(0.45, 'rgba(255, 206, 158, ' + (m.life * 0.07) + ')');
+        mg.addColorStop(1, 'rgba(255, 206, 158, 0)');
+        ctx.fillStyle = mg;
         ctx.beginPath();
-        ctx.arc(cb.x, cb.y, cb.r, 0, Math.PI * 2);
-        var cg = ctx.createRadialGradient(cb.x - cb.r * 0.3, cb.y - cb.r * 0.3, 0, cb.x, cb.y, cb.r);
-        cg.addColorStop(0, 'rgba(255, 255, 220, ' + (cbAlpha * 1.5) + ')');
-        cg.addColorStop(1, 'rgba(255, 255, 200, ' + (cbAlpha * 0.3) + ')');
-        ctx.fillStyle = cg;
+        ctx.arc(m.x, m.y, mr, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      /* ── Cold-glass condensation trails ── */
-      if (beerLevel > 0.1 && Math.random() < 0.08 * dt) spawnCondensation();
+      for (var fpi = foamPuffs.length - 1; fpi >= 0; fpi--) {
+        var puff = foamPuffs[fpi];
+        puff.phase += 0.045 * dt;
+        puff.x += (puff.vx + Math.sin(puff.phase) * 0.08 * puff.wobble) * dt;
+        puff.y += puff.vy * dt;
+        puff.life -= puff.decay * dt;
+        if (puff.life <= 0) { foamPuffs.splice(fpi, 1); continue; }
+        var pr = puff.r * (0.78 + ease(puff.life) * 0.24);
+        var pg = ctx.createRadialGradient(puff.x - pr * 0.28, puff.y - pr * 0.3, 0, puff.x, puff.y, pr);
+        pg.addColorStop(0, 'rgba(255, 255, 246, ' + (puff.life * 0.74) + ')');
+        pg.addColorStop(0.55, 'rgba(255, 233, 190, ' + (puff.life * 0.42) + ')');
+        pg.addColorStop(1, 'rgba(255, 198, 122, 0)');
+        ctx.fillStyle = pg;
+        ctx.beginPath();
+        ctx.arc(puff.x, puff.y, pr, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      if (beerLevel > 0.1 && Math.random() < 0.09 * dt) spawnCondensation(g);
       for (var co = condensation.length - 1; co >= 0; co--) {
         var drip = condensation[co];
         drip.y += drip.vy * dt;
         drip.x += drip.drift * dt;
         drip.life -= drip.decay * dt;
         if (drip.life <= 0 || drip.y > H + 16) { condensation.splice(co, 1); continue; }
-
-        var alpha = drip.life * 0.28;
+        var alpha = drip.life * 0.32;
         var trailGrad = ctx.createLinearGradient(drip.x, drip.y - drip.length, drip.x, drip.y + 2);
         trailGrad.addColorStop(0, 'rgba(255,255,255,0)');
-        trailGrad.addColorStop(0.8, 'rgba(255,255,255,' + alpha + ')');
-        trailGrad.addColorStop(1, 'rgba(255,235,200,' + (alpha * 0.9) + ')');
+        trailGrad.addColorStop(0.72, 'rgba(255,255,255,' + alpha + ')');
+        trailGrad.addColorStop(1, 'rgba(255,235,200,' + (alpha * 0.88) + ')');
         ctx.strokeStyle = trailGrad;
         ctx.lineWidth = drip.width;
         ctx.lineCap = 'round';
@@ -482,17 +785,15 @@
         ctx.moveTo(drip.x, drip.y - drip.length);
         ctx.lineTo(drip.x, drip.y);
         ctx.stroke();
-
         ctx.beginPath();
-        ctx.arc(drip.x, drip.y + 1, drip.width * 0.9, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(255,255,255,' + (alpha * 1.4) + ')';
+        ctx.arc(drip.x, drip.y + 1, drip.width * 0.95, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255,255,255,' + (alpha * 1.35) + ')';
         ctx.fill();
       }
 
-      /* ── Splash drops — soft radial ── */
       for (var di = drops.length - 1; di >= 0; di--) {
         var d = drops[di];
-        d.x += d.vx * dt; d.y += d.vy * dt; d.vy += 0.15 * dt;
+        d.x += d.vx * dt; d.y += d.vy * dt; d.vy += 0.16 * dt;
         d.life -= d.decay * dt;
         if (d.life <= 0 || d.y > H + 10) { drops.splice(di, 1); continue; }
         var dr = d.r * ease(d.life);
@@ -500,114 +801,53 @@
         ctx.beginPath();
         ctx.arc(d.x, d.y, dr, 0, Math.PI * 2);
         var dg = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, dr);
-        dg.addColorStop(0, 'rgba(218, 165, 32, ' + (d.life * 0.5) + ')');
-        dg.addColorStop(1, 'rgba(218, 165, 32, 0)');
+        if (d.foam) {
+          dg.addColorStop(0, 'rgba(255, 252, 232, ' + (d.life * 0.66) + ')');
+          dg.addColorStop(1, 'rgba(255, 210, 128, 0)');
+        } else {
+          dg.addColorStop(0, 'rgba(255, 186, 54, ' + (d.life * 0.62) + ')');
+          dg.addColorStop(1, 'rgba(218, 165, 32, 0)');
+        }
         ctx.fillStyle = dg;
         ctx.fill();
-        if (d.life > 0.72 && Math.random() < 0.16 * dt) {
-          spawnGlint(d.x, d.y, rng(6, 12), 0.65);
-        }
+        if (d.life > 0.7 && Math.random() < 0.15 * dt) spawnGlint(d.x, d.y, rng(6, 12), 0.68);
       }
 
-      /* ── Beer foam head — thick creamy white ── */
-      if (beerLevel > 0.08) {
-        var fh = 14 + beerLevel * 24;
-        ctx.save();
+      drawGlassShell(g, surfaceY, pressure);
+      drawTap(pourX, nozzleY, pressure);
 
-        var foamTop = surfaceY - fh;
-
-        /* 1) Solid opaque cream base — this IS the foam */
-        ctx.beginPath();
-        for (var fx = -1; fx <= W + 1; fx += 2) {
-          var fy = foamTop +
-                   Math.sin(fx * 0.014 + time * 0.7) * 4 +
-                   Math.sin(fx * 0.04 + time * 1.2) * 2.5 +
-                   Math.cos(fx * 0.07 + time * 0.5) * 1.5;
-          if (fx <= 0) ctx.moveTo(fx, fy); else ctx.lineTo(fx, fy);
-        }
-        ctx.lineTo(W + 1, surfaceY + 4); ctx.lineTo(-1, surfaceY + 4); ctx.closePath();
-
-        var baseGrad = ctx.createLinearGradient(0, foamTop, 0, surfaceY + 4);
-        baseGrad.addColorStop(0, 'rgba(255, 250, 235, 0.85)');
-        baseGrad.addColorStop(0.2, 'rgba(252, 245, 225, 0.9)');
-        baseGrad.addColorStop(0.6, 'rgba(248, 238, 210, 0.8)');
-        baseGrad.addColorStop(0.85, 'rgba(240, 225, 185, 0.6)');
-        baseGrad.addColorStop(1, 'rgba(225, 200, 150, 0.15)');
-        ctx.fillStyle = baseGrad;
-        ctx.fill();
-
-        /* 2) Bubble cell pattern — darker outlines give depth */
-        var seed = 42;
-        for (var row = 0; row < Math.ceil(fh / 5); row++) {
-          var by = foamTop + 4 + row * 5;
-          if (by > surfaceY) break;
-          var rowShift = (row % 2) * 3.5;
-          for (var bx = rowShift; bx < W; bx += 7) {
-            seed = (seed * 1103515245 + 12345) & 0x7fffffff;
-            var br = 2.2 + (seed % 100) / 100 * 1.5;
-            /* Dark ring = cell wall */
-            ctx.beginPath();
-            ctx.arc(bx, by, br, 0, Math.PI * 2);
-            ctx.strokeStyle = 'rgba(200, 180, 140, 0.2)';
-            ctx.lineWidth = 0.6;
-            ctx.stroke();
-            /* Highlight dot = light catching the bubble */
-            ctx.beginPath();
-            ctx.arc(bx - br * 0.25, by - br * 0.3, br * 0.3, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
-            ctx.fill();
-          }
-        }
-
-        ctx.restore();
-      }
-
-      /* ── Sparkle glints on stream, foam, and glass ── */
       for (var gi = glints.length - 1; gi >= 0; gi--) {
         var glint = glints[gi];
         glint.life -= glint.decay * dt;
+        glint.spin += glint.spin * dt;
         if (glint.life <= 0) { glints.splice(gi, 1); continue; }
-        var glintAlpha = glint.life * 0.45;
+        var glintAlpha = glint.life * 0.52;
         var size = glint.size * ease(Math.max(0.12, glint.life));
-        var tintR = Math.round(255 - glint.warmth * 16);
-        var tintG = Math.round(240 - glint.warmth * 50);
-        var tintB = Math.round(205 - glint.warmth * 95);
-        ctx.save();
-        ctx.translate(glint.x, glint.y);
-        ctx.strokeStyle = 'rgba(' + tintR + ',' + tintG + ',' + tintB + ',' + glintAlpha + ')';
-        ctx.lineWidth = 1.4;
-        ctx.beginPath();
-        ctx.moveTo(-size, 0);
-        ctx.lineTo(size, 0);
-        ctx.moveTo(0, -size);
-        ctx.lineTo(0, size);
-        ctx.moveTo(-size * 0.65, -size * 0.65);
-        ctx.lineTo(size * 0.65, size * 0.65);
-        ctx.moveTo(size * 0.65, -size * 0.65);
-        ctx.lineTo(-size * 0.65, size * 0.65);
-        ctx.stroke();
-        ctx.restore();
+        drawStar(glint.x, glint.y, size, glintAlpha, glint.warmth, time * 0.6 + glint.spin);
       }
 
       if (celebrationFlash > 0) {
         ctx.save();
-        ctx.fillStyle = 'rgba(255, 198, 92, ' + (celebrationFlash * 0.12) + ')';
+        ctx.globalCompositeOperation = 'screen';
+        ctx.fillStyle = 'rgba(255, 198, 92, ' + (celebrationFlash * 0.16) + ')';
         ctx.fillRect(0, 0, W, H);
         ctx.restore();
       }
 
-      /* Loop */
       if (beerLevel >= 1 && pourActive) {
         pourActive = false;
+        completionHold = 0;
         celebrationFlash = 1;
-        for (var burst = 0; burst < 10; burst++) {
-          spawnGlint(glassMidX + rng(-glassHalfTop * 0.7, glassHalfTop * 0.7), H * 0.45 + rng(-70, 70), rng(10, 22), 0.9);
+        for (var burst = 0; burst < 18; burst++) {
+          spawnGlint(g.midX + rng(-g.halfTop * 0.78, g.halfTop * 0.78), lerp(g.top, g.bottom, rng(0.04, 0.58)), rng(10, 24), 0.92);
+        }
+        for (var crown = 0; crown < 28; crown++) {
+          spawnFoamPuff(g.midX + rng(-g.halfTop * 0.75, g.halfTop * 0.75), g.top + rng(0, 34), 0.9 + Math.random() * 0.7);
+        }
+        for (var ringBurst = 0; ringBurst < 6; ringBurst++) {
+          spawnShockRing(g.midX, g.top + 12 + ringBurst * 10, 1 + ringBurst * 0.24);
         }
         if (typeof HeatFX !== 'undefined') HeatFX.haptics.success();
-        setTimeout(function() {
-          beerLevel = 0; pourActive = true;
-          drops = []; carbonation = []; glints = []; condensation = [];
-        }, 5000);
       }
 
       if (running) animId = requestAnimationFrame(draw);
@@ -616,10 +856,10 @@
     function startPourHaptics() {
       if (pourHapticTimer) return;
       pourHapticTimer = setInterval(function() {
-        if (typeof HeatFX !== 'undefined' && pourActive && beerLevel < 0.92) {
+        if (typeof HeatFX !== 'undefined' && pourActive && beerLevel < 0.98) {
           HeatFX.haptics.pourPulse();
         }
-      }, 1200);
+      }, 1100);
     }
 
     function stopPourHaptics() {

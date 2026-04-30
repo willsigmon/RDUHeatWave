@@ -837,3 +837,225 @@ body {
   pointer-events: none;
   z-index: 190;
 }
+
+/* === DISPLAY-ONLY QR LANDING === */
+.kiosk-display-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(232, 88, 12, 0.24);
+  background: rgba(232, 88, 12, 0.08);
+  color: rgba(255, 245, 236, 0.78);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.kiosk-display-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: var(--color-primary);
+  box-shadow: 0 0 18px rgba(232, 88, 12, 0.8);
+  flex: 0 0 auto;
+}
+
+.kiosk-landing-card {
+  width: min(86%, 720px);
+  min-height: min(76vh, 780px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.85rem, 2vh, 1.45rem);
+  padding: clamp(1.5rem, 4vh, 3.25rem) clamp(1.25rem, 4vw, 4rem);
+  border-radius: calc(var(--radius-2xl) + 0.65rem);
+  border: 1px solid rgba(232, 88, 12, 0.24);
+  background:
+    radial-gradient(circle at 50% 12%, rgba(232, 88, 12, 0.2), transparent 38%),
+    linear-gradient(180deg, rgba(24, 20, 18, 0.94), rgba(14, 11, 9, 0.94));
+  box-shadow:
+    0 34px 90px rgba(0, 0, 0, 0.74),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 0 100px rgba(232, 88, 12, 0.12);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  animation: card-enter 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.kiosk-landing-card::before {
+  content: '';
+  position: absolute;
+  inset: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  border-radius: calc(var(--radius-2xl) + 0.25rem);
+  pointer-events: none;
+}
+
+.kiosk-landing-card::after {
+  content: '';
+  position: absolute;
+  width: 70%;
+  height: 2px;
+  top: 0;
+  left: 15%;
+  background: linear-gradient(90deg, transparent, rgba(255, 106, 30, 0.72), transparent);
+  filter: blur(0.5px);
+}
+
+.kiosk-scan-eyebrow {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.6vw, 1.35rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.kiosk-scan-title {
+  position: relative;
+  z-index: 1;
+  max-width: 12ch;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(3.4rem, 7.2vw, 7.25rem);
+  line-height: 0.9;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+  color: #fff4eb;
+  text-shadow: 0 10px 42px rgba(232, 88, 12, 0.26);
+}
+
+.kiosk-scan-copy {
+  position: relative;
+  z-index: 1;
+  max-width: 34rem;
+  margin: 0;
+  color: rgba(240, 230, 220, 0.78);
+  font-size: clamp(1rem, 1.55vw, 1.35rem);
+  line-height: 1.55;
+}
+
+.kiosk-qr-hero {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: clamp(260px, 31vw, 430px);
+  aspect-ratio: 1;
+  border-radius: 2rem;
+  background: #fff;
+  padding: clamp(0.85rem, 1.5vw, 1.3rem);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.86),
+    0 24px 80px rgba(0, 0, 0, 0.55),
+    0 0 70px rgba(255, 255, 255, 0.18);
+}
+
+.kiosk-qr-hero::before {
+  content: '';
+  position: absolute;
+  inset: -0.65rem;
+  border-radius: 2.35rem;
+  border: 1px solid rgba(232, 88, 12, 0.38);
+  box-shadow: 0 0 34px rgba(232, 88, 12, 0.18);
+  pointer-events: none;
+}
+
+.kiosk-qr-hero-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.kiosk-url-pill {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1.15rem;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.kiosk-step-row {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  width: min(100%, 34rem);
+  margin-top: 0.25rem;
+}
+
+.kiosk-step {
+  min-height: 4.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  color: rgba(240, 230, 220, 0.74);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.kiosk-step span {
+  display: grid;
+  place-items: center;
+  width: 1.55rem;
+  height: 1.55rem;
+  border-radius: 999px;
+  background: rgba(232, 88, 12, 0.2);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  letter-spacing: 0;
+}
+
+@media (max-width: 920px) {
+  .kiosk-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: 2.2rem auto 1fr;
+    overflow-y: auto;
+  }
+
+  .kiosk-left,
+  .kiosk-right {
+    grid-row: auto;
+  }
+
+  .kiosk-left::after { display: none; }
+
+  .kiosk-left {
+    padding: 1rem;
+    gap: 0.85rem;
+  }
+
+  .kiosk-right {
+    padding: 1rem 1rem 1.5rem;
+  }
+
+  .kiosk-landing-card {
+    width: min(94%, 620px);
+    min-height: auto;
+  }
+}

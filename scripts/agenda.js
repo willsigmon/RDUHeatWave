@@ -4,10 +4,21 @@
   var SITE_CONFIG = window.HEATWAVE_SITE_CONFIG || {};
   var MEETING_CONFIG = SITE_CONFIG.meeting || {};
   var CURRENT_SPEAKER_CONFIG = SITE_CONFIG.currentSpeaker || {};
+  var PUBLIC_STATS = SITE_CONFIG.publicStats || {};
   var ROTATION = SITE_CONFIG.speakerRotation || {};
+  var params = new URLSearchParams(window.location.search);
+  var isAdminMode = params.get('mode') === 'admin' ||
+    params.get('view') === 'admin' ||
+    params.get('admin') === '1' ||
+    /\/agenda\/admin\/?$/.test(window.location.pathname);
+  var isPublicMode = !isAdminMode;
   var FIRST_MEETING = new Date('2025-01-09T00:00:00');
   var MEETING_TIME  = MEETING_CONFIG.publicTimeShort || '4:00 PM';
   var MEETING_VENUE = MEETING_CONFIG.venueName || 'Clouds Brewing';
+
+  window.HEATWAVE_AGENDA_ADMIN_MODE = isAdminMode;
+  document.body.classList.toggle('agenda-admin-mode', isAdminMode);
+  document.body.classList.toggle('agenda-public-mode', !isAdminMode);
 
   // ── Next-Thursday calculation (ET-aware) ──────────────────
   // Get today's date in America/New_York so we don't shift on
@@ -55,8 +66,19 @@
   var num = meetingNumber(meeting);
 
   var dateMeta = document.getElementById('meeting-date-meta');
+  var meetingLabel = formatLong(meeting) + ' \u2022 ' + MEETING_TIME + ' \u2022 ' + MEETING_VENUE;
   if (dateMeta) {
-    dateMeta.textContent = formatLong(meeting) + ' \u2022 ' + MEETING_TIME + ' \u2022 ' + MEETING_VENUE;
+    dateMeta.textContent = meetingLabel;
+  }
+
+  var paperlessDateMeta = document.getElementById('paperless-date-meta');
+  if (paperlessDateMeta) {
+    paperlessDateMeta.textContent = meetingLabel + '. Keep this open during the meeting when paper agendas are unavailable.';
+  }
+
+  var statsAsOfEl = document.getElementById('stats-as-of');
+  if (statsAsOfEl) {
+    statsAsOfEl.textContent = 'Stats updated through ' + (PUBLIC_STATS.asOf || 'April 23, 2026');
   }
 
   var footerMeta = document.getElementById('footer-date-meta');
@@ -74,7 +96,6 @@
   var defaultName = rotationSpeaker ? rotationSpeaker.name : (CURRENT_SPEAKER_CONFIG.name || 'Will Sigmon');
   var defaultCompany = rotationSpeaker ? rotationSpeaker.company : (CURRENT_SPEAKER_CONFIG.company || 'Will Sigmon Media');
 
-  var params = new URLSearchParams(window.location.search);
   var speaker = (params.get('speaker') || defaultName).trim();
   var speakerCompany = (params.get('company') || defaultCompany).trim();
   var venueBar = document.querySelector('.venue-bar');
@@ -105,7 +126,13 @@
 
     var heroCompany = document.querySelector('.spotlight-hero-prof');
     if (heroCompany && speakerCompany) heroCompany.textContent = speakerCompany;
+
+    var paperlessSpeaker = document.getElementById('paperless-speaker-name');
+    if (paperlessSpeaker) paperlessSpeaker.textContent = speaker;
   }
+
+  var paperlessMentor = document.getElementById('paperless-mentor-name');
+  if (paperlessMentor) paperlessMentor.textContent = mentorName || 'TBA';
 
   // ── Tip of the week ───────────────────────────────────────
   var TIPS = [
@@ -138,10 +165,13 @@
 })();
 
 (function () {
-  var STORAGE_KEY = 'rduheatwave.agenda.manualStats.v1';
+  var STORAGE_KEY = 'rduheatwave.agenda.manualStats.v2';
+  var SITE_CONFIG = window.HEATWAVE_SITE_CONFIG || {};
+  var PUBLIC_STATS = SITE_CONFIG.publicStats || {};
   var statEls = Array.prototype.slice.call(document.querySelectorAll('[data-stat-key]'));
   var resetButton = document.getElementById('reset-agenda-stats');
   var statusEl = document.getElementById('manual-stats-status');
+  var isAdminMode = !!window.HEATWAVE_AGENDA_ADMIN_MODE;
   var manualStatsActive = false;
   var latestLiveStats = null;
   var defaultStats = {};
@@ -232,6 +262,15 @@
   }
 
   function bindEditableStats() {
+    if (!isAdminMode) {
+      statEls.forEach(function (el) {
+        el.setAttribute('contenteditable', 'false');
+        el.removeAttribute('inputmode');
+        el.removeAttribute('role');
+      });
+      return;
+    }
+
     statEls.forEach(function (el) {
       el.addEventListener('focus', function () {
         window.setTimeout(function () { selectStatText(el); }, 0);
@@ -263,30 +302,72 @@
     return isFinite(number) ? '$' + number.toLocaleString('en-US') : String(value);
   }
 
-  function statsFromApi(data) {
-    var s = data && data.stats ? data.stats : {};
+  function parseStatNumber(value) {
+    var number = Number(String(value == null ? '' : value).replace(/[^0-9.-]/g, ''));
+    return isFinite(number) ? number : 0;
+  }
+
+  function getVerifiedStats() {
     return Object.assign({}, defaultStats, {
-      guests: formatNumber(s.guestsHosted),
-      bizChats: formatNumber(s.bizChats),
-      referrals: formatNumber(s.referrals),
-      gis: formatNumber(s.gratitudeIncentives != null ? s.gratitudeIncentives : s.guestIncentives),
-      revenue: formatCurrency(s.revenue)
+      members: formatNumber(PUBLIC_STATS.members != null ? PUBLIC_STATS.members : defaultStats.members),
+      guests: formatNumber(PUBLIC_STATS.guestVisits != null ? PUBLIC_STATS.guestVisits : defaultStats.guests),
+      bizChats: formatNumber(PUBLIC_STATS.bizChats != null ? PUBLIC_STATS.bizChats : defaultStats.bizChats),
+      referrals: formatNumber(PUBLIC_STATS.referralsPassed != null ? PUBLIC_STATS.referralsPassed : defaultStats.referrals),
+      gis: formatNumber(PUBLIC_STATS.totalGis != null ? PUBLIC_STATS.totalGis : defaultStats.gis),
+      revenue: formatCurrency(PUBLIC_STATS.closedRevenue != null ? PUBLIC_STATS.closedRevenue : defaultStats.revenue)
     });
   }
 
+  function maxNumberStat(apiValue, verifiedValue) {
+    return formatNumber(Math.max(parseStatNumber(apiValue), parseStatNumber(verifiedValue)));
+  }
+
+  function maxCurrencyStat(apiValue, verifiedValue) {
+    return formatCurrency(Math.max(parseStatNumber(apiValue), parseStatNumber(verifiedValue)));
+  }
+
+  function statsFromApi(data) {
+    var s = data && data.stats ? data.stats : {};
+    var verified = getVerifiedStats();
+    var apiGuestValue = s.guestVisits != null ? s.guestVisits : s.guestsHosted;
+    var apiReferralValue = s.referralsPassed != null ? s.referralsPassed : s.referrals;
+    var apiGiValue = s.totalGis != null ? s.totalGis : (s.gratitudeIncentives != null ? s.gratitudeIncentives : s.guestIncentives);
+    var apiRevenueValue = s.closedRevenue != null ? s.closedRevenue : s.revenue;
+
+    return Object.assign({}, verified, {
+      members: verified.members,
+      guests: maxNumberStat(apiGuestValue, verified.guests),
+      bizChats: maxNumberStat(s.bizChats, verified.bizChats),
+      referrals: maxNumberStat(apiReferralValue, verified.referrals),
+      gis: maxNumberStat(apiGiValue, verified.gis),
+      revenue: maxCurrencyStat(apiRevenueValue, verified.revenue)
+    });
+  }
+
+  function applyVerifiedStats() {
+    latestLiveStats = getVerifiedStats();
+    if (!manualStatsActive) {
+      applyStats(latestLiveStats, 'live');
+      updateStatus('Using verified stats through ' + (PUBLIC_STATS.asOf || 'April 23, 2026') + '. Click a number to override.');
+    }
+  }
+
   function fetchLiveStats() {
+    applyVerifiedStats();
+
     return fetch('/api/stats').then(function (response) {
+      if (!response.ok) throw new Error('Stats unavailable');
       return response.json();
     }).then(function (data) {
       if (!data || data.status !== 'ok' || !data.stats) throw new Error('Stats unavailable');
       latestLiveStats = statsFromApi(data);
       if (!manualStatsActive) {
         applyStats(latestLiveStats, 'live');
-        updateStatus('Using live stats. Click a number to override.');
+        updateStatus('Using verified stats. Live stats will only raise numbers when newer.');
       }
       return latestLiveStats;
     }).catch(function () {
-      updateStatus(manualStatsActive ? 'Using manual stats. Live stats are unavailable.' : 'Live stats are unavailable. Type stats manually.');
+      updateStatus(manualStatsActive ? 'Using manual stats. Live stats are unavailable.' : 'Using verified stats. Live stats are unavailable.');
       return null;
     });
   }
@@ -294,28 +375,122 @@
   bindEditableStats();
   defaultStats = getCurrentStats();
 
-  var savedStats = readSavedStats();
-  if (Object.keys(savedStats).length > 0) {
-    manualStatsActive = true;
-    applyStats(savedStats, 'manual');
-    updateStatus('Using saved manual stats. They will print as shown.');
+  if (isAdminMode) {
+    var savedStats = readSavedStats();
+    if (Object.keys(savedStats).length > 0) {
+      manualStatsActive = true;
+      applyStats(savedStats, 'manual');
+      updateStatus('Using saved manual stats. They will print as shown.');
+    }
   }
 
-  if (resetButton) {
+  if (resetButton && isAdminMode) {
     resetButton.addEventListener('click', function () {
       manualStatsActive = false;
       writeSavedStats({});
       statEls.forEach(function (el) { el.removeAttribute('data-manual'); });
-      updateStatus('Manual stats cleared. Loading live stats…');
-      if (latestLiveStats) {
-        applyStats(latestLiveStats, 'live');
-        updateStatus('Using live stats. Click a number to override.');
-        return;
-      }
-      applyStats(defaultStats, 'live');
+      updateStatus('Manual stats cleared. Loading verified stats…');
+      latestLiveStats = getVerifiedStats();
+      applyStats(latestLiveStats, 'live');
+      updateStatus('Using verified stats through ' + (PUBLIC_STATS.asOf || 'April 23, 2026') + '. Click a number to override.');
       fetchLiveStats();
     });
   }
 
   fetchLiveStats();
+})();
+
+(function () {
+  var STORAGE_KEY = 'rduheatwave.agenda.typedNotes.v1';
+  var noteEls = Array.prototype.slice.call(document.querySelectorAll('[data-note-key]'));
+  if (noteEls.length === 0) return;
+
+  function readSavedNotes() {
+    try {
+      var raw = window.localStorage && window.localStorage.getItem(STORAGE_KEY);
+      var parsed = raw ? JSON.parse(raw) : {};
+      return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+    } catch (error) {
+      return {};
+    }
+  }
+
+  function cleanText(value) {
+    return String(value == null ? '' : value)
+      .replace(/\u00a0/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function collectNotes() {
+    return noteEls.reduce(function (notes, el) {
+      var key = el.getAttribute('data-note-key');
+      if (!key) return notes;
+      var value = cleanText(el.textContent);
+      if (value) notes[key] = value;
+      return notes;
+    }, {});
+  }
+
+  function writeSavedNotes() {
+    try {
+      if (!window.localStorage) return;
+      var notes = collectNotes();
+      if (Object.keys(notes).length === 0) {
+        window.localStorage.removeItem(STORAGE_KEY);
+        return;
+      }
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+    } catch (error) {
+      // Notes still remain visible for the current session if storage is blocked.
+    }
+  }
+
+  function markFilled(el) {
+    if (cleanText(el.textContent)) {
+      el.setAttribute('data-filled', 'true');
+    } else {
+      el.removeAttribute('data-filled');
+    }
+  }
+
+  function pastePlainText(event) {
+    event.preventDefault();
+    var text = '';
+    if (event.clipboardData) {
+      text = event.clipboardData.getData('text/plain');
+    } else if (window.clipboardData) {
+      text = window.clipboardData.getData('Text');
+    }
+    document.execCommand('insertText', false, cleanText(text));
+  }
+
+  var savedNotes = readSavedNotes();
+  noteEls.forEach(function (el) {
+    var key = el.getAttribute('data-note-key');
+    if (key && savedNotes[key]) {
+      el.textContent = savedNotes[key];
+    }
+    markFilled(el);
+
+    el.addEventListener('input', function () {
+      markFilled(el);
+      writeSavedNotes();
+    });
+
+    el.addEventListener('blur', function () {
+      el.textContent = cleanText(el.textContent);
+      markFilled(el);
+      writeSavedNotes();
+    });
+
+    el.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        el.blur();
+      }
+    });
+
+    el.addEventListener('paste', pastePlainText);
+  });
 })();
