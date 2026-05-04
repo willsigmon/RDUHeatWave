@@ -1,10 +1,15 @@
 'use strict';
 
 var shared = require('./_lib/shared');
+var sheets = require('./_lib/google-sheets');
 
 var REQUIRED_FIELDS = ['firstName', 'lastName', 'profession', 'phone', 'email', 'guestOf'];
 var OPTIONAL_FIELDS = ['companyName', 'idealReferral'];
 var HONEYPOT_FIELD = 'companyWebsite';
+var SHEET_ID = '1WWSxfqJ1UdMqJxKLaiIzb06n3rSQj5-AVN3m07wAkSA';
+var SHEET_NAME = 'Guest Check In';
+var CHECKIN_RANGE = "'" + SHEET_NAME + "'!A:J";
+var EMAIL_COLUMN_INDEX = 5;
 var FIELD_LENGTH_LIMITS = {
   firstName: 80,
   lastName: 80,
@@ -46,10 +51,52 @@ function validateEntry(entry) {
   return null;
 }
 
+function formatMeetingDate(date) {
+  var parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/New_York',
+    month: 'numeric',
+    day: 'numeric',
+    year: 'numeric'
+  }).formatToParts(date || new Date()).reduce(function (acc, part) {
+    if (part.type !== 'literal') acc[part.type] = part.value;
+    return acc;
+  }, {});
+
+  return parts.month + '/' + parts.day + '/' + parts.year;
+}
+
+async function hasGuestCheckedInBefore(email) {
+  var normalizedEmail = shared.normalizeText(email).toLowerCase();
+  if (!normalizedEmail) return false;
+
+  var rows = await sheets.readRange(SHEET_ID, CHECKIN_RANGE);
+  return rows.some(function (row) {
+    return shared.normalizeText(row[EMAIL_COLUMN_INDEX]).toLowerCase() === normalizedEmail;
+  });
+}
+
+async function appendCheckinToSheet(entry) {
+  var isFirstVisit = !(await hasGuestCheckedInBefore(entry.email));
+  var row = [
+    formatMeetingDate(new Date()),
+    entry.firstName,
+    entry.lastName,
+    entry.profession,
+    entry.companyName,
+    entry.email,
+    entry.phone,
+    entry.guestOf,
+    isFirstVisit ? 'Yes' : 'No',
+    entry.idealReferral
+  ];
+
+  await sheets.appendRows(SHEET_ID, CHECKIN_RANGE, [row]);
+}
+
 module.exports = async function handler(req, res) {
   if (req.method === 'GET' || req.method === 'HEAD') {
     if (req.method === 'HEAD') return shared.handleHead(res);
-    return shared.sendJson(res, 200, { status: 'ok', target: 'apps-script' });
+    return shared.sendJson(res, 200, { status: 'ok', target: sheets.isConfigured() ? 'google-sheets' : 'apps-script' });
   }
   if (req.method === 'OPTIONS') return shared.handleOptions(res, ['GET', 'HEAD', 'POST', 'OPTIONS']);
   if (req.method !== 'POST') return shared.handleMethodNotAllowed(req, res, ['GET', 'HEAD', 'POST', 'OPTIONS']);
@@ -72,6 +119,11 @@ module.exports = async function handler(req, res) {
     var validationError = validateEntry(entry);
     if (validationError) {
       return shared.sendJson(res, 400, { status: 'error', message: validationError });
+    }
+
+    if (sheets.isConfigured()) {
+      await appendCheckinToSheet(entry);
+      return shared.sendJson(res, 200, { status: 'ok' });
     }
 
     var result = await shared.forwardToAppsScript(shared.getAppsScriptUrl(), entry, {

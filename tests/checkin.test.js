@@ -1,4 +1,5 @@
 import { mockReq, mockRes, mockGlobalFetch, mockFetchResponse } from './helpers.js';
+import { generateKeyPairSync } from 'crypto';
 
 process.env.APPS_SCRIPT_URL = process.env.APPS_SCRIPT_URL || 'https://script.google.com/macros/s/test/exec';
 process.env.CHECKIN_SHARED_SECRET = 'test-checkin-secret';
@@ -9,6 +10,8 @@ const handler = (await import('../api/checkin.js')).default;
 
 afterEach(() => {
   globalThis.fetch = originalFetch;
+  delete process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+  delete process.env.GOOGLE_PRIVATE_KEY;
 });
 
 function validBody() {
@@ -26,6 +29,39 @@ function validBody() {
 
 function stubAppsScript() {
   return mockGlobalFetch(async () => mockFetchResponse('{"status":"ok"}'));
+}
+
+function generateTestPrivateKey() {
+  return generateKeyPairSync('rsa', {
+    modulusLength: 2048,
+    privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
+    publicKeyEncoding: { type: 'spki', format: 'pem' },
+  }).privateKey;
+}
+
+function stubSheetsApi(existingRows) {
+  return mockGlobalFetch(async (url, opts) => {
+    const urlStr = String(url);
+
+    if (urlStr.includes('oauth2.googleapis.com/token')) {
+      return mockFetchResponse({ access_token: 'fake-token', expires_in: 3600 });
+    }
+
+    if (urlStr.includes('/values/') && (!opts || opts.method === 'GET' || !opts.method)) {
+      return mockFetchResponse({
+        values: existingRows || [
+          ['Meeting', 'First Name', 'Last Name', 'Profession', 'Company', 'Email', 'Phone', 'Guest Of', 'First Visit?', 'Ideal Intro'],
+          ['4/23/2026', 'Existing', 'Guest', 'Designer', '', 'existing@example.com', '555-0000', 'Carter Helms', 'Yes', ''],
+        ],
+      });
+    }
+
+    if (urlStr.includes(':append')) {
+      return mockFetchResponse({ updates: { updatedRows: 1 } });
+    }
+
+    throw new Error(`Unmocked check-in Sheets URL: ${urlStr}`);
+  });
 }
 
 // ── GET / HEAD / OPTIONS ───────────────────────────────────────────
@@ -123,7 +159,7 @@ describe('checkin handler — origin', () => {
 // ── Happy path ─────────────────────────────────────────────────────
 
 describe('checkin handler — success', () => {
-  it('forwards sanitized data to Apps Script and returns 200', async () => {
+  it('forwards sanitized data to Apps Script when Sheets credentials are absent', async () => {
     const fetchMock = stubAppsScript();
     const { res, getResult } = mockRes();
     await handler(mockReq({ method: 'POST', body: validBody() }), res);
@@ -131,6 +167,35 @@ describe('checkin handler — success', () => {
     expect(getResult().body).toEqual({ status: 'ok' });
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(fetchMock.mock.calls[0][1].body).toContain('checkinSecret=test-checkin-secret');
+  });
+
+  it('writes directly to Google Sheets when service account credentials are configured', async () => {
+    process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL = 'test@test.iam.gserviceaccount.com';
+    process.env.GOOGLE_PRIVATE_KEY = generateTestPrivateKey();
+    vi.resetModules();
+    const { default: sheetsHandler } = await import('../api/checkin.js');
+    const fetchMock = stubSheetsApi();
+
+    const { res, getResult } = mockRes();
+    await sheetsHandler(mockReq({ method: 'POST', body: validBody() }), res);
+
+    expect(getResult().statusCode).toBe(200);
+    expect(getResult().body).toEqual({ status: 'ok' });
+
+    const appendCall = fetchMock.mock.calls.find(([url]) => String(url).includes(':append'));
+    expect(appendCall).toBeTruthy();
+    var body = JSON.parse(appendCall[1].body);
+    expect(body.values[0].slice(1)).toEqual([
+      'Alice',
+      'Smith',
+      'Engineer',
+      'Acme Inc',
+      'alice@example.com',
+      '555-1234',
+      'Carter Helms',
+      'Yes',
+      'Designers',
+    ]);
   });
 });
 
