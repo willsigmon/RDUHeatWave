@@ -344,6 +344,14 @@ function buildRecentWeeks(guests, bizChats, pipeline, revenue) {
     });
 }
 
+function findRecentWeekByLabel(recentWeeks, label) {
+  if (!recentWeeks || !recentWeeks.length) return null;
+  for (var i = recentWeeks.length - 1; i >= 0; i--) {
+    if (recentWeeks[i].week === label) return recentWeeks[i];
+  }
+  return null;
+}
+
 function buildAttendancePresenterLine(watchlist) {
   if (!watchlist.length) {
     return 'Attendance is clean right now, so there is nothing that needs to be called out to the room.';
@@ -396,6 +404,12 @@ async function buildAdminReport() {
   var bizChats = parseBizChatsReport(sheets[2]);
   var pipeline = parsePipelineReport(sheets[3]);
   var revenue = parseRevenueReport(sheets[4]);
+  var recentWeeks = buildRecentWeeks(guests, bizChats, pipeline, revenue);
+  var lastWeekLabel = (guests.lastWeek && guests.lastWeek.dateLabel) ||
+    (bizChats.lastWeek && bizChats.lastWeek.dateLabel) ||
+    (pipeline.lastWeek && pipeline.lastWeek.dateLabel) ||
+    'Previous';
+  var lastWeekRow = findRecentWeekByLabel(recentWeeks, lastWeekLabel);
 
   var report = {
     generatedAt: new Date().toISOString(),
@@ -406,13 +420,13 @@ async function buildAdminReport() {
       closedRevenue: formatCurrency(revenue.totalRevenue)
     },
     lastWeek: {
-      label: (guests.lastWeek && guests.lastWeek.dateLabel) || (bizChats.lastWeek && bizChats.lastWeek.dateLabel) || (pipeline.lastWeek && pipeline.lastWeek.dateLabel) || 'Previous',
-      guests: guests.lastWeek ? guests.lastWeek.guests : 0,
-      bizChats: bizChats.lastWeek ? bizChats.lastWeek.total : 0,
-      referrals: pipeline.lastWeek ? pipeline.lastWeek.referrals : 0,
-      closedRevenue: formatCurrency(revenue.lastWeek ? revenue.lastWeek.revenue : 0)
+      label: lastWeekLabel,
+      guests: lastWeekRow ? shared.parseNumber(lastWeekRow.guests) : 0,
+      bizChats: lastWeekRow ? shared.parseNumber(lastWeekRow.bizChats) : 0,
+      referrals: lastWeekRow ? shared.parseNumber(lastWeekRow.referrals) : 0,
+      closedRevenue: lastWeekRow ? lastWeekRow.revenue : formatCurrency(0)
     },
-    recentWeeks: buildRecentWeeks(guests, bizChats, pipeline, revenue),
+    recentWeeks: recentWeeks,
     leaders: {
       guestHosts: guests.leaderboard.slice(0, 6),
       bizChats: bizChats.leaderboard.slice(0, 6)
