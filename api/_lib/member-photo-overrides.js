@@ -25,6 +25,11 @@ var PHOTO_OVERRIDES = {
     photoObjectPosition: 'center 25%',
     sourceUrl: 'https://advantagelending.com/wp-content/uploads/2025/06/rcourts-square.png'
   },
+  'rusty sutton': {
+    photo: '/member-photos/rusty-sutton.jpg',
+    photoObjectPosition: 'center 20%',
+    sourceUrl: 'https://monkeyfansraleigh.com/about/'
+  },
   'roni payne': {
     photo: '/member-photos/roni-payne.jpg',
     photoObjectPosition: 'center 24%',
