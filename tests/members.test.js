@@ -105,11 +105,15 @@ describe('members handler — sheet data', () => {
     const members = getResult().body.members;
     const carter = members.find((m) => m.name === 'Carter Helms');
     const craig = members.find((m) => m.name === 'Craig Morrill');
+    const roni = members.find((m) => m.name === 'Roni Payne');
+    const shannida = members.find((m) => m.name === 'Shannida Ramsey');
     const alice = members.find((m) => m.name === 'Alice Smith');
 
     expect(carter.photo).toBe('/member-photos/carter-helms.jpg');
     expect(carter.photoObjectPosition).toBe('center 28%');
     expect(craig.photo).toBe('/member-photos/craig-morrill.jpg');
+    expect(roni.photo).toBe('/member-photos/roni-payne.jpg');
+    expect(shannida.photo).toBe('/member-photos/shannida-ramsey.jpg');
     expect(alice.photo).toBeUndefined();
   });
 

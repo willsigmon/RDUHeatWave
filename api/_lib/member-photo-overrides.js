@@ -25,10 +25,20 @@ var PHOTO_OVERRIDES = {
     photoObjectPosition: 'center 25%',
     sourceUrl: 'https://advantagelending.com/wp-content/uploads/2025/06/rcourts-square.png'
   },
+  'roni payne': {
+    photo: '/member-photos/roni-payne.jpg',
+    photoObjectPosition: 'center 24%',
+    sourceUrl: 'https://business.garnerchamber.com/list/member/r-payne-financial-and-tax-solutions-5649'
+  },
   'dana walsh': {
     photo: '/member-photos/dana-walsh.jpg',
     photoObjectPosition: 'center 28%',
     sourceUrl: 'https://strollmag.com'
+  },
+  'shannida ramsey': {
+    photo: '/member-photos/shannida-ramsey.jpg',
+    photoObjectPosition: 'center 26%',
+    sourceUrl: 'https://wahnetwork.org/chapters/north-carolina/'
   },
   'sue kerata': {
     photo: '/member-photos/sue-kerata.jpg',
