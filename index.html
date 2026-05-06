@@ -308,11 +308,11 @@
 </div>
 
 <!-- PANEL 2: BEER MENU (swipe left to see) -->
-<div class="panel" style="position:relative;" tabindex="0" aria-label="Clouds Brewing venue panel">
+<div class="panel panel--clouds" tabindex="0" aria-label="Clouds Brewing venue panel">
   <div class="beer-pour-bg">
     <canvas id="beer-pour-canvas"></canvas>
   </div>
-  <div class="menu-card" data-reveal="scale" style="margin-top: 2.5rem;">
+  <div class="menu-card menu-card--clouds" data-reveal="scale">
     <div class="menu-header">
       <img src="clouds-brewing-logo.png" alt="Clouds Brewing" loading="lazy" decoding="async" width="641" height="643">
       <h2>Clouds Brewing</h2>
@@ -386,14 +386,45 @@
     <span class="chevron">&#9650;</span> MEET TWO TWELVE
   </button>
   <div class="info-drawer-body">
-    <div class="thermo-wrap">
-      <div class="thermo-canvas-wrap">
-        <canvas id="thermo-canvas" width="160" height="440"></canvas>
+    <div class="two-twelve-infographic" aria-label="Two Twelve extra degree infographic">
+      <div class="two-twelve-infographic__main">
+        <div class="infographic-kicker">The extra degree model</div>
+        <h2>211&deg; is hot. <span>212&deg; creates momentum.</span></h2>
+        <div class="infographic-temp-row" aria-hidden="true">
+          <div class="temp-card">
+            <strong>211&deg;</strong>
+            <span>Effort</span>
+          </div>
+          <div class="temp-plus">+1&deg;</div>
+          <div class="temp-card temp-card--boil">
+            <strong>212&deg;</strong>
+            <span>Steam</span>
+          </div>
+        </div>
+        <p>The room works when small, consistent follow-through turns contacts into trusted introductions.</p>
       </div>
-      <div class="thermo-labels">
-        <div class="thermo-label thermo-label-hot">211&deg; HOT</div>
-        <div class="thermo-label thermo-label-boil">212&deg; BOILS</div>
-        <div class="thermo-label thermo-label-steam">That one extra degree creates steam &mdash; and steam can power a train.</div>
+      <div class="two-twelve-infographic__steps">
+        <div class="infographic-step">
+          <span class="infographic-step__num">01</span>
+          <div>
+            <strong>Show up weekly</strong>
+            <span>Visibility makes the room remember what you do.</span>
+          </div>
+        </div>
+        <div class="infographic-step">
+          <span class="infographic-step__num">02</span>
+          <div>
+            <strong>Build trust in BizChats</strong>
+            <span>One-to-ones turn names into real referral confidence.</span>
+          </div>
+        </div>
+        <div class="infographic-step">
+          <span class="infographic-step__num">03</span>
+          <div>
+            <strong>Follow through fast</strong>
+            <span>Warm intros only compound when people respond.</span>
+          </div>
+        </div>
       </div>
     </div>
     <div class="drawer-divider"></div>
@@ -442,8 +473,6 @@
   </div>
 </div>
 <script src="/scripts/index-drawer.js"></script>
-
-<canvas id="steam-blast-canvas" class="steam-blast-canvas" style="display:none;"></canvas>
 
 <!-- Site-wide haptics wiring -->
 <script>

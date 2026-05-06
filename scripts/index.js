@@ -88,21 +88,23 @@
       pourRow.appendChild(chip);
     });
 
-    // Beer columns: first half of categories left, second half right
-    var cats   = BEER_MENU.categories;
-    var mid    = Math.ceil(cats.length / 2);
-    var halves = [cats.slice(0, mid), cats.slice(mid)];
-
+    // Beer menu: each category owns its title, then the beers split into
+    // two balanced columns. This keeps one long tap list from turning into
+    // a hard-to-scan wall on the venue panel.
     clearNode(beerColumns);
-    halves.forEach(function(group) {
-      var col = makeEl('div', 'beer-column');
-      group.forEach(function(cat) {
-        var title = makeEl('div', 'beer-section-title');
-        title.textContent = cat.name;
-        col.appendChild(title);
+    BEER_MENU.categories.forEach(function(cat) {
+      var section = makeEl('div', 'beer-category');
+      var title = makeEl('div', 'beer-section-title');
+      var grid = makeEl('div', 'beer-list-grid');
+      var split = Math.ceil(cat.beers.length / 2);
+      var halves = [cat.beers.slice(0, split), cat.beers.slice(split)];
 
+      title.textContent = cat.name;
+      section.appendChild(title);
+
+      halves.forEach(function(beers) {
         var ul = makeEl('ul', 'beer-list');
-        cat.beers.forEach(function(beer) {
+        beers.forEach(function(beer) {
           var li      = makeEl('li',   'beer-item');
           var wrapper = makeEl('span');
           var bname   = makeEl('span', 'beer-name');
@@ -119,9 +121,11 @@
           li.appendChild(babv);
           ul.appendChild(li);
         });
-        col.appendChild(ul);
+        grid.appendChild(ul);
       });
-      beerColumns.appendChild(col);
+
+      section.appendChild(grid);
+      beerColumns.appendChild(section);
     });
 
     cloudsNote.textContent = getBeerMenuNote();
@@ -171,15 +175,16 @@
     function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
 
     function makeGlass() {
-      var top = H * 0.16;
-      var bottom = H * 0.92;
-      var halfTop = Math.min(W * 0.16, 112);
+      var top = H * 0.18;
+      var bottom = H * 0.88;
+      var halfTop = clamp(W * 0.11, 56, 86);
       /*
-        Keep the hero pour visible. The menu card sits centered above this canvas,
-        so the pint lives off the right shoulder on desktop and tucks closer in on phones.
+        Keep the hero pour visible without letting the pint fight the menu.
+        On phones it becomes a right-edge atmosphere piece; on desktop it
+        sits off the card shoulder.
       */
-      var targetX = W < 740 ? W * 0.68 : W * 0.82;
-      var midX = clamp(targetX, halfTop + 18, W - halfTop - 18);
+      var targetX = W < 740 ? W * 0.86 : W * 0.81;
+      var midX = clamp(targetX, halfTop + 12, W - halfTop - 10);
       return {
         midX: midX,
         top: top,
