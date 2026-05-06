@@ -1,6 +1,7 @@
 'use strict';
 
 var shared = require('./_lib/shared');
+var sheets = require('./_lib/google-sheets');
 
 var RATE_LIMITS = { burst: 10, burstWindowMs: 60 * 1000, hourly: 120 };
 // Normalize so trailing newlines/whitespace in the Vercel env var value
@@ -8,6 +9,7 @@ var RATE_LIMITS = { burst: 10, burstWindowMs: 60 * 1000, hourly: 120 };
 var ADMIN_PASSCODE = shared.normalizeText(process.env.ADMIN_PASSCODE || '');
 var SHEET_ID = '1WWSxfqJ1UdMqJxKLaiIzb06n3rSQj5-AVN3m07wAkSA';
 var REQUEST_TIMEOUT_MS = 12 * 1000;
+var GUEST_CHECKIN_SHEET_NAME = 'Guest Check In';
 
 if (!ADMIN_PASSCODE) {
   console.warn('[api/admin-report] ADMIN_PASSCODE env var is not set — endpoint will reject all requests');
@@ -125,6 +127,46 @@ function parseGuestReport(report) {
       return entry.name && entry.value;
     }).sort(function (a, b) { return b.value - a.value; })
   };
+}
+
+function parseGuestCheckins(rows) {
+  var weekly = new Map();
+  var totalGuests = 0;
+
+  rows.forEach(function (row) {
+    var date = shared.parseDate(row[0]);
+    var firstName = shared.normalizeText(row[1]);
+    if (!date || !firstName || /^first name$/i.test(firstName)) return;
+
+    var key = date.toISOString().slice(0, 10);
+    if (!weekly.has(key)) {
+      weekly.set(key, {
+        date: date,
+        dateLabel: formatShortDate(date),
+        guests: 0
+      });
+    }
+
+    weekly.get(key).guests += 1;
+    totalGuests += 1;
+  });
+
+  var weeklyRows = Array.from(weekly.values()).sort(compareRowsByDateAsc);
+
+  return {
+    recentWeeks: getCompletedRows(weeklyRows).slice(-6),
+    totalGuests: totalGuests
+  };
+}
+
+async function fetchGuestCheckins() {
+  if (!sheets.isConfigured()) return null;
+  try {
+    return await sheets.readRange(SHEET_ID, "'" + GUEST_CHECKIN_SHEET_NAME + "'!A:J");
+  } catch (error) {
+    console.error('[api/admin-report] Guest Check In fetch failed:', error);
+    return null;
+  }
 }
 
 function parseBizChatsReport(report) {
@@ -394,19 +436,25 @@ function buildPresenterPayload(report) {
 }
 
 async function buildAdminReport() {
-  var sheets = await Promise.all([
+  var sheetReports = await Promise.all([
     fetchReportSheet('Guest Incentive Report'),
     fetchReportSheet('Attendance Report'),
     fetchReportSheet('BizChats Report'),
     fetchReportSheet('Referral Pipeline'),
-    fetchReportSheet('Revenue Report')
+    fetchReportSheet('Revenue Report'),
+    fetchGuestCheckins()
   ]);
 
-  var guests = parseGuestReport(sheets[0]);
-  var attendance = parseAttendanceReport(sheets[1]);
-  var bizChats = parseBizChatsReport(sheets[2]);
-  var pipeline = parsePipelineReport(sheets[3]);
-  var revenue = parseRevenueReport(sheets[4]);
+  var guests = parseGuestReport(sheetReports[0]);
+  var attendance = parseAttendanceReport(sheetReports[1]);
+  var bizChats = parseBizChatsReport(sheetReports[2]);
+  var pipeline = parsePipelineReport(sheetReports[3]);
+  var revenue = parseRevenueReport(sheetReports[4]);
+  var guestCheckins = sheetReports[5] ? parseGuestCheckins(sheetReports[5]) : null;
+  if (guestCheckins && guestCheckins.totalGuests) {
+    guests.recentWeeks = guestCheckins.recentWeeks;
+    guests.totalGuests = guestCheckins.totalGuests;
+  }
   var recentWeeks = buildRecentWeeks(guests, bizChats, pipeline, revenue);
   var lastWeekRow = getLatestRecentWeekWithActivity(recentWeeks);
   var lastWeekLabel = (lastWeekRow && lastWeekRow.week) ||

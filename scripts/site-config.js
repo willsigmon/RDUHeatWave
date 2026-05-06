@@ -183,14 +183,14 @@
       photoObjectPosition: speaker.photoObjectPosition || ''
     },
     publicStats: {
-      asOf: 'April 23, 2026',
+      asOf: 'April 30, 2026',
       members: 11,
-      guestVisits: 178,
+      guestVisits: 188,
       uniqueGuestEmails: 121,
-      firstTimeVisitors: 107,
-      bizChats: 344,
-      referralsPassed: 66,
-      totalGis: 40,
+      firstTimeVisitors: 120,
+      bizChats: 430,
+      referralsPassed: 80,
+      totalGis: 42,
       closedRevenue: 249278
     },
     speakerRotation: {

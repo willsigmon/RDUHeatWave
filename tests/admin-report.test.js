@@ -1,7 +1,15 @@
+import { generateKeyPairSync } from 'crypto';
 import { mockReq, mockRes, mockGlobalFetch, mockFetchResponse, gvizResponse } from './helpers.js';
 
 const originalFetch = globalThis.fetch;
 const PASSCODE = 'admin-test-passcode';
+const originalServiceEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+const originalPrivateKey = process.env.GOOGLE_PRIVATE_KEY;
+const { privateKey: testPrivateKey } = generateKeyPairSync('rsa', {
+  modulusLength: 2048,
+  privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
+  publicKeyEncoding: { type: 'spki', format: 'pem' },
+});
 
 process.env.ADMIN_PASSCODE = PASSCODE;
 
@@ -10,6 +18,8 @@ let handler;
 beforeEach(async () => {
   vi.useFakeTimers();
   vi.setSystemTime(new Date('2026-05-06T16:00:00-04:00'));
+  process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL = 'test@test.iam.gserviceaccount.com';
+  process.env.GOOGLE_PRIVATE_KEY = testPrivateKey;
   vi.resetModules();
   handler = (await import('../api/admin-report.js')).default;
 });
@@ -17,11 +27,35 @@ beforeEach(async () => {
 afterEach(() => {
   globalThis.fetch = originalFetch;
   vi.useRealTimers();
+  if (originalServiceEmail === undefined) {
+    delete process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+  } else {
+    process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL = originalServiceEmail;
+  }
+  if (originalPrivateKey === undefined) {
+    delete process.env.GOOGLE_PRIVATE_KEY;
+  } else {
+    process.env.GOOGLE_PRIVATE_KEY = originalPrivateKey;
+  }
 });
 
 function stubAdminSheets() {
-  return mockGlobalFetch(async (url) => {
+  return mockGlobalFetch(async (url, opts) => {
     const urlStr = String(url);
+
+    if (urlStr.includes('oauth2.googleapis.com/token')) {
+      return mockFetchResponse({ access_token: 'fake-token', expires_in: 3600 });
+    }
+
+    if (urlStr.includes('sheets.googleapis.com') && urlStr.includes('/values/')) {
+      return mockFetchResponse({
+        values: [
+          ['Meeting', 'First Name', 'Last Name'],
+          ...Array.from({ length: 12 }, (_, index) => ['4/23/2026', 'Apr23-' + index, 'Guest']),
+          ...Array.from({ length: 10 }, (_, index) => ['4/30/2026', 'Apr30-' + index, 'Guest']),
+        ],
+      });
+    }
 
     if (urlStr.includes('Guest%20Incentive%20Report')) {
       return mockFetchResponse(gvizResponse(
@@ -74,7 +108,7 @@ function stubAdminSheets() {
       ));
     }
 
-    throw new Error(`Unmocked admin sheet URL: ${urlStr}`);
+    throw new Error(`Unmocked admin sheet URL: ${urlStr} ${opts && opts.method ? opts.method : ''}`);
   });
 }
 
@@ -95,7 +129,7 @@ describe('admin-report handler', () => {
     expect(result.statusCode).toBe(200);
     expect(result.body.report.lastWeek).toEqual({
       label: 'Apr 30',
-      guests: 5,
+      guests: 10,
       bizChats: 40,
       referrals: 0,
       closedRevenue: '$0',

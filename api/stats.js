@@ -1,8 +1,10 @@
 'use strict';
 
 var shared = require('./_lib/shared');
+var sheets = require('./_lib/google-sheets');
 
 var SHEET_ID = '1WWSxfqJ1UdMqJxKLaiIzb06n3rSQj5-AVN3m07wAkSA';
+var GUEST_CHECKIN_SHEET_NAME = 'Guest Check In';
 var CACHE_HEADER = 'public, max-age=0, s-maxage=300, stale-while-revalidate=600';
 var lastKnownGoodStats = null;
 var lastKnownGoodAt = null;
@@ -135,6 +137,27 @@ function getGiTotalFromReport(report) {
   return totalIndex >= 0 ? shared.parseNumber(totalsRow[totalIndex]) : 0;
 }
 
+function countGuestCheckins(rows) {
+  return rows.reduce(function (count, row) {
+    var date = shared.parseDate(row[0]);
+    var firstName = shared.normalizeText(row[1]);
+    if (!date || !firstName || /^first name$/i.test(firstName)) return count;
+    return count + 1;
+  }, 0);
+}
+
+async function fetchGuestCheckinCount(warnings) {
+  if (!sheets.isConfigured()) return null;
+
+  try {
+    var rows = await sheets.readRange(SHEET_ID, "'" + GUEST_CHECKIN_SHEET_NAME + "'!A:J");
+    return countGuestCheckins(rows);
+  } catch (error) {
+    warnings.push(GUEST_CHECKIN_SHEET_NAME + ': ' + ((error && error.message) || 'Unavailable'));
+    return null;
+  }
+}
+
 async function buildStats() {
   var uniqueSheetNames = Array.from(new Set(STAT_DEFINITIONS.map(function (item) { return item.sheetName; })));
   var sheetResults = await Promise.allSettled(uniqueSheetNames.map(function (sheetName) {
@@ -167,6 +190,11 @@ async function buildStats() {
       warnings.push(definition.key + ': ' + ((error && error.message) || 'Unavailable'));
     }
   });
+
+  var guestCheckinCount = await fetchGuestCheckinCount(warnings);
+  if (guestCheckinCount != null) {
+    stats.guestsHosted = guestCheckinCount;
+  }
 
   if (lastKnownGoodStats) {
     STAT_DEFINITIONS.forEach(function (definition) {
