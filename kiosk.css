@@ -942,6 +942,23 @@ body {
   line-height: 1.55;
 }
 
+.kiosk-checkin-link {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.85rem, 1.5vh, 1.15rem);
+  color: inherit;
+  text-decoration: none;
+}
+
+.kiosk-checkin-link:focus-visible {
+  outline: 3px solid var(--color-primary-hover);
+  outline-offset: 0.55rem;
+  border-radius: 2.5rem;
+}
+
 .kiosk-qr-hero {
   position: relative;
   z-index: 1;
