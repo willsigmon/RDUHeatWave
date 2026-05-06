@@ -56,15 +56,26 @@ function getCompletedRows(rows) {
   });
 }
 
-function getLatestCompletedRow(rows) {
-  var completed = getCompletedRows(rows);
-  return completed.length ? completed[completed.length - 1] : null;
-}
-
 function getPreviousWeekRow(rows) {
   var completed = getCompletedRows(rows);
   // Previous week = second-to-last completed row
   return completed.length >= 2 ? completed[completed.length - 2] : (completed[0] || null);
+}
+
+function recentWeekHasActivity(entry) {
+  return !!entry && (
+    shared.parseNumber(entry.guests) > 0 ||
+    shared.parseNumber(entry.bizChats) > 0 ||
+    shared.parseNumber(entry.referrals) > 0 ||
+    shared.parseNumber(entry.revenue) > 0
+  );
+}
+
+function getLatestRecentWeekWithActivity(recentWeeks) {
+  for (var index = recentWeeks.length - 1; index >= 0; index -= 1) {
+    if (recentWeekHasActivity(recentWeeks[index])) return recentWeeks[index];
+  }
+  return recentWeeks.length ? recentWeeks[recentWeeks.length - 1] : null;
 }
 
 function parseGuestReport(report) {
@@ -344,14 +355,6 @@ function buildRecentWeeks(guests, bizChats, pipeline, revenue) {
     });
 }
 
-function findRecentWeekByLabel(recentWeeks, label) {
-  if (!recentWeeks || !recentWeeks.length) return null;
-  for (var i = recentWeeks.length - 1; i >= 0; i--) {
-    if (recentWeeks[i].week === label) return recentWeeks[i];
-  }
-  return null;
-}
-
 function buildAttendancePresenterLine(watchlist) {
   if (!watchlist.length) {
     return 'Attendance is clean right now, so there is nothing that needs to be called out to the room.';
@@ -405,11 +408,12 @@ async function buildAdminReport() {
   var pipeline = parsePipelineReport(sheets[3]);
   var revenue = parseRevenueReport(sheets[4]);
   var recentWeeks = buildRecentWeeks(guests, bizChats, pipeline, revenue);
-  var lastWeekLabel = (guests.lastWeek && guests.lastWeek.dateLabel) ||
+  var lastWeekRow = getLatestRecentWeekWithActivity(recentWeeks);
+  var lastWeekLabel = (lastWeekRow && lastWeekRow.week) ||
+    (guests.lastWeek && guests.lastWeek.dateLabel) ||
     (bizChats.lastWeek && bizChats.lastWeek.dateLabel) ||
     (pipeline.lastWeek && pipeline.lastWeek.dateLabel) ||
     'Previous';
-  var lastWeekRow = findRecentWeekByLabel(recentWeeks, lastWeekLabel);
 
   var report = {
     generatedAt: new Date().toISOString(),
