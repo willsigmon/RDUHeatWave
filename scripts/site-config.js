@@ -18,7 +18,8 @@
   ];
   var SPEAKER_OVERRIDES = {
     '2026-04-23': 'Roni Payne',
-    '2026-04-30': 'Shannida Ramsey'
+    '2026-04-30': 'Shannida Ramsey',
+    '2026-05-07': 'Sue Kerata'
   };
   var ROTATION_START = new Date('2026-04-09T00:00:00');
   var MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
@@ -100,7 +101,8 @@
   ];
   var MENTOR_OVERRIDES = {
     // Apr 30, 2026: Will is covering Mentor Moment; keep the normal rotation after this week.
-    '2026-04-30': 'Will Sigmon'
+    '2026-04-30': 'Will Sigmon',
+    '2026-05-07': 'Carter Helms'
   };
   var MENTOR_START = new Date('2026-04-16T00:00:00');
 
