@@ -880,6 +880,19 @@ img {
   font-weight: 700;
 }
 
+.roster-email {
+  font-size: 6.7pt;
+  letter-spacing: -0.05pt;
+  white-space: nowrap;
+  color: var(--ink-soft);
+}
+
+.roster-email a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 0.4pt dotted rgba(138,109,59,0.35);
+}
+
 .page-footer {
   flex: 0 0 auto;
   margin-top: 8pt;
