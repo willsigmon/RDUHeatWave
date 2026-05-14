@@ -2536,3 +2536,80 @@ img {
   }
 }
 
+/* ===== HERO — DIGITAL-FIRST REFRAME 2026-05-14 =========================
+   This is the primary digital agenda. Print/admin is a tiny corner button. */
+@media screen {
+  body.agenda-public-mode .paperless-hero-card {
+    position: relative;
+  }
+
+  body.agenda-public-mode .paperless-admin-link {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    z-index: 5;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(232, 88, 12, 0.22);
+    background: rgba(232, 88, 12, 0.06);
+    color: var(--muted, #8a7463);
+    font-family: var(--font-body, system-ui);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    opacity: 0.78;
+    transition: opacity 160ms ease, background 160ms ease, color 160ms ease;
+  }
+
+  body.agenda-public-mode .paperless-admin-link:hover,
+  body.agenda-public-mode .paperless-admin-link:focus-visible {
+    opacity: 1;
+    color: var(--fire, #E8580C);
+    background: rgba(232, 88, 12, 0.12);
+    outline: none;
+  }
+
+  body.agenda-public-mode .paperless-admin-link-glyph {
+    font-size: 13px;
+    line-height: 1;
+  }
+
+  /* Hide the old footer admin-note if any legacy markup still renders it */
+  body.agenda-public-mode .paperless-admin-note {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  body.agenda-public-mode .paperless-admin-link {
+    top: 9px;
+    right: 9px;
+    padding: 5px 9px;
+    font-size: 10.5px;
+    border-color: rgba(255, 172, 111, 0.36);
+    background: rgba(255, 132, 64, 0.10);
+    color: #ffc49a;
+  }
+
+  body.agenda-public-mode .paperless-admin-link:hover,
+  body.agenda-public-mode .paperless-admin-link:focus-visible {
+    color: #fffaf3;
+    background: rgba(255, 132, 64, 0.22);
+  }
+
+  body.agenda-public-mode .paperless-admin-link-glyph {
+    color: #ffb07a;
+  }
+
+  /* Give the brand block right-padding so the admin chip doesn't crash into the kicker text */
+  body.agenda-public-mode .paperless-brand {
+    padding-right: 64px;
+  }
+}
+
+

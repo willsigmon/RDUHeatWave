@@ -73,7 +73,7 @@
 
   var paperlessDateMeta = document.getElementById('paperless-date-meta');
   if (paperlessDateMeta) {
-    paperlessDateMeta.textContent = meetingLabel + '. Keep this open during the meeting when paper agendas are unavailable.';
+    paperlessDateMeta.textContent = meetingLabel;
   }
 
   var statsAsOfEl = document.getElementById('stats-as-of');
