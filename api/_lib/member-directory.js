@@ -20,7 +20,7 @@ var CHAIR_OVERRIDES = {
 };
 
 var DEFAULT_MEMBERS = [
-  { name: 'Carter Helms', title: 'Team Chair', company: 'Highstreet Ins & Financial Svcs', leader: true, chair: true, website: 'https://carterhelms.com' },
+  { name: 'Carter Helms', title: 'Team Chair', company: 'Franco Restorations', leader: true, chair: true, website: 'https://carterhelms.com' },
   { name: 'Craig Morrill', title: 'Vice Chair', company: 'Summit Global Investments', leader: true, chair: false, website: 'https://sgiam.com' },
   { name: 'Will Sigmon', title: 'Team Admin', company: 'Will Sigmon Media Co.', leader: true, chair: false, website: 'https://willsigmon.media' },
   { name: 'Rusty Sutton', title: 'Team Marketing Specialist', company: 'MonkeyFans Creative', leader: false, chair: false, specialTitle: true, website: 'https://monkeyfansraleigh.com/about' },
@@ -30,6 +30,7 @@ var DEFAULT_MEMBERS = [
   { name: 'Roni Payne', title: 'Accounting / Tax', company: 'R. Payne Financial & Tax Solutions', leader: false, chair: false, website: 'https://rpayne.org/meet-the-owner/' },
   { name: 'Shannida Ramsey', title: 'Property Maintenance', company: 'Ram-Z Services LLC', leader: false, chair: false, website: 'https://ramzservices.com' },
   { name: 'David Mercado', title: 'HOA Management', company: 'William Douglas Management', leader: false, chair: false, website: 'https://wmdouglas.com/raleigh-hoa-management' },
+  { name: 'Erika Beckett', title: 'Pet Sitting', company: 'Pet Sitter', leader: false, chair: false, website: '' },
   { name: 'Sue Kerata', title: 'Realtor', company: 'Century 21 Triangle Group', leader: false, chair: false, website: 'https://suekhomes.com' }
 ].map(memberPhotoOverrides.applyMemberPhotoOverride);
 

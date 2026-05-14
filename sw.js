@@ -1,4 +1,4 @@
-const CACHE_NAME = 'heatwave-v29';
+const CACHE_NAME = 'heatwave-v30';
 
 const PRECACHE_URLS = [
   '/',

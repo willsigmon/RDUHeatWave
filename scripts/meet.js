@@ -10,12 +10,15 @@
 
   var urlParams = new URLSearchParams(window.location.search);
   var DEMO_SHOWTIME = urlParams.get('demoShowtime') === 'true';
+  var SKIP_AGENDA_REDIRECT = urlParams.get('skipAgenda') === 'true' || DEMO_SHOWTIME;
   var STORAGE_KEY = 'rduheatwave:showtime-target';
   var MEETING_DAY = Number.isFinite(MEETING_CONFIG.day) ? MEETING_CONFIG.day : 4;
   var MEETING_TIME_ZONE = COUNTDOWN_CONFIG.timezone || MEETING_CONFIG.timezone || 'America/New_York';
   var ALLOW_REPEAT = COUNTDOWN_CONFIG.allowRepeat === true;
   var CHECK_INTERVAL_MS = 1000;
   var PAST_TARGET_GRACE_MS = 12 * 60 * 60 * 1000;
+  var AGENDA_REDIRECT_DELAY_S = 30;
+  var AGENDA_URL = '/agenda';
 
   var currentPhase = 'countdown';
   var hasShowtimeTriggered = false;
@@ -61,7 +64,11 @@
   var meetingStartLabelEl = document.getElementById('meeting-start-label');
   var meetingTargetTimeEl = document.getElementById('meeting-target-time');
   var showtimeScreenEl = document.getElementById('showtime-screen');
+  var showtimeCtaNoteEl = document.getElementById('showtime-cta-note');
+  var showtimeCtaSecondsEl = document.getElementById('showtime-cta-seconds');
+  var showtimeCtaButtonEl = document.getElementById('showtime-cta-button');
   var embersContainerEl = document.getElementById('embers-container');
+  var agendaRedirectTimerId = null;
   var spotifyDockEl = document.getElementById('spotify-dock');
   var spotifyPresetsEl = document.getElementById('spotify-presets');
   var spotifyTrackArtEl = document.getElementById('spotify-track-art');
@@ -625,6 +632,53 @@
       clearInterval(countdownTimerId);
       countdownTimerId = null;
     }
+
+    scheduleAgendaHandoff();
+  }
+
+  function scheduleAgendaHandoff() {
+    if (agendaRedirectTimerId) return;
+
+    if (showtimeCtaButtonEl && !showtimeCtaButtonEl.dataset.bound) {
+      showtimeCtaButtonEl.dataset.bound = 'true';
+      showtimeCtaButtonEl.addEventListener('click', function() {
+        if (agendaRedirectTimerId) {
+          clearInterval(agendaRedirectTimerId);
+          agendaRedirectTimerId = null;
+        }
+      });
+    }
+
+    if (SKIP_AGENDA_REDIRECT) {
+      if (showtimeCtaNoteEl) {
+        showtimeCtaNoteEl.textContent = 'Demo mode — auto-redirect disabled.';
+      }
+      return;
+    }
+
+    var remaining = AGENDA_REDIRECT_DELAY_S;
+    updateAgendaCountdown(remaining);
+
+    agendaRedirectTimerId = window.setInterval(function() {
+      remaining -= 1;
+      updateAgendaCountdown(remaining);
+
+      if (remaining <= 0) {
+        clearInterval(agendaRedirectTimerId);
+        agendaRedirectTimerId = null;
+        window.location.assign(AGENDA_URL);
+      }
+    }, 1000);
+  }
+
+  function updateAgendaCountdown(remaining) {
+    if (showtimeCtaSecondsEl) {
+      showtimeCtaSecondsEl.textContent = String(Math.max(0, remaining));
+    }
+
+    if (showtimeCtaNoteEl && remaining <= 0) {
+      showtimeCtaNoteEl.textContent = 'Opening agenda…';
+    }
   }
 
   function restoreShowtimeIfNeeded() {
@@ -763,8 +817,9 @@
       showtimeSpeakerEl.textContent = 'Featured member: ' + speakerState.name + (speakerState.company ? ' • ' + speakerState.company : '');
     }
 
+    var initials = getSpeakerInitials(speakerState.name) || 'RH';
     if (speakerInitialsEl) {
-      speakerInitialsEl.textContent = getSpeakerInitials(speakerState.name);
+      speakerInitialsEl.textContent = initials;
     }
 
     if (!speakerHeadshotEl) return;
@@ -776,16 +831,16 @@
       };
       speakerHeadshotEl.src = speakerState.photo;
       speakerHeadshotEl.alt = speakerState.name;
-      speakerHeadshotEl.style.display = 'block';
+      speakerHeadshotEl.hidden = false;
       speakerHeadshotEl.style.objectPosition = speakerState.photoObjectPosition || 'center center';
       if (speakerInitialsEl) {
-        speakerInitialsEl.style.display = 'none';
+        speakerInitialsEl.hidden = true;
       }
     } else {
       speakerHeadshotEl.removeAttribute('src');
-      speakerHeadshotEl.style.display = 'none';
+      speakerHeadshotEl.hidden = true;
       if (speakerInitialsEl) {
-        speakerInitialsEl.style.display = 'inline-flex';
+        speakerInitialsEl.hidden = false;
       }
     }
   }

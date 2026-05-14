@@ -1287,7 +1287,7 @@
   // ===== TEAM GRID (index-specific) =====
   // TEAM_MEMBERS is kept here for renderTeamGrid; shared-form.js manages its own copy.
   var TEAM_MEMBERS = [
-    { name: 'Carter Helms', title: 'Team Chair', profession: 'Community Insurance Agent', company: 'Highstreet Ins & Financial Svcs', website: 'https://carterhelms.com', leader: true, chair: true, photo: '/member-photos/carter-helms.jpg', photoObjectPosition: 'center 18%' },
+    { name: 'Carter Helms', title: 'Team Chair', profession: 'Personal Insurance', company: 'Franco Restorations', website: 'https://carterhelms.com', leader: true, chair: true, photo: '/member-photos/carter-helms.jpg', photoObjectPosition: 'center 18%' },
     { name: 'Craig Morrill', title: 'Vice Chair', profession: 'Financial Advisor', company: 'Summit Global Investments', website: 'https://sgiam.com', leader: true, chair: false, photo: '/member-photos/craig-morrill.jpg', photoObjectPosition: 'center 18%' },
     { name: 'Will Sigmon', title: 'Team Admin', profession: 'Software & Creative', company: 'Will Sigmon Media Co.', website: 'https://willsigmon.media', leader: true, chair: false, photo: '/member-photos/will-sigmon.jpg', photoObjectPosition: 'center 18%' },
     { name: 'Rusty Sutton', title: 'Team Marketing Specialist', profession: 'Digital Marketing', company: 'MonkeyFans Creative', website: 'https://monkeyfansraleigh.com/about', leader: false, specialTitle: true, photo: '/member-photos/rusty-sutton.jpg', photoObjectPosition: 'center 20%' },

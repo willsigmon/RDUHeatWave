@@ -4,10 +4,11 @@
   // Speaker rotation roster — alphabetical by first name.
   // Rotation begins Apr 9 2026 with Carter at index 0.
   var SPEAKER_ROSTER = [
-    { name: 'Carter Helms', company: 'Highstreet Ins & Financial Svcs', photo: '/member-photos/carter-helms.jpg', photoObjectPosition: 'center 28%' },
+    { name: 'Carter Helms', company: 'Franco Restorations', photo: '/member-photos/carter-helms.jpg', photoObjectPosition: 'center 28%' },
     { name: 'Craig Morrill', company: 'Summit Global Investments', photo: '/member-photos/craig-morrill.jpg', photoObjectPosition: 'center 22%' },
     { name: 'Dana Walsh', company: 'Stroll Magazine', photo: '/member-photos/dana-walsh.jpg', photoObjectPosition: 'center 28%' },
     { name: 'David Mercado', company: 'William Douglas Management' },
+    { name: 'Erika Beckett', company: 'Pet Sitter' },
     { name: 'Nathan Senn', company: 'Franco Restorations' },
     { name: 'Robert Courts', company: 'Advantage Lending', photo: '/member-photos/robert-courts.png', photoObjectPosition: 'center 25%' },
     { name: 'Roni Payne', company: 'R. Payne Financial & Tax Solutions', photo: '/member-photos/roni-payne.jpg', photoObjectPosition: 'center 24%' },
@@ -19,7 +20,8 @@
   var SPEAKER_OVERRIDES = {
     '2026-04-23': 'Roni Payne',
     '2026-04-30': 'Shannida Ramsey',
-    '2026-05-07': 'Sue Kerata'
+    '2026-05-07': 'Sue Kerata',
+    '2026-05-14': 'David Mercado'
   };
   var ROTATION_START = new Date('2026-04-09T00:00:00');
   var MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
@@ -91,6 +93,7 @@
     'Craig Morrill',
     'Dana Walsh',
     'David Mercado',
+    'Erika Beckett',
     'Nathan Senn',
     'Robert Courts',
     'Roni Payne',
@@ -102,7 +105,9 @@
   var MENTOR_OVERRIDES = {
     // Apr 30, 2026: Will is covering Mentor Moment; keep the normal rotation after this week.
     '2026-04-30': 'Will Sigmon',
-    '2026-05-07': 'Carter Helms'
+    '2026-05-07': 'Carter Helms',
+    // May 14, 2026: David Mercado is the featured member, Robert Courts steps in for Mentor Moment.
+    '2026-05-14': 'Robert Courts'
   };
   var MENTOR_START = new Date('2026-04-16T00:00:00');
 
@@ -186,7 +191,7 @@
     },
     publicStats: {
       asOf: 'May 7, 2026',
-      members: 11,
+      members: 12,
       guestVisits: 193,
       uniqueGuestEmails: 121,
       firstTimeVisitors: 120,

@@ -135,8 +135,8 @@
         <section class="meet-block meet-block--speaker">
           <p class="meet-block__eyebrow">Today&rsquo;s featured member</p>
           <div class="speaker-card">
-            <img class="speaker-card__photo" id="speaker-headshot" alt="" loading="lazy" decoding="async" width="240" height="240">
-            <div class="speaker-card__fallback" id="speaker-initials" aria-hidden="true">RH</div>
+            <img class="speaker-card__photo" id="speaker-headshot" alt="" loading="lazy" decoding="async" width="240" height="240" hidden>
+            <div class="speaker-card__fallback" id="speaker-initials" aria-hidden="true">&nbsp;</div>
             <div class="speaker-card__content">
               <p class="speaker-card__name" id="speaker-name">&mdash;</p>
               <p class="speaker-card__company" id="speaker-company">&mdash;</p>
@@ -312,7 +312,7 @@
           <div class="support-label">Now starting</div>
           <div class="showtime-meta" id="showtime-speaker">Featured member &mdash; loading&hellip;</div>
           <div class="showtime-meta">Clouds Brewing • Raleigh, NC</div>
-          <div class="showtime-meta">Settle in — we’re ready to kick this thing off.</div>
+          <div class="showtime-meta">Settle in &mdash; we&rsquo;re ready to kick this thing off.</div>
         </div>
 
         <div class="showtime-qr-card">
@@ -321,6 +321,11 @@
           </a>
           <p class="showtime-qr-card__cta">Scan to check in.</p>
         </div>
+      </div>
+
+      <div class="showtime-cta-row">
+        <p class="showtime-cta-note" id="showtime-cta-note">Agenda opens in <span id="showtime-cta-seconds">30</span>s&hellip;</p>
+        <a class="showtime-cta-button" id="showtime-cta-button" href="/agenda">Open agenda now</a>
       </div>
     </div>
   </div>

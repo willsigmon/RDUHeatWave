@@ -652,8 +652,12 @@ img {
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
 }
 
-.speaker-card__fallback {
+.speaker-card__photo[hidden] {
   display: none;
+}
+
+.speaker-card__fallback {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   background: rgba(232, 88, 12, 0.16);
@@ -661,6 +665,10 @@ img {
   font-family: var(--font-display);
   font-size: clamp(1.7rem, 2vw, 2.2rem);
   letter-spacing: 0.05em;
+}
+
+.speaker-card__fallback[hidden] {
+  display: none;
 }
 
 .speaker-card__content {
@@ -1075,6 +1083,61 @@ body.phase-showtime .showtime-screen {
   gap: 0.8rem;
   justify-items: center;
   text-align: center;
+}
+
+.showtime-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.85rem, 1.4vw, 1.4rem);
+  margin-top: clamp(1.4rem, 2.2vw, 2rem);
+  padding-top: clamp(0.9rem, 1.4vw, 1.2rem);
+  border-top: 1px solid rgba(232, 88, 12, 0.22);
+  text-align: center;
+}
+
+.showtime-cta-note {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 1.5vw, 1.6rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.showtime-cta-note #showtime-cta-seconds {
+  display: inline-block;
+  min-width: 2ch;
+  color: var(--color-primary-hover);
+  font-feature-settings: 'tnum' 1;
+}
+
+.showtime-cta-button {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(0.65rem, 0.9vw, 0.85rem) clamp(1.1rem, 1.6vw, 1.6rem);
+  border-radius: 999px;
+  border: 1px solid var(--color-border-strong);
+  background: linear-gradient(135deg, rgba(255, 115, 41, 0.92), rgba(232, 88, 12, 0.96));
+  color: #fff9f3;
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.2vw, 1.25rem);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 0 18px 38px rgba(232, 88, 12, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+}
+
+.showtime-cta-button:hover,
+.showtime-cta-button:focus-visible {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+  outline: none;
+  box-shadow: 0 22px 48px rgba(232, 88, 12, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 .noise-overlay,

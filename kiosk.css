@@ -1076,3 +1076,33 @@ body {
     min-height: auto;
   }
 }
+
+/* Short-and-wide displays (e.g. 1366×768 budget Chromebox in landscape) —
+   keep 2-column but shrink hero typography so the QR card never overflows. */
+@media (min-width: 921px) and (max-height: 800px) {
+  .kiosk-scan-title {
+    font-size: clamp(2.6rem, 5.5vw, 5rem);
+  }
+  .kiosk-landing-card {
+    min-height: min(72vh, 660px);
+    padding: clamp(1rem, 2.5vh, 2.25rem) clamp(1rem, 3.5vw, 3rem);
+    gap: clamp(0.65rem, 1.5vh, 1.1rem);
+  }
+  .kiosk-qr-hero {
+    width: clamp(220px, 26vw, 360px);
+  }
+  .kiosk-left {
+    padding: 0.5vh 1.2vw;
+  }
+}
+
+/* Very short displays — let inner content scroll instead of clipping */
+@media (max-height: 640px) {
+  .kiosk-layout {
+    overflow-y: auto;
+  }
+  .kiosk-left {
+    justify-content: flex-start;
+    gap: 0.6rem;
+  }
+}

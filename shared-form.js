@@ -16,7 +16,7 @@
   var LOCAL_ENTRY_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
   var DEFAULT_TEAM_MEMBERS = [
-    { name: 'Carter Helms', title: 'Team Chair', profession: 'Community Insurance Agent', company: 'Highstreet Ins & Financial Svcs', website: 'https://carterhelms.com', leader: true },
+    { name: 'Carter Helms', title: 'Team Chair', profession: 'Personal Insurance', company: 'Franco Restorations', website: 'https://carterhelms.com', leader: true },
     { name: 'Craig Morrill', title: 'Vice Chair', profession: 'Financial Advisor', company: 'Summit Global Investments', website: 'https://sgiam.com', leader: true },
     { name: 'Will Sigmon', title: 'Team Admin', profession: 'Software & Creative', company: 'Will Sigmon Media Co.', website: 'https://willsigmon.media', leader: true },
     { name: 'Rusty Sutton', title: 'Team Marketing Specialist', profession: 'Digital Marketing', company: 'MonkeyFans Creative', website: 'https://monkeyfansraleigh.com/about', leader: false, specialTitle: true },

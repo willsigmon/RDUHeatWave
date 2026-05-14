@@ -1087,7 +1087,7 @@ function hasAnyHeader_(headers, aliases) {
 
 function buildFallbackMembers_() {
   return [
-    { name: 'Carter Helms', title: 'Team Chair', company: 'Highstreet Ins & Financial Svcs', website: 'https://carterhelms.com', leader: true, specialTitle: false },
+    { name: 'Carter Helms', title: 'Team Chair', company: 'Franco Restorations', website: 'https://carterhelms.com', leader: true, specialTitle: false },
     { name: 'Craig Morrill', title: 'Vice Chair', company: 'Summit Global Investments', website: 'https://sgiam.com', leader: true, specialTitle: false },
     { name: 'Will Sigmon', title: 'Team Admin', company: 'Will Sigmon Media Co.', website: 'https://willsigmon.media', leader: true, specialTitle: false },
     { name: 'Rusty Sutton', title: 'Team Marketing Specialist', company: 'MonkeyFans Creative', website: 'https://monkeyfansraleigh.com/about', leader: false, specialTitle: true },

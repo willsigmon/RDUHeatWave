@@ -1265,8 +1265,8 @@ img {
   }
 
   .stats-as-of {
-    font-size: 9px;
-    line-height: 1.2;
+    font-size: 11px;
+    line-height: 1.25;
   }
 
   .header-stats {
@@ -1318,9 +1318,10 @@ img {
     max-width: 100%;
     overflow: hidden;
     color: var(--muted);
-    font-size: 7px;
-    line-height: 1.1;
-    letter-spacing: 0.06em;
+    font-size: 12px;
+    line-height: 1.15;
+    letter-spacing: 0.08em;
+    font-weight: 800;
   }
 
   .two-col {
@@ -1398,12 +1399,141 @@ img {
     gap: 5px;
   }
 
+  /* Roster: stacked cards on narrow mobile (no horizontal scroll). */
   .roster-panel {
-    overflow-x: auto;
+    overflow-x: visible;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .roster-table,
+  .roster-table tbody,
+  .roster-table tr,
+  .roster-table td {
+    display: block;
+    width: 100%;
   }
 
   .roster-table {
-    min-width: 560px;
+    min-width: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 14px;
+  }
+
+  .roster-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .roster-table tr {
+    margin: 0 0 10px;
+    padding: 14px 14px 6px;
+    border: 1px solid rgba(255, 172, 111, 0.22);
+    border-radius: 16px;
+    background:
+      linear-gradient(135deg, rgba(255,255,255,0.075), rgba(255,255,255,0.03)),
+      rgba(35, 28, 24, 0.82);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+
+  .roster-table tr:nth-child(even) td {
+    background: transparent;
+  }
+
+  .roster-table td {
+    padding: 4px 0;
+    border: 0;
+    white-space: normal;
+    color: #fff7ef;
+  }
+
+  .roster-table td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 2px;
+    font-family: var(--font-display);
+    font-size: 11px;
+    line-height: 1;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 176, 122, 0.78);
+  }
+
+  .roster-table td.roster-name {
+    padding-top: 0;
+    font-family: var(--font-display);
+    font-size: 22px;
+    line-height: 1;
+    letter-spacing: 0.06em;
+    color: var(--fire-hot);
+  }
+
+  .roster-table td.roster-name[data-label]::before {
+    display: none;
+  }
+
+  .roster-table td.roster-profession {
+    font-size: 14px;
+    font-weight: 700;
+    color: rgba(240, 230, 220, 0.86);
+  }
+
+  .roster-table td.roster-company {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(240, 230, 220, 0.7);
+  }
+
+  .roster-table td.roster-email {
+    margin-top: 4px;
+    padding: 0;
+    font-size: 14px;
+    letter-spacing: 0;
+    white-space: normal;
+    color: inherit;
+  }
+
+  .roster-table td.roster-email a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 8px 12px;
+    margin: 4px 0 2px;
+    border: 1px solid rgba(255, 139, 70, 0.32);
+    border-radius: 12px;
+    background: rgba(255, 139, 70, 0.08);
+    color: #ffd1b0;
+    font-weight: 700;
+    text-decoration: none;
+    word-break: break-all;
+  }
+
+  .roster-table td.roster-email a:focus-visible {
+    outline: 2px solid #ff8b46;
+    outline-offset: 2px;
+  }
+
+  .roster-table td.roster-email--empty span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 38px;
+    padding: 6px 12px;
+    border: 1px dashed rgba(255, 172, 111, 0.34);
+    border-radius: 12px;
+    color: rgba(255, 220, 190, 0.62);
+    font-style: italic;
+    font-size: 13px;
   }
 
   body.agenda-public-mode .paperless-hero {
@@ -1479,6 +1609,7 @@ img {
 
   body.agenda-public-mode .paperless-brand img {
     width: 48px;
+    height: auto;
   }
 
   body.agenda-public-mode .paperless-kicker {
@@ -1518,15 +1649,24 @@ img {
   }
 
   body.agenda-public-mode .paperless-button {
-    min-height: 42px;
-    padding: 9px 10px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 12px;
     border-radius: 999px;
     border-color: rgba(255, 139, 70, 0.32);
     background: rgba(255,255,255,0.05);
     color: #fff7ef;
-    font-size: 12px;
+    font-size: 13px;
     line-height: 1.05;
     text-align: center;
+    font-weight: 800;
+  }
+
+  body.agenda-public-mode .paperless-button:focus-visible {
+    outline: 2px solid #ff8b46;
+    outline-offset: 2px;
   }
 
   body.agenda-public-mode .paperless-button-primary {
@@ -1638,20 +1778,25 @@ img {
 
   .agenda-jump-nav a {
     flex: 0 0 auto;
-    min-height: 38px;
+    min-height: 44px;
     display: inline-flex;
     align-items: center;
-    padding: 8px 11px;
+    padding: 10px 14px;
     border: 1px solid rgba(255, 139, 70, 0.25);
     border-radius: 999px;
     background: rgba(255,255,255,0.055);
     color: #ffe0cd;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 900;
     text-decoration: none;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     scroll-snap-align: start;
+  }
+
+  .agenda-jump-nav a:focus-visible {
+    outline: 2px solid #ff8b46;
+    outline-offset: 2px;
   }
 
   body.agenda-public-mode .agenda-list {
@@ -1915,6 +2060,7 @@ img {
 
   body.agenda-public-mode .paperless-brand img {
     width: 56px;
+    height: auto;
   }
 
   body.agenda-public-mode .paperless-hero h2 {
@@ -2030,6 +2176,145 @@ img {
 
   body.agenda-public-mode .write-nudge {
     color: rgba(255, 196, 154, 0.78);
+    font-size: 13px;
+  }
+
+  body.agenda-public-mode .write-prompt {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  body.agenda-public-mode .ornament {
+    font-size: 12px;
+    letter-spacing: 12px;
+    padding: 10px 0 6px;
+  }
+
+  /* Mobile type ramp: bump labels < 12px so iPhone reads cleanly. */
+  body.agenda-public-mode .spotlight-upcoming-label,
+  body.agenda-public-mode .leader-role,
+  body.agenda-public-mode .win-label {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    font-weight: 800;
+  }
+
+  body.agenda-public-mode .win-value {
+    font-size: 28px;
+    letter-spacing: 0.04em;
+  }
+
+  body.agenda-public-mode .win-item {
+    padding: 14px 10px;
+    border: 1px solid rgba(255, 172, 111, 0.22);
+    border-radius: 14px;
+    background: rgba(255, 250, 243, 0.05);
+  }
+
+  body.agenda-public-mode .wins-grid {
+    gap: 8px;
+  }
+
+  body.agenda-public-mode .wins-card,
+  body.agenda-public-mode .tip-box,
+  body.agenda-public-mode .spotlight-card,
+  body.agenda-public-mode .leadership {
+    padding: 16px;
+  }
+
+  body.agenda-public-mode .wins-card-label,
+  body.agenda-public-mode .tip-box-label {
+    font-size: 16px;
+    letter-spacing: 0.14em;
+  }
+
+  body.agenda-public-mode .spotlight-upcoming-name {
+    font-size: 15px;
+    line-height: 1.25;
+    font-weight: 800;
+  }
+
+  body.agenda-public-mode .spotlight-upcoming-item {
+    padding: 10px 8px;
+    border: 1px solid rgba(255, 172, 111, 0.18);
+    border-radius: 12px;
+    background: rgba(255, 250, 243, 0.05);
+  }
+
+  body.agenda-public-mode .spotlight-upcoming {
+    gap: 8px;
+  }
+
+  body.agenda-public-mode .leader-name {
+    font-size: 16px;
+    font-weight: 800;
+  }
+
+  body.agenda-public-mode .leader-row {
+    padding: 10px 0;
+  }
+
+  body.agenda-public-mode .tip-box-text {
+    font-size: 16px;
+    line-height: 1.45;
+  }
+
+  body.agenda-public-mode .about-box-full {
+    font-size: 14px;
+    line-height: 1.4;
+    padding: 16px;
+  }
+
+  body.agenda-public-mode .about-pill {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  body.agenda-public-mode .about-pill strong {
+    font-size: 12px;
+  }
+
+  body.agenda-public-mode .about-url {
+    font-size: 13px;
+  }
+
+  body.agenda-public-mode .venue-bar {
+    font-size: 13px;
+    line-height: 1.35;
+    padding: 10px;
+  }
+
+  body.agenda-public-mode .roster-privacy-note {
+    font-size: 13px;
+    line-height: 1.4;
+    margin: 0 0 10px;
+  }
+
+  body.agenda-public-mode .page-footer {
+    font-size: 12px;
+    padding: 10px 0 4px;
+  }
+
+  /* Sticky offset: agenda group labels sit below the section heading. */
+  body.agenda-public-mode .agenda-page-main .section-heading-fire {
+    font-size: 24px;
+    padding: 12px 4px 10px;
+  }
+
+  body.agenda-public-mode .agenda-group-label {
+    top: 56px;
+    font-size: 14px;
+    padding: 10px 14px 9px;
+  }
+
+  /* Tappable agenda link rows get an unmistakable target. */
+  body.agenda-public-mode .agenda-row-link {
+    min-height: 72px;
+  }
+
+  body.agenda-public-mode .agenda-row-link:focus-visible {
+    outline: 2px solid #ff8b46;
+    outline-offset: 2px;
   }
 }
 
@@ -2066,3 +2351,152 @@ img {
     box-shadow: none !important;
   }
 }
+
+/* ===== CONTRAST HARDENING PASS — 2026-05-14 ============================
+   Final WCAG-pass override layer for the mobile public agenda.
+   Keep at the bottom of the file so it wins specificity battles. */
+@media screen and (max-width: 760px) {
+  body.agenda-public-mode {
+    background:
+      radial-gradient(circle at 50% -8%, rgba(255, 130, 60, 0.32), transparent 18rem),
+      radial-gradient(circle at 50% 40%, rgba(255, 194, 139, 0.08), transparent 22rem),
+      linear-gradient(180deg, #1d130f 0%, #170f0c 60%, #0e0805 100%) !important;
+  }
+
+  body.agenda-public-mode .paperless-hero-card,
+  body.agenda-public-mode .agenda-mobile-guide,
+  body.agenda-public-mode .agenda-item,
+  body.agenda-public-mode .agenda-item--link,
+  body.agenda-public-mode .agenda-row-link,
+  body.agenda-public-mode .spotlight-card,
+  body.agenda-public-mode .leadership,
+  body.agenda-public-mode .wins-card,
+  body.agenda-public-mode .tip-box,
+  body.agenda-public-mode .about-box-full,
+  body.agenda-public-mode .agenda-page-support,
+  body.agenda-public-mode .worksheet-panel,
+  body.agenda-public-mode .worksheet-panel-accent,
+  body.agenda-public-mode .roster-panel,
+  body.agenda-public-mode .roster-card {
+    border-color: rgba(255, 172, 111, 0.42) !important;
+    background:
+      linear-gradient(135deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.035)),
+      rgba(48, 33, 26, 0.96) !important;
+    box-shadow:
+      0 14px 32px rgba(0, 0, 0, 0.38),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  }
+
+  body.agenda-public-mode .agenda-text,
+  body.agenda-public-mode .agenda-mobile-guide span,
+  body.agenda-public-mode .paperless-hero p,
+  body.agenda-public-mode .paperless-admin-note,
+  body.agenda-public-mode .tip-box-text,
+  body.agenda-public-mode .about-box-full,
+  body.agenda-public-mode .write-prompt,
+  body.agenda-public-mode .roster-profession,
+  body.agenda-public-mode .roster-company,
+  body.agenda-public-mode .leader-name,
+  body.agenda-public-mode .spotlight-hero-prof,
+  body.agenda-public-mode .spotlight-upcoming-name,
+  body.agenda-public-mode .win-value,
+  body.agenda-public-mode .venue-bar,
+  body.agenda-public-mode .page-footer {
+    color: #fffaf3 !important;
+  }
+
+  body.agenda-public-mode .stat-label,
+  body.agenda-public-mode .spotlight-upcoming-label,
+  body.agenda-public-mode .leader-role,
+  body.agenda-public-mode .tip-box-label,
+  body.agenda-public-mode .win-label,
+  body.agenda-public-mode .wins-card-label,
+  body.agenda-public-mode .section-heading,
+  body.agenda-public-mode .roster-privacy-note,
+  body.agenda-public-mode .paperless-kicker {
+    color: #ffb07a !important;
+  }
+
+  body.agenda-public-mode .section-heading-fire,
+  body.agenda-public-mode .agenda-page-main .section-heading-fire {
+    color: #ff9b55 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+    background: linear-gradient(180deg, rgba(28, 20, 16, 0.98), rgba(28, 20, 16, 0.86)) !important;
+  }
+
+  body.agenda-public-mode .agenda-glyph {
+    background: linear-gradient(135deg, #ff7c2c, #E8580C) !important;
+    border-color: rgba(255, 220, 195, 0.55) !important;
+    box-shadow:
+      0 6px 18px rgba(232, 88, 12, 0.55),
+      inset 0 1px 0 rgba(255, 255, 255, 0.22) !important;
+  }
+
+  body.agenda-public-mode .agenda-glyph::after {
+    color: #fffaf3 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45) !important;
+  }
+
+  body.agenda-public-mode .agenda-group-label {
+    background: linear-gradient(135deg, rgba(255, 132, 64, 0.24), rgba(38, 27, 22, 0.96)) !important;
+    border-color: rgba(255, 172, 111, 0.42) !important;
+    color: #ffc49a !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+  }
+
+  .agenda-jump-nav a {
+    border-color: rgba(255, 172, 111, 0.52) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #fffaf3 !important;
+  }
+
+  body.agenda-public-mode .roster-name {
+    color: #ff9b55 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35) !important;
+  }
+
+  body.agenda-public-mode .roster-email a,
+  body.agenda-public-mode .roster-email-pill {
+    color: #fffaf3 !important;
+    background: rgba(255, 132, 64, 0.18) !important;
+    border-color: rgba(255, 172, 111, 0.5) !important;
+  }
+
+  body.agenda-public-mode .roster-table td[data-label]::before {
+    color: #ffc49a !important;
+    opacity: 1 !important;
+  }
+
+  body.agenda-public-mode .paperless-button {
+    color: #fffaf3 !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: rgba(255, 172, 111, 0.5) !important;
+  }
+
+  body.agenda-public-mode .paperless-button-primary {
+    color: #fff !important;
+    background: linear-gradient(135deg, #ff7c2c, #E8580C) !important;
+    border-color: rgba(255, 200, 160, 0.7) !important;
+    box-shadow: 0 8px 20px rgba(232, 88, 12, 0.42) !important;
+  }
+
+  body.agenda-public-mode .paperless-meta-item {
+    color: #fffaf3 !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+    border-color: rgba(255, 172, 111, 0.36) !important;
+  }
+
+  body.agenda-public-mode .paperless-meta-item span {
+    color: #ffb07a !important;
+  }
+
+  body.agenda-public-mode .paperless-meta-item strong {
+    color: #fffaf3 !important;
+  }
+
+  body.agenda-public-mode .spotlight-hero-name {
+    color: #ffac74 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45) !important;
+  }
+}
+

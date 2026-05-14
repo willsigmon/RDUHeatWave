@@ -187,26 +187,52 @@
 <script>
 (function(){
   var wakeLock = null;
+  var acquiring = false;
   async function acquire(){
+    if (acquiring) return;
     if (!('wakeLock' in navigator) || document.visibilityState !== 'visible') return;
+    acquiring = true;
     try {
       wakeLock = await navigator.wakeLock.request('screen');
       wakeLock.addEventListener('release', function(){ wakeLock = null; });
-    } catch(e){}
+    } catch(e){ /* sleep/lock cycle or permission denied — retry on next visibility/focus */ }
+    finally { acquiring = false; }
   }
   acquire();
   document.addEventListener('visibilitychange', function(){
     if (document.visibilityState === 'visible' && !wakeLock) acquire();
   });
+  // Some platforms (iOS Safari, Chromebox after app switch) fire focus before visibilitychange
+  window.addEventListener('focus', function(){
+    if (!wakeLock) acquire();
+  });
+  // Defensive periodic check (every 60s) — cheap and catches edge cases where neither event fires
+  setInterval(function(){
+    if (!wakeLock && document.visibilityState === 'visible') acquire();
+  }, 60000);
+
   function goFullscreen(){
     if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
       document.documentElement.requestFullscreen({ navigationUI: 'hide' }).catch(function(){});
     }
   }
-  if (!document.fullscreenElement) {
-    document.addEventListener('click', function onTap(){ goFullscreen(); document.removeEventListener('click', onTap); }, { once: true });
-    document.addEventListener('touchstart', function onTouch(){ goFullscreen(); document.removeEventListener('touchstart', onTouch); }, { once: true, passive: true });
+  function armFullscreenOnce(){
+    if (document.fullscreenElement) return;
+    function fire(){
+      goFullscreen();
+      document.removeEventListener('click', fire);
+      document.removeEventListener('touchstart', fire);
+      document.removeEventListener('keydown', fire);
+    }
+    document.addEventListener('click', fire, { once: true });
+    document.addEventListener('touchstart', fire, { once: true, passive: true });
+    document.addEventListener('keydown', fire, { once: true });
   }
+  armFullscreenOnce();
+  // If user exits fullscreen (Esc, OS gesture), re-arm so the next tap re-enters
+  document.addEventListener('fullscreenchange', function(){
+    if (!document.fullscreenElement) armFullscreenOnce();
+  });
 })();
 </script>
 </body>
