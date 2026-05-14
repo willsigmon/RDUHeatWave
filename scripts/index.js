@@ -4,29 +4,32 @@
 
   // ===== BEER MENU DATA =====
   var BEER_MENU = {
-    lastChecked: '2026-04-30',
+    lastChecked: '2026-05-14',
     featured: [
       { name: 'Tailwind - Margarita', style: '7mg Delta 9 THC Seltzer', abv: 'N/A'  },
       { name: 'Mean Girl',            style: 'Kettle Sour',               abv: '5.5%' },
-      { name: 'Wolkenbrau',           style: 'Hybrid German-American Lager', abv: '4.5%' }
+      { name: 'Sky Lime',             style: 'Lime Lager',                abv: '4.6%' }
     ],
     categories: [
       {
-        name: 'Current Draft List',
+        name: 'DRAFT',
         beers: [
+          { name: 'Tailwind - Margarita', style: '7mg Delta 9 THC Seltzer', abv: 'N/A'  },
+          { name: 'Mean Girl',            style: 'Kettle Sour',               abv: '5.5%' },
+          { name: 'Sky Lime',           style: 'Lime Lager',                abv: '4.6%' },
+          { name: 'Wolkenbrau',         style: 'Hybrid German-American Lager', abv: '4.5%' },
+          { name: 'Precipitation',       style: 'German Style Pilsner',       abv: '5.2%' },
+          { name: 'Mango Weizen',      style: 'Mango Wheat',               abv: '4.7%' },
+          { name: 'El Hefe',             style: 'Bavarian Wheat',            abv: '4.9%' },
+          { name: 'Accumulation',        style: 'Amber Lager',               abv: '5.8%' },
+          { name: 'Bock to the Future',  style: 'Maibock',                   abv: '7.2%' },
           { name: 'Hop Jam IPA',         style: 'American IPA',             abv: '6.3%'  },
           { name: 'Blood Orange Hop Jam', style: 'Blood Orange Infused IPA', abv: '6.3%'  },
           { name: 'Hazy Hop Jam',        style: 'Hazy IPA',                abv: '6.3%'  },
           { name: 'Double hop jam',      style: 'Imperial IPA',            abv: '10.3%' },
-          { name: 'Clouds 9',            style: 'Belgian Golden Strong',    abv: '9%'    },
-          { name: 'Wolkenbrau',         style: 'Hybrid German-American Lager', abv: '4.5%' },
-          { name: 'Precipitation',      style: 'German Style Pilsner',    abv: '5.2%'  },
-          { name: 'Mean Girl',        style: 'Kettle Sour',               abv: '5.5%'  },
           { name: 'Crimea River',     style: 'Baltic Porter',             abv: '8%'    },
-          { name: 'El Hefe',                style: 'Bavarian Wheat',            abv: '4.9%'  },
-          { name: 'Accumulation',       style: 'Amber Lager',               abv: '5.8%'  },
-          { name: 'Bock to the Future', style: 'Maibock',                   abv: '7.2%'  },
           { name: 'Midnight Delight',   style: 'Dark Chocolate Milk Stout',  abv: '6.8%'  },
+          { name: 'Clouds 9',            style: 'Belgian Golden Strong',    abv: '9%'    },
           { name: 'Root Beer',          style: 'NON ALCOHOLIC',             abv: 'N/A'   }
         ]
       }
