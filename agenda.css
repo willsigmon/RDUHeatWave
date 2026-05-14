@@ -2612,4 +2612,48 @@ img {
   }
 }
 
+/* ===== DIGITAL-ONLY: hide worksheet/notes sections on public view =======
+   The page is used digitally now. Connections/BizChats/Notes worksheets
+   were paper artifacts — hide them in public mode. Admin/print still shows them. */
+@media screen {
+  body.agenda-public-mode .agenda-page-support > .two-col,
+  body.agenda-public-mode .agenda-page-support > .section-heading-fire,
+  body.agenda-public-mode .agenda-page-support > .write-section-grow,
+  body.agenda-public-mode .agenda-page-support > .worksheet-panel,
+  body.agenda-public-mode .agenda-page-support > .worksheet-panel-accent,
+  body.agenda-public-mode .agenda-page-support > .ornament {
+    display: none !important;
+  }
+
+  /* Roster heading was using flex-shrink:0 inline; reset top spacing now that
+     it's the first thing on the support page in digital mode. */
+  body.agenda-public-mode .agenda-page-support > #member-roster {
+    margin-top: 0;
+    padding-top: 0;
+  }
+}
+
+/* ===== NUMBER GLYPH OPTICAL CENTERING (mobile) =========================
+   Bebas Neue's baseline sits low inside the em box, so geometric center
+   reads visually high. Nudge the digit down 2px to optically center it. */
+@media screen and (max-width: 760px) {
+  body.agenda-public-mode .agenda-glyph {
+    place-items: center !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    line-height: 1 !important;
+    padding: 0 !important;
+  }
+
+  body.agenda-public-mode .agenda-glyph::after {
+    display: block !important;
+    line-height: 1 !important;
+    transform: translateY(2px) !important;
+    letter-spacing: 0.02em !important;
+    text-align: center !important;
+  }
+}
+
+
 
