@@ -9,7 +9,6 @@
     { name: 'Dana Walsh', company: 'Stroll Magazine', photo: '/member-photos/dana-walsh.jpg', photoObjectPosition: 'center 28%' },
     { name: 'David Mercado', company: 'William Douglas Management' },
     { name: 'Erika Beckett', company: 'Pet Sitter' },
-    { name: 'Nathan Senn', company: 'Franco Restorations' },
     { name: 'Robert Courts', company: 'Advantage Lending', photo: '/member-photos/robert-courts.png', photoObjectPosition: 'center 25%' },
     { name: 'Roni Payne', company: 'R. Payne Financial & Tax Solutions', photo: '/member-photos/roni-payne.jpg', photoObjectPosition: 'center 24%' },
     { name: 'Rusty Sutton', company: 'MonkeyFans Creative' },
@@ -83,7 +82,6 @@
     'Craig Morrill',
     'Dana Walsh',
     'David Mercado',
-    'Nathan Senn',
     'Robert Courts',
     'Roni Payne',
     'Will Sigmon'
@@ -94,7 +92,6 @@
     'Dana Walsh',
     'David Mercado',
     'Erika Beckett',
-    'Nathan Senn',
     'Robert Courts',
     'Roni Payne',
     'Rusty Sutton',
@@ -107,7 +104,9 @@
     '2026-04-30': 'Will Sigmon',
     '2026-05-07': 'Carter Helms',
     // May 14, 2026: David Mercado is the featured member, Robert Courts steps in for Mentor Moment.
-    '2026-05-14': 'Robert Courts'
+    '2026-05-14': 'Robert Courts',
+    // May 21, 2026: David Mercado takes the mentor slot (he was the natural mentor for 5/14 before he became speaker).
+    '2026-05-21': 'David Mercado'
   };
   var MENTOR_START = new Date('2026-04-16T00:00:00');
 
@@ -191,7 +190,7 @@
     },
     publicStats: {
       asOf: 'May 7, 2026',
-      members: 12,
+      members: 11,
       guestVisits: 193,
       uniqueGuestEmails: 121,
       firstTimeVisitors: 120,

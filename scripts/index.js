@@ -1287,13 +1287,12 @@
   // ===== TEAM GRID (index-specific) =====
   // TEAM_MEMBERS is kept here for renderTeamGrid; shared-form.js manages its own copy.
   var TEAM_MEMBERS = [
-    { name: 'Carter Helms', title: 'Team Chair', profession: 'Personal Insurance', company: 'Franco Restorations', website: 'https://carterhelms.com', leader: true, chair: true, photo: '/member-photos/carter-helms.jpg', photoObjectPosition: 'center 18%' },
+    { name: 'Carter Helms', title: 'Team Chair', profession: 'Property Restoration', company: 'Franco Restorations', website: 'https://carterhelms.com', leader: true, chair: true, photo: '/member-photos/carter-helms.jpg', photoObjectPosition: 'center 18%' },
     { name: 'Craig Morrill', title: 'Vice Chair', profession: 'Financial Advisor', company: 'Summit Global Investments', website: 'https://sgiam.com', leader: true, chair: false, photo: '/member-photos/craig-morrill.jpg', photoObjectPosition: 'center 18%' },
     { name: 'Will Sigmon', title: 'Team Admin', profession: 'Software & Creative', company: 'Will Sigmon Media Co.', website: 'https://willsigmon.media', leader: true, chair: false, photo: '/member-photos/will-sigmon.jpg', photoObjectPosition: 'center 18%' },
     { name: 'Rusty Sutton', title: 'Team Marketing Specialist', profession: 'Digital Marketing', company: 'MonkeyFans Creative', website: 'https://monkeyfansraleigh.com/about', leader: false, specialTitle: true, photo: '/member-photos/rusty-sutton.jpg', photoObjectPosition: 'center 20%' },
     { name: 'Robert Courts', title: 'Mortgage Lending', company: 'Advantage Lending', website: 'https://advantagelending.com/mortgage-loan-services', leader: false, photo: '/member-photos/robert-courts.png', photoObjectPosition: 'center 20%' },
     { name: 'Dana Walsh', title: 'Magazine Publisher', company: 'Stroll Magazine', website: 'https://strollmag.com/locations/hayes-barton-nc', leader: false, photo: '/member-photos/dana-walsh.jpg', photoObjectPosition: 'center 25%' },
-    { name: 'Nathan Senn', title: 'Property Restoration', company: 'Franco Restorations', website: 'https://francorestorations.com', leader: false },
     { name: 'Roni Payne', title: 'Accounting / Tax', company: 'R. Payne Financial & Tax Solutions', website: 'https://rpayne.org/meet-the-owner/', leader: false, photo: '/member-photos/roni-payne.jpg', photoObjectPosition: 'center 24%' },
     { name: 'Shannida Ramsey', title: 'Property Maintenance', company: 'Ram-Z Services LLC', website: 'https://ramzservices.com', leader: false, photo: '/member-photos/shannida-ramsey.jpg', photoObjectPosition: 'center 26%' },
     { name: 'David Mercado', title: 'HOA Management', company: 'William Douglas Management', website: 'https://wmdouglas.com/raleigh-hoa-management', leader: false },
