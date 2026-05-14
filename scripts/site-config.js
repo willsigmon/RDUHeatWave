@@ -185,15 +185,15 @@
       photoObjectPosition: speaker.photoObjectPosition || ''
     },
     publicStats: {
-      asOf: 'April 30, 2026',
+      asOf: 'May 7, 2026',
       members: 11,
-      guestVisits: 188,
+      guestVisits: 193,
       uniqueGuestEmails: 121,
       firstTimeVisitors: 120,
-      bizChats: 430,
-      referralsPassed: 80,
-      totalGis: 42,
-      closedRevenue: 249278
+      bizChats: 469,
+      referralsPassed: 82,
+      totalGis: 45,
+      closedRevenue: 250577
     },
     speakerRotation: {
       roster: SPEAKER_ROSTER,
