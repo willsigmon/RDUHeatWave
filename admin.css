@@ -25,6 +25,11 @@
     font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   }
 
+  #admin-main {
+    position: relative;
+    z-index: 1;
+  }
+
   .page {
     width: min(1200px, calc(100vw - 32px));
     margin: 0 auto;

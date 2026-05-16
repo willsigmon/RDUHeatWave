@@ -123,6 +123,7 @@ select:focus, input[type="time"]:focus, input[type="date"]:focus {
 </style>
 </head>
 <body>
+<a href="#main-content" class="skip-link">Skip to reminder tools</a>
 <main id="main-content">
 <div class="heat-bg" aria-hidden="true">
   <div class="heat-line"></div>
@@ -177,7 +178,7 @@ select:focus, input[type="time"]:focus, input[type="date"]:focus {
         <label class="field-label" for="ql-date">Date</label>
         <input type="date" id="ql-date" name="quickLogDate">
       </div>
-      <button class="btn btn-primary fire-btn" id="ql-submit" style="margin-top:4px">Log BizChat<div class="ember-wrap" aria-hidden="true"><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div></div></button>
+      <button type="button" class="btn btn-primary fire-btn" id="ql-submit" style="margin-top:4px">Log BizChat<div class="ember-wrap" aria-hidden="true"><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div></div></button>
       <div class="feedback" id="ql-feedback"></div>
     </div>
   </div>
@@ -199,8 +200,8 @@ select:focus, input[type="time"]:focus, input[type="date"]:focus {
     </div>
 
     <div class="btn-row">
-      <button class="btn btn-primary btn-sm fire-btn" id="remind-enable">Enable Reminders<div class="ember-wrap" aria-hidden="true"><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div></div></button>
-      <button class="btn btn-secondary btn-sm" id="remind-disable" disabled>Disable</button>
+      <button type="button" class="btn btn-primary btn-sm fire-btn" id="remind-enable">Enable Reminders<div class="ember-wrap" aria-hidden="true"><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div><div class="ember"></div></div></button>
+      <button type="button" class="btn btn-secondary btn-sm" id="remind-disable" disabled>Disable</button>
     </div>
 
     <div class="pill-row" id="active-pills"></div>

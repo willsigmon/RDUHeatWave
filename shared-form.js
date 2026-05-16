@@ -105,6 +105,18 @@
     } catch(e) { /* storage unavailable */ }
   }
 
+  function setLocalEntries(entries) {
+    try {
+      var localEntries = keepLatestLocalEntries(entries || []);
+      if (localEntries.length) {
+        localStorage.setItem('heatwave_entries', JSON.stringify(localEntries));
+      } else {
+        localStorage.removeItem('heatwave_entries');
+      }
+      return localEntries;
+    } catch(e) { return []; }
+  }
+
   function getLocalEntries() {
     pruneLocalEntries();
     try { return JSON.parse(localStorage.getItem('heatwave_entries') || '[]'); }
@@ -265,6 +277,95 @@
         formStatus.textContent = message || '';
       }, 10);
     }
+
+    function createPendingRecovery() {
+      var panel = document.createElement('div');
+      panel.className = 'pending-checkins';
+      panel.id = 'pending-checkins';
+      panel.hidden = true;
+      panel.innerHTML =
+        '<div class="pending-checkins__copy">' +
+          '<strong id="pending-checkins-title">Pending local check-ins</strong>' +
+          '<span id="pending-checkins-detail">Saved on this device until the connection comes back.</span>' +
+        '</div>' +
+        '<div class="pending-checkins__actions">' +
+          '<button type="button" class="pending-checkins__button" id="pending-checkins-retry">Retry sync</button>' +
+          '<button type="button" class="pending-checkins__button pending-checkins__button--ghost" id="pending-checkins-export">Export CSV</button>' +
+        '</div>';
+      if (form.parentNode) {
+        form.parentNode.insertBefore(panel, form.nextSibling);
+      }
+      return panel;
+    }
+
+    var pendingPanel = createPendingRecovery();
+    var pendingTitle = document.getElementById('pending-checkins-title');
+    var pendingDetail = document.getElementById('pending-checkins-detail');
+    var pendingRetryBtn = document.getElementById('pending-checkins-retry');
+    var pendingExportBtn = document.getElementById('pending-checkins-export');
+
+    function updatePendingRecovery(message) {
+      var entries = getLocalEntries();
+      if (!pendingPanel) return;
+      pendingPanel.hidden = entries.length === 0;
+      if (pendingTitle) {
+        pendingTitle.textContent = entries.length === 1
+          ? '1 pending local check-in'
+          : entries.length + ' pending local check-ins';
+      }
+      if (pendingDetail) {
+        pendingDetail.textContent = message || 'Saved on this device. Retry sync before clearing browser data.';
+      }
+    }
+
+    function retryPendingCheckins() {
+      var entries = getLocalEntries();
+      if (!entries.length) {
+        updatePendingRecovery('No local check-ins are waiting.');
+        return;
+      }
+
+      if (pendingRetryBtn) {
+        pendingRetryBtn.disabled = true;
+        pendingRetryBtn.textContent = 'Syncing…';
+      }
+
+      var remaining = [];
+      var syncedCount = 0;
+
+      entries.reduce(function(chain, entry) {
+        return chain.then(function() {
+          return fetchWithTimeout(FORM_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+            body: new URLSearchParams(Object.assign({}, entry, { companyWebsite: '' })).toString()
+          }, FORM_TIMEOUT_MS).then(function(response) {
+            if (!response.ok) throw new Error('pending-sync-failed');
+            return response.json();
+          }).then(function(result) {
+            if (!result || result.status !== 'ok') throw new Error('pending-sync-failed');
+            syncedCount += 1;
+          }).catch(function() {
+            remaining.push(entry);
+          });
+        });
+      }, Promise.resolve()).then(function() {
+        setLocalEntries(remaining);
+        updatePendingRecovery(syncedCount
+          ? ('Synced ' + syncedCount + ' saved check-in' + (syncedCount === 1 ? '.' : 's.'))
+          : 'Sync still failed. Export CSV if the host needs to recover these manually.');
+        announceFormStatus(pendingDetail ? pendingDetail.textContent : '');
+      }).finally(function() {
+        if (pendingRetryBtn) {
+          pendingRetryBtn.disabled = false;
+          pendingRetryBtn.textContent = 'Retry sync';
+        }
+      });
+    }
+
+    if (pendingRetryBtn) pendingRetryBtn.addEventListener('click', retryPendingCheckins);
+    if (pendingExportBtn) pendingExportBtn.addEventListener('click', exportCSV);
+    updatePendingRecovery();
 
     function bindFieldAccessibility() {
       allFields.forEach(function(name) {
@@ -585,51 +686,59 @@
     }
 
     // ===== SUBMIT =====
-    if (submitBtn) {
-      submitBtn.addEventListener('click', function() {
-        try {
-          if (!validateAll()) {
-            var firstError = form.querySelector('.field-input.error');
-            announceFormStatus('Please fix the highlighted fields.');
-            if (firstError) firstError.focus();
-            return;
-          }
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+      if (submitBtn && submitBtn.disabled) return;
 
+      try {
+        if (!validateAll()) {
+          var firstError = form.querySelector('.field-input.error');
+          announceFormStatus('Please fix the highlighted fields.');
+          if (firstError) firstError.focus();
+          return;
+        }
+
+        if (submitBtn) {
           submitBtn.classList.add('loading');
           submitBtn.disabled = true;
+        }
 
-          var entry = {};
-          allFields.forEach(function(name) {
-            entry[name] = document.getElementById(name).value.trim();
-          });
+        var entry = {};
+        allFields.forEach(function(name) {
+          var input = document.getElementById(name);
+          entry[name] = input ? input.value.trim() : '';
+        });
 
-          fetchWithTimeout(FORM_ENDPOINT, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
-            body: new URLSearchParams(Object.assign({}, entry, {
-              companyWebsite: companyWebsite ? companyWebsite.value.trim() : ''
-            })).toString()
-          }, FORM_TIMEOUT_MS).then(function(response) {
-            if (!response.ok) throw new Error('submit-failed');
-            return response.json();
-          }).then(function(result) {
-            if (!result || result.status !== 'ok') throw new Error('submit-failed');
-            pruneLocalEntries();
-            showSuccess();
-          }).catch(function() {
-            var savedEntry = saveFailedLocal(entry);
-            if (savedEntry) {
-              showSuccess({ localOnly: true, reason: 'sync-failed' });
-              return;
-            }
-            showSubmissionIssue();
-          });
-        } catch(err) {
+        fetchWithTimeout(FORM_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+          body: new URLSearchParams(Object.assign({}, entry, {
+            companyWebsite: companyWebsite ? companyWebsite.value.trim() : ''
+          })).toString()
+        }, FORM_TIMEOUT_MS).then(function(response) {
+          if (!response.ok) throw new Error('submit-failed');
+          return response.json();
+        }).then(function(result) {
+          if (!result || result.status !== 'ok') throw new Error('submit-failed');
+          pruneLocalEntries();
+          showSuccess();
+        }).catch(function() {
+          var savedEntry = saveFailedLocal(entry);
+          if (savedEntry) {
+            updatePendingRecovery('Saved locally after sync failed. Retry sync before clearing browser data.');
+            showSuccess({ localOnly: true, reason: 'sync-failed' });
+            return;
+          }
+          showSubmissionIssue();
+        });
+      } catch(err) {
+        if (submitBtn) {
           submitBtn.classList.remove('loading');
           submitBtn.disabled = false;
         }
-      });
-    }
+        announceFormStatus('Something went wrong before we could submit. Please try again.');
+      }
+    });
 
     // ===== RESET =====
     function doReset() {
@@ -648,6 +757,7 @@
       if (companyWebsite) companyWebsite.value = '';
       successTitle.textContent = defaultSuccessTitle;
       successSubtitle.textContent = defaultSuccessSubtitle;
+      updatePendingRecovery();
 
       allFields.forEach(function(name) {
         var input = document.getElementById(name);

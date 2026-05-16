@@ -1563,6 +1563,224 @@ img {
   }
 }
 
+/* Desktop public agenda should feel like the rest of the site. Keep the
+   cream-paper treatment for print/admin; the default visitor route is a dark
+   paperless run-of-show. */
+@media screen and (min-width: 761px) {
+  body.agenda-public-mode {
+    padding: 24px 0 40px;
+    color: var(--color-text);
+    background:
+      radial-gradient(circle at 50% -10%, rgba(232, 88, 12, 0.22), transparent 26rem),
+      radial-gradient(circle at 85% 18%, rgba(255, 106, 30, 0.08), transparent 18rem),
+      linear-gradient(180deg, #1a1412 0%, #120d0b 100%);
+  }
+
+  body.agenda-public-mode .heat-bg {
+    display: block !important;
+  }
+
+  body.agenda-public-mode .paperless-hero {
+    display: block !important;
+    width: min(960px, calc(100% - 32px));
+    margin: 0 auto 18px;
+  }
+
+  body.agenda-public-mode .paperless-hero-card {
+    position: relative;
+    overflow: hidden;
+    padding: 22px;
+    border-color: rgba(232, 88, 12, 0.3);
+    border-radius: 24px;
+    background:
+      radial-gradient(circle at 18% 0%, rgba(232, 88, 12, 0.18), transparent 12rem),
+      linear-gradient(145deg, rgba(44, 36, 32, 0.98), rgba(35, 28, 24, 0.96));
+    box-shadow: 0 18px 58px rgba(0, 0, 0, 0.38), var(--shadow-glow), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+
+  body.agenda-public-mode .paperless-admin-link {
+    color: var(--color-text-muted);
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(232, 88, 12, 0.2);
+  }
+
+  body.agenda-public-mode .paperless-kicker {
+    color: var(--color-primary-text);
+  }
+
+  body.agenda-public-mode .paperless-hero h2 {
+    color: var(--color-text);
+  }
+
+  body.agenda-public-mode .paperless-hero p,
+  body.agenda-public-mode .paperless-admin-note {
+    color: var(--color-text-muted) !important;
+  }
+
+  body.agenda-public-mode .paperless-button,
+  body.agenda-public-mode .paperless-meta-item {
+    border-color: rgba(232, 88, 12, 0.24);
+    background: rgba(255,255,255,0.045);
+    color: var(--color-text);
+  }
+
+  body.agenda-public-mode .paperless-button-primary {
+    background: var(--gradient-fire);
+    color: #fff;
+    border-color: rgba(255, 160, 96, 0.7);
+    box-shadow: 0 10px 24px rgba(232, 88, 12, 0.22);
+  }
+
+  body.agenda-public-mode .paperless-meta-item span {
+    color: var(--color-text-muted);
+  }
+
+  body.agenda-public-mode .paperless-meta-item strong {
+    color: var(--color-text);
+  }
+
+  body.agenda-public-mode .agenda-page-main {
+    width: min(960px, calc(100% - 32px));
+    min-height: 0;
+    margin: 0 auto 20px;
+    padding: 24px;
+    border: 1px solid rgba(232, 88, 12, 0.24);
+    border-radius: 24px;
+    background:
+      linear-gradient(135deg, rgba(255,255,255,0.045), rgba(255,255,255,0.018)),
+      rgba(35, 28, 24, 0.94);
+    color: var(--color-text);
+    box-shadow: 0 18px 58px rgba(0, 0, 0, 0.34);
+  }
+
+  body.agenda-public-mode .agenda-page-main::before {
+    height: 4px;
+    border-radius: 24px 24px 0 0;
+    background: var(--gradient-fire);
+  }
+
+  body.agenda-public-mode .agenda-page-main::after,
+  body.agenda-public-mode .agenda-page-main > .header {
+    display: none;
+  }
+
+  body.agenda-public-mode .agenda-page-main .two-col {
+    margin-top: 0 !important;
+  }
+
+  body.agenda-public-mode .section-heading,
+  body.agenda-public-mode .section-heading-fire,
+  body.agenda-public-mode .spotlight-hero-label,
+  body.agenda-public-mode .spotlight-upcoming-label,
+  body.agenda-public-mode .tip-box-label,
+  body.agenda-public-mode .leader-role,
+  body.agenda-public-mode .wins-card-label {
+    color: var(--color-primary-text);
+  }
+
+  body.agenda-public-mode .agenda-list {
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    gap: 8px;
+    padding: 0;
+  }
+
+  body.agenda-public-mode .agenda-group-label {
+    margin: 12px 0 2px;
+    padding: 7px 10px;
+    border: 1px solid rgba(232, 88, 12, 0.18);
+    border-radius: 999px;
+    background: rgba(26, 20, 18, 0.74);
+    color: var(--color-primary-text);
+  }
+
+  body.agenda-public-mode .agenda-item {
+    border: 1px solid rgba(232, 88, 12, 0.18);
+    border-radius: 16px;
+    background:
+      linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018)),
+      rgba(44, 36, 32, 0.78);
+    color: var(--color-text);
+  }
+
+  body.agenda-public-mode .agenda-item:nth-child(odd) {
+    background:
+      linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018)),
+      rgba(35, 28, 24, 0.84);
+  }
+
+  body.agenda-public-mode .agenda-glyph {
+    border-color: rgba(232, 88, 12, 0.3);
+    background: radial-gradient(circle at 35% 25%, rgba(255, 176, 122, 0.22), rgba(232, 88, 12, 0.12));
+    color: var(--color-primary-text);
+  }
+
+  body.agenda-public-mode .agenda-text,
+  body.agenda-public-mode .spotlight-hero-name,
+  body.agenda-public-mode .leader-name,
+  body.agenda-public-mode .win-value,
+  body.agenda-public-mode .roster-name,
+  body.agenda-public-mode .roster-table td {
+    color: var(--color-text);
+  }
+
+  body.agenda-public-mode .agenda-item--link {
+    border-color: rgba(232, 88, 12, 0.3);
+    background:
+      radial-gradient(circle at 10% 50%, rgba(255, 124, 54, 0.16), transparent 8rem),
+      linear-gradient(135deg, rgba(232, 88, 12, 0.16), rgba(35, 28, 24, 0.88));
+  }
+
+  body.agenda-public-mode .agenda-row-link {
+    color: inherit;
+  }
+
+  body.agenda-public-mode .spotlight-card,
+  body.agenda-public-mode .leadership,
+  body.agenda-public-mode .wins-card,
+  body.agenda-public-mode .tip-box,
+  body.agenda-public-mode .about-box-full,
+  body.agenda-public-mode .agenda-page-support,
+  body.agenda-public-mode .worksheet-panel,
+  body.agenda-public-mode .worksheet-panel-accent,
+  body.agenda-public-mode .roster-panel {
+    border-color: rgba(232, 88, 12, 0.18);
+    background:
+      linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018)),
+      rgba(44, 36, 32, 0.74);
+    color: var(--color-text-muted);
+  }
+
+  body.agenda-public-mode .spotlight-upcoming-item,
+  body.agenda-public-mode .win-item,
+  body.agenda-public-mode .about-pill {
+    border: 1px solid rgba(232, 88, 12, 0.18);
+    background: rgba(255,255,255,0.045);
+    color: var(--color-text-muted);
+  }
+
+  body.agenda-public-mode .spotlight-upcoming-label,
+  body.agenda-public-mode .win-label,
+  body.agenda-public-mode .about-pill strong {
+    color: var(--color-primary-text);
+  }
+
+  body.agenda-public-mode .spotlight-hero-prof,
+  body.agenda-public-mode .tip-box-text,
+  body.agenda-public-mode .about-box-full,
+  body.agenda-public-mode .roster-privacy-note,
+  body.agenda-public-mode .roster-profession,
+  body.agenda-public-mode .write-prompt {
+    color: var(--color-text-muted);
+  }
+
+  body.agenda-public-mode .page-footer,
+  body.agenda-public-mode .venue-bar {
+    color: var(--color-text-muted);
+  }
+}
+
 @media screen and (max-width: 760px) {
   body.agenda-public-mode {
     background:
@@ -2654,6 +2872,4 @@ img {
     text-align: center !important;
   }
 }
-
-
 

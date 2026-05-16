@@ -1,4 +1,4 @@
-const CACHE_NAME = 'heatwave-v30';
+const CACHE_NAME = 'heatwave-v31';
 
 const PRECACHE_URLS = [
   '/',
@@ -45,8 +45,10 @@ const PRECACHE_URLS = [
   '/scripts/admin.js',
 ];
 
-// API responses excluded — must always be fresh
-const STATIC_EXTENSIONS = /\.(css|js|png|jpg|jpeg|svg|gif|webp|ico|woff|woff2|ttf|otf)(\?.*)?$/i;
+// API responses excluded — must always be fresh.
+// JS/CSS are network-first because filenames are intentionally simple/static.
+const REVISIONED_ASSET_EXTENSIONS = /\.(png|jpg|jpeg|svg|gif|webp|ico|woff|woff2|ttf|otf)(\?.*)?$/i;
+const CODE_ASSET_EXTENSIONS = /\.(css|js)(\?.*)?$/i;
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -76,8 +78,20 @@ self.addEventListener('fetch', (event) => {
   // Skip caching for API routes — always fetch fresh
   if (url.pathname.includes('/api/')) return;
 
-  if (STATIC_EXTENSIONS.test(url.pathname)) {
-    // Cache-first for static assets
+  if (CODE_ASSET_EXTENSIONS.test(url.pathname)) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          }
+          return response;
+        })
+        .catch(() => caches.match(request))
+    );
+  } else if (REVISIONED_ASSET_EXTENSIONS.test(url.pathname)) {
+    // Cache-first for binary/static assets; these are less sensitive to copy/logic drift.
     event.respondWith(
       caches.match(request).then(
         (cached) => cached || fetch(request).then((response) => {

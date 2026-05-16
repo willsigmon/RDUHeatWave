@@ -130,6 +130,20 @@ button { cursor: pointer; background: none; border: none; }
   padding: 2rem;
 }
 
+/* ── Visually hidden text (screen-reader only) ───────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+  clip-path: inset(50%);
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
 /* ── Shared Keyframes ── */
 
 @keyframes heat-drift {
@@ -199,6 +213,27 @@ button { cursor: pointer; background: none; border: none; }
 .heat-line:nth-child(3) { top: 50%; animation-duration: 16s; animation-delay: -8s; }
 .heat-line:nth-child(4) { top: 70%; animation-duration: 20s; animation-delay: -12s; opacity: 0.5; }
 .heat-line:nth-child(5) { top: 85%; animation-duration: 24s; animation-delay: -6s; opacity: 0.6; }
+
+/* Warm orb used across lightweight one-off subpages. Heavier venue/tablet
+   pages override this in their page CSS. */
+.heat-orb {
+  position: fixed;
+  top: 46%;
+  left: 50%;
+  width: min(82vw, 760px);
+  height: min(82vw, 760px);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(232, 88, 12, 0.12) 0%,
+    rgba(255, 106, 30, 0.05) 40%,
+    transparent 70%
+  );
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: 0;
+  animation: orb-pulse 10s ease-in-out infinite;
+}
 
 /* Heat waves at bottom — used by meet + kiosk */
 .heat-waves {
@@ -549,6 +584,76 @@ button { cursor: pointer; background: none; border: none; }
 .ember:nth-child(4) { top: 60%; left: 70%; --ex: 20px; --ey: -35px; animation-delay: 0.07s; }
 .ember:nth-child(5) { top: 40%; left: 85%; --ex: 25px; --ey: -30px; animation-delay: 0.12s; }
 .ember:nth-child(6) { top: 70%; left: 40%; --ex: -8px; --ey: -50px; animation-delay: 0.03s; }
+
+/* ── Check-in local recovery ─────────────────────────────────────── */
+.pending-checkins {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 0.85rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid rgba(232, 88, 12, 0.28);
+  border-radius: var(--radius-xl);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.02)),
+    rgba(35, 28, 24, 0.94);
+  box-shadow: var(--shadow-sm);
+}
+
+.pending-checkins[hidden] {
+  display: none !important;
+}
+
+.pending-checkins__copy {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.pending-checkins__copy strong {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-primary-text);
+}
+
+.pending-checkins__copy span {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  line-height: 1.45;
+}
+
+.pending-checkins__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pending-checkins__button {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid rgba(232, 88, 12, 0.36);
+  border-radius: var(--radius-full);
+  background: var(--gradient-fire);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.pending-checkins__button--ghost {
+  background: rgba(255,255,255,0.04);
+  color: var(--color-text);
+}
+
+.pending-checkins__button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
 
 /* ── Mobile UX: Touch targets (WCAG 2.5.8) ────────────────────────── */
 
