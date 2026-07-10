@@ -1296,6 +1296,7 @@
     { name: 'Roni Payne', title: 'Accounting / Tax', company: 'R. Payne Financial & Tax Solutions', website: 'https://rpayne.org/meet-the-owner/', leader: false, photo: '/member-photos/roni-payne.jpg', photoObjectPosition: 'center 24%' },
     { name: 'Shannida Ramsey', title: 'Property Maintenance', company: 'Ram-Z Services LLC', website: 'https://ramzservices.com', leader: false, photo: '/member-photos/shannida-ramsey.jpg', photoObjectPosition: 'center 26%' },
     { name: 'David Mercado', title: 'HOA Management', company: 'William Douglas Management', website: 'https://wmdouglas.com/raleigh-hoa-management', leader: false },
+    { name: 'Erika Beckett', title: 'Pet Sitting', company: 'Erika Beckett Pet Sitting', website: '', leader: false, photo: '/member-photos/erika-beckett.webp', photoObjectPosition: 'center 30%' },
     { name: 'Sue Kerata', title: 'Realtor', company: 'Century 21 Triangle Group', website: 'https://suekhomes.com', leader: false, photo: '/member-photos/sue-kerata.jpg', photoObjectPosition: 'center 20%' }
   ];
 

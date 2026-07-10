@@ -13,6 +13,7 @@ function stubMemberSheet() {
     ['Name', 'Profession', 'Company', 'Website'],
     [
       ['Carter Helms', 'Team Chair', 'Highstreet Ins & Financial Svcs', 'https://carterhelms.com'],
+      ['Erika Beckett', 'Pet Sitter', 'Pet Sitter', ''],
       ['Alice Smith', 'Engineer', 'Acme Inc', 'https://acme.com']
     ]
   )));
@@ -42,6 +43,18 @@ describe('member-card handler', () => {
     expect(result.statusCode).toBe(200);
     expect(result.rawBody).toContain('Will Sigmon');
     expect(result.rawBody).toContain('/member-photos/will-sigmon.jpg');
+  });
+
+  it('uses Erika\'s verified portrait and business name on her member card', async () => {
+    stubMemberSheet();
+    const { res, getResult } = mockRes();
+
+    await handler(mockReq({ method: 'GET', query: { name: 'erika-beckett' } }), res);
+
+    const result = getResult();
+    expect(result.statusCode).toBe(200);
+    expect(result.rawBody).toContain('Erika Beckett Pet Sitting');
+    expect(result.rawBody).toContain('/member-photos/erika-beckett.webp');
   });
 
   it('returns 404 for an unknown slug', async () => {
