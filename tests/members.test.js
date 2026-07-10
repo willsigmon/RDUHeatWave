@@ -14,6 +14,7 @@ function stubMemberSheet() {
     [
       ['Carter Helms', 'Insurance', 'Highstreet', 'https://carterhelms.com'],
       ['Craig Morrill', 'Financial Advisor', 'Summit Global', 'https://sgiam.com'],
+      ['Erika Beckett', 'Pet Sitter', 'Pet Sitter', ''],
       ['Alice Smith', 'Engineer', 'Acme Inc', 'acme.com'],
     ],
   );
@@ -108,6 +109,7 @@ describe('members handler — sheet data', () => {
     const rusty = members.find((m) => m.name === 'Rusty Sutton');
     const roni = members.find((m) => m.name === 'Roni Payne');
     const shannida = members.find((m) => m.name === 'Shannida Ramsey');
+    const erika = members.find((m) => m.name === 'Erika Beckett');
     const alice = members.find((m) => m.name === 'Alice Smith');
 
     expect(carter.photo).toBe('/member-photos/carter-helms.jpg');
@@ -116,7 +118,19 @@ describe('members handler — sheet data', () => {
     expect(rusty.photo).toBe('/member-photos/rusty-sutton.jpg');
     expect(roni.photo).toBe('/member-photos/roni-payne.jpg');
     expect(shannida.photo).toBe('/member-photos/shannida-ramsey.jpg');
+    expect(erika.photo).toBe('/member-photos/erika-beckett.webp');
+    expect(erika.photoObjectPosition).toBe('center 30%');
     expect(alice.photo).toBeUndefined();
+  });
+
+  it('keeps Erika Beckett Pet Sitting as Erika\'s public company name', async () => {
+    stubMemberSheet();
+    const { res, getResult } = mockRes();
+    await handler(mockReq({ method: 'GET' }), res);
+    const erika = getResult().body.members.find((m) => m.name === 'Erika Beckett');
+
+    expect(erika.title).toBe('Pet Sitting');
+    expect(erika.company).toBe('Erika Beckett Pet Sitting');
   });
 
   it('promotes governance names to leader even when sheet leader column is FALSE', async () => {

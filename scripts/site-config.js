@@ -8,7 +8,7 @@
     { name: 'Craig Morrill', company: 'Summit Global Investments', photo: '/member-photos/craig-morrill.jpg', photoObjectPosition: 'center 22%' },
     { name: 'Dana Walsh', company: 'Stroll Magazine', photo: '/member-photos/dana-walsh.jpg', photoObjectPosition: 'center 28%' },
     { name: 'David Mercado', company: 'William Douglas Management' },
-    { name: 'Erika Beckett', company: 'Pet Sitter' },
+    { name: 'Erika Beckett', company: 'Erika Beckett Pet Sitting', photo: '/member-photos/erika-beckett.webp', photoObjectPosition: 'center 30%' },
     { name: 'Robert Courts', company: 'Advantage Lending', photo: '/member-photos/robert-courts.png', photoObjectPosition: 'center 25%' },
     { name: 'Roni Payne', company: 'R. Payne Financial & Tax Solutions', photo: '/member-photos/roni-payne.jpg', photoObjectPosition: 'center 24%' },
     { name: 'Rusty Sutton', company: 'MonkeyFans Creative' },

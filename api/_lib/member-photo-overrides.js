@@ -49,6 +49,11 @@ var PHOTO_OVERRIDES = {
     photo: '/member-photos/sue-kerata.jpg',
     photoObjectPosition: 'center 30%',
     sourceUrl: 'https://suekhomes.com'
+  },
+  'erika beckett': {
+    photo: '/member-photos/erika-beckett.webp',
+    photoObjectPosition: 'center 30%',
+    sourceUrl: 'User-provided portrait (IMG_0490.heic)'
   }
 };
 

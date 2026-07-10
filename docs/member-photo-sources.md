@@ -1,11 +1,12 @@
 # Member photo source notes
 
-These public headshots are stored locally under `/member-photos/` so the live site does not rely on brittle hotlinks.
+These verified headshots are stored locally under `/member-photos/` so the live site does not rely on brittle hotlinks.
 
 | Member | Local file | Source checked | Confidence |
 | --- | --- | --- | --- |
 | Roni Payne | `/member-photos/roni-payne.jpg` | Garner Chamber listing for R. Payne Financial and Tax Solutions | High |
 | Shannida Ramsey | `/member-photos/shannida-ramsey.jpg` | National Women's Affordable Housing Network North Carolina leadership profile for Shannida Letellier-Ramsey | High |
+| Erika Beckett | `/member-photos/erika-beckett.webp` | Member-provided portrait (`IMG_0490.heic`), background removed | High |
 
 Still unresolved:
 

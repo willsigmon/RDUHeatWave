@@ -29,7 +29,7 @@ var DEFAULT_MEMBERS = [
   { name: 'Roni Payne', title: 'Accounting / Tax', company: 'R. Payne Financial & Tax Solutions', leader: false, chair: false, website: 'https://rpayne.org/meet-the-owner/' },
   { name: 'Shannida Ramsey', title: 'Property Maintenance', company: 'Ram-Z Services LLC', leader: false, chair: false, website: 'https://ramzservices.com' },
   { name: 'David Mercado', title: 'HOA Management', company: 'William Douglas Management', leader: false, chair: false, website: 'https://wmdouglas.com/raleigh-hoa-management' },
-  { name: 'Erika Beckett', title: 'Pet Sitting', company: 'Pet Sitter', leader: false, chair: false, website: '' },
+  { name: 'Erika Beckett', title: 'Pet Sitting', company: 'Erika Beckett Pet Sitting', leader: false, chair: false, website: '' },
   { name: 'Sue Kerata', title: 'Realtor', company: 'Century 21 Triangle Group', leader: false, chair: false, website: 'https://suekhomes.com' }
 ].map(memberPhotoOverrides.applyMemberPhotoOverride);
 
@@ -81,6 +81,15 @@ function repairKnownDirectoryAnomalies(member) {
   // "Name | Team Chair | Highstreet..." instead of using his real name.
   if (normalizedName === 'name' && normalizedCompany.indexOf('highstreet') !== -1) {
     return Object.assign({}, member, { name: 'Carter Helms' });
+  }
+
+  // Keep Erika's public-facing business name consistent while the live
+  // Membership Directory still carries the generic "Pet Sitter" label.
+  if (normalizedName === 'erika beckett') {
+    return Object.assign({}, member, {
+      title: 'Pet Sitting',
+      company: 'Erika Beckett Pet Sitting'
+    });
   }
 
   return member;
