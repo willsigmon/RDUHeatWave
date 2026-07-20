@@ -12,4 +12,41 @@ Disallow: /survey
 Disallow: /survey-results
 Disallow: /report
 
+# AI assistants and search crawlers — welcome on public pages,
+# same private-page restrictions as everyone else
+User-agent: anthropic-ai
+User-agent: ClaudeBot
+User-agent: Claude-Web
+User-agent: Claude-User
+User-agent: Claude-SearchBot
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: cohere-ai
+User-agent: meta-externalagent
+User-agent: DuckAssistBot
+Allow: /
+Disallow: /agenda
+Disallow: /admin
+Disallow: /api/
+Disallow: /crm
+Disallow: /remind
+Disallow: /kiosk
+Disallow: /timer
+Disallow: /bizchat
+Disallow: /survey
+Disallow: /survey-results
+Disallow: /report
+
+# Bulk scrapers not welcome
+User-agent: Bytespider
+Disallow: /
+
 Sitemap: https://rduheatwave.team/sitemap.xml
+
+# AI-readable site summary
+# https://rduheatwave.team/llms.txt
