@@ -88,6 +88,13 @@
       "continue": true
     },
     {
+      "src": "/(.*)",
+      "status": 308,
+      "headers": {
+        "Location": "https://www.twotwelvereferrals.com/teams/rdu-heatwave/"
+      }
+    },
+    {
       "src": "/sw\\.js",
       "dest": "/sw.js",
       "headers": {
