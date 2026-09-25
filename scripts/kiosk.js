@@ -31,7 +31,7 @@
   var MEETING_DAY = Number.isFinite(MEETING_CONFIG.day) ? MEETING_CONFIG.day : 4;
   var MEETING_HOUR = Number.isFinite(MEETING_CONFIG.hour) ? MEETING_CONFIG.hour : 16;
   var MEETING_MIN = Number.isFinite(MEETING_CONFIG.minute) ? MEETING_CONFIG.minute : 0;
-  var MEETING_TIME_LABEL = MEETING_CONFIG.publicTimeLabel || '4:00 PM ET';
+  var MEETING_TIME_LABEL = MEETING_CONFIG.publicTimeLabel || '11:00 AM ET';
   var MEETING_TIME_ZONE = MEETING_CONFIG.timezone || 'America/New_York';
   var MEETING_DURATION = 2 * 60 * 60 * 1000;
   var meetingDateFormatter = new Intl.DateTimeFormat('en-US', {
@@ -121,9 +121,9 @@
   var cdMinsEl = document.getElementById('cd-mins');
   var cdSecsEl = document.getElementById('cd-secs');
 
-  if (networkingTimeEl) networkingTimeEl.textContent = MEETING_CONFIG.networkingTimeShort || '3:45 PM';
-  if (meetingTimeEl) meetingTimeEl.textContent = MEETING_CONFIG.publicTimeShort || '4:00 PM';
-  if (connectTimeEl) connectTimeEl.textContent = MEETING_CONFIG.connectTimeShort || '5:00 PM';
+  if (networkingTimeEl) networkingTimeEl.textContent = MEETING_CONFIG.networkingTimeShort || '10:45 AM';
+  if (meetingTimeEl) meetingTimeEl.textContent = MEETING_CONFIG.publicTimeShort || '11:00 AM';
+  if (connectTimeEl) connectTimeEl.textContent = MEETING_CONFIG.connectTimeShort || '12:00 PM';
   if (kioskVenueEl && MEETING_CONFIG.venueLineShort) {
     // Safe DOM construction (no innerHTML \u2014 values come from config, not user input,
     // but textContent + element building is XSS-proof regardless).
@@ -212,7 +212,7 @@
   function buildTickerItems() {
     return [
       activeMemberCount + ' ACTIVE MEMBERS',
-      String((MEETING_CONFIG.dayNamePlural || 'Thursdays') + ' AT ' + (MEETING_CONFIG.publicTimeLabel || '4:00 PM ET')).toUpperCase(),
+      String((MEETING_CONFIG.dayNamePlural || 'Thursdays') + ' AT ' + (MEETING_CONFIG.publicTimeLabel || '11:00 AM ET')).toUpperCase(),
       String(MEETING_CONFIG.venueCityLabel || 'Clouds Brewing • Raleigh, NC').toUpperCase(),
       'THE EXTRA DEGREE MAKES ALL THE DIFFERENCE',
       '211\u00B0 IS HOT \u2022 212\u00B0 BOILS \u2022 STEAM = POWER',

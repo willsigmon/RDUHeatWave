@@ -106,7 +106,7 @@ function buildWeeklyThanksMessage_(row) {
       '',
       introLine,
       '',
-      'We meet Thursdays at 4:00 PM ET at Clouds Brewing, and you are welcome back anytime.',
+      'We meet Thursdays at 11:00 AM ET at Clouds Brewing, and you are welcome back anytime.',
       '',
       'Best,',
       'RDU Heatwave',

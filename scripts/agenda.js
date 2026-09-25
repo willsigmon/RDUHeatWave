@@ -13,7 +13,7 @@
     /\/agenda\/admin\/?$/.test(window.location.pathname);
   var isPublicMode = !isAdminMode;
   var FIRST_MEETING = new Date('2025-01-09T00:00:00');
-  var MEETING_TIME  = MEETING_CONFIG.publicTimeShort || '4:00 PM';
+  var MEETING_TIME  = MEETING_CONFIG.publicTimeShort || '11:00 AM';
   var MEETING_VENUE = MEETING_CONFIG.venueName || 'Clouds Brewing';
 
   window.HEATWAVE_AGENDA_ADMIN_MODE = isAdminMode;
