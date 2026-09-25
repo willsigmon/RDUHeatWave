@@ -3,7 +3,7 @@
 ## Schedule
 
 - **Day**: Every Thursday
-- **Time**: 4:00 PM ET
+- **Time**: 11:00 AM ET
 - **Venue**: Clouds Brewing, 1233 Front St, Raleigh NC 27609 (side room)
 - **Duration**: ~90 minutes
 

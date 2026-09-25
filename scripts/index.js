@@ -1160,7 +1160,7 @@
   var MEETING_DAY = Number.isFinite(MEETING_CONFIG.day) ? MEETING_CONFIG.day : 4;
   var MEETING_HOUR = Number.isFinite(MEETING_CONFIG.hour) ? MEETING_CONFIG.hour : 16;
   var MEETING_MIN = Number.isFinite(MEETING_CONFIG.minute) ? MEETING_CONFIG.minute : 0;
-  var MEETING_TIME_LABEL = MEETING_CONFIG.publicTimeLabel || '4:00 PM ET';
+  var MEETING_TIME_LABEL = MEETING_CONFIG.publicTimeLabel || '11:00 AM ET';
   var MEETING_TIME_ZONE = MEETING_CONFIG.timezone || 'America/New_York';
   var MEETING_DURATION = 2 * 60 * 60 * 1000;
   var meetingDateFormatter = new Intl.DateTimeFormat('en-US', {

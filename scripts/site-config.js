@@ -130,13 +130,13 @@
       day: 4,
       dayName: 'Thursday',
       dayNamePlural: 'Thursdays',
-      hour: 16,
+      hour: 11,
       minute: 0,
       timezone: 'America/New_York',
-      networkingTimeShort: '3:45 PM',
-      publicTimeShort: '4:00 PM',
-      publicTimeLabel: '4:00 PM ET',
-      connectTimeShort: '5:00 PM',
+      networkingTimeShort: '10:45 AM',
+      publicTimeShort: '11:00 AM',
+      publicTimeLabel: '11:00 AM ET',
+      connectTimeShort: '12:00 PM',
       venueName: 'Clouds Brewing',
       venueCityLabel: 'Clouds Brewing • Raleigh, NC',
       venueLineShort: 'Clouds Brewing • 1233 Front St, Raleigh NC',
@@ -145,7 +145,7 @@
       supportMessage: 'Please stay for a drink after the meeting to support the brewery — they provide our space at no cost.'
     },
     countdownTarget: {
-      time: '16:00',
+      time: '11:00',
       timezone: 'America/New_York',
       isoDate: null,
       allowRepeat: false

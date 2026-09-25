@@ -133,7 +133,7 @@
   function parseTimeString(value) {
     var match = String(value || '').match(/^(\d{1,2}):(\d{2})$/);
     if (!match) {
-      return { hour: 16, minute: 5 };
+      return { hour: 11, minute: 5 };
     }
 
     return {
@@ -454,7 +454,7 @@
       }
     }
 
-    var timeOfDay = parseTimeString(COUNTDOWN_CONFIG.time || '16:00');
+    var timeOfDay = parseTimeString(COUNTDOWN_CONFIG.time || '11:00');
     var now = Date.now();
     var currentParts = getTimeZoneParts(new Date(now), MEETING_TIME_ZONE);
     var currentDayUtc = new Date(Date.UTC(currentParts.year, currentParts.month - 1, currentParts.day));
@@ -518,7 +518,7 @@
   function syncHeaderMeta() {
     if (!meetingDatetimeEl || !targetState) return;
 
-    var meetingStart = MEETING_CONFIG.publicTimeLabel || '4:00 PM ET';
+    var meetingStart = MEETING_CONFIG.publicTimeLabel || '11:00 AM ET';
     var meetingDateLabel = formatCalendarDate(new Date(targetState.timestamp), MEETING_TIME_ZONE);
     meetingDatetimeEl.textContent = meetingDateLabel + ' • ' + meetingStart;
   }
@@ -533,7 +533,7 @@
     }
 
     if (meetingStartLabelEl) {
-      meetingStartLabelEl.textContent = MEETING_CONFIG.publicTimeLabel || '4:00 PM ET';
+      meetingStartLabelEl.textContent = MEETING_CONFIG.publicTimeLabel || '11:00 AM ET';
     }
 
     if (meetingTargetTimeEl) {
@@ -593,9 +593,9 @@
 
     if (countdownContextEl && targetState) {
       countdownContextEl.textContent = 'Networking opens at ' +
-        (MEETING_CONFIG.networkingTimeShort || '3:45 PM') +
+        (MEETING_CONFIG.networkingTimeShort || '10:45 AM') +
         '; the formal meeting starts at ' +
-        (MEETING_CONFIG.publicTimeShort || '4:00 PM') + '.';
+        (MEETING_CONFIG.publicTimeShort || '11:00 AM') + '.';
     }
 
     if (statusBannerEl) {

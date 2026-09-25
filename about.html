@@ -108,7 +108,7 @@
       <img src="/icons/iconscout/fire.svg" alt="" class="hw-icon-img" aria-hidden="true" width="32" height="32">
       <h3>Weekly Meetings</h3>
       <p id="weekly-meeting-copy">Every Thursday we meet at Clouds Brewing in Raleigh to share referrals, build relationships, and hold each other accountable.</p>
-      <span class="detail" id="weekly-meeting-detail">Thursdays &middot; 4:00 PM ET</span>
+      <span class="detail" id="weekly-meeting-detail">Thursdays &middot; 11:00 AM ET</span>
     </div>
     <div class="card gradient-border">
       <img src="/icons/iconscout/chat-bubble.svg" alt="" class="hw-icon-img" aria-hidden="true" width="32" height="32">
@@ -154,7 +154,7 @@
     <div class="venue-info">
       <h3 id="venue-name">Clouds Brewing</h3>
       <p id="venue-address">1233 Front St, Raleigh, NC 27609</p>
-      <div class="venue-schedule" id="venue-schedule">Thursdays at 4:00 PM ET</div>
+      <div class="venue-schedule" id="venue-schedule">Thursdays at 11:00 AM ET</div>
     </div>
   </div>
 </section>
@@ -191,12 +191,12 @@
     weeklyMeetingCopy.textContent = 'Every ' + (MEETING_CONFIG.dayName || 'Thursday') + ' we meet at ' + MEETING_CONFIG.venueName + ' in Raleigh to share referrals, build relationships, and hold each other accountable.';
   }
   if (weeklyMeetingDetail) {
-    weeklyMeetingDetail.textContent = (MEETING_CONFIG.dayNamePlural || 'Thursdays') + ' · ' + (MEETING_CONFIG.publicTimeLabel || '4:00 PM ET');
+    weeklyMeetingDetail.textContent = (MEETING_CONFIG.dayNamePlural || 'Thursdays') + ' · ' + (MEETING_CONFIG.publicTimeLabel || '11:00 AM ET');
   }
   if (venueName && MEETING_CONFIG.venueName) venueName.textContent = MEETING_CONFIG.venueName;
   if (venueAddress && MEETING_CONFIG.venueAddress) venueAddress.textContent = MEETING_CONFIG.venueAddress;
   if (venueSchedule) {
-    venueSchedule.textContent = (MEETING_CONFIG.dayNamePlural || 'Thursdays') + ' at ' + (MEETING_CONFIG.publicTimeLabel || '4:00 PM ET');
+    venueSchedule.textContent = (MEETING_CONFIG.dayNamePlural || 'Thursdays') + ' at ' + (MEETING_CONFIG.publicTimeLabel || '11:00 AM ET');
   }
 
   if (!grid) return;
